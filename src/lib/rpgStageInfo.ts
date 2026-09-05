@@ -829,6 +829,426 @@ export const CHAR_INFO: Record<string, StageInfo> = {
   "nata-profeta": { title: "Natã", subtitle: "O profeta na corte de Davi (1Cr 17:1-15)", text: "Quando o rei lhe abriu o coração — \"Eis que moro em casa de cedro, mas a arca da aliança do SENHOR está debaixo de cortinas\" (1Cr 17:1) —, Natã respondeu do seu próprio juízo, e depressa: \"Tudo quanto tens no teu coração faze, porque Deus é contigo\" (1Cr 17:2). Mas \"na mesma noite, que a palavra de Deus veio a Natã\" (1Cr 17:3), e o profeta teve a humildade de voltar e desdizer-se: \"Tu não me edificarás uma casa para eu morar\" (1Cr 17:4). Em lugar da casa que Davi queria dar, Deus prometeu a casa que Ele faria — um filho, um trono e uma filiação: \"Eu lhe serei por pai, e ele me será por filho\" (1Cr 17:13), \"e o seu trono será firme para sempre\" (1Cr 17:14). É a aliança davídica, e ela vem por esta boca. Foi Natã também quem ungiu Salomão em Giom (1Rs 1:45), e os seus escritos guardaram os atos do rei: \"nas crônicas do profeta Natã\" (1Cr 29:29)." },
   "gade-vidente": { title: "Gade", subtitle: "O vidente de Davi (1Cr 21:9)", text: "\"Gade, o vidente de Davi\" (1Cr 21:9) acompanhava o rei desde os dias do desterro, quando lhe disse: \"Não fiques naquele lugar forte; vai, e entra na terra de Judá\" (1Sm 22:5). Depois do censo, coube-lhe levar a escolha impossível: \"Três coisas te proponho; escolhe uma delas\" — fome, espada ou peste — e trazer resposta: \"vê, pois, agora, que resposta hei de levar a quem me enviou\" (1Cr 21:12). O que Davi respondeu é uma das grandes confissões da Escritura: \"caia eu, pois, nas mãos do Senhor, porque são muitíssimas as suas misericórdias\" (1Cr 21:13). Detida a peste, foi ainda por Gade que veio a ordem de graça: \"o anjo do Senhor ordenou a Gade que dissesse a Davi para subir e levantar um altar ao Senhor na eira de Ornã, o jebuseu\" (1Cr 21:18). Com Samuel e Natã, deixou registro dos atos do rei — \"nas crônicas de Gade, o vidente\" (1Cr 29:29)." },
   "anjo-do-senhor-sobre-jerusalem": { title: "O anjo do SENHOR sobre Jerusalém", subtitle: "Entre a terra e o céu, com a espada estendida (1Cr 21:16)", text: "É a visão mais assombrosa das Crônicas: \"levantando Davi os seus olhos, viu o anjo do Senhor, que estava entre a terra e o céu, com a sua espada desembainhada na sua mão estendida contra Jerusalém\" (1Cr 21:16). Deus não é desenhado — o que se vê é o mensageiro enviado e a espada suspensa sobre uma cidade que ainda não tinha templo. Ao juízo em curso o próprio Deus pôs freio: \"disse ao anjo destruidor: Basta, agora retira a tua mão\" (1Cr 21:15). Diante da figura, \"Davi e os anciãos, cobertos de sacos, se prostraram sobre os seus rostos\" (1Cr 21:16), e o rei tomou sobre si a culpa do povo: \"estas ovelhas que fizeram?\" (1Cr 21:17). Erguido o altar na eira de Ornã e descido fogo do céu sobre o holocausto, veio o desfecho: \"E o Senhor deu ordem ao anjo, e ele tornou a sua espada à bainha\" (1Cr 21:27)." },
+  "hurao-abi": {
+    title: "Hirão Abiú",
+    subtitle: "O artífice mandado de Tiro — filho de uma mulher das filhas de Dã (2Cr 2:13-14)",
+    text: "Hirão, rei de Tiro, respondeu à carta de Salomão mandando o seu melhor homem: \"Agora, pois, envio um homem sábio de grande entendimento, a saber, Hirão Abiú\" (2Cr 2:13). O currículo vem na linha seguinte, e é o mais completo dado a um operário na Bíblia: \"Filho de uma mulher das filhas de Dã, e cujo pai foi homem de Tiro; este sabe trabalhar em ouro, em prata, em bronze, em ferro, em pedras e em madeira, em púrpura, em azul, e em linho fino, e em carmesim, e é hábil para toda a obra do buril, e para toda a espécie de invenções, qualquer coisa que se lhe propuser\" (2Cr 2:14) — metal, pedra, madeira e tecido, um artífice inteiro num homem só. Em 1 Reis ele é apresentado com outro recorte da mesma vida: \"filho de uma mulher viúva, da tribo de Naftali, e fora seu pai um homem de Tiro, que trabalhava em cobre; e era cheio de sabedoria, e de entendimento, e de ciência para fazer toda a obra de cobre\" (1Rs 7:14) — metade Israel, metade Tiro, o ofício herdado do pai. As palavras com que o descrevem são de propósito as de Bezalel, o artífice do tabernáculo, a quem Deus encheu \"do Espírito de Deus, de sabedoria, e de entendimento, e de ciência, em todo o lavor\" (Êx 31:3); e a tribo da mãe é a de Aoliabe, o segundo artífice do deserto (Êx 31:6). Saíram das mãos dele as duas colunas com os seus capitéis e redes, o mar sobre os doze bois, as dez bases e as dez pias, e \"as caldeiras, as pás e as bacias\" (2Cr 4:11), tudo \"de cobre polido\" (2Cr 4:16). O Cronista fecha o serviço dele com a frase de um contrato cumprido: \"Assim acabou Hirão de fazer a obra, que fazia para o rei Salomão, na casa de Deus\" (2Cr 4:11).",
+  },
+  "azarias-filho-de-odede": {
+    title: "Azarias, filho de Odede",
+    subtitle: "O profeta que saiu ao encontro de Asa na estrada do despojo (2Cr 15:1-7)",
+    text: "Aparece do nada e some no mesmo capítulo: \"Então veio o Espírito de Deus sobre Azarias, filho de Odede\" (2Cr 15:1). Sem genealogia, sem cidade e sem um único milagre, entrega a frase que governa 2 Crônicas inteiro: \"O Senhor está convosco, enquanto vós estais com ele, e, se o buscardes, o achareis; porém, se o deixardes, vos deixará\" (2Cr 15:2). O lugar em que ele a diz é o que a torna difícil de ouvir — o rei vem voltando carregado do despojo de Zerá, o etíope, e é aí que o profeta o alcança. Para provar que a condição é séria, abre diante dele os anos em que Israel viveu \"sem o verdadeiro Deus, e sem sacerdote que o ensinasse, e sem lei\" (2Cr 15:3), sem paz \"nem para o que saía, nem para o que entrava\" (2Cr 15:5), e fecha com imperativo e não com ameaça: \"Mas esforçai-vos, e não desfaleçam as vossas mãos; porque a vossa obra tem uma recompensa\" (2Cr 15:7). O efeito é medido em atos: \"Ouvindo, pois, Asa estas palavras, e a profecia do profeta Odede, cobrou ânimo\" (2Cr 15:8) — daí saem a reforma, o altar renovado, a aliança do terceiro mês e a deposição da própria mãe do rei.",
+  },
+  "hanani-vidente": {
+    title: "Hanani, o vidente",
+    subtitle: "O profeta que Asa lançou na casa do tronco (2Cr 16:7-10)",
+    text: "Chega no pior momento possível, que é o melhor: \"Naquele mesmo tempo veio Hanani, o vidente, a Asa, rei de Judá\" (2Cr 16:7). O inimigo tinha recuado, Ramá estava desmanchada e as suas pedras já viravam Geba e Mizpá — e o profeta não acusa fracasso, acusa êxito: \"Porquanto confiaste no rei da Síria, e não confiaste no Senhor teu Deus, por isso o exército do rei da Síria escapou da tua mão\" (2Cr 16:7). Lembra ao rei o milhão de Zerá vencido de mãos vazias (2Cr 16:8) e diz a frase que ficou: \"Porque, quanto ao Senhor, seus olhos passam por toda a terra, para mostrar-se forte para com aqueles cujo coração é perfeito para com ele\" (2Cr 16:9) — os mesmos olhos que Zacarias veria como sete lâmpadas percorrendo a terra (Zc 4:10). A resposta do rei que uma vez depusera a própria mãe por causa de um ídolo: \"Porém Asa se indignou contra o vidente, e lançou-o na casa do tronco\" (2Cr 16:10). Hanani não sai mais do texto, mas sai da história: o seu filho, Jeú, estará à porta de Jerusalém três capítulos adiante, dizendo a verdade ao filho do rei que prendeu o seu pai (2Cr 19:2).",
+  },
+  "jeosafa": {
+    title: "Jeosafá, rei de Judá",
+    subtitle: "O filho de Asa que mandou ensinar a lei e pôs os cantores adiante do exército (2Cr 17—20)",
+    text: "Reina vinte e cinco anos e é medido por um pastor, não por um palácio: \"E o Senhor era com Jeosafá; porque andou nos primeiros caminhos de Davi seu pai, e não buscou a Baalins\" (2Cr 17:3). No terceiro ano faz o que nenhum rei de Judá tinha feito — manda príncipes, levitas e sacerdotes ensinarem pelas cidades, \"levando consigo o livro da lei do Senhor\" (2Cr 17:9) — e o efeito é dissuasão, não conquista (2Cr 17:10). Erra duas vezes pelo mesmo motivo: \"aparentou-se com Acabe\" (2Cr 18:1) e quase morre em Ramote de Gileade, salvo por um grito (2Cr 18:31); e no fim alia-se com Acazias para fazer navios que se quebram em Eziom-Geber (2Cr 20:35-37). Repreendido à porta de casa por Jeú, filho de Hanani (2Cr 19:2), responde percorrendo o reino de Berseba a Efraim e pondo juízes de cidade em cidade, com a instrução que fez tribunal em Judá: \"não julgais da parte do homem, senão da parte do Senhor\" (2Cr 19:6). O ponto mais alto é a invasão de Moabe e Amom: teme, apregoa jejum, ora dizendo \"não sabemos o que faremos; porém os nossos olhos estão postos em ti\" (2Cr 20:12) e, ouvido Jaaziel, põe cantores \"saindo diante dos armados\" (2Cr 20:21). O veredicto do cronista: \"andou no caminho de Asa, seu pai, e não se desviou dele, fazendo o que era reto aos olhos do Senhor\" (2Cr 20:32) — com o mesmo limite do pai, porque \"os altos não foram tirados\" (2Cr 20:33).",
+  },
+  "bene-hail-principe": {
+    title: "Bene-Hail, príncipe de Jeosafá",
+    subtitle: "Primeiro da comitiva mandada ensinar nas cidades de Judá (2Cr 17:7)",
+    text: "Encabeça a lista da missão mais estranha já dada a um nobre de Judá: \"E no terceiro ano do seu reinado enviou ele os seus príncipes, a Bene-Hail, a Obadias, a Zacarias, a Natanael e a Micaías, para ensinarem nas cidades de Judá\" (2Cr 17:7). O nome quer dizer \"filho de valor\", e o valor dele não foi gasto em batalha: foi gasto em estrada de serra, aldeia por aldeia, ao lado de nove levitas e dois sacerdotes, com um rolo pesado a tiracolo. A autoridade do grupo não estava no título de príncipe, e o texto diz onde estava: \"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). É a resposta exata ao diagnóstico que Azarias dera ao pai do rei, quando Israel esteve \"sem sacerdote que o ensinasse, e sem lei\" (2Cr 15:3).",
+  },
+  "obadias-principe": {
+    title: "Obadias, príncipe de Jeosafá",
+    subtitle: "Da comitiva do livro da lei, no terceiro ano do reinado (2Cr 17:7)",
+    text: "Segundo nome da lista dos cinco príncipes enviados \"para ensinarem nas cidades de Judá\" (2Cr 17:7). Não é o Obadias que escondeu cem profetas em cavernas na casa de Acabe (1Rs 18:4), nem o profeta do livro que leva esse nome: é um nobre de Judá cuja única aparição na Escritura é esta — sair de Jerusalém sem escolta, com o rolo, para ensinar gente de aldeia. O cronista o nomeia porque em Crônicas nome é herança, e porque a coisa que ele fez merecia registro: \"E ensinaram em Judá, levando consigo o livro da lei do Senhor\" (2Cr 17:9). O resultado dessa caravana desarmada é anotado no versículo seguinte, e é maior que o de qualquer campanha do capítulo: \"E veio o temor do Senhor sobre todos os reinos das terras, que estavam ao redor de Judá, e não guerrearam contra Jeosafá\" (2Cr 17:10).",
+  },
+  "zacarias-principe": {
+    title: "Zacarias, príncipe de Jeosafá",
+    subtitle: "Terceiro dos cinco enviados a ensinar em Judá (2Cr 17:7)",
+    text: "Um dos príncipes que o rei mandou pelas cidades no terceiro ano do reinado (2Cr 17:7) — não confundir com Zacarias, filho do sacerdote Joiada, apedrejado no átrio do templo por ordem de Joás duas gerações depois (2Cr 24:20-21), nem com o profeta do pós-exílio. A comitiva de que ele faz parte é o programa de governo mais duradouro de Jeosafá: onze homens de credencial (cinco príncipes, quatro levitas a mais que os sacerdotes, e dois sacerdotes) percorrendo \"todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). O que carregam é a única autoridade citada: \"o livro da lei do Senhor\". Quando, três capítulos adiante, o reino inteiro souber orar de cor a promessa da dedicação do templo (2Cr 20:9), será porque alguém foi ensinar isso de cidade em cidade.",
+  },
+  "natanael-principe": {
+    title: "Natanael, príncipe de Jeosafá",
+    subtitle: "Quarto dos príncipes da comitiva que ensinou com o livro da lei (2Cr 17:7)",
+    text: "O nome quer dizer \"Deus deu\", e é o quarto da lista de 2Cr 17:7 — cinco homens da corte destacados para uma função que em Israel era dos sacerdotes e dos levitas. O arranjo é deliberado: a caravana leva autoridade civil, autoridade sacerdotal e autoridade levítica ao mesmo tempo, para que ninguém na aldeia possa dizer que aquilo era assunto só do templo. \"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). Ensinar \"entre o povo\" quer dizer na praça, junto ao poço e à sombra, onde estão as mulheres e os meninos — como Moisés mandara ler a lei diante de \"os homens e as mulheres, os meninos e os estrangeiros que estão dentro das tuas portas\" (Dt 31:12).",
+  },
+  "micaias-principe-de-jeosafa": {
+    title: "Micaías, príncipe de Jeosafá",
+    subtitle: "O quinto da comitiva mandada ensinar nas cidades de Judá (2Cr 17:7)",
+    text: "Último nome da lista dos príncipes enviados \"para ensinarem nas cidades de Judá\" (2Cr 17:7) — e é preciso não o confundir com Micaías, filho de Inlá, o profeta que no capítulo seguinte contradiz quatrocentos e vai para a casa do cárcere a pão e água de angústia (2Cr 18:7-27). São dois homens de mesmo nome no mesmo reinado, e o contraste vale a pena: um leva a lei às cidades por ordem do rei, o outro diz a verdade a dois reis contra a vontade deles. Um foi mandado, o outro foi buscado à força. Deste, o cronista guarda apenas o que ele fez com a comitiva: \"E ensinaram em Judá, levando consigo o livro da lei do Senhor\" (2Cr 17:9) — e o temor do SENHOR que caiu depois disso sobre os reinos ao redor (2Cr 17:10).",
+  },
+  "semaias-levita-de-jeosafa": {
+    title: "Semaías, levita da comitiva de Jeosafá",
+    subtitle: "Primeiro dos nove levitas que ensinaram pelas cidades de Judá (2Cr 17:8)",
+    text: "Encabeça a lista dos levitas destacados para a missão: \"E com eles os levitas, Semaías, Netanias, Zebadias, Asael, Semiramote, Jônatas, Adonias, Tobias e Tobe-Adonias e, com estes levitas, os sacerdotes, Elisama e Jeorão\" (2Cr 17:8). Ensinar era ofício levítico desde a bênção de Moisés a Levi — \"Ensinaram os teus juízos a Jacó, e a tua lei a Israel\" (Dt 33:10) —, mas fazia gerações que ninguém o exercia como itinerância. É esse ofício que o rei desenterra e põe na estrada, com o rolo debaixo do braço: \"e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). O cronista, ele mesmo homem do templo, escreve esses nove nomes com o mesmo cuidado com que escreve os capitães dos milhares — e é o único lugar da Bíblia em que eles aparecem.",
+  },
+  "netanias-levita": {
+    title: "Netanias, levita da comitiva de Jeosafá",
+    subtitle: "Da escola itinerante que percorreu Judá com o livro da lei (2Cr 17:8)",
+    text: "Segundo dos nove levitas nomeados em 2Cr 17:8, mandados com os príncipes \"para ensinarem nas cidades de Judá\" (2Cr 17:7). O que a comitiva faz não tem paralelo nos livros dos Reis: nenhum rei do norte, e nenhum de Judá antes deste, organizou o ensino da lei como política de reino. E o cronista mostra o fruto disso no reinado seguinte do mesmo homem — quando a invasão chega, o povo inteiro sabe onde se pôr e o que dizer, e o rei ora citando de cor a promessa feita na dedicação do templo: \"Se algum mal nos sobrevier, espada, juízo, peste, ou fome, nós nos apresentaremos diante desta casa e diante de ti\" (2Cr 20:9). Uma nação só sabe orar assim quando alguém foi ensinar isso de cidade em cidade.",
+  },
+  "zebadias-levita": {
+    title: "Zebadias, levita da comitiva de Jeosafá",
+    subtitle: "Terceiro dos nove levitas que saíram a ensinar (2Cr 17:8)",
+    text: "Um dos levitas da caravana do terceiro ano (2Cr 17:8) — não confundir com Zebadias, filho de Ismael, líder da casa de Judá, que o mesmo rei porá depois \"em todo o negócio do rei\" no tribunal de Jerusalém (2Cr 19:11). Este é homem de rolo, não de causa: a sua função é ler, explicar e repetir a lei diante de gente que talvez nunca a tivesse ouvido inteira. \"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). A missão dura o tempo que durar a estrada, mas a marca fica: é essa geração instruída que, em 2Cr 20:13, está em pé no pátio novo \"como também as suas crianças, as suas mulheres, e os seus filhos\".",
+  },
+  "asael-levita": {
+    title: "Asael, levita da comitiva de Jeosafá",
+    subtitle: "Quarto dos levitas mandados ensinar nas cidades de Judá (2Cr 17:8)",
+    text: "Aparece uma única vez na Escritura, na lista de 2Cr 17:8 — não é Asael, irmão de Joabe, o ligeiro de pés morto por Abner em Gibeom (2Sm 2:18-23), que viveu um século e meio antes. Este Asael é levita, e o seu trabalho é o oposto do da guerra: percorrer as cidades de Judá com um rolo aberto, ensinando gente comum. O cronista escreve o nome dele porque escreve todos — em Crônicas, uma lista é um monumento. E o versículo que resume a obra deles é o mais improvável de um livro cheio de exércitos: \"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9).",
+  },
+  "elisama-sacerdote": {
+    title: "Elisama, sacerdote da comitiva de Jeosafá",
+    subtitle: "Um dos dois sacerdotes que foram ensinar com os levitas e os príncipes (2Cr 17:8)",
+    text: "A comitiva do terceiro ano acaba com dois sacerdotes, e a Escritura os nomeia: \"e, com estes levitas, os sacerdotes, Elisama e Jeorão\" (2Cr 17:8). A presença deles não é decorativa: pela Lei, era do sacerdote a responsabilidade de \"ensinar aos filhos de Israel todos os estatutos que o Senhor lhes tem falado por meio de Moisés\" (Lv 10:11), e fora a ausência disso que Azarias apontara como a ruína de Israel — \"sem sacerdote que o ensinasse, e sem lei\" (2Cr 15:3). Elisama sai de Jerusalém para fazer nas aldeias o que o cargo dele sempre mandou fazer e que quase ninguém fazia: \"ensinando entre o povo\" (2Cr 17:9).",
+  },
+  "jeorao-sacerdote": {
+    title: "Jeorão, sacerdote da comitiva de Jeosafá",
+    subtitle: "O segundo sacerdote da caravana do livro da lei (2Cr 17:8)",
+    text: "Último nome da lista dos onze que acompanharam os príncipes: \"e, com estes levitas, os sacerdotes, Elisama e Jeorão\" (2Cr 17:8). Tem o mesmo nome do filho do rei que herdará o trono e matará todos os irmãos à espada (2Cr 21:4) — e é a única coisa que os dois têm em comum. Este Jeorão passa pela Escritura fazendo o contrário: leva a lei a gente que não podia subir a Jerusalém para a ouvir. \"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). O cronista mede o reinado de Jeosafá por esta caravana e não pelo milhão de homens do rol militar do mesmo capítulo.",
+  },
+  "adna-capitao-dos-milhares": {
+    title: "Adna, capitão dos milhares de Judá",
+    subtitle: "O chefe da maior coluna do rol de Jeosafá (2Cr 17:14)",
+    text: "Abre o rol dos homens de guerra por casas paternas, e com o maior contingente de todos: \"o chefe Adna, e com ele trezentos mil homens valentes\" (2Cr 17:14). É o mesmo número que Asa tinha de Judá, \"que traziam pavês e lança\" (2Cr 14:8), agora repetido uma geração depois — sinal de que o reino se refez inteiro. Toda a resenha do capítulo, somadas as cinco colunas, passa de um milhão de homens, \"afora os que o rei tinha posto nas cidades fortes por todo o Judá\" (2Cr 17:19). O cronista alinha essa força imensa no mesmo capítulo em que conta a caravana de onze homens que saiu com um rolo e sem escolta — e é a caravana, não a resenha, que ele credita pela paz das fronteiras (2Cr 17:10).",
+  },
+  "joana-capitao-de-juda": {
+    title: "Joanã, capitão de Judá",
+    subtitle: "A segunda coluna do rol das casas paternas (2Cr 17:15)",
+    text: "\"E depois dele o capitão Joanã, e com ele duzentos e oitenta mil\" (2Cr 17:15) — segundo na ordem do rol de Jeosafá, logo abaixo de Adna. O número é exatamente o de Benjamim nos dias de Asa, \"duzentos e oitenta mil de Benjamim, que traziam escudo e atiravam com arco\" (2Cr 14:8): o cronista escreve como quem confere um livro de registro velho, casa por casa, para mostrar que nada se perdeu. Estas colunas \"estavam no serviço do rei\" (2Cr 17:19), de prontidão em Jerusalém, enquanto as guarnições ficavam nas cidades fortes. E, no capítulo em que Judá é de fato invadido, nenhuma delas peleja: \"Nesta batalha não tereis que pelejar; postai-vos, ficai parados, e vede a salvação do Senhor\" (2Cr 20:17).",
+  },
+  "amasias-filho-de-zicri": {
+    title: "Amasias, filho de Zicri",
+    subtitle: "O capitão que voluntariamente se entregou ao SENHOR (2Cr 17:16)",
+    text: "É o único homem de toda a resenha militar de Jeosafá que o cronista para para elogiar, e o elogio não tem nada a ver com o número dos seus: \"E depois Amasias, filho de Zicri, que voluntariamente se entregou ao Senhor, e com ele duzentos mil homens valentes\" (2Cr 17:16). A expressão descreve uma oferta espontânea, do tipo que a Lei chamava de voluntária, e é a mesma disposição com que os chefes de Israel se ofereceram no cântico de Débora — \"que voluntariamente se ofereceram entre o povo; bendizei ao Senhor\" (Jz 5:9). Num rol de cinco capitães e mais de um milhão de soldados, todos convocados por ofício, um homem entrou sem ser convocado, e é o nome que ficou.",
+  },
+  "eliada-de-benjamim": {
+    title: "Eliada, o valente de Benjamim",
+    subtitle: "O capitão dos duzentos mil armados de arco e escudo (2Cr 17:17)",
+    text: "\"E de Benjamim, Eliada, homem valente, e com ele duzentos mil, armados de arco e de escudo\" (2Cr 17:17). Benjamim foi sempre a tribo do arco e da funda — dos setecentos canhotos que atiravam pedra a um fio de cabelo sem errar (Jz 20:16) até os archeiros que se juntaram a Davi em Ziclague, \"armados de arco, e usavam tanto da mão direita como da esquerda em atirar pedras e em atirar flechas com o arco\" (1Cr 12:2). É a tribo que ficou com Judá quando o reino se dividiu, e o cronista a conta separada dentro do rol de Jeosafá, com a sua arma própria. Duzentos mil arcos guardados numa fronteira que, naquele reinado, ninguém tentou atravessar (2Cr 17:10).",
+  },
+  "jozabade-capitao-de-juda": {
+    title: "Jozabade, capitão de Judá",
+    subtitle: "A última coluna do rol, armada para a guerra (2Cr 17:18)",
+    text: "Fecha a resenha das casas paternas: \"E depois dele Jozabade, e com ele cento e oitenta mil, armados para a guerra\" (2Cr 17:18). A expressão o distingue dos outros — Adna e Joanã têm \"homens valentes\", Eliada tem gente \"armados de arco e de escudo\", e a coluna de Jozabade está pronta a sair a qualquer hora, equipada e engatada. Todo esse aparato termina numa frase que devolve o crédito a quem o cronista quer: \"Estes estavam no serviço do rei; afora os que o rei tinha posto nas cidades fortes por todo o Judá\" (2Cr 17:19) — e, três versículos antes, a razão real da paz do reino já tinha sido dada, e não era militar: \"E veio o temor do Senhor sobre todos os reinos das terras\" (2Cr 17:10).",
+  },
+  "micaias-filho-de-inla": {
+    title: "Micaías, filho de Inlá",
+    subtitle: "O profeta que contradisse quatrocentos e foi para o cárcere a pão de angústia (2Cr 18:6-27)",
+    text: "É apresentado pelo próprio rei que o manda chamar, e a apresentação é uma confissão sem querer: \"Ainda há um homem por quem podemos consultar ao Senhor; porém eu o odeio, porque nunca profetiza de mim o que é bom, senão sempre o mal; este é Micaías, filho de Inlá\" (2Cr 18:7). No caminho, o oficial tenta comprá-lo com um conselho amigável — \"seja, pois, também a tua palavra como a de um deles, e fala o que é bom\" (2Cr 18:12) — e recebe a única regra do ofício: \"Vive o Senhor, que o que meu Deus me disser, isso falarei\" (2Cr 18:13). Diante dos dois tronos começa com ironia, repetindo o coro dos quatrocentos (2Cr 18:14), e depois abre duas visões: \"Vi a todo o Israel disperso pelos montes, como ovelhas que não têm pastor\" (2Cr 18:16) — imagem que Jesus retomaria diante das multidões (Mt 9:36) — e a sala do trono do céu, com o exército celestial em pé e o espírito que se oferece para ser \"um espírito de mentira na boca de todos os seus profetas\" (2Cr 18:21). Leva uma bofetada de Zedequias (2Cr 18:23) e sai preso, com ração ditada pelo rei: \"pão de angústia\" e \"água de angústia\" (2Cr 18:26). Da porta do cárcere aposta a vida na palavra que falou: \"Se voltares em paz, o Senhor não tem falado por mim\" (2Cr 18:27). O relato paralelo está em 1Rs 22, e a Escritura não conta se ele chegou a ser solto.",
+  },
+  "amom-governador-da-cidade": {
+    title: "Amom, o governador da cidade de Samaria",
+    subtitle: "A quem Acabe entregou Micaías preso (2Cr 18:25)",
+    text: "Existe na Escritura para receber um preso. \"Então disse o rei de Israel: Tomai a Micaías, e tornai a levá-lo a Amom, o governador da cidade, e a Joás, filho do rei\" (2Cr 18:25). O verbo é \"tornai a levá-lo\": o profeta já tinha estado sob a guarda deles antes, o que explica por que Acabe sabia exatamente onde encontrá-lo quando Jeosafá pediu um profeta do SENHOR. A ordem que Amom recebe é curta e tem prazo: \"Colocai este homem na casa do cárcere; e sustentai-o com pão de angústia, e com água de angústia, até que eu volte em paz\" (2Cr 18:26). O prazo nunca venceu — o rei que o fixou morreu ao pôr do sol daquele mesmo dia, encostado em pé no carro (2Cr 18:34) —, e o carcereiro ficou com um preso cuja soltura dependia de um homem que não voltou.",
+  },
+  "joas-filho-do-rei-de-israel": {
+    title: "Joás, filho do rei de Israel",
+    subtitle: "O príncipe a quem, com Amom, foi entregue Micaías (2Cr 18:25)",
+    text: "Um filho de Acabe que aparece uma vez, para carregar um profeta de volta ao cárcere: \"Tomai a Micaías, e tornai a levá-lo a Amom, o governador da cidade, e a Joás, filho do rei\" (2Cr 18:25). Não é Acazias nem Jorão, os dois filhos de Acabe que reinariam depois dele (2Rs 1:17); é um príncipe da casa, com função de polícia na cidade. O que ele executa naquele dia é a última ordem que o pai deu antes de subir a Ramote — trancar o único homem que dissera a verdade e alimentá-lo com \"pão de angústia, e com água de angústia, até que eu volte em paz\" (2Cr 18:26). Ao anoitecer, quem estava no cárcere continuava vivo, e quem tinha dado a ordem, não: \"o rei de Israel susteve-se em pé no carro defronte dos sírios até à tarde; e morreu ao tempo do pôr do sol\" (2Cr 18:34).",
+  },
+  "amarias-sumo-sacerdote": {
+    title: "Amarias, o sumo sacerdote",
+    subtitle: "Posto por Jeosafá sobre todo o negócio do SENHOR no tribunal de Jerusalém (2Cr 19:11)",
+    text: "É o topo da instância superior que Jeosafá monta em Jerusalém: \"E eis que Amarias, o sumo sacerdote, presidirá sobre vós em todo o negócio do Senhor; e Zebadias, filho de Ismael, líder da casa de Judá, em todo o negócio do rei\" (2Cr 19:11). A repartição é notável para o mundo antigo: causas de culto e de lei divina para o sacerdote, causas do reino para o líder civil, e os dois no mesmo tribunal, sem que um engula o outro. Amarias é descendente de Zadoque (1Cr 6:11) e recebe com os demais o encargo mais curto e mais exigente do capítulo: \"Assim fazei no temor do Senhor, com fidelidade, e com coração íntegro\" (2Cr 19:9), sob a regra que descreve o próprio Deus — \"não há no Senhor nosso Deus iniqüidade nem acepção de pessoas, nem aceitação de suborno\" (2Cr 19:7).",
+  },
+  "zebadias-filho-de-ismael": {
+    title: "Zebadias, filho de Ismael",
+    subtitle: "Líder da casa de Judá, sobre todo o negócio do rei (2Cr 19:11)",
+    text: "É a autoridade civil do tribunal que Jeosafá instala em Jerusalém, ao lado do sumo sacerdote e com jurisdição distinta: \"Amarias, o sumo sacerdote, presidirá sobre vós em todo o negócio do Senhor; e Zebadias, filho de Ismael, líder da casa de Judá, em todo o negócio do rei\" (2Cr 19:11). A ele cabem as causas do reino — impostos, contratos, fronteiras, o que hoje se chamaria de direito civil e administrativo —, e a ele se aplica a mesma instrução dada aos juízes das cidades: \"Vede o que fazeis; porque não julgais da parte do homem, senão da parte do Senhor, e ele está convosco quando julgardes\" (2Cr 19:6). O capítulo termina com a bênção condicional que ele e Amarias levam para o trabalho: \"esforçai-vos, pois, e fazei-o; e o Senhor será com os bons\" (2Cr 19:11).",
+  },
+  "jaaziel-levita": {
+    title: "Jaaziel, filho de Zacarias, levita dos filhos de Asafe",
+    subtitle: "Sobre quem veio o Espírito no meio da congregação (2Cr 20:14-17)",
+    text: "Não é sacerdote nem está no santuário: está na fila. \"Então veio o Espírito do Senhor, no meio da congregação, sobre Jaaziel, filho de Zacarias, filho de Benaia, filho de Jeiel, filho de Matanias, levita, dos filhos de Asafe\" (2Cr 20:14) — quatro gerações de credencial para um homem que aparece uma vez na Bíblia, e o Espírito não desce sobre o rei que estava orando, desce sobre um cantor no meio do povo. Asafe era a casa de cantores que Davi pusera diante da arca (1Cr 16:5), e é dela que sai a palavra que desmonta a batalha antes dela: \"Não temais, nem vos assusteis por causa desta grande multidão; pois a peleja não é vossa, mas de Deus\" (2Cr 20:15). Dá o mapa antes de alguém ir olhar — a ladeira de Ziz, o fim do vale, o deserto de Jeruel (2Cr 20:16) — e a ordem de batalha mais estranha da Escritura: \"Nesta batalha não tereis que pelejar; postai-vos, ficai parados, e vede a salvação do Senhor para convosco\" (2Cr 20:17), eco do que Moisés dissera à beira do mar (Êx 14:13-14). É por causa dele que os cantores saem adiante dos armados no dia seguinte.",
+  },
+  "eliezer-filho-de-dodava": {
+    title: "Eliezer, filho de Dodava, de Maressa",
+    subtitle: "O profeta que anunciou o naufrágio dos navios de Társis (2Cr 20:37)",
+    text: "Fecha o reinado de Jeosafá como Azarias, filho de Odede, abrira o do pai dele: com um profeta atravessando a cena e uma frase só. \"Porém Eliezer, filho de Dodava, de Maressa, profetizou contra Jeosafá, dizendo: Porquanto te aliaste com Acazias, o Senhor despedaçou as tuas obras. E os navios se quebraram, e não puderam ir a Társis\" (2Cr 20:37). É de Maressa, a mesma cidade em cujo vale Asa vencera o milhão de Zerá (2Cr 14:9-10) — a geografia amarra o começo e o fim destes seis capítulos. A acusação não é comercial, é de sociedade: o rei que quase morreu por se aparentar com Acabe se aliou depois com o filho de Acabe, \"que procedeu com toda a impiedade\" (2Cr 20:35). O verbo do oráculo é duro e é literal: o SENHOR despedaçou a obra, e a madeira ficou na praia de Eziom-Geber.",
+  },
+  "azuba-filha-de-sili": {
+    title: "Azuba, filha de Sili",
+    subtitle: "A mãe do rei Jeosafá (2Cr 20:31)",
+    text: "Aparece no resumo do reinado, no lugar em que o cronista sempre põe a rainha-mãe: \"era da idade de trinta e cinco anos quando começou a reinar e vinte e cinco anos reinou em Jerusalém; e o nome de sua mãe era Azuba, filha de Sili\" (2Cr 20:31). Em Judá a mãe do rei era a gebirá, a mulher de mais poder na corte, e registrar o nome dela não é enfeite genealógico: é dizer de que casa veio a influência que criou o rei. O peso desse registro fica claro quando se olha para os dois lados: Maaca, avó de Jeosafá, foi deposta do posto por ter feito um horrível ídolo (2Cr 15:16), e Atalia, nora dele, mataria toda a descendência real para reinar (2Cr 22:10). Entre uma e outra está Azuba, e o filho que ela criou \"andou no caminho de Asa, seu pai, e não se desviou dele, fazendo o que era reto aos olhos do Senhor\" (2Cr 20:32).",
+  },
+  "acazias-rei-de-israel": {
+    title: "Acazias, rei de Israel",
+    subtitle: "O filho de Acabe com quem Jeosafá se aliou para fazer navios (2Cr 20:35-37)",
+    text: "O cronista o apresenta com a sentença já pronta: \"Jeosafá, rei de Judá, se aliou com Acazias, rei de Israel, que procedeu com toda a impiedade\" (2Cr 20:35). É filho de Acabe e de Jezabel, reinou dois anos em Samaria e é o rei que, caindo pelas grades do seu quarto alto, mandou consultar Baal-Zebube, deus de Ecrom, e ouviu de Elias que não desceria da cama em que subira (2Rs 1:2-4). A sociedade que ele faz com Judá é comercial: \"E aliou-se com ele, para fazerem navios que fossem a Társis; e fizeram os navios em Eziom-Geber\" (2Cr 20:36), no fim do golfo, a mesma enseada de onde a frota de Salomão saía para Ofir (1Rs 9:26). O fim é uma só linha: \"E os navios se quebraram, e não puderam ir a Társis\" (2Cr 20:37). É o segundo laço de Jeosafá com a casa de Acabe, e o segundo desastre — o primeiro quase lhe custou a vida em Ramote de Gileade (2Cr 18:31).",
+  },
+  "rei-da-siria-diante-de-ramote": {
+    title: "O rei da Síria diante de Ramote de Gileade",
+    subtitle: "Quem deu aos capitães dos carros o alvo único (2Cr 18:30)",
+    text: "Não é nomeado neste capítulo, mas é o senhor de Damasco a quem Acabe poupara depois de o vencer (1Rs 20:34) e que agora lhe cobra Ramote de Gileade. A ordem que ele dá é a mais estreita já registrada numa batalha antiga: \"Não pelejareis nem contra pequeno, nem contra grande; senão só contra o rei de Israel\" (2Cr 18:30) — a Síria não veio tomar terreno, veio matar um homem. O plano colide com o de Acabe, que se disfarça e manda o hóspede vestido de rei (2Cr 18:29), e por isso os carros cercam o alvo errado e desistem quando percebem o engano (2Cr 18:31-32). No fim, quem cumpre a ordem do rei da Síria não é a cavalaria dele: é um soldado sem nome que \"armou o arco e atirou a esmo\" (2Cr 18:33) e acertou, sem mirar, a única brecha de uma couraça.",
+  },
+  "azarias-filho-de-jeosafa": {
+    title: "Azarias, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — o primeiro da lista dos seis irmãos mortos à espada",
+    text: "Abre a lista que o capítulo faz questão de dar por extenso dois versículos antes de ela ser apagada: \"E teve irmãos, filhos de Jeosafá: Azarias, Jeiel, Zacarias, Asarias, Micael e Sefatias\" (2Cr 21:2). O pai deixara-o bem posto — \"muitos presentes de prata, de ouro e de coisas preciosíssimas, juntamente com cidades fortificadas em Judá\" (21:3) —, e ele não chegou a governar nenhuma delas: \"E, subindo Jeorão ao reino de seu pai, e havendo-se fortificado, matou a todos os seus irmãos à espada\" (21:4). O escrito de Elias dará a ele e aos irmãos o único elogio que a Escritura lhes faz, e o faz pela boca de Deus: eram \"melhores do que tu\" (2Cr 21:13).",
+  },
+  "jeiel-filho-de-jeosafa": {
+    title: "Jeiel, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — um dos seis irmãos do rei, herdeiro de uma cidade fortificada",
+    text: "Segundo nome da lista de 2Cr 21:2, filho do rei que \"buscou ao Senhor com todo o seu coração\" (2Cr 22:9). A herança que recebeu era de governo, não só de cofre: o pai repartiu entre os seis \"cidades fortificadas em Judá\" (21:3), o que fazia deles governadores de praças de fronteira — e provavelmente foi exatamente isso que o irmão mais velho não suportou. Todos morreram no mesmo dia, junto com \"alguns dos príncipes de Israel\" (21:4), no primeiro ato de um reinado de oito anos que terminaria \"sem deixar de si saudades\" (21:20).",
+  },
+  "zacarias-filho-de-jeosafa": {
+    title: "Zacarias, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — irmão de Jeorão, morto no dia em que o irmão se firmou no reino",
+    text: "Terceiro dos seis irmãos nomeados em 2Cr 21:2. O Cronista fecha o versículo com uma observação estranha e proposital — \"todos estes foram filhos de Jeosafá, rei de Israel\" —, chamando de rei de Israel o rei de Judá, como quem lembra que a casa de Davi respondia pelo povo inteiro. A chacina de 21:4 não foi tumulto: foi o passo seguinte a \"havendo-se fortificado\". Poder consolidado que estreia matando parentes é o retrato que o livro dá de Jeorão, e o preço aparece no fim do capítulo, quando os filisteus e os árabes levam os filhos e as mulheres dele e não sobra ninguém para o defender (21:17).",
+  },
+  "asarias-filho-de-jeosafa": {
+    title: "Asarias, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — o quarto irmão da lista, morto à espada em Jerusalém",
+    text: "Quarto nome de 2Cr 21:2. A ARC distingue-o do primeiro da lista por uma letra — Azarias e Asarias —, e essa quase repetição é típica das listas de Crônicas, onde nomes parecidos convivem na mesma casa. Ele e os irmãos representam, no capítulo, tudo o que Jeosafá tentou construir: filhos providos, cidades fortificadas, um reino repartido com prudência (21:3). Bastou um herdeiro para desfazer tudo em um versículo. Deus não deixou o crime sem palavra: a carta de Elias o lista como o segundo pecado de Jeorão, logo depois de ter andado \"no caminho dos reis de Israel\" (2Cr 21:13).",
+  },
+  "micael-filho-de-jeosafa": {
+    title: "Micael, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — irmão do rei, entre os que Elias chamou de melhores do que ele",
+    text: "Quinto dos seis nomes de 2Cr 21:2. O nome significa \"quem é como Deus?\" e é o mesmo do príncipe angélico de Daniel (Dn 10:13) — em Judá, nomes assim eram confissão de fé posta na criança. O que a Escritura guarda dele é o fim: \"matou a todos os seus irmãos à espada, como também a alguns dos príncipes de Israel\" (2Cr 21:4). O julgamento de Deus sobre esse dia veio por escrito, de fora do reino e pela mão do profeta do Norte: \"e também mataste a teus irmãos da casa de teu pai, melhores do que tu\" (2Cr 21:13).",
+  },
+  "sefatias-filho-de-jeosafa": {
+    title: "Sefatias, filho de Jeosafá",
+    subtitle: "2Cr 21:2-4 — o último da lista dos seis irmãos de Jeorão",
+    text: "Fecha a lista de 2Cr 21:2. Seu nome quer dizer \"o SENHOR julgou\", e o capítulo em que ele aparece é justamente o do juízo escrito: o flagelo anunciado sobre o povo, os filhos, as mulheres e as fazendas do irmão que o matou, e a doença nas entranhas \"até que elas saiam, de dia em dia\" (2Cr 21:14-15). Cumpriu-se letra por letra em dois anos (21:18-19). Dos sete filhos de Jeosafá, só o assassino chegou a reinar — e é o único de quem o texto diz que \"foi sem deixar de si saudades\" (21:20).",
+  },
+  "jeoacaz-o-mais-moco-dos-filhos-de-jeorao": {
+    title: "Jeoacaz, o mais moço dos filhos de Jeorão",
+    subtitle: "2Cr 21:17 — o único filho que os filisteus e os árabes não levaram",
+    text: "Quando o SENHOR despertou contra Jeorão \"o espírito dos filisteus e dos árabes, que estavam do lado dos etíopes\" (2Cr 21:16), o saque foi total: \"levaram todos os bens que se achou na casa do rei, como também a seus filhos e a suas mulheres; de modo que não lhe deixaram filho algum, senão a Jeoacaz, o mais moço de seus filhos\" (2Cr 21:17). Este menino poupado é o Acazias do capítulo seguinte — os moradores de Jerusalém o farão rei \"porque a tropa, que viera com os árabes ao arraial, tinha matado a todos os mais velhos\" (2Cr 22:1). A casa de Davi passa por um fio, e passa pelo caçula: é o primeiro de três estrangulamentos seguidos da linhagem, antes que Atalia tente apagá-la de vez (22:10).",
+  },
+  "azarias-filho-de-jeroao": {
+    title: "Azarias, filho de Jeroão",
+    subtitle: "2Cr 23:1 — o primeiro dos cinco chefes de cem que Joiada tomou em aliança",
+    text: "\"Porém no sétimo ano Joiada se animou, e tomou consigo em aliança os chefes de cem, a Azarias, filho de Jeroão\" (2Cr 23:1). É oficial de tropa, não homem do templo, e o seu nome abre a lista dos cinco que fizeram o levante possível — 2 Reis conta o mesmo dia sem dar um nome sequer (2Rs 11:4); o Cronista dá os cinco, com os patronímicos, porque num pacto desses se sabe exatamente quem estava dentro. Recebe das mãos do sacerdote as armas guardadas no santuário havia mais de um século: \"as lanças, os escudos e as rodelas que foram do rei Davi, os quais estavam na casa de Deus\" (23:9). No fim do dia é ele e os seus que conduzem o menino do templo ao trono real (23:20).",
+  },
+  "ismael-filho-de-joana": {
+    title: "Ismael, filho de Joanã",
+    subtitle: "2Cr 23:1 — o segundo chefe de cem da aliança do sétimo ano",
+    text: "Nomeado em \"e tomou consigo em aliança os chefes de cem, a Azarias, filho de Jeroão, a Ismael, filho de Joanã\" (2Cr 23:1). Entrar nessa aliança era arriscar a cabeça: Atalia reinava havia seis anos e já mostrara o que fazia com a descendência real da casa de Judá (22:10). O plano que ele executa é de uma precisão de quem o preparou por seis anos — três turmas nas portas, o povo nos pátios, os levitas armados em volta do rei e uma linha que ninguém cruza: \"Porém ninguém entre na casa do Senhor, senão os sacerdotes e os levitas que ministram\" (23:6). Golpe de estado que protege o santuário no meio da operação é coisa rara na história de qualquer povo.",
+  },
+  "maaseias-filho-de-adaias": {
+    title: "Maaséias, filho de Adaías",
+    subtitle: "2Cr 23:1 — o quarto dos chefes de cem que percorreram Judá ajuntando os levitas",
+    text: "Nomeado em 2Cr 23:1 entre os cinco centuriões da aliança. A tarefa que coube a estes homens não foi só militar: \"Estes percorreram a Judá e ajuntaram os levitas de todas as cidades de Judá e os chefes dos pais de Israel, e vieram para Jerusalém\" (2Cr 23:2) — antes de haver tropa houve convocação, cidade por cidade, feita sem que a rainha soubesse. E a ordem que recebem no dia é dupla: proteger o menino de todos os lados (23:7) e tirar Atalia dali sem sujar o santuário — \"Tirai-a para fora das fileiras, e o que a seguir, morrerá à espada; porque dissera o sacerdote: Não a mateis na casa do Senhor\" (2Cr 23:14).",
+  },
+  "elisafate-filho-de-zicri": {
+    title: "Elisafate, filho de Zicri",
+    subtitle: "2Cr 23:1 — o quinto chefe de cem da aliança de Joiada",
+    text: "Fecha a lista de 2Cr 23:1. Com os outros quatro, ele é a prova de que o sétimo ano não começou com um milagre e sim com uma conspiração paciente: um sacerdote que \"se animou\", cinco oficiais de tropa que aceitaram, e um país inteiro chamado às escondidas. Diante da congregação reunida, Joiada mostra o motivo, e não é dinástico e sim de palavra dada: \"Eis que o filho do rei reinará, como o Senhor falou a respeito dos filhos de Davi\" (2Cr 23:3) — a promessa de 2Sm 7:16 posta em pé diante de gente que a sabia de cor. No fim do dia, o povo derruba a casa de Baal, mata Matã diante dos altares, e \"a cidade ficou em paz\" (23:17,21).",
+  },
+  "zacarias-filho-de-joiada": {
+    title: "Zacarias, filho do sacerdote Joiada",
+    subtitle: "2Cr 24:20-22 — o profeta revestido do Espírito e apedrejado no pátio da casa do SENHOR",
+    text: "É o filho do homem que criou o rei. Depois que Joiada morre e Judá deixa a casa do SENHOR para servir \"às imagens do bosque e aos ídolos\" (2Cr 24:18), Deus manda profetas, e não lhe dão ouvidos; então vem o último e o mais próximo: \"E o Espírito de Deus revestiu a Zacarias, filho do sacerdote Joiada, o qual se pôs em pé acima do povo, e lhes disse: Assim diz Deus: Por que transgredis os mandamentos do Senhor, de modo que não possais prosperar? Porque deixastes ao Senhor, também ele vos deixará\" (2Cr 24:20). A resposta é a ingratidão mais nua da Escritura: \"Assim o rei Joás não se lembrou da beneficência que Joiada, pai de Zacarias, lhe fizera; porém matou-lhe o filho\" (24:22) — apedrejado \"por mandado do rei, no pátio da casa do Senhor\" (24:21). Morrendo, disse seis palavras que atravessam o Antigo Testamento inteiro: \"O Senhor o verá, e o requererá\". Um ano depois o SENHOR requereu (24:23-25); e o Senhor Jesus fecharia com o nome dele a conta de todo o sangue justo derramado, \"desde o sangue de Abel, o justo, até ao sangue de Zacarias\" (Mt 23:35).",
+  },
+  "zabade-filho-de-simeate": {
+    title: "Zabade, filho de Simeate, a amonita",
+    subtitle: "2Cr 24:25-26 — um dos dois servos que feriram o rei Joás na sua cama",
+    text: "\"E, quando os sírios se retiraram, deixaram-no gravemente ferido; então seus servos conspiraram contra ele por causa do sangue do filho do sacerdote Joiada, e o feriram na sua cama, e morreu\" (2Cr 24:25). O Cronista dá o nome dele e o da mãe, e o detalhe da mãe é a ponta do relato: \"Zabade, filho de Simeate, a amonita\" (24:26) — dois estrangeiros de nascimento executam, dentro do palácio, a conta que um profeta de Judá deixou em aberto ao morrer (24:22). Em 2Rs 12:21 a grafia do nome é Jozacar, e o lugar é a casa de Milo. O rei que reparou o templo não foi para os sepulcros dos reis (24:25); o sacerdote que ele mandou matar o pai tinha ido (24:16). Amazias, filho de Joás, executaria estes dois — mas poupou os filhos deles, conforme a lei (2Cr 25:3-4).",
+  },
+  "jozabade-filho-de-sinrite": {
+    title: "Jeozabade, filho de Sinrite, a moabita",
+    subtitle: "2Cr 24:26 — o segundo dos servos que conspiraram contra Joás",
+    text: "\"Estes, pois, foram os que conspiraram contra ele; Zabade, filho de Simeate, a amonita, e Jeozabade, filho de Sinrite, a moabita\" (2Cr 24:26). Duas mães estrangeiras, uma de Amom e outra de Moabe, nomeadas de propósito: o rei que abandonou o Deus de Israel morre pelas mãos de filhos de mulheres das nações, dentro do próprio quarto. O motivo está escrito e não é ambição: \"por causa do sangue do filho do sacerdote Joiada\" (24:25). Em 2Rs 12:21 o nome vem como Jozabade, filho de Somer. O epitáfio é o mesmo do avô Jeorão: \"e o sepultaram na cidade de Davi, porém não nos sepulcros dos reis\" (2Cr 24:25).",
+  },
+  "zacarias-entendido-nas-visoes": {
+    title: "Zacarias, que era entendido nas visões de Deus",
+    subtitle: "2Cr 26:5 — o mestre em cujos dias Uzias buscou ao SENHOR e prosperou",
+    text: "\"Porque deu-se a buscar a Deus nos dias de Zacarias, que era entendido nas visões de Deus; e nos dias em que buscou ao Senhor, Deus o fez prosperar\" (2Cr 26:5). É uma das ligações mais explícitas da Escritura entre ter um mestre e ir bem: a prosperidade do reinado mais longo de Judá está amarrada, na mesma frase, aos dias de um homem de quem não se diz mais nada — nem a família, nem a tribo, nem quando morreu. Esse silêncio é o peso da ficha: enquanto houve alguém entendido nas visões de Deus ao lado do rei, o rei buscou; o capítulo não o menciona outra vez, e é depois disso que \"exaltou-se o seu coração até se corromper\" (26:16). Não é o mesmo Zacarias do livro profético, nem o filho de Joiada apedrejado dois reinados antes (24:20-22).",
+  },
+  "azarias-sacerdote-que-resistiu-a-uzias": {
+    title: "Azarias, o sumo sacerdote que resistiu ao rei Uzias",
+    subtitle: "2Cr 26:17-20 — o homem que entrou atrás do rei no santo lugar com oitenta sacerdotes valentes",
+    text: "\"Porém o sacerdote Azarias entrou após ele, e com ele oitenta sacerdotes do Senhor, homens valentes\" (2Cr 26:17). O adjetivo é do texto: é preciso valentia para barrar, dentro do templo, um rei com cinquenta anos de vitórias. A frase que lhe diz não deixa margem: \"A ti, Uzias, não compete queimar incenso perante o Senhor, mas aos sacerdotes, filhos de Arão, que são consagrados para queimar incenso; sai do santuário, porque transgrediste\" (26:18) — a lei que invoca foi escrita depois de Corá, \"que nenhum estranho, que não for da descendência de Arão, se chegue para acender incenso perante o Senhor\" (Nm 16:40). Não precisou pôr a mão nele: \"a lepra lhe saiu à testa perante os sacerdotes, na casa do Senhor, junto ao altar do incenso\" (26:19), e então \"o sumo sacerdote Azarias olhou para ele, como também todos os sacerdotes... e apressuradamente o lançaram fora\" (26:20). O sacerdote que resistiu ao rei salvou o rei de coisa pior, e salvou o santuário.",
+  },
+  "jeiel-o-escrivao-de-uzias": {
+    title: "Jeiel, o escrivão de Uzias",
+    subtitle: "2Cr 26:11 — a mão que fez a resenha do exército de trezentos e sete mil e quinhentos",
+    text: "\"Tinha também Uzias um exército de homens destros na guerra, que saíam à guerra em tropas, segundo o número da resenha feita por mão de Jeiel, o escrivão\" (2Cr 26:11). É o funcionário do recenseamento militar: quem escreve os nomes, conta as casas dos pais e fecha os números que o capítulo dá com precisão de arquivo — \"O total dos chefes dos pais, homens valentes, era de dois mil e seiscentos\" (26:12) e, debaixo deles, \"um exército guerreiro de trezentos e sete mil e quinhentos homens\" (26:13). Em Crônicas, contar gente é ofício respeitável quando se conta para servir, e ruína quando se conta para se gabar — foi por um recenseamento de vaidade que Davi trouxe peste sobre Israel (1Cr 21:1-7). A força que Jeiel registrou nestes rolos é exatamente a que fez o coração do rei se exaltar (26:15-16).",
+  },
+  "maaseias-oficial-de-uzias": {
+    title: "Maaséias, oficial de Uzias",
+    subtitle: "2Cr 26:11 — o oficial que respondia pela resenha ao lado do escrivão",
+    text: "Aparece na mesma linha que o escrivão e o capitão: \"segundo o número da resenha feita por mão de Jeiel, o escrivão, e Maaséias, oficial, sob a direção de Hananias, um dos capitàes do rei\" (2Cr 26:11). São três funções encadeadas — quem escreve, quem responde pela conta e quem comanda —, e o Cronista as registra porque este é um exército administrado, com arsenal próprio: \"E preparou Uzias, para todo o exército, escudos, lanças, capacetes, couraças e arcos, e até fundas para atirar pedras\" (26:14). A ordem do capítulo é implacável: primeiro os poços e as vinhas, depois as tropas e as máquinas de guerra, e então o versículo que vira a página — \"Mas, havendo-se já fortificado, exaltou-se o seu coração até se corromper\" (26:16).",
+  },
+  "hananias-um-dos-capitaes-do-rei": {
+    title: "Hananias, um dos capitàes do rei",
+    subtitle: "2Cr 26:11 — o comandante sob cuja direção o exército de Uzias saía em tropas",
+    text: "\"sob a direção de Hananias, um dos capitàes do rei\" (2Cr 26:11). O texto o põe acima do escrivão e do oficial da resenha: é o homem que leva a campo as tropas contadas — trezentos e sete mil e quinhentos homens \"que faziam a guerra com força belicosa, para ajudar o rei contra os inimigos\" (26:13). É com esse exército que Uzias quebra os muros de Gate, de Jabne e de Asdode (26:6) e é ajudado contra os árabes de Gur-Baal e contra os meunitas (26:7) — e o crédito, o Cronista dá a quem é devido: \"E Deus o ajudou contra os filisteus\" (26:7), \"porque foi maravilhosamente ajudado, até que se fortificou\" (26:15). Todo o poderio que Hananias comandava é, no capítulo, a matéria-prima da queda do seu rei.",
+  },
+  "zicri-valente-de-efraim": {
+    title: "Zicri, homem valente de Efraim",
+    subtitle: "2Cr 28:7 • o soldado do Norte que matou três homens da casa de Acaz num só dia",
+    text: "\"E Zicri, homem valente de Efraim, matou a Maasias, filho do rei, e a Azricão, o mordomo, e a Elcana, o segundo depois do rei\" (2Cr 28:7). O Cronista para a narrativa da matança geral — cento e vinte mil valentes de Judá num só dia (2Cr 28:6) — para nomear um soldado e três das suas vítimas, e não é por curiosidade: as três eram o filho do rei, o chefe do palácio e o segundo homem do reino, isto é, o gabinete inteiro de Acaz caiu na mão de um efraimita anônimo até este versículo. O nome Zicri quer dizer \"lembrança\" — e é a lembrança que Judá levaria daquele dia. Ele não é herói de Israel na leitura do capítulo: poucos versículos adiante, um profeta diz ao exército em que ele serviu que a vitória fora entregue por Deus e usada \"com uma raiva tal, que chegou até aos céus\" (2Cr 28:9). O golpe que decapitou a corte de Jerusalém não fez de Samaria a justa da história; fez dela ré do mesmo tribunal.",
+  },
+  "maasias-filho-do-rei": {
+    title: "Maasias, filho do rei",
+    subtitle: "2Cr 28:7 • o filho de Acaz morto por Zicri na derrota diante de Israel",
+    text: "\"E Zicri, homem valente de Efraim, matou a Maasias, filho do rei\" (2Cr 28:7). É um dos filhos de Acaz — provavelmente já em idade de guerra, no campo com o exército — e a Escritura não lhe dá mais do que o nome e o parentesco. A ironia do capítulo é que este mesmo pai já tinha queimado filhos seus no vale do filho de Hinom, \"conforme as abominações dos gentios que o Senhor tinha expulsado de diante dos filhos de Israel\" (2Cr 28:3): a casa que oferecia crianças ao fogo perdeu um herdeiro à espada de um estrangeiro. O nome Maasias significa \"obra do SENHOR\", e ele morre num reinado que fez o contrário de tudo o que o SENHOR mandou. A sucessão acabaria caindo sobre outro filho da casa, Ezequias, que abriria no primeiro mês do seu primeiro ano as portas que este pai tinha fechado (2Cr 29:3).",
+  },
+  "azricao-o-mordomo": {
+    title: "Azricão, o mordomo da casa do rei",
+    subtitle: "2Cr 28:7 • o chefe do palácio de Acaz, morto no mesmo dia que o filho do rei",
+    text: "\"E Zicri, homem valente de Efraim, matou a Maasias, filho do rei, e a Azricão, o mordomo\" (2Cr 28:7). O \"mordomo\" é o oficial \"sobre a casa\", o cargo mais alto da administração de Judá depois do trono — o mesmo posto de Sebna e depois de Eliaquim, a quem Isaías veria receber \"a chave da casa de Davi\" (Is 22:15,20-22). Quem ocupa esse lugar guarda o palácio, o selo e o acesso ao rei; matá-lo em campo é decapitar o governo, não apenas o exército. Azricão morre servindo a um rei que, no mesmo capítulo, esvaziaria a casa do SENHOR e a casa do rei para pagar tributo à Assíria (2Cr 28:21). O nome significa \"meu socorro se levantou\" — num capítulo em que Judá procurou socorro em Damasco e na Assíria e não achou em nenhuma das duas.",
+  },
+  "elcana-o-segundo-depois-do-rei": {
+    title: "Elcana, o segundo depois do rei",
+    subtitle: "2Cr 28:7 • o vice-rei de Judá caído no campo diante de Israel",
+    text: "\"E Zicri, homem valente de Efraim, matou a Maasias, filho do rei, e a Azricão, o mordomo, e a Elcana, o segundo depois do rei\" (2Cr 28:7). O título é raro na Escritura e mede exatamente o tamanho do desastre: é o posto que José teve no Egito, quando Faraó lhe disse \"somente no trono eu serei maior que tu\" (Gn 41:40), e o que Mordecai receberia na Pérsia, \"o segundo depois do rei Assuero\" (Et 10:3). Judá perdeu num dia o príncipe, o mordomo e o segundo homem do reino. O Cronista nomeia os três porque a sua tese está aí: \"porquanto deixaram ao Senhor Deus de seus pais\" (2Cr 28:6) — a derrota não foi de tática, foi de aliança rompida. Elcana quer dizer \"Deus adquiriu\"; é o nome do pai de Samuel (1Sm 1:1), e aparece aqui na lista de mortos de um reinado que preferiu Baalins.",
+  },
+  "odede-profeta": {
+    title: "Obede, o profeta do SENHOR em Samaria",
+    subtitle: "2Cr 28:9-11 • saiu ao encontro do exército vitorioso e mandou soltar os cativos",
+    text: "\"Mas estava ali um profeta do Senhor, cujo nome era Obede, o qual saiu ao encontro do exército que vinha para Samaria\" (2Cr 28:9). Ele profetiza no reino do Norte, e a sua palavra é contra os vencedores. Reconhece a mão de Deus na batalha — \"irando-se o Senhor Deus de vossos pais contra Judá, os entregou na vossa mão\" — e denuncia o excesso na mesma frase: \"e vós os matastes com uma raiva tal, que chegou até aos céus\" (2Cr 28:9). Depois vira o espelho: \"porventura não sois vós mesmos culpados contra o Senhor vosso Deus?\" (2Cr 28:10). E ordena o que nenhum exército faz: \"tornai a enviar os prisioneiros que trouxestes cativos de vossos irmãos; porque o ardor da ira do Senhor está sobre vós\" (2Cr 28:11). Foi obedecido no ato — quatro cabeças de Efraim se levantaram, os homens armados largaram cativos e despojo (2Cr 28:12-14), e os presos voltaram vestidos, calçados, ungidos e sobre jumentos até Jericó (2Cr 28:15). É um dos raros lugares da Escritura em que a pregação profética é acatada de imediato, e pelo lado que tinha tudo a perder com ela. Amós, um século antes, já dissera contra Edom o mesmo pecado: \"perseguiu a seu irmão à espada, e aniquilou as suas misericórdias\" (Am 1:11).",
+  },
+  "azarias-filho-de-joana": {
+    title: "Azarias, filho de Joanã",
+    subtitle: "2Cr 28:12 • o primeiro dos quatro cabeças de Efraim que barraram o exército",
+    text: "\"Então se levantaram alguns homens dentre os cabeças dos filhos de Efraim, a saber, Azarias, filho de Joanã, Berequias, filho de Mesilemote, Jeizquias, filho de Salum, e Amasa, filho de Hadlai, contra os que voltavam da batalha\" (2Cr 28:12). Azarias encabeça a lista, e o que estes quatro fazem é politicamente suicida: põem-se diante do próprio exército vitorioso, carregado de duzentos mil cativos e de grande despojo, para dizer que a vitória não pode entrar na cidade. O argumento deles não acusa Judá, acusa Samaria: \"além da nossa culpa contra o Senhor, vós intentais acrescentar mais a nossos pecados e a nossas culpas, sendo que já temos grande culpa, e já o ardor da ira está sobre Israel\" (2Cr 28:13). O nome Azarias significa \"o SENHOR ajudou\". Deu certo: \"os homens armados deixaram os cativos e o despojo diante dos príncipes e de toda a congregação\" (2Cr 28:14). Quatro homens nomeados fizeram um exército pôr no chão o que tinha tomado.",
+  },
+  "berequias-filho-de-mesilemote": {
+    title: "Berequias, filho de Mesilemote",
+    subtitle: "2Cr 28:12 • um dos quatro cabeças de Efraim que se levantaram contra os que voltavam da batalha",
+    text: "O Cronista faz questão de nomear os quatro, um a um: \"Azarias, filho de Joanã, Berequias, filho de Mesilemote, Jeizquias, filho de Salum, e Amasa, filho de Hadlai\" (2Cr 28:12). São cabeças de casas de Efraim — a tribo que dá nome ao reino do Norte inteiro — e é justamente da tribo mais comprometida com a apostasia de Jeroboão que sai, aqui, o gesto mais evangélico do livro. Berequias quer dizer \"o SENHOR abençoou\". Depois de os soldados largarem a presa, o versículo seguinte diz que \"os homens que foram apontados por seus nomes se levantaram\" (2Cr 28:15) e cuidaram pessoalmente dos cativos: vestiram, calçaram, deram de comer e de beber, ungiram e puseram os fracos sobre jumentos até Jericó. Estes nomes não voltam a aparecer na Escritura; o que fizeram atravessou os séculos até virar a forma exata da parábola do bom samaritano, na mesma estrada de Jericó (Lc 10:33-35).",
+  },
+  "jeizquias-filho-de-salum": {
+    title: "Jeizquias, filho de Salum",
+    subtitle: "2Cr 28:12 • um dos quatro de Efraim que impediram a entrada dos cativos de Judá em Samaria",
+    text: "Terceiro da lista de 2Cr 28:12, Jeizquias é um dos \"cabeças dos filhos de Efraim\" que se põem \"contra os que voltavam da batalha\". O nome dele é uma variante do nome de Ezequias — \"o SENHOR fortalece\" —, e é uma coincidência que o próprio texto explora: enquanto em Jerusalém um Acaz esvaziava a casa de Deus, em Samaria um homônimo do futuro Ezequias parava um exército em nome do SENHOR. A fala dos quatro é curta e teologicamente exata: trazer aqueles cativos para dentro não seria vitória, seria culpa acumulada — \"já temos grande culpa, e já o ardor da ira está sobre Israel\" (2Cr 28:13). Reconhecer a própria conta antes de julgar a do outro é o que abre a porta desta cena inteira; era isso que o profeta Obede acabara de pregar (2Cr 28:10). Poucos anos depois, a ira que eles reconheceram cairia: Samaria seria levada pela Assíria (2Rs 17:6).",
+  },
+  "amasa-filho-de-hadlai": {
+    title: "Amasa, filho de Hadlai",
+    subtitle: "2Cr 28:12 • o quarto cabeça de Efraim, entre os que vestiram e calçaram os cativos",
+    text: "Fecha a lista dos quatro nomeados em 2Cr 28:12, e é com esse grupo que o capítulo dá a volta. Depois que os soldados largam a presa, o texto os identifica outra vez pelo mesmo detalhe: \"E os homens que foram apontados por seus nomes se levantaram, e tomaram os cativos, e vestiram do despojo a todos os que dentre eles estavam nus; e vestiram-nos, e calçaram-nos, e deram-lhes de comer e de beber, e os ungiram, e a todos os que estavam fracos levaram sobre jumentos, e conduziram-nos a Jericó, à cidade das palmeiras, a seus irmãos. Depois voltaram para Samaria\" (2Cr 28:15). Seis verbos de misericórdia praticados com o despojo do inimigo — pagaram a ajuda com o que tinham tomado. Jesus poria os mesmos gestos na boca do Rei no juízo final: \"Estava nu, e vestistes-me\" (Mt 25:36). Nada mais se sabe de Amasa; a Escritura guarda o nome dele por causa de um só dia.",
+  },
+  "tiglate-pileser-rei-da-assiria": {
+    title: "Tiglate-Pileser, rei da Assíria",
+    subtitle: "2Cr 28:20-21 • o socorro que Acaz comprou, e que veio para apertar",
+    text: "\"Naquele tempo o rei Acaz mandou pedir aos reis da Assíria que o ajudassem\" (2Cr 28:16), e o que veio está no versículo 20: \"E veio a ele Tiglate-Pileser, rei da Assíria; porém o pôs em aperto, e não o fortaleceu\" (2Cr 28:20). A conta foi paga com o que não era de Acaz: \"Porque Acaz tomou despojos da casa do Senhor, e da casa do rei, e dos príncipes, e os deu ao rei da Assíria; porém não o ajudou\" (2Cr 28:21). Reis conta o mesmo episódio pelo lado do recado — \"Eu sou teu servo e teu filho; sobe, e livra-me\" (2Rs 16:7) — e pelo resultado militar: o assírio tomou Damasco, levou o povo para Quir e matou Rezim (2Rs 16:9). Este mesmo rei já tinha arrancado Gileade, a Galileia e Naftali do reino do Norte (2Rs 15:29). Isaías avisara Acaz de que chamar aquele exército era chamar um rio que passa dos leitos: \"o Senhor fará subir sobre eles as águas do rio, fortes e impetuosas, isto é, o rei da Assíria\" (Is 8:7). Quem contrata o império paga em prata, paga em fé e continua pagando.",
+  },
+  "abia-filha-de-zacarias": {
+    title: "Abia, filha de Zacarias",
+    subtitle: "2Cr 29:1 • a mãe de Ezequias, mulher na casa do rei que fechou o templo",
+    text: "\"Tinha Ezequias vinte e cinco anos de idade, quando começou a reinar, e reinou vinte e nove anos em Jerusalém; e era o nome de sua mãe Abia, filha de Zacarias\" (2Cr 29:1). Em Reis o nome dela aparece na forma abreviada, \"Abi, filha de Zacarias\" (2Rs 18:2). É a rainha-mãe de Judá, cargo com peso real na corte, e criou o filho dentro do reinado de Acaz — o rei das imagens fundidas, do incenso no vale de Hinom e das portas trancadas (2Cr 28:2-3,24). Que desse palácio tenha saído o rei de quem se diz \"E fez o que era reto aos olhos do Senhor, conforme a tudo quanto fizera Davi, seu pai\" (2Cr 29:2) é o tipo de dado que o Cronista registra sem explicar. Há quem veja no pai dela o \"Zacarias\" que Isaías tomou por testemunha fiel (Is 8:2), e também o Zacarias \"entendido nas visões de Deus\" que instruiu Uzias (2Cr 26:5): uma linhagem de instrução no meio de uma corte apóstata.",
+  },
+  "maate-filho-de-amasai": {
+    title: "Maate, filho de Amasai, dos filhos dos coatitas",
+    subtitle: "2Cr 29:12 • o primeiro levita que se levantou quando o rei mandou limpar o templo",
+    text: "\"Então se levantaram os levitas, Maate, filho de Amasai, e Joel, filho de Azarias, dos filhos dos coatitas\" (2Cr 29:12). O verbo é o do capítulo inteiro: levantaram-se. Ezequias tinha acabado de pregar na praça oriental que os pais \"desviaram os seus rostos do tabernáculo do Senhor, e lhe deram as costas\" (2Cr 29:6), e a resposta não foi discurso, foi trabalho braçal. Maate é coatita, da casa que no deserto carregava ao ombro as coisas mais santas — a arca, a mesa, o candeeiro, os altares (Nm 4:4-15) —, e o serviço que lhe cabe agora é o inverso e igualmente sagrado: tirar de dentro da casa a imundícia acumulada em dezesseis anos de portas fechadas. Ele e os outros treze \"ajuntaram a seus irmãos, e santificaram-se e vieram conforme ao mandado do rei, pelas palavras do Senhor, para purificarem a casa do Senhor\" (2Cr 29:15) — a ordem veio do rei, mas o texto faz questão de dizer de quem eram as palavras.",
+  },
+  "joel-filho-de-azarias-levita": {
+    title: "Joel, filho de Azarias, dos filhos dos coatitas",
+    subtitle: "2Cr 29:12 • o segundo coatita da lista dos catorze que purificaram a casa",
+    text: "Aparece emparelhado com Maate no primeiro par da lista: \"Maate, filho de Amasai, e Joel, filho de Azarias, dos filhos dos coatitas\" (2Cr 29:12). O Cronista organiza os catorze por casas — dois coatitas, dois meraritas, dois gersonitas, e depois dois de Elisafã, dois de Asafe, dois de Hemã e dois de Jedutum —, e essa arrumação é a prova de que o avivamento de Ezequias não foi improviso emocional: reativou a estrutura levítica de Números 3 e das turmas de Davi (1Cr 23-26), casa por casa. Joel quer dizer \"o SENHOR é Deus\". O trabalho concreto destes homens está no versículo 16: os sacerdotes tiravam do santuário para o pátio, \"e os levitas a tomaram, para a levarem para fora, ao ribeiro de Cedrom\". Dezesseis dias de carreto, do primeiro ao décimo sexto dia do primeiro mês (2Cr 29:17), para que se pudesse acender de novo o altar.",
+  },
+  "quis-filho-de-abdi": {
+    title: "Quis, filho de Abdi, dos filhos de Merari",
+    subtitle: "2Cr 29:12 • um dos dois meraritas entre os catorze levitas de Ezequias",
+    text: "\"e dos filhos de Merari, Quis, filho de Abdi, e Azarias, filho de Jealelel\" (2Cr 29:12). Merari é a terceira casa de Levi, e no deserto ficou com a parte mais pesada e menos vistosa do tabernáculo: as tábuas, as barras, as colunas, as bases e as estacas (Nm 3:36-37; 4:31-32) — carga de carroça, não de ombro. É gente de estrutura, e é exatamente disso que a casa do SENHOR precisava no primeiro mês do primeiro ano de Ezequias, com as portas arrebentadas e o santuário cheio de entulho. Quis leva o nome do pai de Saul (1Sm 9:1) e reaparece nas genealogias levíticas de Merari (1Cr 23:21-22). Ele está entre os que \"santificaram-se e vieram conforme ao mandado do rei, pelas palavras do Senhor, para purificarem a casa do Senhor\" (2Cr 29:15), e entre os que, no fim do capítulo, tiveram de ajudar a esfolar os holocaustos porque os sacerdotes eram poucos demais (2Cr 29:34).",
+  },
+  "azarias-filho-de-jealelel": {
+    title: "Azarias, filho de Jealelel, dos filhos de Merari",
+    subtitle: "2Cr 29:12 • o segundo merarita da lista, entre os que tiraram a imundícia do santuário",
+    text: "Nomeado no mesmo fôlego que Quis: \"dos filhos de Merari, Quis, filho de Abdi, e Azarias, filho de Jealelel\" (2Cr 29:12). O nome significa \"o SENHOR ajudou\", e é o nome mais repetido do livro das Crônicas — o que torna esta lista ainda mais notável, porque o Cronista podia ter escrito \"e os levitas se levantaram\" e passado adiante; em vez disso escreveu catorze nomes com os nomes dos pais. É a assinatura teológica do livro: Deus conta e guarda quem trabalha na sua casa, inclusive quem só carregou balde. O ofício deles não é sacerdotal e o texto delimita bem: quem entra no templo é o sacerdote, o levita recebe no pátio e leva para fora, ao ribeiro de Cedrom (2Cr 29:16). Terminada a limpeza no décimo sexto dia (2Cr 29:17), estes mesmos homens estariam de pé com os instrumentos de Davi quando o holocausto e o cântico começaram juntos (2Cr 29:26-27).",
+  },
+  "joa-filho-de-zima": {
+    title: "Joá, filho de Zima, dos gersonitas",
+    subtitle: "2Cr 29:12 • um dos dois gersonitas entre os catorze levitas da purificação",
+    text: "\"e dos gersonitas, Joá, filho de Zima, e Éden, filho de Joá\" (2Cr 29:12) — pai e filho na mesma lista, os dois trabalhando na mesma faxina. Gérson é o primogênito de Levi, e a sua casa carregava no deserto as cortinas, as coberturas e o véu da porta do tabernáculo (Nm 3:25-26): os panos, tudo o que fecha e cobre. Em Crônicas os gersonitas aparecem ligados ao serviço do canto e dos tesouros (1Cr 23:7-11; 26:21-22). Joá reaparece no capítulo seguinte da história de Judá, num homônimo célebre: o \"Joá, filho de Asafe, o cronista\" que enfrentou Rabsaqué no muro (2Rs 18:18). O que este faz é menos vistoso e igualmente decisivo: está entre os que \"santificaram-se e vieram conforme ao mandado do rei, pelas palavras do Senhor\" (2Cr 29:15), no dia em que a casa de Deus foi reaberta.",
+  },
+  "eden-filho-de-joa": {
+    title: "Éden, filho de Joá, dos gersonitas",
+    subtitle: "2Cr 29:12 • o filho que subiu com o pai para limpar a casa do SENHOR",
+    text: "\"e dos gersonitas, Joá, filho de Zima, e Éden, filho de Joá\" (2Cr 29:12). O Cronista poderia ter poupado tinta escrevendo \"Joá e seu filho\"; escreveu os dois nomes, e é assim que se vê que a reforma de Ezequias pegou dentro das famílias levíticas, de geração a geração, e não só na folha de pagamento do templo. Éden ainda aparece uma segunda vez neste bloco, dois capítulos adiante: entre os que ficaram \"nas cidades dos sacerdotes, para distribuírem com fidelidade a seus irmãos, segundo as suas turmas, tanto aos pequenos como aos grandes\" (2Cr 31:15). Quem começou carregando entulho ao Cedrom acabou encarregado de repartir a fartura dos montões — a mesma pessoa nas duas pontas da história, na sujeira e na abundância. O nome significa \"delícia\"; o serviço dele começou tirando imundícia.",
+  },
+  "sinri-filho-de-elisafa": {
+    title: "Sinri, dos filhos de Elisafã",
+    subtitle: "2Cr 29:13 • um dos levitas da casa de Elisafã convocados por Ezequias",
+    text: "\"E dentre os filhos de Elisafã, Sinri e Jeuel\" (2Cr 29:13). Elisafã, filho de Uziel, foi \"príncipe da casa paterna das famílias dos coatitas\" no deserto (Nm 3:30) e um dos dois primos que carregaram para fora do arraial os corpos de Nadabe e Abiú, mortos diante do SENHOR (Lv 10:4-5) — a casa de Elisafã entra na Escritura justamente removendo do santuário o que não podia ficar ali. Mil anos depois, um descendente seu está fazendo exatamente o mesmo trabalho: tirar do templo a imundícia acumulada no reinado de Acaz e levá-la ao ribeiro de Cedrom (2Cr 29:16). Os filhos de Elisafã já tinham ajudado Davi a subir a arca de casa de Obede-Edom (1Cr 15:8). Sinri não aparece em nenhum outro lugar da Bíblia; o único dia dele registrado é este.",
+  },
+  "jeuel-filho-de-elisafa": {
+    title: "Jeuel, dos filhos de Elisafã",
+    subtitle: "2Cr 29:13 • o segundo levita da casa de Elisafã na lista dos catorze",
+    text: "\"E dentre os filhos de Elisafã, Sinri e Jeuel\" (2Cr 29:13). Há dois Jeuel nesta mesma lista — um de Elisafã e outro de Hemã (2Cr 29:14) —, e o Cronista distingue os dois pela casa, que é como Israel identificava as pessoas: pelo pai e pelo clã, não por sobrenome. A convocação a que ele responde é a de 2Cr 29:5: \"Ouvi-me, ó levitas, santificai-vos agora, e santificai a casa do Senhor Deus de vossos pais, e tirai do santuário a imundícia\". Santificar-se e carregar lixo, na mesma ordem e no mesmo dia — o texto não separa devoção de trabalho sujo. E a pressa foi tanta que o rei registra o espanto no fim: \"porque apressuradamente se fez esta obra\" (2Cr 29:36). Dezesseis dias para desfazer dezesseis anos.",
+  },
+  "zacarias-filho-de-asafe": {
+    title: "Zacarias, dos filhos de Asafe",
+    subtitle: "2Cr 29:13 • um cantor da casa de Asafe entre os levitas que purificaram o templo",
+    text: "\"dentre os filhos de Asafe, Zacarias e Matanias\" (2Cr 29:13). Asafe é um dos três mestres do canto que Davi pôs na casa do SENHOR, junto com Hemã e Jedutum, para profetizar \"com harpas, com címbalos, e com saltérios\" (1Cr 25:1), e o nome dele encabeça doze salmos do saltério (Sl 50; 73-83). Este descendente entra em cena, porém, com pá e cesto: antes de haver música é preciso haver casa limpa. Foi ele e os seus irmãos que \"santificaram-se e vieram conforme ao mandado do rei\" (2Cr 29:15). Terminada a limpeza, a casa de Asafe volta ao seu ofício no mesmo capítulo, e por ordem expressa: \"Então o rei Ezequias e os príncipes disseram aos levitas que louvassem ao Senhor com as palavras de Davi, e de Asafe, o vidente. E o louvaram com alegria e se inclinaram e adoraram\" (2Cr 29:30). Os salmos do seu antepassado voltaram à boca de um povo que crescera sem templo aberto.",
+  },
+  "matanias-filho-de-asafe": {
+    title: "Matanias, dos filhos de Asafe",
+    subtitle: "2Cr 29:13 • o segundo asafita da lista, entre os que carregaram até o Cedrom",
+    text: "Nomeado com Zacarias em 2Cr 29:13, Matanias é da casa de cantores mais duradoura de Israel: os filhos de Asafe atravessam o exílio e reaparecem em Esdras entre os que voltaram da Babilônia — \"Os cantores: os filhos de Asafe, cento e vinte e oito\" (Ed 2:41) —, e um \"Matanias, filho de Mica, filho de Zabdi, filho de Asafe\" é registrado em Neemias como \"o chefe, que iniciava as ações de graças na oração\" (Ne 11:17). O nome quer dizer \"dádiva do SENHOR\". Neste capítulo ele não canta ainda: está entre os catorze que se levantaram à ordem \"tirai do santuário a imundícia\" (2Cr 29:5) e passaram dezesseis dias descendo o vale do Cedrom com o entulho da casa. Quando o altar volta a arder, ele está de pé com os instrumentos de Davi, e o texto guarda o instante: \"ao tempo em que começou o holocausto, começou também o canto do Senhor\" (2Cr 29:27).",
+  },
+  "jeuel-filho-de-hema": {
+    title: "Jeuel, dos filhos de Hemam",
+    subtitle: "2Cr 29:14 • um levita da casa de Hemam entre os catorze da purificação",
+    text: "\"E dentre os filhos de Hemam, Jeuel e Simei\" (2Cr 29:14). Hemam, o cantor, era neto de Samuel pela linha de Coate (1Cr 6:33) e um dos três chefes da música que Davi instituiu, com Asafe e Jedutum (1Cr 25:1); é chamado \"o vidente do rei nas palavras de Deus\" e teve catorze filhos e três filhas, todos no serviço do canto (1Cr 25:5-6). O Salmo 88, o mais escuro do saltério, traz o nome dele no título. Este descendente entra na história de Ezequias não pelo instrumento, mas pela ordem de 2Cr 29:5: santificar-se e tirar a imundícia do santuário. É a mesma casa que, dias depois, estaria \"em pé com os instrumentos de Davi\" enquanto os sacerdotes tocavam as trombetas e o holocausto subia (2Cr 29:26-27). Trabalho de carregador antes, ministério de louvor depois — e o Cronista registra os dois com o mesmo nome.",
+  },
+  "simei-filho-de-hema": {
+    title: "Simei, dos filhos de Hemam",
+    subtitle: "2Cr 29:14 • o segundo levita da casa de Hemam na convocação de Ezequias",
+    text: "\"E dentre os filhos de Hemam, Jeuel e Simei\" (2Cr 29:14). Simei é nome comum em Israel — o benjamita que amaldiçoou Davi na fuga de Absalão (2Sm 16:5), um dos filhos de Gérson (1Cr 23:7), o irmão de Conanias que Ezequias poria sobre as câmaras dos montões (2Cr 31:12) —, e é por isso que o texto sempre o prende a uma casa. Este é dos filhos de Hemam, o cantor-vidente. O que se pede dele em 2Cr 29 não é canto: é a resposta imediata à ordem \"não sejais negligentes; pois o Senhor vos tem escolhido para estardes diante dele para o servirdes, e para serdes seus ministros e queimadores de incenso\" (2Cr 29:11). Foi essa palavra que levantou os catorze. E o Cronista faz um elogio deles que é uma crítica ao clero: \"os levitas foram mais retos de coração, para se santificarem, do que os sacerdotes\" (2Cr 29:34).",
+  },
+  "semaias-filho-de-jedutum": {
+    title: "Semaías, dos filhos de Jedutum",
+    subtitle: "2Cr 29:14 • um levita da casa de Jedutum entre os catorze que purificaram a casa",
+    text: "\"e dentre os filhos de Jedutum, Semaías e Uziel\" (2Cr 29:14) — o último par da lista, e o que fecha as sete casas convocadas. Jedutum é o terceiro dos mestres do canto de Davi, ao lado de Asafe e Hemam; os seus seis filhos ficaram \"a cargo de seu pai, Jedutum, o qual profetizava com a harpa, louvando e dando graças ao Senhor\" (1Cr 25:3), e o nome dele aparece nos títulos dos Salmos 39, 62 e 77. Semaías significa \"o SENHOR ouviu\" — e o capítulo em que ele trabalha termina com Deus respondendo em silêncio, sem uma palavra do alto: o fogo do holocausto sobe junto com o cântico e as trombetas (2Cr 29:27), e o povo se prostra. Antes disso, porém, houve dezesseis dias de serviço pesado, do primeiro ao décimo sexto dia do primeiro mês (2Cr 29:17), e ele estava neles.",
+  },
+  "uziel-filho-de-jedutum": {
+    title: "Uziel, dos filhos de Jedutum",
+    subtitle: "2Cr 29:14 • o décimo quarto e último nome da lista dos levitas de Ezequias",
+    text: "\"e dentre os filhos de Jedutum, Semaías e Uziel\" (2Cr 29:14). Uziel quer dizer \"Deus é a minha força\", e é também o nome do quarto filho de Coate, tio de Arão (Êx 6:18,22), de quem descende a casa de Elisafã que aparece um versículo antes nesta mesma lista. Ser o último nome de um rol não diminui nada em Crônicas: o livro inteiro é a demonstração de que Deus guarda por nome quem serve na sua casa, do sumo sacerdote ao que carrega o cesto. Uziel responde à convocação de 2Cr 29:5 — \"santificai-vos agora, e santificai a casa do Senhor Deus de vossos pais, e tirai do santuário a imundícia\" —, ajunta os seus irmãos (2Cr 29:15) e desce o vale do Cedrom com o entulho de dezesseis anos. E é dele e dos seus que o Cronista diz o elogio mais raro do capítulo: foram \"mais retos de coração, para se santificarem, do que os sacerdotes\" (2Cr 29:34).",
+  },
+  "azarias-sumo-sacerdote-da-casa-de-zadoque": {
+    title: "Azarias, o sumo sacerdote da casa de Zadoque",
+    subtitle: "2Cr 31:10,13 • o que explicou os montões a Ezequias e ficou encarregado das câmaras",
+    text: "Ezequias viu as pilhas de trigo, mosto, azeite e mel crescendo no pátio de mês em mês e perguntou aos sacerdotes e levitas o que era aquilo (2Cr 31:9). A resposta é dele: \"E Azarias, o sumo sacerdote da casa de Zadoque, lhe respondeu, dizendo: Desde que se começou a trazer estas ofertas à casa do Senhor, temos comido e temos fartado, e ainda sobejou em abundância; porque o Senhor abençoou ao seu povo, e sobejou esta abastança\" (2Cr 31:10). Primeiro o balanço, depois a causa — e a causa não é a safra nem a administração, é a bênção. A \"casa de Zadoque\" é a linhagem que ficou com Davi na fuga de Absalão, ungiu Salomão (2Sm 15:24-29; 1Rs 1:39) e que Ezequiel veria servindo no santuário restaurado, \"os sacerdotes levíticos, os filhos de Zadoque, que guardaram a ordenança do meu santuário\" (Ez 44:15). Três versículos adiante ele reaparece como \"Azarias, líder da casa de Deus\" (2Cr 31:13): quem contou a sobra ficou responsável por guardá-la e reparti-la.",
+  },
+  "conanias-o-levita-principal": {
+    title: "Conanias, o levita principal sobre as câmaras",
+    subtitle: "2Cr 31:12-13 • o tesoureiro dos montões, encarregado de recolher fielmente",
+    text: "Preparadas as câmaras na casa do SENHOR, era preciso alguém em quem confiar: \"Ali recolheram fielmente as ofertas, e os dízimos, e as coisas consagradas; e tinham cargo disto Conanias, o levita principal, e Simei, seu irmão, o segundo\" (2Cr 31:12). O advérbio é a chave do versículo — recolheram \"fielmente\" —, e é a mesma palavra que reaparece na distribuição (2Cr 31:15,18). Abundância sem fidelidade vira desvio, e Israel tinha memória disso: os filhos de Eli tomavam para si a carne das ofertas com garfo de três dentes (1Sm 2:13-17). Sob a direção de Conanias e do irmão ficam dez superintendentes nomeados um a um (2Cr 31:13), e a cadeia de comando é dupla, para que ninguém preste contas a si mesmo: eles respondem \"por mandado do rei Ezequias, e de Azarias, líder da casa de Deus\". Manejar o dinheiro do santuário é ministério, e a Escritura o trata com o mesmo cuidado com que trata o altar (cf. 2Co 8:20-21).",
+  },
+  "simei-irmao-de-conanias": {
+    title: "Simei, irmão de Conanias, o segundo sobre as câmaras",
+    subtitle: "2Cr 31:12-13 • o segundo homem do tesouro dos montões",
+    text: "\"e tinham cargo disto Conanias, o levita principal, e Simei, seu irmão, o segundo\" (2Cr 31:12). O Cronista registra o cargo de segundo porque a administração do templo de Ezequias é montada em pares e em cadeias: acima deles o rei e Azarias, líder da casa de Deus; abaixo, dez superintendentes nomeados (2Cr 31:13). Ninguém guarda sozinho o que o povo trouxe — e o que o povo trouxe era muito: primícias de trigo, mosto, azeite e mel, dízimos dos bois e das ovelhas, montões que começaram no terceiro mês e só acabaram no sétimo (2Cr 31:5-7). Simei aparece aqui como irmão, isto é, da mesma casa levítica, e é a segunda vez que o nome surge no bloco: havia um Simei entre os catorze levitas que limparam o santuário dois capítulos antes (2Cr 29:14). A reforma de Ezequias começou com balde e cesto e terminou com livro-caixa; os dois trabalhos são do mesmo ministério.",
+  },
+  "jeiel-superintendente-das-camaras": {
+    title: "Jeiel, superintendente das câmaras",
+    subtitle: "2Cr 31:13 • o primeiro dos dez nomeados sob a direção de Conanias e Simei",
+    text: "\"E Jeiel, Azarias, Naate, Asael, Jerimote, Jozabade, Eliel, Ismaquias, Maate, e Benaia, eram superintendentes sob a direção de Conanias e Simei, seu irmão, por mandado do rei Ezequias, e de Azarias, líder da casa de Deus\" (2Cr 31:13). Dez homens, nomeados um a um, para um trabalho que ninguém canta: conferir montão, medir cântaro, anotar entrada e saída das câmaras que se prepararam na casa do SENHOR (2Cr 31:11). Jeiel encabeça a lista. O Cronista escreve os dez nomes pelo mesmo motivo por que escreveu os catorze levitas do capítulo 29: em Israel, quem serve na casa de Deus é contado por nome, e o registro é a garantia de que a oferta do lavrador chegou aonde ele quis mandá-la. A dupla autoridade citada no versículo — o rei e o líder da casa de Deus — é a assinatura de um sistema em que ninguém audita a si mesmo.",
+  },
+  "naate-superintendente-das-camaras": {
+    title: "Naate, superintendente das câmaras",
+    subtitle: "2Cr 31:13 • o terceiro dos dez encarregados dos montões da casa do SENHOR",
+    text: "Naate é o terceiro nome do rol de dez em 2Cr 31:13, posto sobre as câmaras \"por mandado do rei Ezequias, e de Azarias, líder da casa de Deus\". O trabalho começou por uma pergunta prática do rei diante das pilhas (2Cr 31:9) e por uma ordem de obra: \"Então ordenou Ezequias que se preparassem câmaras na casa do Senhor, e as prepararam\" (2Cr 31:11). Sem depósito e sem escrituração, a abundância apodrece ou some. O que se guardava ali é descrito em três categorias distintas — \"as ofertas, e os dízimos, e as coisas consagradas\" (2Cr 31:12) —, cada uma com destino próprio na lei, e distinguir uma da outra era parte do ofício destes homens. O nome Naate aparece também na descendência de Esaú (Gn 36:13) e entre os coatitas de 1Cr 6:26; aqui é o de um levita a quem o povo confiou o próprio dízimo.",
+  },
+  "jerimote-superintendente-das-camaras": {
+    title: "Jerimote, superintendente das câmaras",
+    subtitle: "2Cr 31:13 • o quinto dos dez postos sobre as ofertas, os dízimos e as coisas consagradas",
+    text: "Quinto na lista de 2Cr 31:13. O nome Jerimote é frequente entre os levitas de Davi — um filho de Merari (1Cr 24:30) e um dos filhos de Hemã, chefe da décima quinta turma dos cantores (1Cr 25:4,22) —, e é típico de Crônicas que o mesmo ofício reapareça nas mesmas casas, séculos depois, quando um rei fiel restaura o serviço do templo. O encargo destes dez está entre dois versículos que dizem tudo: antes, \"Ali recolheram fielmente\" (2Cr 31:12); depois, \"para distribuírem com fidelidade a seus irmãos, segundo as suas turmas, tanto aos pequenos como aos grandes\" (2Cr 31:15). Recolher com fidelidade e repartir com fidelidade — e a garantia de que o pequeno recebe tanto quanto o grande depende de homens como este, cujo único registro na Escritura é o nome numa lista de guardas de armazém.",
+  },
+  "benaia-superintendente-das-camaras": {
+    title: "Benaia, superintendente das câmaras",
+    subtitle: "2Cr 31:13 • o décimo e último dos nomeados sobre os montões",
+    text: "Fecha a lista de dez em 2Cr 31:13. Benaia é nome de peso na história de Israel — o filho de Joiada que matou o leão dentro da cova em dia de neve e comandou a guarda de Davi (2Sm 23:20-23), e também o de um levita que tocava saltério diante da arca (1Cr 15:18,20) —, e aqui é o de um homem posto a cuidar de trigo, mosto, azeite e mel. Crônicas não hierarquiza esses serviços: o livro que conta as turmas dos porteiros e o peso dos utensílios é o mesmo que conta as batalhas. O que estes dez guardavam vinha de mão em mão do povo, e a razão de tudo estava declarada no começo do capítulo: que os sacerdotes e levitas \"pudessem se dedicar à lei do Senhor\" (2Cr 31:4). Depois de tudo montado, o Cronista assina o reinado: \"E assim fez Ezequias em todo o Judá; e fez o que era bom, e reto, e verdadeiro, perante o Senhor seu Deus\" (2Cr 31:20).",
+  },
+  "core-filho-de-imna-porteiro-do-oriente": {
+    title: "Coré, filho de Imná, o levita porteiro do lado do oriente",
+    subtitle: "2Cr 31:14 • o guarda da porta oriental, encarregado das ofertas voluntárias",
+    text: "\"E Coré, filho de Imna, o levita, porteiro do lado do oriente, estava encarregado das ofertas voluntárias que se faziam a Deus, para distribuir as ofertas alçadas do Senhor e as coisas santíssimas\" (2Cr 31:14). Ser porteiro do templo não era função menor: as turmas de porteiros foram sorteadas por Davi porta por porta, e o oriente era a mais movimentada, com seis levitas por dia (1Cr 26:14-17), porque é por ela que se entra na casa. O ofício que Ezequias lhe acrescenta é de confiança máxima — a oferta voluntária não tem tabela, é o que cada um resolve dar, e as \"coisas santíssimas\" só podiam ser comidas pelos sacerdotes e dentro do lugar santo (Lv 6:16-18,26). O nome Coré é o mesmo do levita que se rebelou contra Moisés e foi tragado pela terra (Nm 16), mas os filhos de Coré não morreram (Nm 26:11) e viraram porteiros e cantores do santuário (1Cr 9:19; 26:1) — e onze salmos levam o nome deles. Este está à porta, cuidando do que o povo dá sem ser mandado.",
+  },
+  "eden-distribuidor-das-cidades-sacerdotais": {
+    title: "Éden, um dos seis que distribuíam nas cidades dos sacerdotes",
+    subtitle: "2Cr 31:15 • a repartição fiel das porções fora de Jerusalém, do pequeno ao grande",
+    text: "\"E debaixo das suas ordens estavam Éden, Miniamim, Jesua, Semaías, Amarias e Secanias, nas cidades dos sacerdotes, para distribuírem com fidelidade a seus irmãos, segundo as suas turmas, tanto aos pequenos como aos grandes\" (2Cr 31:15). A abundância não ficou represada no pátio do templo: seis homens saíram com ela para as cidades levíticas espalhadas por Judá (Nm 35:2-8), onde moravam os sacerdotes que não estavam de turno. A cláusula final é a que importa — \"tanto aos pequenos como aos grandes\" —, e vem reforçada dois versículos depois pela inclusão dos que estavam \"contados pelas genealogias dos homens, da idade de três anos para cima\" (2Cr 31:16). Este Éden é provavelmente o mesmo gersonita, filho de Joá, que dois capítulos antes carregava a imundícia do templo ao ribeiro de Cedrom (2Cr 29:12): quem serviu na sujeira foi posto sobre a fartura.",
+  },
+  "secanias-distribuidor-das-cidades-sacerdotais": {
+    title: "Secanias, um dos seis que distribuíam nas cidades dos sacerdotes",
+    subtitle: "2Cr 31:15 • o último nome da equipe de repartição de Coré",
+    text: "Fecha a lista de seis em 2Cr 31:15, encarregada de levar as porções às cidades dos sacerdotes \"para distribuírem com fidelidade a seus irmãos, segundo as suas turmas, tanto aos pequenos como aos grandes\". Secanias é nome de casa sacerdotal antiga: a décima sorte das vinte e quatro turmas de Davi caiu \"a Secanias\" (1Cr 24:11), e o nome volta depois do exílio entre os que subiram com Zorobabel e entre os que ajudaram a reconstruir o muro (Ne 3:29; 12:3). O detalhe administrativo do versículo é justamente o que dá segurança ao lavrador que trouxe o dízimo: distribui-se \"segundo as suas turmas\", ou seja, pela escala já registrada, e não por preferência de quem reparte. É assim que uma reforma dura mais que o entusiasmo — e o Cronista fecha o capítulo dizendo do rei que \"toda a obra que começou no serviço da casa de Deus, e na lei, e nos mandamentos, para buscar a seu Deus, ele a fez de todo o seu coração, e prosperou\" (2Cr 31:21).",
+  },
 };
 
 // ============================================================================
@@ -6728,6 +7148,865 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O rol das casas dos depósitos",
     subtitle: "1Cr 26:15,17 — a guarda de dois em dois sobre o que ficava guardado",
     text: "A porta do sul coube a Obede-Edom, e \"para seus filhos a casa dos depósitos\" (1Cr 26:15). Nas quatro bandas a guarda era pesada — seis levitas ao oriente, quatro por dia ao norte, quatro por dia ao sul —, \"porém para as casas dos depósitos de dois em dois\" (1Cr 26:17): onde ninguém entra em multidão, dois guardam um ao outro, e o rol diz o que entrou e o que saiu. É a mesma prudência que fez os que tinham cargo dos vasos os contarem \"por conta os traziam e por conta os tiravam\" (1Cr 9:28). O Cronista guarda o nome de cada porteiro com o mesmo cuidado com que guarda o dos príncipes: no serviço da casa, a fidelidade do que ninguém vê é contada como ofício." },
+  "altar-de-metal-de-vinte-covados": {
+    title: "O altar de metal de vinte côvados",
+    subtitle: "2Cr 4:1 — o altar do holocausto do templo, quatro vezes o do deserto",
+    text: "\"Também fez um altar de metal, de vinte côvados de comprimento, de vinte côvados de largura e de dez côvados de altura\" (2Cr 4:1). O altar de Bezaleel, que ficara em Gibeom, tinha \"cinco côvados... o comprimento, e cinco côvados a largura (será quadrado o altar), e três côvados a sua altura\" (Êx 27:1): este é quatro vezes mais largo e mais de três vezes mais alto, uma plataforma de cobre com rampa a que se subia. E nem assim bastou — no dia da dedicação \"no altar de metal, que Salomão tinha feito, não podia caber o holocausto, e a oferta de alimentos, e a gordura\", e o rei teve de santificar o meio do átrio para dar conta (2Cr 7:7). É a única peça do inventário que 1 Reis não descreve e o Cronista faz questão de medir: a casa é nova, mas o fogo é o mesmo desde o deserto." },
+  "banca-dos-mercadores-do-rei": {
+    title: "A banca dos mercadores do rei",
+    subtitle: "2Cr 1:16 — onde os cavalos do Egito eram recebidos em tropas",
+    text: "\"E os cavalos, que tinha Salomão, eram trazidos do Egito; e os mercadores do rei os recebiam em tropas, cada uma pelo seu preço\" (2Cr 1:16). O comércio de cavalaria não era feito por particulares: os negociantes eram do rei, e a compra vinha em lotes fechados, com preço por tropa. Sobre esta bancada corria a tabela do capítulo — \"cada carro por seiscentos siclos de prata, e cada cavalo por cento e cinqüenta\" (2Cr 1:17) — e daqui a mercadoria seguia para o norte, \"para todos os reis dos heteus, e para os reis da Síria\". É o retrato de um reino que virou entreposto entre dois mundos; e é também a porta pela qual entrou em Israel a confiança que Isaías denunciaria: \"Ai dos que descem ao Egito a buscar socorro, e se estribam em cavalos\" (Is 31:1)." },
+  "bases-das-pias-do-templo": {
+    title: "As bases das pias",
+    subtitle: "2Cr 4:14 — os carrinhos de cobre sobre os quais as dez pias corriam",
+    text: "\"Também fez as bases; e as pias pôs sobre as bases\" (2Cr 4:14). O Cronista resume numa linha o que 1 Reis descreve por dez versículos: \"Fez também as dez bases de cobre; o comprimento de uma base de quatro côvados, e de quatro côvados a sua largura, e três côvados a sua altura\" (1Rs 7:27), e cada uma \"tinha quatro rodas de metal, e lâminas de cobre\" (1Rs 7:30). Eram carros de cobre, iguais entre si — \"todas tinham uma mesma fundição, uma mesma medida, e um mesmo entalhe\" (1Rs 7:37) —, feitos para que a água chegasse aonde o sangue estava, e não o contrário. Séculos depois foram das primeiras peças a serem desmontadas: Acaz \"cortou as cintas das bases, e de cima delas tomou a pia\" (2Rs 16:17), e os caldeus levaram o resto para a Babilônia (2Rs 25:13)." },
+  "caldeiras-pas-e-bacias-de-hirao-abiu": {
+    title: "As caldeiras, as pás e as bacias de Hirão Abiú",
+    subtitle: "2Cr 4:11,16 — os utensílios do altar, em cobre polido",
+    text: "\"Também Hirão fez as caldeiras, as pás e as bacias. Assim acabou Hirão de fazer a obra, que fazia para o rei Salomão, na casa de Deus\" (2Cr 4:11). São as ferramentas do dia a dia do altar: a caldeira em que se cozia a carne das ofertas, a pá com que se tirava a cinza e a bacia em que se aparava o sangue para ser aspergido. O mesmo artífice que fundiu as colunas e o mar não achou pouco fazer o balde e a pá — \"Semelhantemente as caldeiras, as pás, os garfos e todos os seus utensílios, fez Hirão Abiú ao rei Salomão, para a casa do Senhor, de cobre polido\" (2Cr 4:16). Em Israel a santidade desce até o instrumento de limpar cinza; e no fim da profecia a promessa é justamente essa: \"até as panelas na casa do Senhor serão como as bacias diante do altar\" (Zc 14:20)." },
+  "carro-de-seiscentos-siclos-de-prata": {
+    title: "O carro de seiscentos siclos de prata",
+    subtitle: "2Cr 1:17 — a tabela de preços do comércio de carruagens do Egito",
+    text: "\"E faziam subir e sair do Egito cada carro por seiscentos siclos de prata, e cada cavalo por cento e cinqüenta\" (2Cr 1:17) — quatro cavalos e uma carruagem, o pacote de guerra mais caro do mundo antigo, comprado e revendido pelos homens do rei. O número tem um eco desconfortável dentro do próprio livro do Cronista: pelo chão onde o templo seria levantado, \"Davi deu a Ornã, por aquele lugar, o peso de seiscentos siclos de ouro\" (1Cr 21:25). Seiscentos siclos compraram o altar de Israel; seiscentos siclos compram uma carruagem egípcia. E a lei já tinha avisado quanto custa esse comércio: \"ele não multiplicará para si cavalos, nem fará voltar o povo ao Egito para multiplicar cavalos\" (Dt 17:16)." },
+  "carros-das-cidades-dos-carros": {
+    title: "Os carros das cidades dos carros",
+    subtitle: "2Cr 1:14 — mil e quatrocentos carros aquartelados fora de Jerusalém",
+    text: "\"E Salomão ajuntou carros e cavaleiros, e teve mil e quatrocentos carros, e doze mil cavaleiros; os quais pôs nas cidades dos carros, e junto ao rei em Jerusalém\" (2Cr 1:14). As \"cidades dos carros\" eram praças fortes reformadas para abrigar cavalaria — Hazor, Megido e Gezer, no rol das obras do reinado, ao lado \"das cidades de provisões que Salomão tinha, e as cidades dos carros, e as cidades dos cavaleiros\" (1Rs 9:19). O parque cresceu com o reino: mais adiante o mesmo livro conta \"quatro mil estrebarias para os cavalos de seus carros, e doze mil cavaleiros\" (2Cr 9:25). Israel nunca tivera arma assim; e foi contra carros que Deus dera as suas maiores vitórias, quando o povo não tinha nenhum (Jz 4:15; 1Sm 17:47)." },
+  "carta-de-hirao-a-salomao": {
+    title: "A carta de Hirão a Salomão",
+    subtitle: "2Cr 2:11-16 — a resposta de Tiro, por escrito",
+    text: "\"E Hirão, rei de Tiro, respondeu por escrito que enviou a Salomão, dizendo: Porque o Senhor tem amado o seu povo, te constituiu sobre ele rei\" (2Cr 2:11). O Cronista guarda a carta inteira, e ela é uma peça notável: um soberano fenício abre bendizendo o Deus de Israel — \"Bendito seja o Senhor Deus de Israel, que fez os céus e a terra; o que deu ao rei Davi um filho sábio, de grande prudência e entendimento\" (2Cr 2:12). Depois vêm as cláusulas: manda o artífice, \"a saber, Hirão Abiú\" (2Cr 2:13), pede o mantimento combinado, \"o trigo, a cevada, o azeite e o vinho, de que falou\" (2Cr 2:15), e fecha a logística: \"e ta traremos em jangadas pelo mar até Jope, e tu a farás subir a Jerusalém\" (2Cr 2:16). É contrato e confissão no mesmo papel — e ficou registrado num livro escrito para uma geração pequena, que precisava lembrar que as nações já tinham reconhecido o nome do seu Deus." },
+  "carta-de-salomao-a-hirao": {
+    title: "A carta de Salomão a Hirão",
+    subtitle: "2Cr 2:3-10 — a encomenda da madeira e do homem hábil",
+    text: "\"E Salomão mandou dizer a Hirão, rei de Tiro: Como fizeste com Davi meu pai, mandando-lhe cedros, para edificar uma casa em que morasse, assim também faze comigo\" (2Cr 2:3). O pedido começa por uma dívida antiga e continua explicando para que serve a obra: incenso aromático, o pão contínuo, os holocaustos da manhã e da tarde, os sábados e as luas novas, \"o que é obrigação perpétua de Israel\" (2Cr 2:4). No meio da encomenda o rei põe a única cláusula que nenhum contrato prevê — a confissão do próprio limite: \"quem seria capaz de lhe edificar uma casa, visto que os céus e até os céus dos céus o não podem conter?\" (2Cr 2:6). Só então vêm os itens: um homem hábil em ouro, prata, bronze, ferro, púrpura, carmesim e azul, que saiba \"lavrar ao buril\" (2Cr 2:7); \"madeiras de cedro, de cipreste, e algumins do Líbano\" (2Cr 2:8); e a paga em coros e batos (2Cr 2:10). Uma carta comercial que começa em teologia e acaba em sacas de trigo." },
+  "cavalaria-de-salomao": {
+    title: "A cavalaria de Salomão",
+    subtitle: "2Cr 1:14 — doze mil cavaleiros, a arma que a lei do rei proibia acumular",
+    text: "\"E Salomão ajuntou carros e cavaleiros, e teve mil e quatrocentos carros, e doze mil cavaleiros\" (2Cr 1:14). É a primeira força montada permanente de Israel, e nasce contra uma proibição escrita: \"Porém ele não multiplicará para si cavalos, nem fará voltar o povo ao Egito para multiplicar cavalos; pois o Senhor vos tem dito: Nunca mais voltareis por este caminho\" (Dt 17:16). O pai fizera o oposto com o espólio das guerras — \"Davi jarretou todos os cavalos dos carros; porém reservou deles para cem carros\" (1Cr 18:4) —, para que Israel não passasse a confiar no que tomava. O Cronista narra o crescimento sem uma palavra de censura, deixando o próprio texto expor o caminho: os cavalos vinham \"do Egito\" (2Cr 1:16), o mesmo lugar de onde Deus tirara o povo." },
+  "cavalos-trazidos-do-egito": {
+    title: "Os cavalos trazidos do Egito",
+    subtitle: "2Cr 1:16 — as tropas compradas no país de onde Israel saíra",
+    text: "\"E os cavalos, que tinha Salomão, eram trazidos do Egito; e os mercadores do rei os recebiam em tropas, cada uma pelo seu preço\" (2Cr 1:16). O Egito criava o melhor cavalo de guerra do mundo antigo, e a compra é registrada com naturalidade de livro-caixa — mas o leitor da Torá sente o peso: a lei do rei manda expressamente não \"fazer voltar o povo ao Egito para multiplicar cavalos\" (Dt 17:16). Séculos depois, quando Judá quisesse ser salvo por essa mesma cavalaria, o profeta gritaria: \"Ai dos que descem ao Egito a buscar socorro, e se estribam em cavalos; e têm confiança em carros, porque são muitos... e não atentam para o Santo de Israel\" (Is 31:1). O capítulo que começa com mil holocaustos e um pedido de sabedoria termina numa cocheira comprada no sul." },
+  "cedros-como-figueiras-bravas-das-campinas": {
+    title: "Os cedros como figueiras bravas das campinas",
+    subtitle: "2Cr 1:15 — a madeira nobre virada em coisa comum em Jerusalém",
+    text: "\"E fez o rei que houvesse ouro e prata em Jerusalém como pedras; e cedros em tanta abundância como figueiras bravas que há pelas campinas\" (2Cr 1:15). O cedro do Líbano era o material mais caro do Oriente, comprado a peso de trigo e azeite (2Cr 2:10); a figueira brava — o sicômoro — era a árvore do pobre, que dava pelas planícies sem que ninguém plantasse. Dizer que uma virou a outra é dizer que a escassez acabou. A imagem é de bênção, e vem imediatamente depois do dom prometido em Gibeom: \"e te darei riquezas, bens e honra, quais não teve nenhum rei antes de ti\" (2Cr 1:12). Foi tudo dado por acréscimo, a quem não tinha pedido nada disso — a mesma ordem que o Sermão do Monte guardaria: \"buscai primeiro o reino de Deus... e todas estas coisas vos serão acrescentadas\" (Mt 6:33)." },
+  "cem-bacias-de-ouro": {
+    title: "As cem bacias de ouro",
+    subtitle: "2Cr 4:8 — os vasos do sangue e das libações, contados um a um",
+    text: "\"Também fez dez mesas, e pô-las no templo, cinco à direita e cinco à esquerda; também fez cem bacias de ouro\" (2Cr 4:8). Bacia de altar não é enfeite: é o vaso em que se recolhia o sangue da vítima para ser aspergido e em que se levavam as libações de vinho. No inventário final elas reaparecem entre as peças de ouro finíssimo, ao lado \"dos apagadores, as bacias, as colheres e os incensários\" (2Cr 4:22). O número redondo — cem — mede o tamanho do serviço previsto: uma casa preparada para dias em que o sacrifício não caberia num só altar, como de fato aconteceu na dedicação (2Cr 7:7). Em Israel, até o balde do sangue foi feito do metal mais caro que havia." },
+  "cobre-polido-de-hirao-abiu": {
+    title: "O cobre polido de Hirão Abiú",
+    subtitle: "2Cr 4:16 — o acabamento das peças do átrio",
+    text: "\"Semelhantemente as caldeiras, as pás, os garfos e todos os seus utensílios, fez Hirão Abiú ao rei Salomão, para a casa do Senhor, de cobre polido\" (2Cr 4:16). Polido é a última etapa e a mais demorada: depois de fundida e limpa a rebarba, a peça é esfregada até refletir a luz, e é assim que o átrio inteiro brilha sem uma folha de ouro. O homem que assina esse acabamento é o artífice mandado de Tiro, \"cheio de sabedoria, e de entendimento, e de ciência para fazer toda a obra de cobre\" (1Rs 7:14). O que se vê no pátio não é ouro nenhum — é cobre trabalhado até parecer ouro, e é dele que são feitas as peças que tocam o sangue e o fogo." },
+  "cobre-sem-peso-averiguado": {
+    title: "O cobre sem peso averiguado",
+    subtitle: "2Cr 4:18 — a conta que a casa de Deus não conseguiu fechar",
+    text: "\"E fez Salomão todos estes objetos em grande abundância, que não se podia averiguar o peso do cobre\" (2Cr 4:18). Um livro que pesa pregos de cinquenta siclos (2Cr 3:9) e conta quatrocentas romãs (2Cr 4:13) para aqui e desiste da balança. A narrativa de Reis diz o mesmo com outras palavras: \"E deixou Salomão de pesar todos os objetos, pelo seu excessivo número; nem se averiguou o peso do cobre\" (1Rs 7:47). A origem do metal explica a montanha: Davi preparara para esta casa \"cobre e de ferro que não se pesou, porque era em abundância\" (1Cr 22:14), ajuntado ao longo de uma vida inteira de guerras e ofertas. O pai deixou o que não cabia em balança; o filho fundiu o que não cabia em registro." },
+  "dez-pias-do-atrio-do-templo": {
+    title: "As dez pias do átrio",
+    subtitle: "2Cr 4:6 — cinco à direita e cinco à esquerda, para lavar o holocausto",
+    text: "\"Também fez dez pias; e pôs cinco à direita e cinco à esquerda, para lavarem nelas; o que pertencia ao holocausto o lavavam nelas; porém o mar era para que os sacerdotes se lavassem nele\" (2Cr 4:6). O versículo reparte com precisão duas águas que não se misturam: a das pias lava a vítima, a do mar lava quem oferece. Cada pia levava \"quarenta batos\", tinha quatro côvados e ficava \"sobre cada uma das dez bases\" com rodas de metal (1Rs 7:38), para poder ser levada aonde fosse preciso. A lei já mandava lavar \"a sua fressura e as suas pernas\" antes de o animal subir ao altar (Lv 1:9): nada entra no fogo de Deus com a sujeira do caminho." },
+  "ferramentas-de-hirao-abiu": {
+    title: "As ferramentas de Hirão Abiú",
+    subtitle: "2Cr 2:7,14 — o buril do homem hábil para toda a espécie de invenções",
+    text: "O que Salomão pede a Tiro não é um operário e sim um mestre: \"Manda-me, pois, agora um homem hábil para trabalhar em ouro, em prata, em bronze, em ferro, em púrpura, em carmesim e em azul; e que saiba lavrar ao buril\" (2Cr 2:7). A resposta descreve a caixa de ferramentas inteira num homem só: sabe trabalhar \"em ouro, em prata, em bronze, em ferro, em pedras e em madeira, em púrpura, em azul, e em linho fino, e em carmesim, e é hábil para toda a obra do buril, e para toda a espécie de invenções, qualquer coisa que se lhe propuser\" (2Cr 2:14). Buril é o ferro de entalhar, e é ele que faz a diferença entre fundir e lavrar. A mesma palavra descreve o dom dado a Bezalel no deserto: \"E o enchi do Espírito de Deus, de sabedoria, e de entendimento, e de ciência, em todo o lavor\" (Êx 31:3)." },
+  "flores-lampadas-e-espevitadores-de-ouro": {
+    title: "As flores, as lâmpadas e os espevitadores de ouro",
+    subtitle: "2Cr 4:21 — as miudezas do candelabro, no metal mais fino que havia",
+    text: "\"E as flores, as lâmpadas e os espevitadores eram de ouro, do mais finíssimo ouro\" (2Cr 4:21). Espevitador é a tesourinha de aparar o pavio; as flores são os cálices lavrados nas hastes do candelabro; a lâmpada é o copo do azeite. Tudo isso já estava previsto no modelo do deserto — \"o seu pé, as suas hastes, os seus copos, os seus botões, e as suas flores serão do mesmo\" (Êx 25:31), e \"os seus espevitadores e os seus apagadores serão de ouro puro\" (Êx 25:38). A insistência do texto não é riqueza por riqueza: é que a casa foi feita sem uma peça de segunda linha, até nas que só o sacerdote da noite veria, quando entrasse para aparar o pavio e manter a luz acesa \"desde a tarde até a manhã, perante o Senhor\" (Êx 27:21)." },
+  "forja-dos-peritos-de-juda": {
+    title: "A forja dos peritos de Judá",
+    subtitle: "2Cr 2:7,14 — a oficina de ourives que Davi deixou pronta",
+    text: "Ao pedir o artífice a Tiro, Salomão diz que ele não virá para uma casa vazia: o estrangeiro trabalhará \"juntamente com os peritos que estão comigo em Judá e em Jerusalém, os quais Davi, meu pai, preparou\" (2Cr 2:7), e Hirão repete a condição na resposta — o seu homem virá \"juntamente com os teus peritos, e os peritos de Davi, meu senhor, teu pai\" (2Cr 2:14). Era parte do preparo do velho rei, que ajuntara não só material como mão de obra: \"Também tens contigo obreiros em grande número, cortadores e artífices em obra de pedra e madeira; e toda a sorte de peritos em toda a espécie de obra\" (1Cr 22:15). A forja em cena é essa oficina israelita, acesa havia anos à espera de uma casa que ainda não tinha alicerce." },
+  "fornos-da-terra-argilosa": {
+    title: "Os fornos da terra argilosa",
+    subtitle: "2Cr 4:17 — a fundição armada no vale, entre Sucote e Zeredá",
+    text: "\"Na campina do Jordão os fundiu o rei, na terra argilosa, entre Sucote e Zeredá\" (2Cr 4:17). Fundir cobre exige três coisas que Jerusalém não tinha juntas: barro que aguente o molde sem trincar, lenha bastante para manter o forno e água à mão para a têmpera. Tudo isso estava no vale do Jordão, quase mil metros abaixo da cidade, e para lá desceu a obra. O mar de dez côvados, as dez bases, as pias e as duas colunas nasceram no chão que Ló escolhera por ser \"toda bem regada... como o jardim do Senhor\" (Gn 13:10) e junto à cidade que negara pão aos homens de Gideão (Jz 8:6). Depois de frias, as peças subiram a serra até o monte Moriá — as maiores obras de metal do reino foram carregadas montanha acima." },
+  "fundamentos-da-casa-de-deus": {
+    title: "Os fundamentos da casa de Deus",
+    subtitle: "2Cr 3:3 — sessenta côvados por vinte, segundo a primeira medida",
+    text: "\"E estes foram os fundamentos que Salomão pôs para edificar a casa de Deus: o comprimento em côvados, segundo a primeira medida, era de sessenta côvados, e a largura de vinte côvados\" (2Cr 3:3). A ressalva \"segundo a primeira medida\" é do escriba: ele avisa em que côvado está falando, porque o leitor do pós-exílio já media diferente. Debaixo do alicerce estão as pedras que o rei mandou trazer da montanha — \"pedras grandes, e pedras valiosas, pedras lavradas, para fundarem a casa\" (1Rs 5:17), lavradas na pedreira para que na obra não se ouvisse ferramenta. Quando este mesmo alicerce foi refeito depois do cativeiro, os velhos que tinham visto a primeira casa \"choraram em altas vozes\" enquanto os moços gritavam de alegria (Ed 3:12). É a linha de pedra sobre a qual o profeta assentaria a maior das promessas: \"Eis que eu assentei em Sião uma pedra... pedra preciosa de esquina, que está bem firme e fundada\" (Is 28:16)." },
+  "ouro-de-parvaim": {
+    title: "O ouro de Parvaim",
+    subtitle: "2Cr 3:6 — o ouro com que a casa grande foi adornada",
+    text: "\"Também a casa adornou de pedras preciosas, para ornamento; e o ouro era ouro de Parvaim\" (2Cr 3:6). Parvaim aparece uma única vez em toda a Escritura, e ninguém sabe ao certo onde ficava — a tradição judaica a situa na Arábia; outros a ligam às rotas do sudeste, as mesmas de Ofir e de Sabá. O Cronista guarda o nome pela mesma razão por que guarda os nomes dos porteiros e dos cantores: o que se dá a Deus tem procedência. Era o ouro reputado mais fino do seu tempo, como o de Ofir dos salmos (\"à tua direita estava a rainha ornada de finíssimo ouro de Ofir\", Sl 45:9), e foi usado no lugar em que quase ninguém entraria para ver. A casa foi revestida com o melhor que o mundo conhecido produzia, e o nome da mina ficou escrito na Bíblia." },
+  "ouro-e-prata-como-pedras-em-jerusalem": {
+    title: "O ouro e a prata como pedras em Jerusalém",
+    subtitle: "2Cr 1:15 — o acréscimo que veio junto com a sabedoria",
+    text: "\"E fez o rei que houvesse ouro e prata em Jerusalém como pedras\" (2Cr 1:15). É a imagem mais forte de fartura em toda a história de Israel: o metal que se guarda em cofre espalhado pelo chão como cascalho. O texto a coloca de propósito logo depois da noite de Gibeom, porque é exatamente o que Deus disse que daria a quem não pediu nada disso: \"Sabedoria e conhecimento te são dados; e te darei riquezas, bens e honra, quais não teve nenhum rei antes de ti, e nem depois de ti haverá\" (2Cr 1:12). Mais adiante o mesmo livro leva a hipérbole ao fim: \"a prata reputava-se por nada nos dias de Salomão\" (2Cr 9:20). O que o rei pediu foi para poder julgar um povo; o resto veio por cima — e, com o tempo, o resto é que lhe pesaria." },
+  "pedras-preciosas-do-ornamento-da-casa": {
+    title: "As pedras preciosas do ornamento da casa",
+    subtitle: "2Cr 3:6 — as gemas engastadas nas paredes do templo",
+    text: "\"Também a casa adornou de pedras preciosas, para ornamento\" (2Cr 3:6). Não são joias guardadas em arca: são gemas engastadas na parede, no meio do ouro, para que a luz das lâmpadas achasse cor dentro do santuário. O material vinha do que o velho rei ajuntara com as próprias mãos: \"pedras de ônix, e as de engaste, e pedras ornamentais, e pedras de diversas cores, e toda a sorte de pedras preciosas, e pedras de mármore em abundância\" (1Cr 29:2), e do que o povo tirou de casa no dia da oferta — \"E os que possuíam pedras preciosas, deram-nas para o tesouro da casa do Senhor\" (1Cr 29:8). Cada pedra na parede foi um dono a menos em Israel. A última visão da Escritura repete o gesto numa cidade inteira: \"os fundamentos do muro da cidade estavam adornados de toda a pedra preciosa\" (Ap 21:19)." },
+  "poco-que-enchia-o-mar-de-fundicao": {
+    title: "O poço que enchia o mar de fundição",
+    subtitle: "2Cr 4:5 — três mil batos de água a carregar no pátio",
+    text: "A borda do mar \"foi feita como a borda de um copo, ou como uma flor-de-lis, da capacidade de três mil batos\" (2Cr 4:5) — algo em torno de sessenta mil litros, num tanque de cinco côvados de altura. A Escritura não descreve encanamento nenhum para ele: Jerusalém bebia da fonte de Giom, no vale, e a água do átrio subia por poço, cisterna e ombro de servo. Isto é o que a peça monumental esconde — que alguém enchia aquilo, dia após dia, para que \"os sacerdotes se lavassem nele\" (2Cr 4:6) antes de tocar no altar. A ordem que instituiu esse lavatório foi dada em tom de vida ou morte: \"lavar-se-ão com água, para que não morram\" (Êx 30:20). O maior objeto de cobre do templo depende do trabalho mais anônimo do pátio." },
+  "portas-de-cobre-do-grande-atrio": {
+    title: "As portas de cobre do grande átrio",
+    subtitle: "2Cr 4:9 — a entrada do pátio onde o povo se ajuntava",
+    text: "\"Fez mais o pátio dos sacerdotes, e o grande átrio; como também as portas para o pátio, as quais revestiu de cobre\" (2Cr 4:9). O grande átrio é o de fora, o lugar de Israel — ali o povo ficava enquanto o sacrifício era oferecido, e é dele que fala o salmo: \"Porque vale mais um dia nos teus átrios do que mil\" (Sl 84:10). As folhas revestidas de cobre não são só reforço: cobre é o metal do lado de fora do santuário, como o altar e o mar, enquanto o ouro é o metal de dentro. Andando da rua para o oráculo, o visitante atravessava cobre, depois ouro, depois o véu — a arquitetura ensinando, passo a passo, que ninguém chega perto de Deus de qualquer jeito." },
+  "portas-de-cobre-do-patio-dos-sacerdotes": {
+    title: "As portas de cobre do pátio dos sacerdotes",
+    subtitle: "2Cr 4:9 — a cerca interna, entre o povo e o altar",
+    text: "\"Fez mais o pátio dos sacerdotes, e o grande átrio; como também as portas para o pátio, as quais revestiu de cobre\" (2Cr 4:9). O Cronista é o único a registrar os dois pátios do templo de Salomão, e a distinção importa: dentro deste ficavam o altar de vinte côvados, o mar e as dez pias; fora dele ficava Israel. Não é privilégio de casta, é ofício — quem entra ali entra para trabalhar com fogo e com sangue, e para isso teve de lavar-se no mar \"para que não morram\" (Êx 30:20). Foi esta cerca que, séculos depois, um rei quis atravessar por conta própria: Uzias entrou para queimar incenso e saiu leproso do átrio, empurrado pelos sacerdotes (2Cr 26:16-20). A porta de cobre também é uma pregação." },
+  "prata-do-comercio-dos-cavalos": {
+    title: "A prata do comércio dos cavalos",
+    subtitle: "2Cr 1:17 — o lucro que o reino tirou de atravessar carros e cavalos",
+    text: "\"E faziam subir e sair do Egito cada carro por seiscentos siclos de prata, e cada cavalo por cento e cinqüenta; e assim, por meio deles eram para todos os reis dos heteus, e para os reis da Síria\" (2Cr 1:17). A expressão \"por meio deles\" diz tudo: os mercadores do rei eram o intermediário obrigatório entre a indústria de guerra do Egito e os reinos do norte, e cada tropa que passava deixava prata em Jerusalém. É uma das fontes daquela abundância em que o metal ficou \"como pedras\" (2Cr 1:15), ao lado do ouro que vinha das frotas e dos tributos — \"todos os reis da Arábia, e os governadores da mesma terra traziam a Salomão ouro e prata\" (2Cr 9:14). O reino que devia viver da lavoura e do rebanho descobriu o lucro do trânsito; e a estrada por onde entrava a prata era a mesma por onde entrava o cavalo do Egito." },
+  "pregos-de-ouro-de-cinquenta-siclos": {
+    title: "Os pregos de cinqüenta siclos de ouro",
+    subtitle: "2Cr 3:9 — o que ninguém torna a ver depois de cravado",
+    text: "\"O peso dos pregos era de cinqüenta siclos de ouro; e as câmaras cobriu de ouro\" (2Cr 3:9). No meio das medidas do lugar santíssimo, o texto para para pesar prego. É o detalhe que mostra a lógica inteira da obra: nada foi feito para a vista. O prego some dentro da madeira no instante em que é cravado, e ainda assim foi feito de ouro e passou pela balança — a mesma exigência de Davi ao entregar o projeto ao filho, quando deu \"ouro, segundo o peso do ouro, para todos os utensílios de cada ministério\" (1Cr 28:14). Numa casa em que o mais escondido é de ouro pesado, a pergunta não é quanto se gastou, e sim para quem se gastou: aquilo que só Deus veria recebeu o mesmo cuidado do que todos veriam." },
+  "querubins-lavrados-nas-paredes": {
+    title: "Os querubins lavrados nas paredes",
+    subtitle: "2Cr 3:7 — a guarda do Éden entalhada por toda a casa",
+    text: "\"Também na casa revestiu, com ouro, as traves, os umbrais, as suas paredes e as suas portas; e lavrou querubins nas paredes\" (2Cr 3:7). Não são os dois querubins do oráculo: são figuras entalhadas por toda a volta, misturadas às \"palmas e cadeias\" do versículo 5 — em Reis o desenho é descrito por inteiro, \"esculturas e entalhes de querubins, e de palmas, e de flores abertas, por dentro e por fora\" (1Rs 6:29), e Ezequiel vê o mesmo padrão no templo da sua visão, \"cada palmeira estava entre querubim e querubim\" (Ez 41:18). Palmeira e querubim juntos são jardim e sentinela: a casa é o Éden refeito em pedra, com a mesma guarda posta à porta desde o começo — \"pôs querubins ao oriente do jardim do Éden... para guardar o caminho da árvore da vida\" (Gn 3:24). Também as cortinas do tabernáculo já eram assim (Êx 26:1)." },
+  "rol-do-inventario-da-casa-de-deus": {
+    title: "O rol do inventário da casa de Deus",
+    subtitle: "2Cr 4:11-22 — a lista com que o Cronista fecha a obra",
+    text: "O capítulo inteiro é este rolo: as colunas, os globos, os capitéis, as duas redes, \"as quatrocentas romãs\" (2Cr 4:13), as bases, as pias, o mar e os doze bois, as caldeiras, as pás e os garfos (2Cr 4:16), e depois o ouro — o altar, as mesas dos pães, os castiçais e as lâmpadas, as flores, os espevitadores, os apagadores, as bacias, as colheres, os incensários e as portas do lugar santíssimo (2Cr 4:19-22). Duas vezes o escrivão admite que a conta não fecha: \"não se podia averiguar o peso do cobre\" (2Cr 4:18). O rol termina onde o do tabernáculo terminava, com a obra entregue: \"Assim se acabou toda a obra que Salomão fez para a casa do SENHOR; então trouxe Salomão as coisas que seu pai Davi havia consagrado\" (2Cr 5:1). Um inventário é a maneira que a Escritura tem de dizer que uma promessa foi cumprida item por item." },
+  "rol-dos-estrangeiros-contados-por-salomao": {
+    title: "O rol dos estrangeiros contados por Salomão",
+    subtitle: "2Cr 2:17-18 — cento e cinqüenta e três mil e seiscentos nomes",
+    text: "\"E Salomão contou todos os homens estrangeiros, que havia na terra de Israel, conforme o censo com que os contara Davi seu pai; e acharam-se cento e cinqüenta e três mil e seiscentos\" (2Cr 2:17). O rol não é invenção do filho: reaproveita o levantamento que Davi mandara fazer quando \"deu ordem... que se ajuntassem os estrangeiros que estavam na terra de Israel; e ordenou cortadores de pedras\" (1Cr 22:2). Deste papel saem as três colunas da folha de obra: \"setenta mil carregadores, e oitenta mil cortadores na montanha; como também três mil e seiscentos inspetores, para fazerem trabalhar o povo\" (2Cr 2:18). É um documento duro — trabalho compulsório de gente que não era do povo (1Rs 9:20-21) — e o Cronista o guarda inteiro, sem retoque. Anos depois, o mesmo rei que assinou este rol pediria a Deus que ouvisse a oração do estrangeiro nesta casa (2Cr 6:32-33)." },
+  "trono-de-hirao-rei-de-tiro": {
+    title: "O trono de Hirão, rei de Tiro",
+    subtitle: "2Cr 2:11-12 — a cadeira de onde saiu uma bênção ao Deus de Israel",
+    text: "Tiro era a maior potência marítima do Levante, uma cidade-ilha que vivia do cedro, da púrpura e do comércio, e o seu rei fora aliado de Davi antes de ser de Salomão. Deste trono saiu uma carta que começa assim: \"Porque o Senhor tem amado o seu povo, te constituiu sobre ele rei\", e continua: \"Bendito seja o Senhor Deus de Israel, que fez os céus e a terra; o que deu ao rei Davi um filho sábio, de grande prudência e entendimento, que edifique casa ao Senhor\" (2Cr 2:11-12). É um soberano pagão reconhecendo o Criador — e o Cronista guarda isso para uma geração que voltara do exílio sentindo-se pequena entre os impérios. A mesma cadeira, séculos depois, receberia um dos oráculos mais duros da profecia: \"Porquanto o teu coração se elevou e disseste: Eu sou Deus, sobre a cadeira de Deus me assento no meio dos mares\" (Ez 28:2)." },
+  "vinte-mil-batos-de-vinho-e-de-azeite": {
+    title: "Os vinte mil batos de vinho e de azeite",
+    subtitle: "2Cr 2:10,15 — a bebida e o azeite com que se pagou o Líbano",
+    text: "\"E eis que a teus servos, os cortadores, que cortarem a madeira, darei... vinte mil batos de vinho e vinte mil batos de azeite\" (2Cr 2:10), e Hirão cobra a entrega na resposta: \"mande para os seus servos o trigo, a cevada, o azeite e o vinho, de que falou\" (2Cr 2:15). O bato era a medida de líquido, cerca de vinte e dois litros; vinte mil batos são umas quatrocentas mil medidas de cada coisa, e vão para a boca dos lenhadores, não para o palácio. Em 1 Reis a conta anual do rei de Tiro aparece com outro recorte — \"vinte mil coros de trigo, para sustento da sua casa, e vinte coros de azeite batido\" (1Rs 5:11) —, porque uma é a paga da equipe no monte e a outra é o tributo da corte. Israel não tinha ouro para pagar Tiro: pagou com o que a sua terra dava." },
+  "vinte-mil-coros-de-trigo-e-de-cevada": {
+    title: "Os vinte mil coros de trigo e de cevada",
+    subtitle: "2Cr 2:10,15 — o mantimento dos cortadores do Líbano",
+    text: "\"E eis que a teus servos, os cortadores, que cortarem a madeira, darei vinte mil coros de trigo malhado, vinte mil coros de cevada\" (2Cr 2:10). O coro era a maior medida de secos de Israel — dez batos, algo perto de duzentos e vinte litros —, e vinte mil deles alimentam um acampamento de milhares de homens por temporadas inteiras. \"Trigo malhado\" é trigo já batido na eira, pronto para moer: manda-se comida limpa, não serviço a mais. Este é o preço real da madeira do templo, e ele explica por que a lavoura de Israel importa tanto nos livros históricos. A mesma moeda pagaria a segunda casa, depois do cativeiro: dinheiro aos pedreiros e carpinteiros, \"e azeite aos sidônios, e aos tírios, para trazerem do Líbano madeira de cedro ao mar, para Jope\" (Ed 3:7)." },
+  "despojo-de-zera-o-etiope": {
+    title: "O despojo de Zerá, o etíope",
+    subtitle: "2Cr 15:11 — o saque que virou sacrifício no terceiro mês",
+    text: "Zerá saiu contra Judá \"com um exército de um milhão e com trezentos carros\" (2Cr 14:9) e foi desfeito no vale de Zefatá, junto a Maressa, depois de Asa clamar \"em ti confiamos, e no teu nome viemos contra esta multidão\" (2Cr 14:11). Do rastro dessa derrota Judá levou \"mui grande despojo\" (2Cr 14:13) e ainda as malhadas do gado de Gerar (2Cr 14:15). Os caixotes que aparecem na estrada e depois no átrio são esse saque — e nada dele ficou no palácio: \"E no mesmo dia ofereceram em sacrifício ao Senhor, do despojo que trouxeram, setecentos bois e sete mil ovelhas\" (2Cr 15:11). É o oposto exato do capítulo seguinte, em que a prata guardada na casa do SENHOR sai pela porta para comprar uma espada estrangeira." },
+  "altar-abandonado-dos-dias-sem-lei": {
+    title: "O altar rachado dos dias sem lei",
+    subtitle: "2Cr 15:3 — o retrato que Azarias abriu diante do rei",
+    text: "Não é um altar de agora: é o que o profeta faz o rei ver quando descreve os anos em que \"Israel esteve por muitos dias sem o verdadeiro Deus, e sem sacerdote que o ensinasse, e sem lei\" (2Cr 15:3). Sem sacerdote não há quem ofereça, e o altar racha sozinho; sem lei não há rolo em parte alguma, e ninguém sabe mais o que ali se fazia. Foi o tempo dos juízes, em que \"não havia paz, nem para o que saía, nem para o que entrava\" (2Cr 15:5). O quadro tem virada, e é ela que dá o argumento a Azarias: \"Mas quando na sua angústia voltaram para o Senhor Deus de Israel, e o buscaram, o acharam\" (2Cr 15:4)." },
+  "idolo-dos-dias-sem-sacerdote": {
+    title: "O ídolo posto no lugar do altar",
+    subtitle: "2Cr 15:3 — o que ocupou o espaço vazio nos dias sem lei",
+    text: "Faz par com o altar rachado do mesmo quadro: onde deixou de haver sacerdote que ensinasse (2Cr 15:3), não sobrou vazio — sobrou substituto. É a história inteira do livro dos Juízes, dos ídolos de Mica à casa de Baal-Berite, e é a razão pela qual Deus \"os perturbara com toda a angústia\" (2Cr 15:6). O profeta mostra esta figura ao rei que acaba de voltar vitorioso, para que ele veja o que acontece a um povo que ganha guerras e perde o ensino. A resposta de Asa é imediata e é do mesmo tamanho: \"tirou as abominações de toda a terra, de Judá e de Benjamim\" (2Cr 15:8)." },
+  "cidade-incendiada-na-perturbacao": {
+    title: "A cidade em chamas do tempo das perturbações",
+    subtitle: "2Cr 15:6 — nação contra nação e cidade contra cidade",
+    text: "\"Porque nação contra nação e cidade contra cidade se despedaçavam; porque Deus os perturbara com toda a angústia\" (2Cr 15:6). A fumaça que sobe atrás do viajante parado na estrada é a guerra civil crônica dos dias sem rei e sem lei — Gibeá contra Benjamim, Efraim contra Gileade, os quarenta e dois mil que morreram na vau do Jordão por não saberem dizer Chibolete (Jz 12:6). O que Azarias faz o rei ver não é um acidente da história: é juízo, e o texto atribui a perturbação ao próprio Deus. E é exatamente por isso que a promessa do versículo 2 vale como aviso: quem deixa o SENHOR é deixado." },
+  "abominacoes-tiradas-de-juda-e-benjamim": {
+    title: "As abominações tiradas de toda a terra",
+    subtitle: "2Cr 15:8 — a primeira medida de Asa depois de ouvir o profeta",
+    text: "\"Ouvindo, pois, Asa estas palavras, e a profecia do profeta Odede, cobrou ânimo e tirou as abominações de toda a terra, de Judá e de Benjamim, como também das cidades que tomara nas montanhas de Efraim\" (2Cr 15:8). Uma profecia que não muda nada não passa de discurso; esta muda a paisagem do reino em três regiões de uma vez, incluindo território tomado ao norte. O rei já tinha feito uma limpeza parecida no começo do reinado — \"quebrou as imagens, e cortou os bosques\" (2Cr 14:3) —, o que mostra que o trabalho voltava sempre. E há um limite honesto no mesmo capítulo: \"Os altos, porém, não foram tirados de Israel\" (2Cr 15:17)." },
+  "altar-renovado-diante-do-portico": {
+    title: "O altar do SENHOR renovado diante do pórtico",
+    subtitle: "2Cr 15:8 — a obra que denuncia o estado do templo",
+    text: "No mesmo fôlego em que tira as abominações, Asa \"renovou o altar do Senhor, que estava diante do pórtico do Senhor\" (2Cr 15:8). Este é o altar de bronze do átrio, o que Salomão fizera para os holocaustos (2Cr 4:1) — e ele precisou de reparo a menos de sessenta anos da dedicação. O detalhe é uma acusação silenciosa aos reinados de Roboão e de Abias: o culto oficial não tinha sido proibido, tinha sido deixado apodrecer. É sobre este altar refeito que ardem, no mesmo capítulo, os setecentos bois e as sete mil ovelhas do despojo (2Cr 15:11)." },
+  "trombetas-e-buzinas-do-juramento": {
+    title: "As trombetas e buzinas do juramento do terceiro mês",
+    subtitle: "2Cr 15:14 — a aliança jurada em alta voz",
+    text: "\"E juraram ao Senhor, em alta voz, com júbilo e com trombetas e buzinas\" (2Cr 15:14). O barulho é parte da coisa: um juramento feito assim tem testemunhas, tem data — \"no terceiro mês; no ano décimo do reinado de Asa\" (2Cr 15:10) — e não pode depois ser negado por ninguém. A trombeta de prata era o instrumento dos sacerdotes, para convocar a congregação e para os dias de alegria (Nm 10:2, 10); a buzina, o chifre de carneiro que anunciava o jubileu. O resultado registrado é de mão dupla: \"de toda a sua vontade o buscaram, e o acharam; e o Senhor lhes deu repouso ao redor\" (2Cr 15:15)." },
+  "idolo-horrivel-de-asera-de-maaca": {
+    title: "O horrível ídolo de Aserá, feito por Maaca",
+    subtitle: "2Cr 15:16 — o que custou o posto à mãe do rei",
+    text: "\"E também a Maaca, sua mãe, o rei Asa depôs, para que não fosse mais rainha, porquanto fizera um horrível ídolo, a Aserá\" (2Cr 15:16). Maaca, neta de Absalão (1Rs 15:2), era a gebirá — a mulher de mais poder na corte de Judá — e a única pessoa a quem o rei devia obediência de filho. O termo que a ARC traduz por \"horrível\" indica algo que causa espanto e repugnância, um objeto de culto obsceno ligado à deusa cananeia da fertilidade. Asa não se contenta em tirar a mãe do posto: destrói o ídolo, despedaça-o e o queima. Foi o gesto mais duro do reinado, e o que mostra até onde ia a reforma dele — até dentro da própria casa." },
+  "queima-do-idolo-junto-ao-cedrom": {
+    title: "A queima do ídolo junto ao ribeiro de Cedrom",
+    subtitle: "2Cr 15:16 — o vale onde Judá destruía o que tirava do templo",
+    text: "\"e Asa destruiu o seu horrível ídolo, e o despedaçou, e o queimou junto ao ribeiro de Cedrom\" (2Cr 15:16). Não bastava tirar: era preciso reduzir a pó, e à vista de todos, para que ninguém recolhesse os pedaços depois. O Cedrom corre no vale entre a cidade e o monte das Oliveiras, e virou o lugar padrão desse tipo de destruição em Judá — Ezequias mandaria lançar ali toda a imundícia tirada do santuário (2Cr 29:16), e Josias queimaria ali os vasos feitos para Baal e o próprio bosque (2Rs 23:4, 6). O mesmo ribeiro que Davi atravessou chorando na fuga de Absalão (2Sm 15:23) e que Jesus atravessou a caminho do Getsêmani (Jo 18:1)." },
+  "altos-que-nao-foram-tirados": {
+    title: "Os altos que não foram tirados",
+    subtitle: "2Cr 15:17; 20:33 — o limite de toda reforma feita de cima para baixo",
+    text: "A frase volta duas vezes nestes capítulos, sobre pai e filho. De Asa: \"Os altos, porém, não foram tirados de Israel; contudo o coração de Asa foi perfeito todos os seus dias\" (2Cr 15:17). De Jeosafá: \"Contudo os altos não foram tirados porque o povo não tinha ainda disposto o seu coração para com o Deus de seus pais\" (2Cr 20:33) — e aqui o cronista diz de quem é a culpa. Altos eram santuários locais em outeiros, muitos deles usados para adorar o próprio SENHOR fora do lugar que Ele escolhera (Dt 12:13-14), o que os tornava difíceis de proibir e fáceis de justificar. Um rei pode derrubar altares; não pode dispor o coração de um povo." },
+  "prata-ouro-e-vasos-consagrados": {
+    title: "A prata, o ouro e os vasos trazidos à casa de Deus",
+    subtitle: "2Cr 15:18 — o tesouro que entra no fim do capítulo",
+    text: "\"E trouxe, à casa de Deus, as coisas consagradas por seu pai, e as coisas que ele mesmo tinha consagrado: prata, ouro e vasos\" (2Cr 15:18). O pai é Abias, que vencera Jeroboão com quatrocentos mil homens e tomara Betel, Jesana e Efrom (2Cr 13:19); o que ficou consagrado daquela campanha e desta é depositado agora no tesouro do templo. Vale guardar a imagem exata: este cofre está entrando pela porta em 15:18. Um capítulo adiante ele sai por ela — \"Então Asa tirou a prata e o ouro dos tesouros da casa do Senhor, e da casa do rei\" (2Cr 16:2) — para pagar a Ben-Hadade." },
+  "muro-de-rama-edificado-por-baasa": {
+    title: "O muro de Ramá, edificado por Baasa",
+    subtitle: "2Cr 16:1 — o bloqueio a uma hora de Jerusalém",
+    text: "\"No trigésimo sexto ano do reinado de Asa, Baasa, rei de Israel, subiu contra Judá e edificou a Ramá, para não deixar ninguém sair, nem chegar a Asa, rei de Judá\" (2Cr 16:1). Ramá fica a cerca de oito quilômetros ao norte de Jerusalém, em cima da estrada principal: fortificá-la é fechar a porta de Judá para o comércio e para os que \"tinham passado a ele\" do norte (2Cr 15:9). Não é uma invasão, é um estrangulamento — e é por isso que assusta mais. A obra para no meio quando os sírios atacam a fronteira norte de Israel: \"deixou de edificar a Ramá, e não continuou a sua obra\" (2Cr 16:5)." },
+  "prata-e-ouro-enviados-a-ben-hadade": {
+    title: "A prata e o ouro enviados a Ben-Hadade",
+    subtitle: "2Cr 16:2-3 — o tesouro do templo pago a Damasco",
+    text: "\"Então Asa tirou a prata e o ouro dos tesouros da casa do Senhor, e da casa do rei; e enviou servos a Ben-Hadade, rei da Síria, que habitava em Damasco\" (2Cr 16:2). As duas câmaras são abertas ao mesmo tempo, e a do templo é citada primeiro. A proposta é de uma franqueza constrangedora: \"eis que te envio prata e ouro; vai, pois, e anula o teu acordo com Baasa, rei de Israel, para que se retire de sobre mim\" (2Cr 16:3) — Asa compra um aliado já comprado e lhe pede exatamente a deslealdade que um dia sofrerá. O mesmo homem que dez anos antes vencera um milhão de etíopes dizendo \"em ti confiamos\" (2Cr 14:11) agora paga por uma vitória, e é isso que Hanani virá acusar." },
+  "cidades-armazens-de-naftali-feridas": {
+    title: "As cidades-armazéns de Naftali feridas pela Síria",
+    subtitle: "2Cr 16:4 — o que a prata da casa do SENHOR comprou",
+    text: "\"E Ben-Hadade deu ouvidos ao rei Asa, e enviou os capitães dos seus exércitos, contra as cidades de Israel, e eles feriram a Ijom, a Dã, a Abel-Maim, e a todas as cidades-armazéns de Naftali\" (2Cr 16:4). Ijom, Dã e Abel-Maim ficam no extremo norte, na entrada de Israel vinda de Damasco — a Síria não precisou de muito para obrigar Baasa a largar Ramá. A fumaça que sobe dessas cidades foi paga com o ouro que estava guardado no templo de Jerusalém, e o povo que a viu subir era do mesmo Israel. Funcionou; e é justamente o funcionamento que o profeta acusa: \"o exército do rei da Síria escapou da tua mão\" (2Cr 16:7)." },
+  "pedras-e-madeira-de-rama": {
+    title: "As pedras e a madeira de Ramá, levadas para Geba e Mizpá",
+    subtitle: "2Cr 16:6 — o muro do inimigo virou as duas fronteiras de Judá",
+    text: "\"Então o rei Asa tomou a todo o Judá, e levaram as pedras de Ramá, e a sua madeira, com que Baasa edificara; e com elas edificou a Geba e a Mizpá\" (2Cr 16:6). É o único lucro limpo do capítulo: cada pedra do bloqueio vira defesa de quem estava bloqueado. Mizpá guardaria memória longa em Israel — foi ali que Samuel julgou o povo (1Sm 7:5-6) e para lá Gedalias levaria o resto de Judá depois da queda de Jerusalém (Jr 40:6). A obra é impecável e a manobra também; o que o texto vai dizer em seguida é que nada disso justifica o preço, porque \"quanto ao Senhor, seus olhos passam por toda a terra\" (2Cr 16:9)." },
+  "casa-do-tronco-de-asa": {
+    title: "A casa do tronco, onde Asa lançou o vidente",
+    subtitle: "2Cr 16:10 — o cárcere de quem disse a verdade ao rei",
+    text: "\"Porém Asa se indignou contra o vidente, e lançou-o na casa do tronco; porque estava enfurecido contra ele, por causa disto; também Asa, no mesmo tempo, oprimiu a alguns do povo\" (2Cr 16:10). O tronco é o cepo de madeira que prendia pés, mãos e pescoço numa posição forçada — o mesmo instrumento em que Jeremias passaria uma noite por ordem de Pasur (Jr 20:2) e em que Paulo e Silas seriam postos em Filipos (At 16:24). O que este objeto marca é a virada de um reinado: o rei que depusera a própria mãe por causa de um ídolo não suporta uma frase. E a violência não fica no profeta — transborda para o povo no mesmo versículo." },
+  "livro-dos-reis-de-juda-e-israel": {
+    title: "O livro dos reis de Judá e Israel",
+    subtitle: "2Cr 16:11 — a fonte para onde o cronista remete o resto",
+    text: "\"E eis que os atos de Asa, tanto os primeiros, como os últimos, estão escritos no livro dos reis de Judá e Israel\" (2Cr 16:11). É um arquivo real, hoje perdido, que o Cronista cita dezenas de vezes como quem indica onde estão os detalhes que ele resolveu não repetir. A fórmula \"tanto os primeiros, como os últimos\" é a chave de leitura deste reinado: houve os primeiros — a terra em paz, Zerá desfeito, o altar renovado, a aliança do terceiro mês — e houve os últimos, a prata de Damasco, o vidente no tronco e os médicos à cabeceira. O arquivo guarda os dois, e o cronista também: não apaga nem um nem outro." },
+  "cama-de-asa-doente-dos-pes": {
+    title: "A cama de Asa, doente dos pés",
+    subtitle: "2Cr 16:12 — a enfermidade em que ele buscou os médicos",
+    text: "\"E, no ano trinta e nove do seu reinado, Asa caiu doente de seus pés, a sua doença era em extremo grave; contudo, na sua enfermidade, não buscou ao Senhor, mas antes os médicos\" (2Cr 16:12). O médico não é o vilão do versículo — o pecado está no \"mas antes\". É a mesma troca de 16:2, quando ele foi buscar socorro em Damasco em vez de o buscar em Deus; agora a troca se repete dentro do próprio corpo, e é a última coisa que a Escritura registra da vida dele. Três anos antes tinha ouvido que \"seus olhos passam por toda a terra, para mostrar-se forte para com aqueles cujo coração é perfeito para com ele\" (2Cr 16:9) e mandou prender quem disse isso." },
+  "cama-de-perfumes-e-especiarias-de-asa": {
+    title: "A cama cheia de perfumes e especiarias",
+    subtitle: "2Cr 16:14 — o leito fúnebre do rei, preparado pelos perfumistas",
+    text: "\"havendo-o deitado na cama, que se enchera de perfumes e especiarias preparadas segundo a arte dos perfumistas\" (2Cr 16:14). É o sepultamento mais caro registrado para um rei de Judá: um leito coberto de aromas caros, ao gosto dos funerais reais do Oriente. O cronista descreve a honra sem ironia — Judá enterrou Asa com tudo o que devia a um rei que fizera \"o que era bom e reto aos olhos do Senhor seu Deus\" (2Cr 14:2) — e no mesmo capítulo não esconde os últimos cinco anos dele. A comparação vem cinco capítulos adiante, quando Jeorão morrer sem que \"o seu povo\" lhe queimasse aroma \"como queimara a seus pais\" (2Cr 21:19)." },
+  "queima-muito-grande-por-asa": {
+    title: "A queima muito grande feita por Asa",
+    subtitle: "2Cr 16:14 — a fogueira de honra no sepultamento de um rei",
+    text: "\"e, destas coisas fizeram-lhe uma grande queima\" (2Cr 16:14). Não é cremação — Israel não queimava os seus mortos —, é a queima cerimonial dos perfumes e especiarias ao lado do sepulcro, sinal público de honra ao rei. O costume aparece como medida do apreço de um povo pelo seu governante: Jeremias o prometeria a Zedequias — \"conforme as queimas para teus pais, os reis precedentes, que foram antes de ti, assim queimarão para ti\" (Jr 34:5), e a sua ausência marcaria o desprezo por Jeorão (2Cr 21:19). Asa recebeu a maior de todas, e ainda assim o livro que a registra é o mesmo que registra o vidente no tronco e os médicos à cabeceira." },
+  "sepulcro-cavado-na-cidade-de-davi": {
+    title: "O sepulcro que Asa cavara para si na cidade de Davi",
+    subtitle: "2Cr 16:14 — o túmulo preparado em vida",
+    text: "\"E o sepultaram no seu sepulcro, que tinha cavado para si na cidade de Davi\" (2Cr 16:14). Cavar o próprio sepulcro em vida era coisa de rei e de rico — Isaías repreenderia Sebna por lavrar para si uma sepultura no alto (Is 22:16), e José de Arimateia daria a Jesus o túmulo novo que mandara abrir para si (Mt 27:60). Ser sepultado na cidade de Davi, entre os reis, é a honra máxima de Judá, e não foi dada a todos: a Jeorão, sepultado ali mesmo, negaram os sepulcros dos reis (2Cr 21:20), e a Uzias, leproso, deram um campo ao lado deles (2Cr 26:23). Asa entra inteiro na sepultura dos pais." },
+  "harpa-dos-primeiros-caminhos-de-davi": {
+    title: "A harpa dos primeiros caminhos de Davi",
+    subtitle: "2Cr 17:3 — a medida com que o cronista julga Jeosafá",
+    text: "O veredicto sobre o rei é dado por comparação com um menino de rebanho: \"E o Senhor era com Jeosafá; porque andou nos primeiros caminhos de Davi seu pai, e não buscou a Baalins\" (2Cr 17:3). Os primeiros caminhos de Davi são os de antes do trono — o campo de Belém, a funda, a harpa com que acalmava Saul (1Sm 16:23), os anos em que ele \"apascentava as ovelhas de seu pai\" (1Sm 17:34). A harpa posta na cena, ao lado do rolo, é a medida escolhida: não o palácio de Davi, não a guerra de Davi, mas a fidelidade dele quando ainda não tinha nada. Um reinado se julga pela juventude que o formou." },
+  "imagens-de-baalins": {
+    title: "As imagens de Baalins deixadas na encruzilhada",
+    subtitle: "2Cr 17:3-4 — o culto que Jeosafá não procurou",
+    text: "\"não buscou a Baalins. Antes buscou ao Deus de seu pai, andou nos seus mandamentos, e não segundo as obras de Israel\" (2Cr 17:3-4). Os baalins, no plural, são os baais locais — cada aldeia com o seu, senhor da chuva e da colheita daquele pedaço de terra —, e adorá-los era a religião prática do reino do norte, onde Acabe e Jezabel os tinham feito culto de Estado (1Rs 16:31-33). O elogio ao rei de Judá é medido justamente por aí: \"não segundo as obras de Israel\". A ironia do arquivo é que este mesmo rei se aparentará com a casa que sustentava esses altares, um capítulo adiante (2Cr 18:1)." },
+  "altos-e-bosques-tirados-por-jeosafa": {
+    title: "Os altos e os bosques tirados de Judá",
+    subtitle: "2Cr 17:6 — a prova de um coração exaltado nos caminhos do SENHOR",
+    text: "\"E exaltou-se o seu coração nos caminhos do Senhor e, ainda mais, tirou os altos e os bosques de Judá\" (2Cr 17:6). É uma das raras vezes em que a Escritura fala de um coração que se exalta e não o condena: em geral é soberba (2Cr 26:16, de Uzias), aqui é coragem. E a coragem se mede pelo que ele derruba — o que o pai tinha deixado de pé (2Cr 15:17). O bosque é a aserá, o poste sagrado plantado no alto, ligado ao culto de fertilidade; derrubá-lo mexia com o que o povo julgava garantir chuva e cria. É esta obra que o profeta Jeú citará, dois capítulos adiante, como a coisa boa que se achou nele (2Cr 19:3)." },
+  "queima-dos-bosques-de-juda": {
+    title: "A queima dos bosques cortados em Judá",
+    subtitle: "2Cr 17:6 — o fogo que consome o poste da aserá",
+    text: "Cortar não bastava: a Lei mandava queimar. \"os seus bosques queimareis a fogo\" (Dt 12:3) — para que o poste sagrado não fosse replantado nem reaproveitado noutro alto. A fogueira da cena é a execução literal dessa ordem, no reinado em que o rei \"tirou os altos e os bosques de Judá\" (2Cr 17:6). O mesmo trabalho voltará a ser citado como mérito na boca de Jeú, filho de Hanani: \"Boas coisas contudo se acharam em ti; porque tiraste os bosques da terra\" (2Cr 19:3). Uma reforma que se pode ver do caminho — cinza no lugar de um poste — vale mais que um decreto lido na praça." },
+  "livro-da-lei-do-senhor": {
+    title: "O livro da lei do SENHOR, levado às cidades de Judá",
+    subtitle: "2Cr 17:9 — o objeto mais importante de todo o reinado de Jeosafá",
+    text: "\"E ensinaram em Judá, levando consigo o livro da lei do Senhor; e foram a todas as cidades de Judá, ensinando entre o povo\" (2Cr 17:9). Onze homens — cinco príncipes, nove levitas e dois sacerdotes (2Cr 17:7-8) — atravessam o reino carregando um rolo, e é o rolo, não o título deles, que carrega a autoridade. A Lei já mandava ler a lei diante de todo o povo de sete em sete anos (Dt 31:10-13); Jeosafá inverte a logística e, em vez de esperar que o povo suba ao templo, manda o templo descer às aldeias. O efeito registrado é maior que o de qualquer campanha do capítulo: \"E veio o temor do Senhor sobre todos os reinos das terras\" (2Cr 17:10). É o mesmo rolo que, achado na casa do SENHOR, rasgaria as vestes de Josias duzentos anos depois (2Cr 34:14-19)." },
+  "prata-de-tributo-dos-filisteus": {
+    title: "A prata de tributo trazida pelos filisteus",
+    subtitle: "2Cr 17:11 — os antigos inimigos entrando sem espada",
+    text: "\"E alguns dentre os filisteus traziam presentes a Jeosafá, e prata como tributo\" (2Cr 17:11). São os mesmos filisteus que humilharam Israel desde Sansão e Afeque, que levaram a arca e mataram Saul em Gilboa — e que agora sobem a Jerusalém com caixotes de prata. O cronista não credita isso à resenha militar do fim do capítulo, e sim ao versículo anterior: \"veio o temor do Senhor sobre todos os reinos das terras, que estavam ao redor de Judá, e não guerrearam contra Jeosafá\" (2Cr 17:10). No mesmo versículo chega o tributo do outro lado, em rebanho: sete mil e setecentos carneiros e sete mil e setecentos bodes dos árabes." },
+  "altar-de-amasias-filho-de-zicri": {
+    title: "O altar de Amasias, filho de Zicri, no campo da resenha",
+    subtitle: "2Cr 17:16 — o único capitão do rol que o cronista para para elogiar",
+    text: "\"E depois Amasias, filho de Zicri, que voluntariamente se entregou ao Senhor, e com ele duzentos mil homens valentes\" (2Cr 17:16). Num rol de cinco capitães e mais de um milhão de soldados, todos convocados por ofício, um homem entrou sem ser convocado — e é o nome que ficou. A expressão descreve a oferta espontânea, do mesmo tipo dos que \"voluntariamente se ofereceram entre o povo\" no cântico de Débora (Jz 5:9). O altar aceso no meio do campo é essa entrega tornada visível: antes de ser o comandante de duzentos mil, ele é um homem que se ofereceu, e a espada está deposta ao pé do altar, não na mão." },
+  "banquete-de-acabe-em-samaria": {
+    title: "As ovelhas e os bois abatidos por Acabe em Samaria",
+    subtitle: "2Cr 18:2 — a mesa em que começou a persuasão",
+    text: "\"E depois de alguns anos desceu ele para Acabe em Samaria; e Acabe matou ovelhas e bois em abundância, para ele e para o povo que vinha com ele; e o persuadiu a subir com ele a Ramote de Gileade\" (2Cr 18:2). Não houve ameaça nem chantagem: houve hospitalidade, e ela bastou. Toda a persuasão deste capítulo começa nesta mesa farta, e é dela que sai o compromisso sem cláusula que Jeosafá assume: \"Como tu és, serei eu; e o meu povo, como o teu povo; iremos contigo à guerra\" (2Cr 18:3). Só depois de prometer é que ele se lembra de perguntar a Deus (2Cr 18:4) — e é sempre nessa ordem que os aliados errados são feitos." },
+  "trono-do-senhor-na-visao-de-micaias": {
+    title: "O trono do SENHOR na visão de Micaías",
+    subtitle: "2Cr 18:18 — a sala do trono do céu, aberta diante de dois reis",
+    text: "\"Vi ao Senhor assentado no seu trono, e todo o exército celestial em pé à sua mão direita, e à sua esquerda\" (2Cr 18:18). O trono é desenhado vazio e em glória: Deus não é figura em cena nenhuma, e quem fala continua sendo o profeta. Todos estão em pé; só um está assentado — a mesma cena que Isaías veria com os serafins (Is 6:1-3), Daniel com milhares de milhares (Dn 7:10) e João com o mar de vidro (Ap 4:2-6). Diante de dois reis sentados nos seus tronos na porta de Samaria, Micaías mostra o único trono que decide a batalha do dia seguinte — e o que se delibera ali é a queda de um deles: \"Quem persuadirá a Acabe rei de Israel, para que suba, e caia em Ramote de Gileade?\" (2Cr 18:19)." },
+  "pao-de-angustia-e-agua-de-angustia": {
+    title: "O pão de angústia e a água de angústia",
+    subtitle: "2Cr 18:26 — a ração do profeta na casa do cárcere",
+    text: "\"Colocai este homem na casa do cárcere; e sustentai-o com pão de angústia, e com água de angústia, até que eu volte em paz\" (2Cr 18:26). É a ração mínima de preso: o bastante para não morrer, e nada além. A expressão volta em Isaías, que a usa como imagem do tempo de aflição em que ainda assim os mestres do povo não seriam escondidos: \"Bem vos dará o Senhor pão de angústia e água de aperto\" (Is 30:20). O que dá peso ao objeto é a cláusula que o acompanha — \"até que eu volte em paz\" —, porque o rei que a ditou não voltou: morreu naquele dia ao pôr do sol. E o preso respondeu à sentença antes que ela se cumprisse: \"Se voltares em paz, o Senhor não tem falado por mim\" (2Cr 18:27)." },
+  "casa-do-carcere-de-samaria": {
+    title: "A casa do cárcere de Samaria",
+    subtitle: "2Cr 18:25-27 — para onde Micaías foi levado de volta",
+    text: "\"Então disse o rei de Israel: Tomai a Micaías, e tornai a levá-lo a Amom, o governador da cidade, e a Joás, filho do rei\" (2Cr 18:25). O verbo é \"tornai a levá-lo\": o profeta já tinha estado ali antes, o que explica por que Acabe sabia exatamente onde encontrá-lo quando Jeosafá pediu um profeta do SENHOR. Da porta desse cárcere sai o grito que fecha a cena e que aposta a vida de um homem contra a de um rei: \"Se voltares em paz, o Senhor não tem falado por mim. Disse mais: Ouvi, povos todos!\" (2Cr 18:27). A Escritura não conta se ele chegou a ser solto — só conta que quem fixou o prazo da soltura morreu antes do fim do dia." },
+  "arco-atirado-a-esmo-em-ramote": {
+    title: "O arco atirado a esmo em Ramote de Gileade",
+    subtitle: "2Cr 18:33 — a flecha sem alvo que achou a brecha da couraça",
+    text: "\"Então um homem armou o arco e atirou a esmo, e feriu o rei de Israel entre as junturas e a couraça\" (2Cr 18:33). Um soldado sem nome, sem mira e sem intenção, e a flecha entra pela única fresta de uma armadura, no corpo do único homem que a Síria procurava e que estava disfarçado justamente para não ser achado. Acabe tinha tomado todas as precauções — mandou o aliado vestido de rei, tirou o próprio manto (2Cr 18:29) — e nenhuma delas alcançava o problema real, que era uma palavra dita na praça: \"Vi a todo o Israel disperso pelos montes, como ovelhas que não têm pastor\" (2Cr 18:16). Não há acaso que escape ao governo de Deus; em hebraico, a flecha foi atirada \"na sua simplicidade\", e chegou onde tinha de chegar." },
+  "carro-de-acabe-em-ramote-de-gileade": {
+    title: "O carro em que Acabe se susteve em pé até à tarde",
+    subtitle: "2Cr 18:33-34 — o posto de comando que virou leito de morte",
+    text: "Ferido, o rei dá a última ordem da sua vida: \"então disse ao carreteiro: Dá volta, e tira-me do exército, porque estou gravemente ferido\" (2Cr 18:33). Não sai. \"E aquele dia cresceu a peleja, mas o rei de Israel susteve-se em pé no carro defronte dos sírios até à tarde; e morreu ao tempo do pôr do sol\" (2Cr 18:34). Ficar em pé é manter a linha: enquanto o exército vê o rei no carro, o exército não foge. É a última coragem de um homem que passou o capítulo inteiro fugindo da verdade, e é o cumprimento exato da visão do rebanho sem pastor. O relato paralelo acrescenta o que o cronista poupa: lavaram o carro no tanque de Samaria, e os cães lamberam o sangue (1Rs 22:38)." },
+  "bosques-tirados-da-terra-por-jeosafa": {
+    title: "Os bosques tirados da terra — a coisa boa achada no rei",
+    subtitle: "2Cr 19:3 — o que Jeú citou como mérito, na mesma repreensão",
+    text: "O oráculo de Jeú, filho de Hanani, começa duro — \"Devias tu ajudar ao ímpio, e amar aqueles que odeiam ao Senhor?\" (2Cr 19:2) — e não termina só em ira: \"Boas coisas contudo se acharam em ti; porque tiraste os bosques da terra, e preparaste o teu coração para buscar a Deus\" (2Cr 19:3). O elogio tem prova material: a clareira dos postes cortados que o rei deixou pela serra de Judá (2Cr 17:6). É um dos poucos lugares da Escritura em que um profeta, no meio de uma repreensão, para para dizer o que achou de bom no homem que está repreendendo. E o rei recebe as duas coisas sem prender ninguém — ao contrário do pai, que pelo mesmo tipo de palavra pôs o pai deste profeta na casa do tronco (2Cr 16:10)." },
+  "harpa-dos-cantores-diante-dos-armados": {
+    title: "A harpa dos cantores que saíram adiante dos armados",
+    subtitle: "2Cr 20:21 — o instrumento posto na primeira fila da batalha",
+    text: "\"E aconselhou-se com o povo, e ordenou cantores para o Senhor, que louvassem à Majestade santa, saindo diante dos armados, e dizendo: Louvai ao Senhor porque a sua benignidade dura para sempre\" (2Cr 20:21). Nenhum comandante do mundo antigo poria o coro na vanguarda: quem vai na frente é quem morre primeiro. O louvor cantado é o de sempre em Israel, o mesmo da dedicação do templo (2Cr 5:13) e do Salmo 136 inteiro — a novidade é o lugar em que ele foi posto. E o gatilho da vitória é exatamente o canto: \"E, quando começaram a cantar e a dar louvores, o Senhor pôs emboscadas\" (2Cr 20:22)." },
+  "trombetas-dos-cantores-de-juda": {
+    title: "As trombetas dos cantores de Judá no deserto de Tecoa",
+    subtitle: "2Cr 20:21-22 — o som que precedeu as emboscadas",
+    text: "A trombeta de prata era instrumento sacerdotal, e a Lei lhe dava função de guerra: \"quando na vossa terra sairdes a pelejar contra o inimigo, que vos oprime, também tocareis as trombetas retinindo, e perante o Senhor vosso Deus haverá lembrança de vós, e sereis salvos de vossos inimigos\" (Nm 10:9). Aqui ela sai à frente das lanças, junto com os cantores mandados louvar \"à Majestade santa\" (2Cr 20:21). O que acontece em seguida é o único combate do capítulo, e Judá não participa dele: \"E, quando começaram a cantar e a dar louvores, o Senhor pôs emboscadas contra os filhos de Amom e de Moabe e os das montanhas de Seir, que vieram contra Judá, e foram desbaratados\" (2Cr 20:22)." },
+  "objetos-preciosos-do-despojo-de-beraca": {
+    title: "Os objetos preciosos do despojo, recolhidos em três dias",
+    subtitle: "2Cr 20:25 — mais do que o povo conseguia carregar",
+    text: "\"E vieram Jeosafá e o seu povo para saquear os seus despojos, e acharam entre eles riquezas e cadáveres em abundância, assim como objetos preciosos; e tomaram para si tanto, que não podiam levar; e três dias saquearam o despojo, porque era muito\" (2Cr 20:25). O exército que saiu cantando não deu um golpe e passou três dias recolhendo. É o cumprimento literal da ordem que ninguém tinha entendido na véspera: \"Nesta batalha não tereis que pelejar; postai-vos, ficai parados, e vede a salvação do Senhor\" (2Cr 20:17). E no quarto dia o povo não vai para casa: junta-se num vale para bendizer, e o vale ficou com o nome disso — Beraca, bênção (2Cr 20:26)." },
+  "harpas-e-salterios-da-volta-a-jerusalem": {
+    title: "Os saltérios e as harpas da volta a Jerusalém",
+    subtitle: "2Cr 20:28 — a procissão que entrou tocando, direto para a casa do SENHOR",
+    text: "\"Então voltaram todos os homens de Judá e de Jerusalém, e Jeosafá à frente deles, e tornaram a Jerusalém com alegria; porque o Senhor os alegrara sobre os seus inimigos\" (2Cr 20:27), \"E vieram a Jerusalém com saltérios, com harpas e com trombetas, para a casa do Senhor\" (2Cr 20:28). Os mesmos instrumentos que Davi pusera diante da arca (1Cr 15:28) fecham a campanha, e o destino da procissão não é o palácio: é o templo, que foi de onde a coisa toda partiu, com o rei em pé diante do pátio novo. Saíram para uma batalha e voltaram de um culto — e entram pela mesma porta por onde tinham saído cantando." },
+  "trombetas-da-entrada-em-jerusalem": {
+    title: "As trombetas da entrada em Jerusalém",
+    subtitle: "2Cr 20:28 — o som da volta, para a casa do SENHOR",
+    text: "\"E vieram a Jerusalém com saltérios, com harpas e com trombetas, para a casa do Senhor\" (2Cr 20:28). É a mesma trombeta que tinha saído na vanguarda para o deserto de Tecoa, e agora anuncia a volta: a música que abriu a batalha é a que fecha o dia. Em Israel, a trombeta de prata marcava tanto o alarme de guerra quanto \"no dia da vossa alegria e nas vossas solenidades\" (Nm 10:10), e aqui as duas funções se encontram no mesmo instrumento e no mesmo grupo de homens. O reino inteiro descansa depois disto: \"E o reino de Jeosafá ficou quieto; e o seu Deus lhe deu repouso ao redor\" (2Cr 20:30)." },
+  "notas-de-jeu-filho-de-hanani": {
+    title: "As notas de Jeú, filho de Hanani",
+    subtitle: "2Cr 20:34 — o profeta que repreendeu o rei acabou sendo o seu cronista",
+    text: "\"Ora, o restante dos atos de Jeosafá, assim, desde os primeiros até os últimos, eis que está escrito nas notas de Jeú, filho de Hanani, que as inseriu no livro dos reis de Israel\" (2Cr 20:34). É o mesmo Jeú que o esperou à porta de casa com a pergunta \"Devias tu ajudar ao ímpio, e amar aqueles que odeiam ao Senhor?\" (2Cr 19:2), e é o filho de Hanani, o vidente que o pai deste rei mandara lançar na casa do tronco (2Cr 16:10). Três gerações amarradas por um arquivo: o profeta preso por dizer a verdade a Asa tem um filho que diz a verdade a Jeosafá — e é a esse filho que a história do rei é confiada. Quem tem coragem de repreender um homem é quem tem crédito para o contar." },
+  "navios-de-tarsis-em-eziom-geber": {
+    title: "Os navios de Társis quebrados em Eziom-Geber",
+    subtitle: "2Cr 20:36-37 — o último erro do reinado, na praia do golfo",
+    text: "\"E aliou-se com ele, para fazerem navios que fossem a Társis; e fizeram os navios em Eziom-Geber\" (2Cr 20:36). Eziom-Geber fica no fim do golfo de Ácaba, e foi de lá que a frota de Salomão partia para Ofir (1Rs 9:26): a rota existia e dava lucro. O que não podia é a sociedade — o rei que quase morrera por se aparentar com Acabe se alia agora com o filho de Acabe, \"que procedeu com toda a impiedade\" (2Cr 20:35). Eliezer, filho de Dodava, de Maressa, dá o veredicto antes do naufrágio: \"Porquanto te aliaste com Acazias, o Senhor despedaçou as tuas obras. E os navios se quebraram, e não puderam ir a Társis\" (2Cr 20:37). A madeira ficou na praia, e o reinado terminou com um casco partido." },
+  "sepulcros-dos-reis-na-cidade-de-davi": {
+    title: "Os sepulcros dos reis, na cidade de Davi",
+    subtitle: "2Cr 21:1,20 — a encosta cavada onde entram uns e de onde outros são barrados",
+    text: "É o jazigo da dinastia, aberto na encosta sul de Jerusalém: \"Depois Jeosafá dormiu com seus pais, e foi sepultado junto a eles na cidade de Davi\" (2Cr 21:1). Em 2 Crônicas esta porta funciona como sentença: entram os que fizeram bem e ficam de fora os que não fizeram. Jeorão foi sepultado na cidade, \"porém não nos sepulcros dos reis\" (21:20); Joás também não (24:25); Uzias ficou no campo ao lado, \"porque disseram: Leproso é\" (26:23). E uma vez a porta se abriu para quem não era da casa real: \"E o sepultaram na cidade de Davi com os reis; porque tinha feito bem em Israel, e para com Deus e a sua casa\" (2Cr 24:16) — o sacerdote Joiada.",
+  },
+  "presentes-de-prata-e-de-ouro-de-jeosafa": {
+    title: "Os presentes de prata, de ouro e de coisas preciosíssimas",
+    subtitle: "2Cr 21:3 — a herança que Jeosafá repartiu entre os seus sete filhos",
+    text: "\"E seu pai lhes deu muitos presentes de prata, de ouro e de coisas preciosíssimas, juntamente com cidades fortificadas em Judá\" (2Cr 21:3). Jeosafá fez o que um pai prudente faria: proveu os seis filhos mais moços com bens e com governo de praças fortes, e reservou o trono ao primogênito. Era partilha sensata e generosa — e foi a única coisa que o herdeiro não tolerou. Um versículo depois, os donos destas arcas estão mortos (21:4), e as cidades fortificadas voltaram todas para a mesma mão. Providência de pai não segura coração de filho.",
+  },
+  "mesa-da-partilha-dos-filhos-de-jeosafa": {
+    title: "A mesa da partilha dos filhos de Jeosafá",
+    subtitle: "2Cr 21:2-3 — onde se repartiu a herança dos seis irmãos",
+    text: "É a mesa onde se lê a lista que o capítulo faz questão de dar por extenso: \"E teve irmãos, filhos de Jeosafá: Azarias, Jeiel, Zacarias, Asarias, Micael e Sefatias; todos estes foram filhos de Jeosafá, rei de Israel\" (2Cr 21:2). Em Crônicas, nomear é herdar: o registro escrito é o que garante lugar na casa. Aqui os seis nomes são anotados dois versículos antes de serem apagados — e o texto, ao mantê-los na página, faz o contrário do que o irmão fez com a espada. A carta de Elias devolverá a eles a última palavra: eram \"melhores do que tu\" (2Cr 21:13).",
+  },
+  "trono-de-juda-dado-ao-primogenito": {
+    title: "O trono que não se reparte",
+    subtitle: "2Cr 21:3 — o reino dado a Jeorão porque era o primogênito",
+    text: "\"porém, o reino, deu a Jeorão, porquanto era o primogênito\" (2Cr 21:3). Prata, ouro e cidades fortificadas dividem-se em seis; o trono, não. Jeosafá seguiu o direito da primogenitura, e o direito não garantiu caráter nenhum: quem se sentou aqui \"andou no caminho dos reis de Israel, como fazia a casa de Acabe\" (21:6). O Cronista guarda a cena porque ela mostra a fragilidade do arranjo humano diante da promessa divina — a casa de Davi não se sustentou pela regra sucessória, e sim porque \"o Senhor não quis destruir a casa de Davi, em atenção à aliança que tinha feito com Davi\" (2Cr 21:7).",
+  },
+  "espada-com-que-jeorao-matou-os-irmaos": {
+    title: "A espada com que Jeorão matou os irmãos",
+    subtitle: "2Cr 21:4 — o primeiro ato de um reinado firmado",
+    text: "\"E, subindo Jeorão ao reino de seu pai, e havendo-se fortificado, matou a todos os seus irmãos à espada, como também a alguns dos príncipes de Israel\" (2Cr 21:4). A ordem das palavras é o retrato: primeiro ficou forte, depois matou — não foi golpe de desespero, foi política de consolidação. Deus não deixou o fato sem resposta, e a resposta veio por escrito, da mão do profeta do Norte: \"e também mataste a teus irmãos da casa de teu pai, melhores do que tu\" (2Cr 21:13). No fim do capítulo os papéis se invertem, e os filhos e as mulheres do próprio Jeorão são levados por estranhos (21:17).",
+  },
+  "trono-de-jeorao-em-jerusalem": {
+    title: "O trono de Jeorão em Jerusalém",
+    subtitle: "2Cr 21:5-6 — oito anos de reinado num salão sem parentes",
+    text: "\"Da idade de trinta e dois anos era Jeorão, quando começou a reinar; e reinou oito anos em Jerusalém\" (2Cr 21:5). É o assento pelo qual ele matou seis irmãos — e do qual governou como se fosse rei do Norte: \"E andou no caminho dos reis de Israel, como fazia a casa de Acabe; porque tinha a filha de Acabe por mulher; e fazia o que era mau aos olhos do Senhor\" (21:6). Debaixo dele, Edom se solta e constitui rei próprio (21:8), Libna fecha as portas (21:10) e os montes de Judá se enchem de altos (21:11). Oito anos depois, o epitáfio: \"e foi sem deixar de si saudades\" (2Cr 21:20).",
+  },
+  "baal-da-casa-de-acabe-em-juda": {
+    title: "O Baal da casa de Acabe, dentro de Judá",
+    subtitle: "2Cr 21:6; 22:3 — o culto do Norte instalado em Jerusalém por um casamento",
+    text: "A idolatria não entrou em Judá por invasão: entrou por aliança de família. \"E andou no caminho dos reis de Israel, como fazia a casa de Acabe; porque tinha a filha de Acabe por mulher\" (2Cr 21:6), e a filha de Acabe é Atalia, filha da casa que Elias enfrentara no Carmelo (1Rs 18). No reinado seguinte a coisa se repete com o neto: \"Também ele andou nos caminhos da casa de Acabe, porque sua mãe era sua conselheira, para proceder impiamente\" (2Cr 22:3). O ídolo só cai no dia da coroação de Joás, quando \"todo o povo entrou na casa de Baal, e a derrubaram\" (2Cr 23:17) — três reinados depois de ter sido trazido.",
+  },
+  "incenso-da-filha-de-acabe": {
+    title: "O incensário da filha de Acabe",
+    subtitle: "2Cr 21:6 — o culto particular da rainha dentro do palácio de Davi",
+    text: "O texto não descreve o pátio de Atalia, mas descreve o resultado: \"fazia o que era mau aos olhos do Senhor\" (2Cr 21:6), e o rei \"fez altos nos montes de Judá; e fez com que se corrompessem os moradores de Jerusalém\" (21:11). Um incensário aceso a Baal dentro da cidade onde estava a casa do SENHOR é, na lógica do livro, a raiz de tudo o que vem depois: a revolta de Edom, a de Libna \"porque deixara ao Senhor Deus de seus pais\" (21:10), o saque dos filisteus e dos árabes (21:16-17). Em Judá, o culto errado nunca ficou só no cômodo em que começou.",
+  },
+  "tenda-do-rei-que-edom-constituiu": {
+    title: "A tenda do rei que Edom constituiu para si",
+    subtitle: "2Cr 21:8 — o trono que se levantou no planalto vermelho contra Judá",
+    text: "\"Nos seus dias se revoltaram os edomitas contra o mando de Judá, e constituíram para si um rei\" (2Cr 21:8). Edom estava sujeito desde Davi (2Sm 8:14), e ainda no reinado do pai deste rei o texto registrava que \"Então não havia rei em Edom, porém um vice-rei\" (1Rs 22:48). Sob Jeorão a sujeição acaba — \"Todavia os edomitas se revoltaram contra o mando de Judá até ao dia de hoje\" (2Cr 21:10) —, e cumpre-se tardiamente o que Isaque dissera a Esaú: \"sacudirás o seu jugo do teu pescoço\" (Gn 27:40). Amazias voltará a feri-los no Vale do Sal, mas Edom nunca mais será de Judá.",
+  },
+  "porta-fechada-de-libna": {
+    title: "A porta fechada de Libna",
+    subtitle: "2Cr 21:10 — a cidade sacerdotal que se revoltou por motivo de religião",
+    text: "\"então no mesmo tempo Libna se revoltou contra o seu mando; porque deixara ao Senhor Deus de seus pais\" (2Cr 21:10). O Cronista explica esta revolta por dentro, e não por fora: não foi ambição de fronteira, foi recusa a um rei que abandonou o SENHOR. E o detalhe pesa: Libna, na Sefelá, era cidade dos filhos de Arão — \"Libna e os seus arrabaldes\" (Js 21:13) —, isto é, praça de sacerdotes. Quando até a cidade dos sacerdotes tranca o portão ao rei de Jerusalém, o problema deixou de ser político havia muito tempo.",
+  },
+  "altos-que-jeorao-fez-nos-montes-de-juda": {
+    title: "Os altos que Jeorão fez nos montes de Judá",
+    subtitle: "2Cr 21:11 — a idolatria como política de Estado, no cume da serra",
+    text: "\"Ele também fez altos nos montes de Judá; e fez com que se corrompessem os moradores de Jerusalém, e até a Judá impeliu a isso\" (2Cr 21:11). Os reis bons de Judá são medidos, um a um, pelo que fizeram com os altos; este os construiu. E o verbo do versículo não é permitir e sim IMPELIR: não se trata de tolerância com o costume do povo, e sim de um rei empurrando a sua cidade para o culto errado — o mesmo verbo com que Elias, na carta, o acusa de ter feito \"prostituir a Judá e aos moradores de Jerusalém, segundo a prostituição da casa de Acabe\" (2Cr 21:13). A Lei mandava sacrificar \"no lugar que o Senhor escolher numa das tuas tribos\" (Dt 12:14), e não em cada crista de monte.",
+  },
+  "escrito-da-parte-de-elias-o-profeta": {
+    title: "O escrito da parte de Elias, o profeta",
+    subtitle: "2Cr 21:12-15 — a única palavra ESCRITA de Elias que a Escritura guardou",
+    text: "\"Então lhe veio um escrito da parte de Elias, o profeta, que dizia: Assim diz o Senhor Deus de Davi teu pai\" (2Cr 21:12). É o quadro mais estranho de 2 Crônicas: o profeta do Norte, que nunca pisa nesta narrativa, manda uma carta a um rei do Sul — e o texto a transcreve inteira. Ela diz o que ele fez: \"Mas andaste no caminho dos reis de Israel, e fizeste prostituir a Judá... e também mataste a teus irmãos da casa de teu pai, melhores do que tu\" (21:13); e o que vai acontecer, em duas metades que se cumprirão à risca: \"Eis que o Senhor ferirá com um grande flagelo ao teu povo, aos teus filhos, às tuas mulheres e a todas as tuas fazendas\" (21:14) e \"Tu também terás grande enfermidade por causa de uma doença em tuas entranhas, até que elas saiam, de dia em dia, por causa do mal\" (2Cr 21:15). Elias não aparece em cena; o que chegou a Jerusalém foi papel, e o papel bastou.",
+  },
+  "arraial-saqueado-de-jeorao": {
+    title: "O arraial saqueado pelos filisteus e pelos árabes",
+    subtitle: "2Cr 21:16-17 — a primeira metade da carta de Elias, cumprida",
+    text: "\"Despertou, pois, o Senhor, contra Jeorão o espírito dos filisteus e dos árabes, que estavam do lado dos etíopes\" (2Cr 21:16). O sujeito da frase é o SENHOR, e é isso que o Cronista quer que se leia: não foi azar de fronteira, foi juízo anunciado por escrito dois versículos antes. \"Estes subiram a Judá, e deram sobre ela, e levaram todos os bens que se achou na casa do rei, como também a seus filhos e a suas mulheres\" (21:17). O acampamento real, montado por um rei que se julgava firme, é aberto como uma casa sem porta — e é daqui que saem, amarrados, a família inteira dele.",
+  },
+  "bens-da-casa-do-rei-levados": {
+    title: "Os bens que se acharam na casa do rei",
+    subtitle: "2Cr 21:17 — as arcas do palácio arrastadas para fora pelos árabes",
+    text: "\"e levaram todos os bens que se achou na casa do rei, como também a seus filhos e a suas mulheres; de modo que não lhe deixaram filho algum, senão a Jeoacaz, o mais moço de seus filhos\" (2Cr 21:17). É a devolução exata da conta aberta em 21:3-4: quem começou o reinado tomando para si a prata, o ouro e as cidades dos irmãos vê tudo sair pela mesma porta, e não vê sair só o tesouro. O que a carta prometera — \"a todas as tuas fazendas\" (21:14) — é cumprido ao pé da letra, e o que sobra da casa de Davi cabe num único menino.",
+  },
+  "leito-da-enfermidade-de-jeorao": {
+    title: "O leito da enfermidade incurável de Jeorão",
+    subtitle: "2Cr 21:18-19 — dois anos de cumprimento literal da segunda metade da carta",
+    text: "\"E depois de tudo isto o Senhor o feriu nas suas entranhas com uma enfermidade incurável\" (2Cr 21:18). O escrito de Elias fora específico até no prazo — \"até que elas saiam, de dia em dia\" (21:15) —, e a narrativa é ainda mais crua: \"E sucedeu que, depois de muito tempo, ao fim de dois anos, saíram-lhe as entranhas por causa da doença; e morreu daquela grave enfermidade\" (2Cr 21:19). Dois anos numa cama é tempo suficiente para qualquer arrependimento; o texto não registra nenhum. É o mesmo leito que reaparecerá no livro, com outros donos: Jorão em Jizreel (22:6), Joiada aos cento e trinta anos (24:15) e Joás ferido pelos seus servos (24:25).",
+  },
+  "bacia-do-leito-de-jeorao": {
+    title: "A bacia ao pé do leito do rei",
+    subtitle: "2Cr 21:19 — o utensílio do quarto onde a doença durou dois anos",
+    text: "O texto não menciona a bacia; menciona o que ela serviria: \"ao fim de dois anos, saíram-lhe as entranhas por causa da doença; e morreu daquela grave enfermidade\" (2Cr 21:19). O objeto está em cena para dizer o que uma frase tão seca esconde — que houve dois anos de rotina, de mãos lavando, de criados entrando e saindo, de um palácio inteiro convivendo com o cumprimento de uma carta. Em Crônicas a doença de um rei nunca é só clínica: do avô Asa se registrou que \"na sua enfermidade, não buscou ao Senhor, mas antes os médicos\" (2Cr 16:12), e aqui nem os médicos aparecem.",
+  },
+  "aroma-que-nao-queimaram-por-jeorao": {
+    title: "O aroma que não queimaram por ele",
+    subtitle: "2Cr 21:19 — a honra fúnebre negada a um rei de Judá",
+    text: "\"e o seu povo não lhe queimou aroma como queimara a seus pais\" (2Cr 21:19). Queimar especiarias no funeral do rei era honra devida — fizeram-no por Asa, na cama \"que se enchera de perfumes e especiarias preparadas segundo a arte dos perfumistas\" (2Cr 16:14), e Jeremias o prometeria a Zedequias: \"conforme as queimas para teus pais, os reis precedentes, que foram antes de ti, assim queimarão para ti\" (Jr 34:5). Aqui o costume é simplesmente omitido, e a omissão é o veredito do povo. O braseiro apagado no canto do quarto diz o que ninguém precisou dizer em voz alta.",
+  },
+  "cova-de-jeorao-fora-dos-sepulcros-dos-reis": {
+    title: "A cova de Jeorão, fora dos sepulcros dos reis",
+    subtitle: "2Cr 21:20 — o epitáfio mais duro do livro",
+    text: "\"Era da idade de trinta e dois anos quando começou a reinar, e reinou oito anos em Jerusalém; e foi sem deixar de si saudades; e sepultaram-no na cidade de Davi, porém não nos sepulcros dos reis\" (2Cr 21:20). Cinco palavras — \"e foi sem deixar de si saudades\" — resumem oito anos de governo: ninguém sentiu falta. E a sepultura fecha o julgamento com geografia: dentro da cidade, sim, porque era da casa de Davi; no jazigo dos reis, não. O mesmo será dito do neto Joás (24:25) e, por outro motivo, do bisneto Uzias (26:23).",
+  },
+  "porta-de-jerusalem-onde-fizeram-rei-a-acazias": {
+    title: "A porta de Jerusalém onde fizeram rei a Acazias",
+    subtitle: "2Cr 22:1 — a aclamação feita por falta de candidatos",
+    text: "\"E os moradores de Jerusalém, em lugar de Jeorão, fizeram rei a Acazias, seu filho mais moço, porque a tropa, que viera com os árabes ao arraial, tinha matado a todos os mais velhos\" (2Cr 22:1). A praça do portão é, em Israel, o lugar público por excelência — onde se julga, se negocia e se aclama. Aqui a cidade se ajunta não para escolher, e sim para reconhecer o que sobrou do saque do capítulo anterior (21:17). Reinou um ano (22:2). Seis anos depois, esta mesma gente estará noutro pátio, batendo palmas por um menino de sete anos (2Cr 23:11-13).",
+  },
+  "trono-de-acazias-aconselhado-por-atalia": {
+    title: "O trono de Acazias, com a conselheira ao lado",
+    subtitle: "2Cr 22:2-4 — um reinado de um ano governado de pé",
+    text: "\"Era da idade de quarenta e dois anos, quando começou a reinar, e reinou um ano em Jerusalém; e era o nome de sua mãe Atalia, filha de Onri\" (2Cr 22:2). O versículo seguinte é o mais explícito de toda a série sobre a origem de um mau reinado: \"Também ele andou nos caminhos da casa de Acabe, porque sua mãe era sua conselheira, para proceder impiamente\" (22:3). E o texto amplia: \"porque eles eram seus conselheiros depois da morte de seu pai, para a sua perdição\" (22:4). Quem se assenta neste trono não decide nada; a casa de Acabe decide por ele, e em doze meses o leva à ruína.",
+  },
+  "carros-da-peleja-de-ramote-de-gileade": {
+    title: "Os carros da peleja de Ramote de Gileade",
+    subtitle: "2Cr 22:5 — a mesma estrada em que Acabe morrera, repetida pelos filhos",
+    text: "\"Também andou nos conselhos deles, e foi com Jorão, filho de Acabe, rei de Israel, à peleja contra Hazael, rei da Síria, junto a Ramote de Gileade; e os sírios feriram a Jorão\" (2Cr 22:5). Ramote é chão marcado: foi ali que Acabe, com Jeosafá ao lado, recebeu a flecha atirada a esmo e morreu no carro (2Cr 18:33-34). Uma geração depois, o filho de Acabe e o neto de Jeosafá refazem a mesma aliança, a mesma estrada e o mesmo erro. O que muda é o desfecho: desta vez o ferido é levado a Jizreel, e a visita ao ferido põe o rei de Judá na frente de Jeú (22:6-7).",
+  },
+  "bacia-das-feridas-de-jorao": {
+    title: "A bacia dos curativos de Jorão em Jizreel",
+    subtitle: "2Cr 22:6 — a enfermaria onde Acazias foi visitar quem não devia",
+    text: "\"E voltou para curar-se em Jizreel, das feridas que lhe fizeram em Ramá, pelejando contra Hazael, rei da Síria; e Acazias, filho de Jeorão, rei de Judá, desceu para ver a Jorão, filho de Acabe, em Jizreel, porque estava doente\" (2Cr 22:6). Visitar um parente ferido é gesto humano e inocente — e o Cronista o lê de outro modo: \"Foi, pois, da vontade de Deus, que Acazias, para sua ruína, visitasse Jorão\" (22:7). Jizreel é a cidade da vinha de Nabote (1Rs 21), o lugar onde a palavra de Deus contra a casa de Acabe fora pronunciada; foi ali que o juízo alcançou as duas casas de uma vez.",
+  },
+  "carro-de-jeu-no-campo-de-jizreel": {
+    title: "O carro de Jeú no campo de Jizreel",
+    subtitle: "2Cr 22:7-8 — a estrada fechada pelo homem ungido para desarraigar a casa de Acabe",
+    text: "\"porque chegando ele, saiu com Jorão contra Jeú, filho de Ninsi, a quem o Senhor tinha ungido para desarraigar a casa de Acabe\" (2Cr 22:7). Jeú não é um usurpador qualquer: a sua unção fora ordenada a Elias em Horebe (1Rs 19:16-17), e ele cumpre o encargo com uma eficiência que apanha, no mesmo dia, gente das duas casas — \"achou os príncipes de Judá e os filhos dos irmãos de Acazias, que serviam a Acazias, e os matou\" (2Cr 22:8). O que os pôs na estrada errada foi uma aliança de família feita duas gerações antes: quem se aparenta com a casa de Acabe acaba no juízo da casa de Acabe.",
+  },
+  "esconderijo-de-acazias-em-samaria": {
+    title: "O esconderijo de Acazias em Samaria",
+    subtitle: "2Cr 22:9 — um rei de Judá morrendo escondido na cidade de Acabe",
+    text: "\"Depois buscou a Acazias (porque se tinha escondido em Samaria), e o alcançaram, e o trouxeram a Jeú, e o mataram, e o sepultaram; porque disseram: Filho é de Jeosafá, que buscou ao Senhor com todo o seu coração\" (2Cr 22:9). O detalhe da sepultura é o único raio de luz do capítulo, e vem de três gerações atrás: um bisavô que buscou a Deus comprou ao bisneto um enterro decente. O versículo fecha com o estado da casa de Davi naquela hora: \"E já não tinha a casa de Acazias ninguém que tivesse força para o reino\" — e é exatamente nesse vazio que a avó se levanta.",
+  },
+  "espada-que-destruiu-a-descendencia-real": {
+    title: "A espada que destruiu a descendência real da casa de Judá",
+    subtitle: "2Cr 22:10 — o dia em que a promessa a Davi coube num bebê",
+    text: "\"Vendo, pois, Atalia, mãe de Acazias, que seu filho era morto, levantou-se e destruiu toda a descendência real da casa de Judá\" (2Cr 22:10). Nenhum exército estrangeiro conseguira isto em quatro séculos; conseguiu-o uma mulher da própria casa, para reinar seis anos sobre a terra (22:12). O que Deus jurara a Davi — \"a tua casa e o teu reino serão firmados para sempre diante de ti\" (2Sm 7:16) — pendeu, naquela noite, de uma criança de colo e da coragem de uma tia. A lâmpada prometida em 2Cr 21:7 quase se apagou, e não se apagou.",
+  },
+  "roupas-de-cama-da-camara-dos-leitos": {
+    title: "As roupas de cama da câmara dos leitos",
+    subtitle: "2Cr 22:11 — o quarto de fundos onde um bebê ficou escondido seis anos",
+    text: "\"Porém Jeosabeate, filha do rei, tomou a Joás, filho de Acazias, furtando-o dentre os filhos do rei, aos quais matavam, e o pôs com a sua ama na câmara dos leitos\" (2Cr 22:11). É o depósito das camas e das roupas do serviço — o cômodo mais insignificante do conjunto, e por isso o único seguro. O Cronista acrescenta o que 2 Reis não diz e que explica tudo: Jeosabeate era \"mulher do sacerdote Joiada\" (22:11), e por isso a criança pôde passar do palácio para o templo: \"E esteve com eles seis anos escondido na casa de Deus; e Atalia reinou sobre a terra\" (2Cr 22:12).",
+  },
+  "porta-da-casa-do-senhor-no-plano-de-joiada": {
+    title: "A porta da casa do SENHOR, no plano de Joiada",
+    subtitle: "2Cr 23:4 — o posto da primeira das três turmas",
+    text: "\"Isto é o que haveis de fazer; uma terça parte de vós, ou seja, dos sacerdotes e dos levitas que entram no sábado, serão guardas das portas\" (2Cr 23:4). O plano do sétimo ano não é improviso de multidão: é uma ordem de serviço em três partes, dada por um sacerdote que a preparou durante seis anos. Guardar esta porta é impedir que o santuário vire campo de batalha — a linha que Joiada traça em 23:6 passa exatamente por aqui: \"Porém ninguém entre na casa do Senhor, senão os sacerdotes e os levitas que ministram\". É também a porta onde, anos depois, o rei Joás mandaria pôr o cofre furado (2Cr 24:8).",
+  },
+  "porta-da-casa-do-rei-no-plano-de-joiada": {
+    title: "A porta da casa do rei, no plano de Joiada",
+    subtitle: "2Cr 23:5 — o posto da segunda turma, entre o templo e o palácio",
+    text: "\"E uma terça parte estará na casa do rei\" (2Cr 23:5). Enquanto o menino é coroado no templo, um terço da força fica no palácio — onde está Atalia. É a peça que impede que o levante seja esmagado pelas costas, e é dali que sai o corredor pelo qual ela será levada: \"E lançaram mão dela; e ela foi pelo caminho da entrada da porta dos cavalos, à casa do rei, e ali a mataram\" (2Cr 23:15). No fim do dia, a mesma porta se abre no sentido inverso, e o rei legítimo entra por ela para se assentar no trono real (23:20).",
+  },
+  "porta-do-fundamento": {
+    title: "A porta do fundamento",
+    subtitle: "2Cr 23:5 — o terceiro posto da guarda no dia da coroação",
+    text: "\"e a outra terça parte à porta do fundamento; e todo o povo estará nos pátios da casa do Senhor\" (2Cr 23:5). É a terceira das três entradas cobertas pelo plano — em 2Rs 11:6 a mesma posição aparece como \"a porta de Sur\" —, e o nome sugere a entrada inferior, ao pé do aterro do monte. Não se sabe mais do que isso, e o texto não precisa: o que importa é que nenhuma via de acesso ficou aberta. Um levante que dá certo é feito de coisas assim, sem brilho nenhum: três portas, três turmas e ninguém fora do posto.",
+  },
+  "armas-das-turmas-do-sabado": {
+    title: "As armas na mão de cada um, em redor do rei",
+    subtitle: "2Cr 23:7,10 — os levitas armados formando círculo em volta do menino",
+    text: "\"E os levitas cercarão o rei de todos os lados, cada um com as suas armas na mão; e qualquer que entrar na casa será morto; porém vós estareis com o rei, quando entrar e quando sair\" (2Cr 23:7). E logo depois: \"E dispôs todo o povo, a cada um com as suas armas na mão, desde o lado direito da casa até o lado esquerdo da casa, do lado do altar e da casa, em redor do rei\" (23:10). Homens do santuário empunhando ferro é imagem rara na Escritura, e aqui é o cumprimento de um encargo antigo: os levitas acampavam em redor do tabernáculo \"tendo o cuidado da guarda do santuário\" (Nm 3:38). Naquele dia, guardar o santuário era guardar uma criança de sete anos.",
+  },
+  "turmas-do-sabado-de-joiada": {
+    title: "As turmas do sábado que Joiada não despediu",
+    subtitle: "2Cr 23:8 — o truque administrativo que dobrou a guarda sem alarde",
+    text: "\"E fizeram os levitas e todo o Judá conforme a tudo o que ordenara o sacerdote Joiada; e tomou cada um os seus homens, tanto os que entravam no sábado como os que saíam no sábado; porque o sacerdote Joiada não tinha despedido as turmas\" (2Cr 23:8). O detalhe é genial pela discrição: as escalas de serviço do templo, instituídas por Davi (1Cr 24-26), trocavam ao sábado; naquele sábado, simplesmente ninguém foi mandado para casa. O efetivo dobrou dentro do templo sem uma única movimentação de tropa que chamasse atenção do palácio. Atalia só soube quando ouviu o barulho (23:12).",
+  },
+  "escudos-e-rodelas-do-rei-davi": {
+    title: "Os escudos e as rodelas do rei Davi",
+    subtitle: "2Cr 23:9 — o arsenal de museu que voltou ao serviço",
+    text: "\"Também o sacerdote Joiada deu aos capitàes de cem as lanças, os escudos e as rodelas que foram do rei Davi, os quais estavam na casa de Deus\" (2Cr 23:9). Eram troféus consagrados, guardados no santuário havia mais de um século — o ferro com que o pastor de Belém firmara o reino, dedicado por ele mesmo ao SENHOR (2Sm 8:11). No dia em que o último descendente de Davi é coroado, é com as armas do antepassado que a guarda se arma. Salomão pendurara escudos de ouro no palácio, e Sisaque os levou (2Cr 12:9-10); estes, que ficaram na casa de Deus, sobreviveram e serviram.",
+  },
+  "cantores-que-dirigiam-o-cantar-de-louvores": {
+    title: "Os cantores que dirigiam o cantar de louvores",
+    subtitle: "2Cr 23:13 — a música do templo no meio de um golpe de estado",
+    text: "Foi isto que Atalia viu ao entrar: \"e também os cantores tocavam instrumentos musicais, e dirigiam o cantar de louvores\" (2Cr 23:13). Não há grito de guerra na cena da coroação, há coro: os cantores levíticos instituídos por Davi (1Cr 25:1) estão nos seus postos, fazendo o que fariam em qualquer festa. É por isso que o dia termina com o culto reposto e não com uma cidade em armas — \"E Joiada ordenou os ofícios na casa do Senhor, sob a direção dos sacerdotes levitas a quem Davi designara na casa do Senhor, para oferecerem os holocaustos do Senhor, como está escrito na lei de Moisés, com alegria e com canto, conforme a instituição de Davi\" (2Cr 23:18).",
+  },
+  "casa-de-baal-de-jerusalem": {
+    title: "A casa de Baal em Jerusalém",
+    subtitle: "2Cr 23:17 — o templo estrangeiro derrubado no mesmo dia da coroação",
+    text: "\"Depois todo o povo entrou na casa de Baal, e a derrubaram, e quebraram os seus altares, e as suas imagens, e a Matã, sacerdote de Baal, mataram diante dos altares\" (2Cr 23:17). Atalia, filha da casa de Onri, trouxera o culto fenício para dentro da cidade de Davi; caída a rainha, cai no mesmo dia o templo dela. Coroar o rei legítimo e demolir a casa de Baal são, no texto, um só movimento, e o elo entre os dois está no versículo anterior: \"E Joiada fez aliança entre si e o povo e o rei, para que fossem o povo do Senhor\" (23:16). Aliança que não muda o que está de pé na cidade não é aliança nenhuma.",
+  },
+  "altares-de-baal-quebrados-em-jerusalem": {
+    title: "Os altares de Baal quebrados diante de Matã",
+    subtitle: "2Cr 23:17 — a demolição feita pelas mãos do próprio povo",
+    text: "\"e quebraram os seus altares, e as suas imagens, e a Matã, sacerdote de Baal, mataram diante dos altares\" (2Cr 23:17). Não foi uma ordem real cumprida por soldados: foi o povo que entrou e derrubou, o que faz do ato uma renúncia pública e não uma reforma imposta de cima. É o mesmo que a Lei mandava desde o deserto — \"derrubareis os seus altares, e quebrareis as suas estátuas\" (Dt 12:3) —, e é o que Josias fará em escala nacional cem anos depois (2Cr 34:4). O sacerdote de Baal morre diante dos próprios altares, no lugar exato em que servira.",
+  },
+  "lei-de-moises-nos-oficios-de-joiada": {
+    title: "A lei de Moisés nos ofícios repostos por Joiada",
+    subtitle: "2Cr 23:18 — o culto recomposto conforme o que estava escrito",
+    text: "\"E Joiada ordenou os ofícios na casa do Senhor, sob a direção dos sacerdotes levitas a quem Davi designara na casa do Senhor, para oferecerem os holocaustos do Senhor, como está escrito na lei de Moisés, com alegria e com canto, conforme a instituição de Davi\" (2Cr 23:18). O versículo amarra as três autoridades que o Cronista respeita: a lei de Moisés, a instituição de Davi e o ofício dos levitas. Depois de seis anos de casa de Baal aberta e casa do SENHOR abandonada, a restauração não é uma invenção nova — é a volta ao que já estava escrito, com alegria e com canto.",
+  },
+  "portas-guardadas-pelos-porteiros-de-joiada": {
+    title: "As portas guardadas pelos porteiros de Joiada",
+    subtitle: "2Cr 23:19 — a triagem reposta na entrada da casa do SENHOR",
+    text: "\"E pôs porteiros às portas da casa do Senhor, para que nela não entrasse ninguém imundo em coisa alguma\" (2Cr 23:19). É a última providência do capítulo, e a mais silenciosa: depois de coroar o rei e derrubar o templo de Baal, Joiada trata de quem entra pela porta do santuário todos os dias. O ofício de porteiro era ofício levítico organizado por Davi, com escalas e famílias inteiras responsáveis por cada lado do templo (1Cr 26:1-19). Reformas grandes se perdem por falta de guarda pequena — o velho sacerdote sabia disso.",
+  },
+  "bacia-da-purificacao-das-portas": {
+    title: "A bacia da purificação, ao pé da soleira",
+    subtitle: "2Cr 23:19; 26:20 — a água que separa quem pode entrar de quem não pode",
+    text: "Está em cena por causa da ordem de 2Cr 23:19: \"E pôs porteiros às portas da casa do Senhor, para que nela não entrasse ninguém imundo em coisa alguma\". A lavagem à entrada do santuário vem do próprio tabernáculo, onde a bacia de bronze foi posta \"entre a tenda da congregação e o altar\" para que Arão e seus filhos lavassem as mãos e os pés antes de ministrar (Êx 30:18-20). É a mesma fronteira que reaparece, invertida, no fim destes capítulos: um rei que atravessou a linha sai por essa porta com a lepra na testa e já não pode sequer chegar à bacia (2Cr 26:20-21).",
+  },
+  "porta-maior-entre-o-templo-e-a-casa-do-rei": {
+    title: "A porta maior, entre a casa do SENHOR e a casa do rei",
+    subtitle: "2Cr 23:20 — o caminho do templo ao trono, e não o contrário",
+    text: "\"E tomou os centuriões, os poderosos, os que tinham domínio entre o povo e todo o povo da terra, e conduziram o rei da casa do Senhor, e entraram na casa do rei passando pela porta maior, e assentaram-no no trono real\" (2Cr 23:20). A ordem do cortejo é teológica: a coroa e o testemunho foram recebidos diante do altar, e só depois o menino se assenta no trono. Em Judá, o poder passava pela casa de Deus antes de chegar ao palácio — e é por ter esquecido essa direção que outro rei, três reinados adiante, entrará no santuário para queimar incenso como se o trono lhe desse esse direito (2Cr 26:16-18).",
+  },
+  "trono-real-de-joas": {
+    title: "O trono real devolvido à casa de Davi",
+    subtitle: "2Cr 23:20-21 — o assento vazio de Davi por seis anos",
+    text: "\"e assentaram-no no trono real. E todo o povo da terra se alegrou, e a cidade ficou em paz, depois que mataram a Atalia à espada\" (2Cr 23:20-21). Durante seis anos este assento teve dona, e não era da casa de Davi (22:12); agora recebe um menino de sete anos que passou a vida inteira escondido dentro do templo. É o cumprimento visível do que Joiada anunciara à congregação: \"Eis que o filho do rei reinará, como o Senhor falou a respeito dos filhos de Davi\" (2Cr 23:3). Do mesmo trono, quarenta anos depois, sairá a ordem de apedrejar o filho do homem que o pôs ali (24:21).",
+  },
+  "casa-do-senhor-arruinada-pelos-filhos-de-atalia": {
+    title: "A casa do SENHOR arruinada pelos filhos de Atalia",
+    subtitle: "2Cr 24:7 — as fendas e o saque que o menino-rei encontrou ao crescer",
+    text: "\"Porque, sendo Atalia ímpia, seus filhos arruinaram a casa de Deus, e até todas as coisas sagradas da casa do Senhor empregaram em Baalins\" (2Cr 24:7). Não foi só abandono: os utensílios consagrados foram transferidos para o culto de Baal. O templo em que Joás fora escondido seis anos estava, quando ele se tornou adulto, rachado e esvaziado — e é essa a razão de ele resolver \"renovar a casa do Senhor\" (24:4). A obra que se segue não é vaidade de construtor, é reparação de um crime cometido dentro da própria família dele.",
+  },
+  "tributo-de-moises-para-a-tenda-do-testemunho": {
+    title: "O tributo de Moisés, ordenado a Israel no deserto",
+    subtitle: "2Cr 24:6,9 — o imposto do santuário cobrado oito séculos depois",
+    text: "\"Por que não requereste dos levitas, que trouxessem de Judá e de Jerusalém o tributo que Moisés, servo do Senhor, ordenou à congregação de Israel, para a tenda do testemunho?\" (2Cr 24:6). É o meio siclo do recenseamento, mandado recolher \"para a expiação das vossas almas\" e aplicado \"para o serviço da tenda da congregação\" (Êx 30:12-16) — a mesma prata com que se fizeram as bases do tabernáculo (Êx 38:25-28). Joás não inventa uma taxa nova: manda cumprir uma ordenança esquecida, e publica-a como tal — \"que trouxessem ao Senhor o tributo de Moisés, o servo de Deus, ordenado a Israel no deserto\" (2Cr 24:9).",
+  },
+  "mesa-da-cobranca-do-tributo-de-moises": {
+    title: "A mesa onde o rei cobrou o sacerdote",
+    subtitle: "2Cr 24:6 — o menino que Joiada criou, já homem, pedindo contas ao velho",
+    text: "\"E o rei chamou a Joiada, o chefe, e disse-lhe: Por que não requereste dos levitas...?\" (2Cr 24:6). É a única cena de atrito entre os dois, e ela nasce de uma frase seca do versículo anterior: \"Porém os levitas não se apressaram\" (24:5). O rei tinha razão, e a cobrança produziu a solução do capítulo — o cofre à porta (24:8). Vale notar quem cobra quem: o homem que devia a vida ao sacerdote não se calou por gratidão, e o sacerdote não se ofendeu por orgulho. Enquanto Joiada viveu, a casa do SENHOR teve quem a cobrasse e quem a atendesse.",
+  },
+  "pregao-do-tributo-em-juda-e-em-jerusalem": {
+    title: "O pregão do tributo em Judá e em Jerusalém",
+    subtitle: "2Cr 24:9 — o edital lido em praça pública",
+    text: "\"E publicou-se em Judá e em Jerusalém que trouxessem ao Senhor o tributo de Moisés, o servo de Deus, ordenado a Israel no deserto\" (2Cr 24:9). O que anos de circulares aos levitas pelas cidades não conseguiram (24:5), um pregão aberto e uma caixa à vista resolveram. A diferença é de método e de transparência: em vez de cobradores passando de porta em porta, uma ordem pública e um lugar público para entregar. O resultado está no versículo seguinte, e é de festa: \"Então todos os príncipes e todo o povo se alegraram, e o trouxeram e o lançaram no cofre, até que ficou cheio\" (24:10).",
+  },
+  "tributo-lancado-no-cofre-de-joiada": {
+    title: "O dinheiro lançado no cofre até ficar cheio",
+    subtitle: "2Cr 24:10 — a frase mais alegre do capítulo",
+    text: "\"Então todos os príncipes e todo o povo se alegraram, e o trouxeram e o lançaram no cofre, até que ficou cheio\" (2Cr 24:10). Dois detalhes fazem esta cena: a alegria — ninguém foi constrangido — e o transbordo, \"até que ficou cheio\", repetido depois em \"ajuntaram dinheiro em abundância\" (24:11). É o mesmo movimento que o povo de Israel fizera no deserto, quando trouxeram tanto para o tabernáculo que Moisés teve de mandar parar (Êx 36:5-7). Onde a ordem é clara e o destino é visível, o povo de Deus costuma dar mais do que se pede.",
+  },
+  "mesa-da-contagem-do-dinheiro-do-cofre": {
+    title: "A mesa da contagem do dinheiro do cofre",
+    subtitle: "2Cr 24:11 — dois homens de casas diferentes conferindo a mesma caixa",
+    text: "\"E sucedia que, quando levavam o cofre pelas mãos dos levitas, segundo o mandado do rei, e vendo-se que já havia muito dinheiro, vinha o escrivão do rei, e o oficial do sumo sacerdote, e esvaziavam o cofre, e tomavam-no e levavam-no de novo ao seu lugar; assim faziam de dia em dia, e ajuntaram dinheiro em abundância\" (2Cr 24:11). A fiscalização é cruzada — o palácio e o templo abrem a caixa juntos — e é rotineira, \"de dia em dia\". O relato paralelo elogia o resultado: aos que faziam a obra não se pediam contas, \"porque procediam com fidelidade\" (2Rs 12:15). Confiança na saída se compra com cuidado na entrada.",
+  },
+  "forja-dos-ferreiros-da-obra-da-casa": {
+    title: "A forja dos ferreiros e serralheiros da obra",
+    subtitle: "2Cr 24:12 — barulho de canteiro dentro do lugar santo",
+    text: "\"O qual o rei e Joiada davam aos que tinham o encargo da obra do serviço da casa do Senhor; e contrataram pedreiros e carpinteiros, para renovarem a casa do Senhor; como também ferreiros e serralheiros, para repararem a casa do Senhor\" (2Cr 24:12). Quatro ofícios nomeados num versículo: a restauração do templo é obra de gente com ferramenta na mão, e o texto não a considera menos espiritual por isso. Quando Salomão edificou a casa, cuidou-se para que não se ouvisse ferramenta de ferro no lugar (1Rs 6:7); aqui, ao contrário, o martelo é sinal de que a casa está voltando a ser casa.",
+  },
+  "casa-do-senhor-restaurada-por-joas": {
+    title: "A casa de Deus restaurada no seu estado",
+    subtitle: "2Cr 24:13 — o resultado da caixa furada à porta",
+    text: "\"E os que tinham o encargo da obra faziam com que o trabalho de reparação fosse crescendo pelas suas mãos; e restauraram a casa de Deus no seu estado, e a fortaleceram\" (2Cr 24:13). Não se fez um templo novo nem maior: recolocou-se o que existia no lugar em que devia estar. \"No seu estado\" é a medida exata da reforma de Joás — nada de invenção, tudo de restauração. E o texto guarda a data implícita: enquanto Joiada viveu, \"continuamente sacrificaram holocaustos na casa do Senhor, todos os dias de Joiada\" (24:14). Depois do enterro do velho, a mesma casa restaurada foi abandonada em um versículo (24:18).",
+  },
+  "vasos-de-ouro-e-de-prata-da-casa-do-senhor": {
+    title: "As colheres e os vasos de ouro e de prata",
+    subtitle: "2Cr 24:14 — os utensílios feitos com o dinheiro que sobrou da obra",
+    text: "\"E, depois de acabarem, trouxeram ao rei e a Joiada o resto do dinheiro, e dele fizeram utensílios para a casa do Senhor, objetos para ministrar e oferecer, colheres, vasos de ouro e de prata\" (2Cr 24:14). Sobrou dinheiro — sinal de obra bem administrada — e o resto não voltou ao tesouro do rei: virou instrumento de culto, repondo o que os filhos de Atalia tinham empregado em Baalins (24:7). Um século depois, esse mesmo ouro e essa mesma prata sairão de Jerusalém na bagagem de Jeoás de Israel, tomados \"na casa de Deus com Obede-Edom\" (2Cr 25:24).",
+  },
+  "leito-da-velhice-de-joiada": {
+    title: "O leito de Joiada, aos cento e trinta anos",
+    subtitle: "2Cr 24:15-16 — a morte que dividiu o reinado de Joás ao meio",
+    text: "\"E envelheceu Joiada, e morreu farto de dias; era da idade de cento e trinta anos quando morreu\" (2Cr 24:15). \"Farto de dias\" é o elogio que a Escritura reserva a Abraão, a Isaque e a Jó (Gn 25:8; 35:29; Jó 42:17). E o enterro é sem paralelo em todo o livro: \"E o sepultaram na cidade de Davi com os reis; porque tinha feito bem em Israel, e para com Deus e a sua casa\" (24:16) — um sacerdote posto no jazigo dos reis, no mesmo lugar de onde três reis foram excluídos. Com este leito acaba a guarda do rei: no versículo seguinte já vêm os príncipes de Judá se prostrar diante dele (24:17).",
+  },
+  "imagens-do-bosque-e-idolos-de-juda": {
+    title: "As imagens do bosque e os ídolos a que Judá serviu",
+    subtitle: "2Cr 24:18 — o culto que mudou de endereço depois do enterro de Joiada",
+    text: "\"E deixaram a casa do Senhor Deus de seus pais, e serviram às imagens do bosque e aos ídolos. Então, por causa desta sua culpa, veio grande ira sobre Judá e Jerusalém\" (2Cr 24:18). O templo que eles próprios tinham acabado de reformar (24:13) fica de pé e vazio; o culto sai dos muros e vai para as encostas. E o gatilho está no versículo anterior, e não é invasão nem crise: \"vieram os príncipes de Judá e prostraram-se perante o rei; e o rei os ouviu\" (24:17). Bastou uma lisonja bem colocada e a ausência de um velho para desfazer quarenta anos de reto proceder.",
+  },
+  "pedra-de-onde-zacarias-falou-acima-do-povo": {
+    title: "A pedra de onde Zacarias se pôs em pé acima do povo",
+    subtitle: "2Cr 24:20 — o lugar exato em que ele falou e em que caiu",
+    text: "\"E o Espírito de Deus revestiu a Zacarias, filho do sacerdote Joiada, o qual se pôs em pé acima do povo, e lhes disse: Assim diz Deus: Por que transgredis os mandamentos do Senhor, de modo que não possais prosperar? Porque deixastes ao Senhor, também ele vos deixará\" (2Cr 24:20). O verbo do original diz que o Espírito o VESTIU, como se veste uma roupa — a mesma expressão usada de Gideão (Jz 6:34) e de Amasai (1Cr 12:18). Ele sobe acima do povo para ser visto e ouvido por todos, e é dali que o apedrejam no versículo seguinte: no átrio da casa do SENHOR, por mandado do rei que o pai dele criou.",
+  },
+  "pedras-com-que-apedrejaram-a-zacarias": {
+    title: "As pedras com que apedrejaram Zacarias no pátio",
+    subtitle: "2Cr 24:21-22 — o sangue derramado dentro da casa de Deus",
+    text: "\"E eles conspiraram contra ele, e o apedrejaram por mandado do rei, no pátio da casa do Senhor\" (2Cr 24:21). Duas agravantes numa linha: o lugar — o átrio do templo restaurado pelo próprio rei — e a ordem, que vem do trono. \"Assim o rei Joás não se lembrou da beneficência que Joiada, pai de Zacarias, lhe fizera; porém matou-lhe o filho, o qual, morrendo, disse: O Senhor o verá, e o requererá\" (24:22). Um ano depois o SENHOR requereu, pelo pequeno exército da Síria e pela mão dos próprios servos do rei (24:23-25). E o Senhor Jesus fecharia com este nome a conta de todo o sangue justo: \"desde o sangue de Abel, o justo, até ao sangue de Zacarias, filho de Baraquias, que matastes entre o santuário e o altar\" (Mt 23:35).",
+  },
+  "despojo-enviado-ao-rei-de-damasco": {
+    title: "O despojo enviado ao rei de Damasco",
+    subtitle: "2Cr 24:23 — o que os poucos homens da Síria levaram de Jerusalém",
+    text: "\"E sucedeu que, decorrido um ano, o exército da Síria subiu contra ele; e vieram a Judá e a Jerusalém, e destruíram dentre o povo a todos os seus príncipes; e enviaram todo o seu despojo ao rei de Damasco\" (2Cr 24:23). O prazo — \"decorrido um ano\" — é medido a partir do apedrejamento no pátio, e o Cronista explica a desproporção sem rodeios: \"ainda que o exército dos sírios viera com poucos homens, contudo o Senhor entregou na sua mão um exército mui numeroso, porquanto deixaram ao Senhor Deus de seus pais\" (24:24). Os príncipes destruídos são precisamente os que se prostraram diante do rei em 24:17.",
+  },
+  "cama-onde-feriram-o-rei-joas": {
+    title: "A cama onde os servos feriram o rei Joás",
+    subtitle: "2Cr 24:25 — o fim de quarenta anos de reinado, e o motivo escrito",
+    text: "\"E, quando os sírios se retiraram, deixaram-no gravemente ferido; então seus servos conspiraram contra ele por causa do sangue do filho do sacerdote Joiada, e o feriram na sua cama, e morreu; e o sepultaram na cidade de Davi, porém não nos sepulcros dos reis\" (2Cr 24:25). O texto dá o móvel do crime, e é teológico antes de ser político: o sangue de Zacarias. O rei que foi escondido num quarto para escapar da espada de Atalia morre num quarto pela espada dos seus. E o epitáfio repete, palavra por palavra, o do avô Jeorão (21:20): sepultado na cidade, mas fora do jazigo dos reis.",
+  },
+  "livro-da-historia-dos-reis-de-juda": {
+    title: "O livro da história dos reis",
+    subtitle: "2Cr 24:27 — onde a grandeza de um cargo vira uma linha escrita",
+    text: "\"E, quanto a seus filhos, e à grandeza do cargo que se lhe impôs, e à restauração da casa de Deus, eis que estão escritos no livro da história dos reis; e Amazias, seu filho, reinou em seu lugar\" (2Cr 24:27). O Cronista remete constantemente a arquivos que não temos — \"o livro dos reis de Judá e de Israel\" (2Cr 25:26), o escrito do profeta Isaías (26:22) —, e a remissão faz parte do método: ele não está inventando história, está resumindo registros. Do reinado inteiro de Joás, o que ele guarda é a restauração da casa e o sangue no pátio; o resto ficou no rolo.",
+  },
+  "trono-de-amazias-em-jerusalem": {
+    title: "O trono de Amazias em Jerusalém",
+    subtitle: "2Cr 25:1-2 — reto aos olhos do SENHOR, porém não com inteireza de coração",
+    text: "\"Era Amazias da idade de vinte e cinco anos, quando começou a reinar, e reinou vinte e nove anos em Jerusalém; e era o nome de sua mãe Joadã, de Jerusalém. E fez o que era reto aos olhos do Senhor, porém não com inteireza de coração\" (2Cr 25:1-2). A ressalva do versículo 2 é a chave de todo o capítulo: um rei que faz a coisa certa quando lhe mostram o livro (25:4) e obedece ao profeta quando o custo é só financeiro (25:9-10), mas que, vitorioso, se prostra diante dos deuses dos vencidos (25:14) e manda calar quem o adverte (25:16). Correção sem inteireza dura só até o primeiro sucesso.",
+  },
+  "mesa-da-audiencia-de-amazias": {
+    title: "A mesa da audiência de Amazias",
+    subtitle: "2Cr 25 — a banca onde o rei ouviu a lei, o profeta e o conselho de guerra",
+    text: "É o móvel diante do qual passa o reinado inteiro: aqui se abre \"a lei, no livro de Moisés\" para decidir sobre os filhos dos assassinos do pai (2Cr 25:4); aqui se conta o soldo dos cem mil de Israel (25:6); aqui se recebe o recado de Jeoás com a parábola do cardo (25:18); e aqui se toma a decisão final, contra todo aviso — \"E, tendo tomado conselho, Amazias, rei de Judá, mandou dizer a Jeoás... Vem, vejamo-nos face a face\" (25:17). A mesma mesa serve à obediência e à teimosia; o que muda é quem o rei resolve ouvir.",
+  },
+  "espada-sobre-os-que-mataram-o-rei-joas": {
+    title: "A espada sobre os que mataram o rei seu pai",
+    subtitle: "2Cr 25:3 — a justiça feita, e feita no limite exato da lei",
+    text: "\"Sucedeu que, sendo-lhe o reino já confirmado, matou a seus servos que mataram o rei seu pai\" (2Cr 25:3). Os executados são Zabade, filho de Simeate, a amonita, e Jeozabade, filho de Sinrite, a moabita (2Cr 24:26), que feriram Joás na cama por causa do sangue do filho do sacerdote Joiada. Amazias esperou o reino estar confirmado — não foi vingança apressada — e parou onde a Lei mandava parar: \"Porém não matou os filhos deles\" (25:4). Num tempo em que se varriam casas inteiras, é a moderação que chama atenção, e ela vem de um livro aberto.",
+  },
+  "livro-de-moises-sobre-os-pais-e-os-filhos": {
+    title: "O livro de Moisés aberto sobre os pais e os filhos",
+    subtitle: "2Cr 25:4 — a lei que salvou duas crianças numa manhã",
+    text: "\"Porém não matou os filhos deles; mas fez segundo está escrito na lei, no livro de Moisés, como o Senhor ordenou, dizendo: Não morrerão os pais pelos filhos, nem os filhos pelos pais; mas cada um morrerá pelo seu pecado\" (2Cr 25:4). A citação é de Dt 24:16 — \"Os pais não morrerão pelos filhos, nem os filhos pelos pais: cada qual morrerá pelo seu pecado\" —, e é o melhor momento do reinado: um rei que vai ler antes de decidir. O princípio será retomado, contra o provérbio das uvas verdes, por Ezequiel: \"a alma que pecar, essa morrerá\" (Ez 18:20).",
+  },
+  "lanca-e-escudo-dos-trezentos-mil-de-juda": {
+    title: "A lança e o escudo dos trezentos mil escolhidos",
+    subtitle: "2Cr 25:5 — o exército próprio de Judá, contado de vinte anos para cima",
+    text: "\"E Amazias reuniu a Judá e os pôs segundo as casas dos pais, sob capitàes de milhares, e sob capitàes de cem, por todo o Judá e Benjamim; e os contou, de vinte anos para cima, e achou deles trezentos mil escolhidos que podiam sair à guerra, e manejar lança e escudo\" (2Cr 25:5). A idade mínima e a organização por casas dos pais vêm do recenseamento do deserto (Nm 1:2-3). Trezentos mil homens equipados são força mais que suficiente para bater Edom — e é exatamente por isso que a contratação de mais cem mil no versículo seguinte é tão reveladora: o problema nunca foi falta de gente.",
+  },
+  "tenda-do-recenseamento-de-amazias": {
+    title: "A tenda do recenseamento de Judá e Benjamim",
+    subtitle: "2Cr 25:5 — o posto de comando onde se contaram as casas dos pais",
+    text: "\"E Amazias reuniu a Judá e os pôs segundo as casas dos pais, sob capitàes de milhares, e sob capitàes de cem, por todo o Judá e Benjamim\" (2Cr 25:5). O recenseamento militar é feito no campo, fora dos muros, com a tenda do comando no meio: cada família se apresenta, cada homem em condição de sair à guerra é inscrito, e a tropa sai daí repartida em milhares e centenas. Em Crônicas esse tipo de conta é neutro em si mesmo — vira pecado quando o rei conta para se gabar da própria força, como Davi contou e Israel pagou com peste (1Cr 21:1-7).",
+  },
+  "resenha-dos-trezentos-mil-de-amazias": {
+    title: "A resenha dos trezentos mil de Amazias",
+    subtitle: "2Cr 25:5 — o rolo dos escolhidos que podiam sair à guerra",
+    text: "\"e os contou, de vinte anos para cima, e achou deles trezentos mil escolhidos que podiam sair à guerra, e manejar lança e escudo\" (2Cr 25:5). O rolo registra o que o rei tem — e o capítulo é a história do que ele achou que faltava. Ao ler este número, Amazias foi tomar a soldo mais cem mil de Israel por cem talentos de prata (25:6), e o homem de Deus teve de vir dizer-lhe que a conta estava errada por cima e não por baixo: \"porque o Senhor não é com Israel, a saber com os filhos de Efraim\" (25:7). Somar homens de quem Deus não está com eles é subtrair.",
+  },
+  "cem-talentos-de-prata-de-amazias": {
+    title: "Os cem talentos de prata pagos às tropas de Israel",
+    subtitle: "2Cr 25:6-9 — a conta que quase custou a bênção",
+    text: "\"Também de Israel tomou a soldo cem mil homens valentes, por cem talentos de prata\" (2Cr 25:6). Mandados despedir pelo homem de Deus, a objeção do rei é uma calculadora: \"Que se fará, pois, dos cem talentos de prata que dei às tropas de Israel?\" (25:9). E a resposta é a frase que resume a economia inteira da fé: \"Mais tem o Senhor que te dar do que isso\" (2Cr 25:9). Cem talentos são cerca de três toneladas de prata — dinheiro grande de verdade, e ainda assim pequeno diante de quem \"força há em Deus para ajudar e para fazer cair\" (25:8). O rei obedeceu, perdeu a prata e ganhou a batalha.",
+  },
+  "tropas-de-efraim-tomadas-a-soldo": {
+    title: "As tropas de Efraim tomadas a soldo",
+    subtitle: "2Cr 25:6-10 — os cem mil valentes contratados e despedidos",
+    text: "\"Porém um homem de Deus veio a ele, dizendo: Ó rei, não deixes ir contigo o exército de Israel; porque o Senhor não é com Israel, a saber com os filhos de Efraim\" (2Cr 25:7). O argumento não é militar, é de companhia: quem se alia a quem Deus deixou carrega o que essa aliança traz. \"Então separou Amazias as tropas que lhe tinham vindo de Efraim, para que se fossem ao seu lugar; pelo que se acendeu a sua ira contra Judá, e voltaram para as suas casas ardendo em ira\" (25:10). A obediência do rei foi real e custou caro duas vezes: a prata, e a vingança que estes homens cobrariam nas cidades de Judá (25:13).",
+  },
+  "divisa-por-onde-voltaram-as-tropas-de-efraim": {
+    title: "A estrada por onde voltaram as tropas despedidas",
+    subtitle: "2Cr 25:10,13 — os cem mil ardendo em ira, e ainda dentro do país",
+    text: "\"voltaram para as suas casas ardendo em ira\" (2Cr 25:10) — e o caminho de volta passava por dentro de Judá. O que fizeram nesse caminho está três versículos depois: \"Porém os homens das tropas que Amazias despedira, para que não fossem com ele à peleja, deram sobre as cidades de Judá desde Samaria, até Bete-Horom; e feriram deles três mil, e saquearam grande despojo\" (25:13). O rei fez o que devia ao dispensá-los, mas o estrago já estava contratado quando os chamou. Obediência tardia continua sendo obediência — e mesmo assim há contas que ela já não desfaz.",
+  },
+  "cimo-da-rocha-de-onde-lancaram-os-dez-mil": {
+    title: "O cimo da rocha de onde lançaram os dez mil",
+    subtitle: "2Cr 25:12 — o penhasco de Edom e as quatro palavras que fecham o versículo",
+    text: "\"Também os filhos de Judá prenderam vivos dez mil, e os levaram ao cume da rocha; e do mais alto da rocha os lançaram abaixo, e todos se despedaçaram\" (2Cr 25:12). A vitória do Vale do Sal (25:11) não bastou; o que se descreve aqui é execução em massa, e o texto a relata sem uma palavra de aprovação. Edom era o povo que morava \"nas fendas das rochas\", cuja soberba Obadias denunciara — \"Quem me derribará em terra?\" (Ob 3) —, e a crueldade de Judá contra ele foi denunciada por Amós na mesma época: \"porque perseguiu a seu irmão à espada, e baniu toda a misericórdia\" (Am 1:11). O capítulo cobra a conta no versículo 14: os deuses desse povo vencido viram os deuses do vencedor.",
+  },
+  "cidades-de-juda-saqueadas-por-efraim": {
+    title: "As cidades de Judá saqueadas desde Samaria até Bete-Horom",
+    subtitle: "2Cr 25:13 — a conta que os mercenários despedidos cobraram sozinhos",
+    text: "\"Porém os homens das tropas que Amazias despedira, para que não fossem com ele à peleja, deram sobre as cidades de Judá desde Samaria, até Bete-Horom; e feriram deles três mil, e saquearam grande despojo\" (2Cr 25:13). Bete-Horom é a descida que liga a serra à planície, caminho clássico das invasões (Js 10:10-11); Samaria é a capital do Norte. O trecho descreve, portanto, uma faixa inteira de aldeias arrasada na volta para casa. Enquanto o rei ganhava a guerra no sul, a sua retaguarda ardia — e ninguém morreu ali por ter desobedecido a Deus, e sim por o rei ter contratado antes o que teve de despedir depois.",
+  },
+  "grande-despojo-tomado-em-juda": {
+    title: "O grande despojo tomado nas cidades de Judá",
+    subtitle: "2Cr 25:13 — o que os cem talentos acabaram custando",
+    text: "\"e feriram deles três mil, e saquearam grande despojo\" (2Cr 25:13). O rei quis poupar cem talentos de prata quando o profeta lhe mandou despedir as tropas (25:9); acabou pagando os cem talentos e mais o saque de uma faixa inteira do seu próprio país. É o retrato do que custa uma aliança errada mesmo depois de desfeita. Do outro lado da conta está a promessa que o homem de Deus fizera e que se cumpriu na mesma campanha: \"Mais tem o Senhor que te dar do que isso\" (25:9) — Judá venceu Edom e voltou com despojo próprio, e ainda assim o rei se ajoelhou diante dos ídolos dos vencidos.",
+  },
+  "deuses-dos-filhos-de-seir": {
+    title: "Os deuses dos filhos de Seir",
+    subtitle: "2Cr 25:14 — o vencedor de joelhos diante dos deuses dos vencidos",
+    text: "\"E sucedeu que, depois que Amazias veio da matança dos edomitas e trouxe consigo os deuses dos filhos de Seir, tomou-os por seus deuses, e prostrou-se diante deles, e queimou-lhes incenso\" (2Cr 25:14). É a coisa mais absurda do livro, e o profeta a expõe com uma pergunta que não tem resposta possível: \"Por que buscaste deuses deste povo, os quais não livraram o seu próprio povo da tua mão?\" (25:15). Trazer ídolos do campo de batalha era prática comum entre as nações; em Israel a ordem era outra — Davi, achando os deuses dos filisteus abandonados no vale, mandou que se queimassem a fogo (1Cr 14:12). Seir é o outro nome de Edom, o monte de Esaú (Gn 36:8).",
+  },
+  "incenso-que-amazias-queimou-aos-deuses-de-seir": {
+    title: "O incenso que Amazias queimou aos deuses de Seir",
+    subtitle: "2Cr 25:14-16 — o gesto que acendeu a ira do SENHOR",
+    text: "\"tomou-os por seus deuses, e prostrou-se diante deles, e queimou-lhes incenso. Então a ira do Senhor se acendeu contra Amazias, e mandou-lhe um profeta\" (2Cr 25:14-15). O incenso é oferta de adoração, o gesto mais íntimo do culto — e é o mesmo objeto que, um reinado depois, estará na mão do filho dele dentro do templo, no dia em que a lepra lhe sair à testa (26:19). Quando o profeta fala, o rei o manda calar: \"Puseram-te por conselheiro do rei? Cala-te! Por que haveria de ser ferido?\" (25:16). E o profeta obedece, com uma sentença: \"Bem vejo eu que já Deus deliberou destruir-te; porquanto fizeste isto, e não deste ouvidos ao meu conselho\" (2Cr 25:16).",
+  },
+  "cedro-que-estava-no-libano": {
+    title: "O cedro que estava no Líbano",
+    subtitle: "2Cr 25:18 — a árvore grande da parábola de Jeoás",
+    text: "\"O cardo que estava no Líbano mandou dizer ao cedro que estava no Líbano: Dá tua filha por mulher a meu filho\" (2Cr 25:18). Na resposta de Jeoás ao desafio, o cedro é ele próprio: a árvore que a Escritura usa para dizer altura e força — a madeira do templo e do palácio (1Rs 5:6-10), a figura dos poderosos que Deus abate (Is 2:13). O insulto está no pedido de casamento: o cardo rasteiro querendo aliança de igual para igual com a maior árvore da montanha. Amazias pedira \"Vem, vejamo-nos face a face\" (25:17); a resposta diz que não há face a face nenhuma a ser vista.",
+  },
+  "cardo-que-estava-no-libano": {
+    title: "O cardo que estava no Líbano",
+    subtitle: "2Cr 25:18 — a moita rasteira pisada por um bicho que passava",
+    text: "\"porém os animais do campo, que estavam no Líbano passaram e pisaram o cardo\" (2Cr 25:18). O golpe da parábola está aqui: o cardo não é vencido pelo cedro, nem numa disputa entre iguais — é pisado sem querer por um bando de bichos que passava. Não há batalha nenhuma, só desatenção. É a mesma forma de fábula que Jotão usara em Siquém, com as árvores escolhendo rei e o espinheiro se oferecendo (Jz 9:8-15). Jeoás ainda traduz a figura em conselho direto: \"elevou-se o teu coração, para te gloriares; agora, pois, fica em tua casa\" (25:19) — e Amazias não deu ouvidos, \"porque isto vinha de Deus\" (25:20).",
+  },
+  "peleja-de-bete-semes": {
+    title: "A peleja de Bete-Semes",
+    subtitle: "2Cr 25:21-22 — o face a face que Amazias pediu por escrito",
+    text: "\"E Jeoás, rei de Israel, subiu; e ele e Amazias, rei de Judá, viram-se face a face em Bete-Semes, que está em Judá\" (2Cr 25:21). O texto sublinha \"que está em Judá\": o encontro que o rei do Sul pedira aconteceu dentro da casa dele. O resultado cabe numa linha: \"E Judá foi ferido diante de Israel; e fugiu cada um para a sua tenda\" (25:22). Bete-Semes fica na Sefelá, na estrada que sobe do vale — a mesma cidade levítica para onde as vacas dos filisteus levaram a arca séculos antes (1Sm 6:12-13). O rei foi preso ali e levado a ver o próprio muro cair (25:23).",
+  },
+  "tendas-de-juda-em-bete-semes": {
+    title: "As tendas de Judá esvaziadas",
+    subtitle: "2Cr 25:22 — cada um fugiu para a sua tenda",
+    text: "\"E Judá foi ferido diante de Israel; e fugiu cada um para a sua tenda\" (2Cr 25:22). A expressão é a fórmula bíblica da debandada — a mesma com que Israel se desfez depois da morte de Acabe, \"Cada um para a sua cidade, e cada um para a sua terra\" (2Cr 18:16). O que se vê no quadro é um acampamento abandonado no meio do dia: os trezentos mil escolhidos, contados casa por casa em 25:5, dispersos sem ordem. O rei que os reunira foi preso e levado a Jerusalém pelo vencedor, e não havia mais exército para o resgatar.",
+  },
+  "porta-de-efraim-e-porta-da-esquina": {
+    title: "Da porta de Efraim até à porta da esquina",
+    subtitle: "2Cr 25:23 — os quatrocentos côvados de muro derrubados",
+    text: "\"E Jeoás, rei de Israel, prendeu a Amazias, rei de Judá, filho de Joás, o filho de Jeoacaz, em Bete-Semes, e o trouxe a Jerusalém; e derrubou o muro de Jerusalém, desde a porta de Efraim até à porta da esquina, quatrocentos côvados\" (2Cr 25:23). Quatrocentos côvados são cerca de cento e oitenta metros de muralha abertos no lado norte, justamente o flanco por onde a cidade era mais vulnerável. O trecho ficou aberto por décadas: Uzias voltaria a fortificar as torres desta mesma esquina (26:9), e Neemias reconstruiria as duas portas dois séculos e meio depois (Ne 8:16; 12:39). Um rei de Judá assistiu, preso, ao próprio muro cair.",
+  },
+  "ouro-e-prata-da-casa-de-deus-com-obede-edom": {
+    title: "O ouro e a prata da casa de Deus, com Obede-Edom",
+    subtitle: "2Cr 25:24 — o tesouro do templo levado para Samaria",
+    text: "\"Também tomou todo o ouro, a prata, e todos os utensílios que se acharam na casa de Deus com Obede-Edom, e os tesouros da casa do rei, e os reféns; e voltou para Samaria\" (2Cr 25:24). Obede-Edom é o nome da casa levítica que respondia pelas câmaras do tesouro desde Davi (1Cr 26:15) — a mesma família em cuja casa a arca ficou três meses (1Cr 13:14). Os utensílios levados são, muito provavelmente, os que Joás mandara fazer com o dinheiro que sobrou da reforma, uma geração antes (2Cr 24:14). Levaram-se também reféns: o preço de uma soberba cobrado em gente.",
+  },
+  "poco-do-patio-da-casa-do-rei-amazias": {
+    title: "O poço do pátio da casa do rei",
+    subtitle: "2Cr 25:25 — os quinze anos que sobraram depois da derrota",
+    text: "\"E viveu Amazias, filho de Joás, rei de Judá, depois da morte de Jeoás, filho de Jeoacaz, rei de Israel, quinze anos\" (2Cr 25:25). Quinze anos de sobrevida resumidos numa linha, num palácio de muro arrombado e tesouro vazio. O que corria por baixo desse silêncio está no versículo 27: \"E desde o tempo em que Amazias se desviou do Senhor, conspiraram contra ele em Jerusalém\". O pátio, o poço e a parreira desenham a única coisa que lhe restou — tempo —, e o texto marca com precisão quando a conspiração começou a andar: não foi depois da derrota, foi desde o desvio.",
+  },
+  "laquis-para-onde-amazias-fugiu": {
+    title: "Laquis, para onde Amazias fugiu",
+    subtitle: "2Cr 25:27 — a fortaleza da Sefelá onde a conspiração o alcançou",
+    text: "\"E desde o tempo em que Amazias se desviou do Senhor, conspiraram contra ele em Jerusalém, porém ele fugiu para Laquis; mas perseguiram-no até Laquis, e o mataram ali\" (2Cr 25:27). Laquis era a segunda praça forte de Judá, no caminho do Egito — a mesma cidade que Senaqueribe sitiaria e de onde mandaria os seus mensageiros a Ezequias (2Cr 32:9). Fugir para a fortaleza mais bem defendida do reino não adiantou: quem o queria morto era de dentro. \"E trouxeram-no sobre cavalos e sepultaram-no com seus pais na cidade de Judá\" (25:28) — como o pai, morto pelos seus; ao contrário do pai, sepultado com os seus.",
+  },
+  "porta-superior-da-casa-do-senhor": {
+    title: "A porta superior da casa do SENHOR",
+    subtitle: "2Cr 27:3 • a obra que resume o reinado de Jotão",
+    text: "\"Ele edificou a porta superior da casa do Senhor\" (2Cr 27:3) — Reis chama-a de \"porta alta\" (2Rs 15:35). É o portal do lado norte do átrio, a entrada por onde se subia do palácio para o templo, e o Cronista escolhe justamente esta obra para resumir dezesseis anos de reinado. A ironia está no versículo anterior: quem edificou a porta é o rei de quem se diz \"exceto que não entrou no templo do Senhor\" (2Cr 27:2). Jotão vira a casa do pai, Uzias, entrar para queimar incenso e sair leproso (2Cr 26:19-20), e aprendeu a diferença entre servir a casa de Deus e tomar o ofício de quem ministra nela. Levantou o portal e parou na soleira. Ezequiel voltaria a mencionar \"a porta do norte\", onde viu \"a imagem dos ciúmes\" no templo dos últimos dias de Judá (Ez 8:3-5): a mesma entrada, dada a um culto que Jotão não teria autorizado.",
+  },
+  "muro-de-ofel": {
+    title: "O muro de Ofel",
+    subtitle: "2Cr 27:3 • a muralha que segura Jerusalém pelo lado leste",
+    text: "\"e também edificou muitas obras sobre o muro de Ofel\" (2Cr 27:3). Ofel é a esporão de rocha entre a cidade de Davi e o monte do templo, o pescoço estreito por onde a cidade se defende ou se perde do lado oriental, sobre o vale do Cedrom. Não é obra de vaidade: Jotão herdou de Uzias um reino já pressionado, e nos seus dias \"começou o Senhor a enviar contra Judá a Rezim, rei da Síria, e a Peca, filho de Remalias\" (2Rs 15:37). Este mesmo muro reaparece duas vezes na Escritura — Manassés \"cercou de muros a Ofel\" depois de voltar da Babilônia (2Cr 33:14), e os netinins habitavam nele quando Neemias reconstruiu Jerusalém (Ne 3:26-27). O veredito sobre quem o levantou não está na engenharia: \"Assim se fortificou Jotão, porque dirigiu os seus caminhos na presença do Senhor seu Deus\" (2Cr 27:6).",
+  },
+  "castelos-e-torres-nos-bosques": {
+    title: "Os castelos e as torres nos bosques de Judá",
+    subtitle: "2Cr 27:4 • a fortificação da mata das montanhas",
+    text: "\"Também edificou cidades nas montanhas de Judá, e castelos e torres nos bosques\" (2Cr 27:4). É a política de fronteira herdada do pai: Uzias já tinha edificado torres no deserto e cavado muitos poços \"porque tinha muito gado, tanto nos vales como nas campinas\" (2Cr 26:10). A torre no bosque serve para vigiar caminho de mata, guardar o lenhador e o pastor e abrigar quem trabalha longe da vila; é a mesma \"torre no meio\" da vinha da parábola de Isaías (Is 5:2), cantada nestes mesmos anos. O detalhe importa porque desenha um rei que governou por obra e não por discurso — o capítulo inteiro tem sete versículos e quase nenhuma fala. E encerra a linha do texto sobre este reinado com a frase que interessa ao Cronista: fortificou-se \"porque dirigiu os seus caminhos na presença do Senhor seu Deus\" (2Cr 27:6).",
+  },
+  "cem-talentos-de-prata-de-amom": {
+    title: "Os cem talentos de prata de Amom",
+    subtitle: "2Cr 27:5 • o tributo pago por três anos seguidos",
+    text: "\"os filhos de Amom naquele ano lhe deram cem talentos de prata, e dez mil coros de trigo, e dez mil de cevada; isto lhe trouxeram os filhos de Amom também no segundo e no terceiro ano\" (2Cr 27:5). Cem talentos são cerca de três toneladas e meia de prata — a mesma quantia que Amazias pagara para alugar cem mil homens de Israel e que um profeta o fez perder de vez (2Cr 25:6-9), e um terço do que a Assíria imporia depois a Ezequias (2Rs 18:14). Aqui a prata entra em vez de sair: é a única vez, neste trecho de Crônicas, em que Judá recebe tributo em lugar de pagá-lo. Amom era vizinho, parente por Ló (Gn 19:38) e inimigo antigo — tinha alugado Balaão contra Israel (Dt 23:3-4) e humilhado os mensageiros de Davi (2Sm 10:4). O tributo cessa no terceiro ano, e o texto não explica por quê; o reinado seguinte começaria pagando, não recebendo.",
+  },
+  "dez-mil-coros-de-trigo-de-amom": {
+    title: "Os dez mil coros de trigo e os dez mil de cevada",
+    subtitle: "2Cr 27:5 • o tributo de Amom medido em grão, três colheitas seguidas",
+    text: "Além da prata, Amom pagou comida: \"e dez mil coros de trigo, e dez mil de cevada; isto lhe trouxeram os filhos de Amom também no segundo e no terceiro ano\" (2Cr 27:5). O coro é a maior medida de secos de Israel — o mesmo padrão em que Salomão pagava a Hirão \"vinte mil coros de trigo\" por ano pelo cedro do Líbano (1Rs 5:11) —, de modo que dez mil coros de cada grão são a produção de uma província inteira, entregue três anos seguidos. Trigo é pão de mesa; cevada é pão de pobre e ração de animal (1Rs 4:28; Jo 6:9). Um tributo assim alimenta exército, canteiro de obras e cidade fortificada — exatamente o que o versículo anterior descreve o rei construindo (2Cr 27:4). É o Cronista mostrando a bênção por dentro da contabilidade: quem dirige os seus caminhos diante do SENHOR se fortifica, e o texto mede a força em coros e em talentos.",
+  },
+  "livro-dos-reis-de-israel-e-de-juda": {
+    title: "O livro dos reis de Israel e de Judá",
+    subtitle: "2Cr 27:7 • a fonte que o Cronista cita para o restante dos atos de Jotão",
+    text: "\"Ora, o restante dos atos de Jotão, e todas as suas guerras e os seus caminhos, eis que estão escritos no livro dos reis de Israel e de Judá\" (2Cr 27:7). O Cronista trabalha com arquivo: cita mais de vinte vezes fontes assim — as palavras de Samuel, de Natã e de Gade (1Cr 29:29), o livro de Semaías e de Ido (2Cr 12:15), o comentário do livro dos reis (2Cr 24:27) —, e faz isso porque escreve depois do exílio, para um povo que precisa saber que a sua história foi registrada e não inventada. A ordem dos nomes varia conforme o capítulo: aqui é \"de Israel e de Judá\", em 2Cr 28:26 será \"dos reis de Judá e de Israel\". Não é o livro bíblico de 1 e 2 Reis, e sim as crônicas oficiais do reino, hoje perdidas. Da vida inteira de Jotão sobraram nove versículos; o resto ficou num rolo que ninguém mais leu.",
+  },
+  "sepulcro-na-cidade-de-davi": {
+    title: "O sepulcro na cidade de Davi",
+    subtitle: "2Cr 27:9 • a laje onde Jotão foi posto com os seus pais",
+    text: "\"E dormiu Jotão com seus pais, e sepultaram-no na cidade de Davi; e Acaz, seu filho, reinou em seu lugar\" (2Cr 27:9). Os túmulos reais ficavam cavados na rocha da encosta sul da cidade velha, e ser posto ali é, em Crônicas, um veredito: o livro repara em quem entra e em quem fica de fora. Uzias, o pai deste rei, foi sepultado \"no campo do sepulcro que era dos reis; porque disseram: Leproso é\" (2Cr 26:23) — perto, mas não dentro. Joás e Jorão também não entraram nos sepulcros dos reis (2Cr 24:25; 21:20). E o filho que sucede a Jotão terá a mesma nota: \"o sepultaram na cidade, em Jerusalém; porém não o puseram nos sepulcros dos reis de Israel\" (2Cr 28:27). Jotão entra sem ressalva — o último rei de Judá, por muitos anos, de quem isso se pôde dizer.",
+  },
+  "imagens-fundidas-a-baalins": {
+    title: "As imagens fundidas a Baalins",
+    subtitle: "2Cr 28:2 • o metal derretido no primeiro ato do reinado de Acaz",
+    text: "\"Antes andou nos caminhos dos reis de Israel, e, além disso, fez imagens fundidas a Baalins\" (2Cr 28:2). Fundir imagem é o pecado do Sinai repetido — \"trabalhou o ouro com um buril, e fez dele um bezerro de fundição\" (Êx 32:4) —, e a lei o proíbe pelo nome: \"Não vos virareis para os ídolos nem vos fareis deuses de fundição\" (Lv 19:4). \"Baalins\" está no plural porque não era um deus, era uma prateleira: o baal de cada lugar, o dono de cada campo, a religião da chuva e da colheita que Israel encontrou em Canaã e nunca largou de todo. Oseias, profetizando nestes anos, disse o que aquilo custava: \"da sua prata e do seu ouro fizeram ídolos para si, para serem destruídos\" (Os 8:4). Acaz começou fundindo imagens e terminou fechando as portas da casa do SENHOR (2Cr 28:24) — é sempre essa a ordem das coisas.",
+  },
+  "vale-do-filho-de-hinom": {
+    title: "O vale do filho de Hinom",
+    subtitle: "2Cr 28:3 • a ravina ao sul de Jerusalém onde Acaz queimou os próprios filhos",
+    text: "\"Também queimou incenso no vale do filho de Hinom, e queimou a seus filhos no fogo, conforme as abominações dos gentios que o Senhor tinha expulsado de diante dos filhos de Israel\" (2Cr 28:3). O gê-hinnom é a garganta que contorna Jerusalém pelo sul e pelo oeste; ali ficava Tofete, e ali a lei já tinha proibido em termos absolutos: \"E da tua descendência não darás nenhum para fazer passar pelo fogo perante Moloque\" (Lv 18:21). Jeremias diria que aquilo nunca sequer passou pela cabeça de Deus — \"o que nunca ordenei, nem me subiu ao coração\" (Jr 7:31) — e anunciou que o lugar mudaria de nome para \"o Vale da Matança\" (Jr 7:32). Josias, bisneto deste rei, profanaria Tofete justamente \"para que ninguém fizesse passar a seu filho, ou sua filha, pelo fogo a Moloque\" (2Rs 23:10). Do nome deste vale a língua tirou a palavra que o Novo Testamento usa para inferno (Mt 5:22).",
+  },
+  "arvore-verde-dos-altos": {
+    title: "A árvore verde dos altos e outeiros",
+    subtitle: "2Cr 28:4 • o carvalho grande sob o qual Judá sacrificava",
+    text: "\"Também sacrificou, e queimou incenso nos altos e nos outeiros, como também debaixo de toda a árvore verde\" (2Cr 28:4). A expressão é fórmula fixa na Escritura para o culto cananeu: monte alto, colina e árvore frondosa, os três lugares em que Israel foi expressamente mandado destruir os santuários da terra — \"sobre as altas montanhas, e sobre os outeiros, e debaixo de toda a árvore frondosa\" (Dt 12:2). A árvore não era enfeite: o terebinto e o carvalho grandes marcavam o lugar sagrado, e debaixo deles ficava o poste de Aserá. Oseias, contemporâneo de Acaz, descreveu o que ali se fazia: \"Sacrificam sobre os cumes dos montes, e queimam incenso sobre os outeiros, debaixo do carvalho, e do álamo, e do olmeiro, porque é boa a sua sombra\" (Os 4:13). Um capítulo adiante, o povo de Ezequias sairia de Jerusalém para cortar exatamente estes bosques (2Cr 31:1).",
+  },
+  "altar-dos-altos-e-outeiros": {
+    title: "O altar dos altos e outeiros",
+    subtitle: "2Cr 28:4 • o altar de incenso do santuário local, fora da casa do SENHOR",
+    text: "\"Também sacrificou, e queimou incenso nos altos e nos outeiros\" (2Cr 28:4). O \"alto\" (bamah) é o santuário de bairro: uma plataforma de pedra com altar, coluna e poste sagrado, na colina ao lado da vila. Foi o pecado tolerado por quase todos os reis retos de Judá — de Asa a Jotão, o refrão de Reis é sempre \"Tão-somente os altos não foram tirados; porque o povo ainda sacrificava e queimava incenso nos altos\" (2Rs 15:35) —, e é por isso que Acaz não precisou inventar nada: bastou usar o que já estava de pé, e sacrificar nele. A lei tinha mandado o contrário desde a entrada na terra: \"Totalmente destruireis todos os lugares, onde as nações que possuireis serviram os seus deuses\" (Dt 12:2). Só dois reis derrubaram os altos de fato, e os dois vêm depois deste: Ezequias, no capítulo 31, e Josias. A cena que este objeto abre é a da religião fácil, perto de casa, sem sacerdote e sem prestação de contas.",
+  },
+  "despojo-levado-para-samaria": {
+    title: "O grande despojo levado para Samaria",
+    subtitle: "2Cr 28:8 • a carga que voltou a ser descarregada por ordem de um profeta",
+    text: "\"E os filhos de Israel levaram presos de seus irmãos duzentos mil, mulheres, filhos e filhas; e também saquearam deles grande despojo, que levaram para Samaria\" (2Cr 28:8). É saque de irmão contra irmão, e é exatamente isso que o profeta Obede põe diante do exército na entrada da cidade (2Cr 28:9-11). O que acontece em seguida não tem paralelo na Escritura: \"Então os homens armados deixaram os cativos e o despojo diante dos príncipes e de toda a congregação\" (2Cr 28:14). E o despojo largado no chão vira roupa e comida para as próprias vítimas: \"e vestiram do despojo a todos os que dentre eles estavam nus; e vestiram-nos, e calçaram-nos, e deram-lhes de comer e de beber, e os ungiram\" (2Cr 28:15). O butim mais bem gasto do Antigo Testamento — e a lei já tinha mandado devolver até o jumento do inimigo caído debaixo da carga (Êx 23:4-5).",
+  },
+  "jerico-a-cidade-das-palmeiras": {
+    title: "Jericó, a cidade das palmeiras",
+    subtitle: "2Cr 28:15 • o destino a que os cativos de Judá foram conduzidos",
+    text: "\"e a todos os que estavam fracos levaram sobre jumentos, e conduziram-nos a Jericó, à cidade das palmeiras, a seus irmãos. Depois voltaram para Samaria\" (2Cr 28:15). O apelido é antigo: dali Moisés viu a terra prometida, do alto de Nebo, \"e a campina do vale de Jericó, a cidade das palmeiras\" (Dt 34:3), e assim ela aparece em Juízes 1:16 e 3:13. Jericó fica na fronteira, na descida quente para o Jordão — é o ponto de entrega natural entre o reino do Norte e Judá, o lugar onde um cativo devolvido volta a estar em casa. A escolha da estrada é significativa: mil anos depois, Jesus poria na mesma descida a parábola do homem que caiu entre salteadores e foi socorrido por um samaritano que \"atou-lhe as feridas, deitando-lhes azeite e vinho; e, pondo-o sobre o seu animal, levou-o para uma estalagem, e cuidou dele\" (Lc 10:34). Os quatro homens de Efraim fizeram isso antes, e com duzentos mil.",
+  },
+  "jumentos-que-levaram-os-fracos-a-jerico": {
+    title: "Os jumentos que levaram os fracos até Jericó",
+    subtitle: "2Cr 28:15 • o transporte dos cativos que não conseguiam andar",
+    text: "\"e a todos os que estavam fracos levaram sobre jumentos\" (2Cr 28:15). É o último dos seis gestos do versículo — vestir, calçar, dar de comer, dar de beber, ungir e carregar —, e o único que custou aos soldados de Israel a própria montaria: quem ia sobre o jumento passou a ir a pé para que o velho, a grávida e a criança de Judá pudessem chegar. O jumento é o animal do pobre e do pacífico na Escritura, o que carrega Abigail com o pão e o vinho para Davi (1Sm 25:18-20) e o que leva o Rei a Jerusalém, \"pobre, e montado sobre um jumento\" (Zc 9:9). Aqui ele carrega inimigos de guerra. O gesto é o mesmo que Jesus desenharia na parábola do samaritano, \"pondo-o sobre o seu animal\" (Lc 10:34), na mesma estrada de Jericó — e o que Ele exigiria no juízo: \"Estava nu, e vestistes-me\" (Mt 25:36).",
+  },
+  "utensilios-quebrados-da-casa-de-deus": {
+    title: "Os utensílios quebrados da casa de Deus",
+    subtitle: "2Cr 28:24 • o que Acaz fez em pedaços antes de trancar o templo",
+    text: "\"E ajuntou Acaz os utensílios da casa de Deus, e fez em pedaços os utensílios da casa de Deus, e fechou as portas da casa do Senhor\" (2Cr 28:24). O texto repete a expressão \"os utensílios da casa de Deus\" dentro do mesmo versículo, como quem não quer que se leia depressa: são as bacias, os garfos, os incensários e os vasos que Salomão mandara fazer de ouro e de bronze (1Rs 7:45-50). Reis conta o passo anterior: Acaz já tinha cortado as bordaduras das bases, tirado o mar de cima dos bois de bronze e mudado o altar de lugar, tudo \"por causa do rei da Assíria\" (2Rs 16:17-18). Não foi só cobiça — foi desmonte deliberado do culto. Um capítulo adiante, os sacerdotes de Ezequias voltariam ao rei com a resposta a este versículo: \"Também todos os objetos que o rei Acaz no seu reinado lançou fora, na sua transgressão, já preparamos e santificamos\" (2Cr 29:19).",
+  },
+  "portas-fechadas-da-casa-do-senhor": {
+    title: "As portas fechadas da casa do SENHOR",
+    subtitle: "2Cr 28:24 • a tranca que Acaz pôs no templo de Jerusalém",
+    text: "\"e fechou as portas da casa do Senhor, e fez para si altares em todos os cantos de Jerusalém\" (2Cr 28:24). É o fundo do poço deste trecho de Crônicas: não houve destruição estrangeira do templo, houve um rei de Judá que o trancou por dentro e distribuiu altares pela cidade em lugar dele. O efeito prático está descrito pelo filho, dois capítulos adiante: \"Também fecharam as portas do alpendre, e apagaram as lâmpadas, e não queimaram incenso nem ofereceram holocaustos no santuário ao Deus de Israel\" (2Cr 29:7) — culto contínuo interrompido, candeeiro apagado, casa às escuras. Malaquias diria depois que antes isso do que a farsa: \"Quem há também entre vós que feche as portas por nada, e não acenda debalde o fogo do meu altar?\" (Ml 1:10). Mas aqui não é santa indignação, é apostasia. A primeira coisa que Ezequias fez ao reinar foi desfazer este versículo (2Cr 29:3).",
+  },
+  "altares-em-todos-os-cantos-de-jerusalem": {
+    title: "Os altares em todos os cantos de Jerusalém",
+    subtitle: "2Cr 28:24-25 • o culto espalhado pela cidade depois que o templo foi trancado",
+    text: "\"e fez para si altares em todos os cantos de Jerusalém. Também em cada cidade de Judá fez altos para queimar incenso a outros deuses; assim provocou à ira o Senhor Deus de seus pais\" (2Cr 28:24-25). Fechada a casa, o culto não acabou — multiplicou-se e mudou de dono. É o retrato exato do que Jeremias veria uma geração depois: \"segundo o número das tuas cidades, são os teus deuses, ó Judá! E, segundo o número das ruas de Jerusalém, levantastes altares\" (Jr 11:13). Um altar em cada esquina parece devoção e é o contrário: o santuário único existia porque o Deus é um, e espalhar altar é confessar muitos deuses. Estes são os altares que a multidão da páscoa arrancaria com as próprias mãos assim que chegasse à cidade: \"levantaram-se, e tiraram os altares que havia em Jerusalém; também tiraram todos os altares de incenso, e os lançaram no ribeiro de Cedrom\" (2Cr 30:14).",
+  },
+  "livro-dos-reis-de-juda-e-de-israel": {
+    title: "O livro dos reis de Judá e de Israel",
+    subtitle: "2Cr 28:26 • a fonte citada para os atos de Acaz, os primeiros e os últimos",
+    text: "\"Ora, o restante dos seus atos e de todos os seus caminhos, tanto os primeiros como os últimos, eis que estão escritos no livro dos reis de Judá e de Israel\" (2Cr 28:26). É a mesma fonte citada um capítulo antes com os nomes na ordem inversa, \"o livro dos reis de Israel e de Judá\" (2Cr 27:7): os anais oficiais dos dois reinos, hoje perdidos, de onde o Cronista tira o que resume. A fórmula \"tanto os primeiros como os últimos\" aparece só nos reinados em que houve virada, para o bem ou para o mal — e no de Acaz a virada é para baixo: começou fundindo imagens e terminou fechando o templo. O registro não o poupa, e o versículo seguinte marca a diferença que ficou escrita para sempre: \"E dormiu Acaz com seus pais, e o sepultaram na cidade, em Jerusalém; porém não o puseram nos sepulcros dos reis de Israel\" (2Cr 28:27).",
+  },
+  "portas-abertas-da-casa-do-senhor": {
+    title: "As portas abertas da casa do SENHOR",
+    subtitle: "2Cr 29:3 • a primeira coisa que Ezequias fez ao começar a reinar",
+    text: "\"Ele, no primeiro ano do seu reinado, no primeiro mês, abriu as portas da casa do Senhor, e as reparou\" (2Cr 29:3). É a mesma folha que o pai trancara em 2Cr 28:24, e a data está no texto porque a data é o argumento: primeiro ano, primeiro mês — antes de campanha, de aliança ou de censo. Não bastou destrancar; foi preciso consertar, porque dezesseis anos de abandono estragam dobradiça. A leitura teológica do gesto vem na pregação que ele faz em seguida na praça oriental: \"Agora me tem vindo ao coração, que façamos uma aliança com o Senhor Deus de Israel, para que se desvie de nós o ardor da sua ira\" (2Cr 29:10). Reis descreve o mesmo rei por outro ângulo — \"No Senhor Deus de Israel confiou, de maneira que depois dele não houve quem lhe fosse semelhante entre todos os reis de Judá\" (2Rs 18:5). Uma porta reaberta é a forma mais curta de dizer arrependimento.",
+  },
+  "lampadas-apagadas-do-alpendre": {
+    title: "As lâmpadas apagadas do alpendre",
+    subtitle: "2Cr 29:7 • o candeeiro que ficou dezesseis anos sem arder",
+    text: "Ezequias descreve aos levitas o estado exato da casa: \"Também fecharam as portas do alpendre, e apagaram as lâmpadas, e não queimaram incenso nem ofereceram holocaustos no santuário ao Deus de Israel\" (2Cr 29:7). A lei mandava o contrário, e mandava por escrito: o azeite de oliveira batido é \"para o candeeiro, para fazer arder as lâmpadas continuamente\", e Arão e seus filhos as poriam em ordem \"desde a tarde até a manhã, perante o Senhor\" (Êx 27:20-21). Apagar o candelabro é declarar encerrada a presença — foi o que a casa de Eli deixou acontecer em Siló, quando \"a lâmpada de Deus ainda não se apagara\" e Samuel dormia no templo (1Sm 3:3). A luz do santuário não é decoração: é sinal de que ali há alguém de plantão diante de Deus. Reacendê-la é parte do que estes dezesseis dias de purificação estão preparando.",
+  },
+  "altar-do-holocausto-da-casa-do-senhor": {
+    title: "O altar do holocausto da casa do SENHOR",
+    subtitle: "2Cr 29:18 • o altar purificado e devolvido ao seu uso",
+    text: "No relatório que os sacerdotes trazem ao rei, o altar vem nomeado antes de tudo: \"Já purificamos toda a casa do Senhor, como também o altar do holocausto com todos os seus utensílios e a mesa da proposição com todos os seus utensílios\" (2Cr 29:18). É o altar de bronze do átrio, feito por Salomão com vinte côvados de comprimento e dez de altura (2Cr 4:1), o lugar do sacrifício diário da manhã e da tarde (Êx 29:38-39). Acaz o tinha empurrado para o lado do norte para pôr no seu lugar uma cópia do altar sírio de Damasco (2Rs 16:14). Purificado, ele volta a arder no versículo 27, e o Cronista guarda o instante em que o fogo e a música começam juntos: \"ao tempo em que começou o holocausto, começou também o canto do Senhor, com as trombetas e com os instrumentos de Davi\" (2Cr 29:27). Deus não fala uma palavra no capítulo; responde deixando o altar arder.",
+  },
+  "mesa-da-proposicao": {
+    title: "A mesa da proposição",
+    subtitle: "2Cr 29:18 • a mesa dos pães, purificada com todos os seus utensílios",
+    text: "\"como também o altar do holocausto com todos os seus utensílios e a mesa da proposição com todos os seus utensílios\" (2Cr 29:18). É a mesa de acácia coberta de ouro sobre a qual se punham doze pães, um por tribo, renovados todo sábado \"pelos filhos de Israel, por aliança perpétua\" (Lv 24:8; cf. Êx 25:23-30). Chama-se \"pão da proposição\" porque fica proposto, exposto diante de Deus: Israel inteiro representado em pão sobre a mesa do SENHOR. Foi desse pão que Aimeleque deu a Davi em fuga, quando não havia outro (1Sm 21:6) — e foi esse episódio que Jesus citou contra quem acusava os discípulos de colher espigas no sábado (Mt 12:3-4). Ter a mesa vazia por dezesseis anos era ter Israel apagado da presença de Deus; purificá-la é repor as doze tribos diante dele.",
+  },
+  "objetos-que-acaz-lancou-fora": {
+    title: "Os objetos que Acaz lançou fora",
+    subtitle: "2Cr 29:19 • o que foi recolhido, preparado e santificado de volta",
+    text: "\"Também todos os objetos que o rei Acaz no seu reinado lançou fora, na sua transgressão, já preparamos e santificamos; e eis que estão diante do altar do Senhor\" (2Cr 29:19). É a resposta direta a 2Cr 28:24, onde o mesmo rei \"fez em pedaços os utensílios da casa de Deus\": o que foi quebrado e jogado fora não é substituído por peça nova — é recolhido, consertado e reconsagrado. O verbo \"santificar\" aqui é técnico: um utensílio profanado não volta ao serviço só por estar limpo, precisa ser posto outra vez à parte para o SENHOR (cf. Êx 40:9-11). E a última frase do relatório é uma exposição: \"eis que estão diante do altar do Senhor\" — enfileirados no pátio, à vista do rei, como quem devolve o que foi tomado. É o método deste avivamento inteiro: não se começa nada novo antes de reparar o que foi arrebentado.",
+  },
+  "instrumentos-de-davi": {
+    title: "Os instrumentos de Davi",
+    subtitle: "2Cr 29:26-27 • as harpas, os saltérios e os címbalos do rei tocando outra vez",
+    text: "\"E pôs os levitas na casa do Senhor com címbalos, com saltérios, e com harpas, conforme ao mandado de Davi e de Gade, o vidente do rei, e do profeta Natã; porque este mandado veio do Senhor, por mão de seus profetas\" (2Cr 29:25). O Cronista blinda o ponto: a orquestra do templo não foi gosto pessoal de Davi, foi ordem transmitida por profetas. \"Estavam, pois, os levitas em pé com os instrumentos de Davi, e os sacerdotes com as trombetas\" (2Cr 29:26) — e no versículo seguinte o fogo e a música começam no mesmo segundo (2Cr 29:27). Davi tinha organizado esse serviço com Asafe, Hemam e Jedutum, \"para profetizarem com harpas, com címbalos, e com saltérios\" (1Cr 25:1), e fabricado ele mesmo instrumentos para o louvor (1Cr 23:5). Duzentos e cinquenta anos depois, aquelas partituras ainda serviam: o avivamento de Ezequias não inventou culto novo, desenterrou o antigo.",
+  },
+  "trombetas-dos-sacerdotes": {
+    title: "As trombetas dos sacerdotes",
+    subtitle: "2Cr 29:26-28 • as trombetas de prata que anunciam o holocausto",
+    text: "\"Estavam, pois, os levitas em pé com os instrumentos de Davi, e os sacerdotes com as trombetas\" (2Cr 29:26). A divisão é da lei: as duas trombetas de prata batida são dos filhos de Arão, e Números manda tocá-las \"tocareis as trombetas sobre os vossos holocaustos… e vos serão por memorial perante vosso Deus\" (Nm 10:10). Não são instrumento de melodia, são sinal — convocam a congregação, dão o alarme na guerra e marcam a hora do sacrifício. Foram cento e vinte delas que soaram na dedicação do templo de Salomão, quando a glória encheu a casa (2Cr 5:12-14). Aqui elas tocam sobre um pátio recém-varrido, e o povo se dobra: \"E toda a congregação se prostrou, quando entoavam o canto, e as trombetas eram tocadas; tudo isto até o holocausto se acabar\" (2Cr 29:28). O som que Judá não ouvia havia dezesseis anos voltou a atravessar Jerusalém.",
+  },
+  "cartas-da-pascoa-de-ezequias": {
+    title: "As cartas da páscoa de Ezequias",
+    subtitle: "2Cr 30:1,6 • o convite escrito que os correios levaram a Efraim, a Manassés e até Zebulom",
+    text: "\"Depois disto Ezequias enviou mensageiros por todo o Israel e Judá, e escreveu também cartas a Efraim e a Manassés para que viessem à casa do SENHOR em Jerusalém, para celebrarem a páscoa ao SENHOR Deus de Israel\" (2Cr 30:1). São cartas de um rei de Judá a súditos de outro reino — o Norte já esfacelado pela Assíria —, e o conteúdo está transcrito: \"Filhos de Israel, convertei-vos ao Senhor Deus de Abraão, de Isaque e de Israel; para que ele se volte para o restante de vós que escapou da mão dos reis da Assíria\" (2Cr 30:6). Nada de política e nada de ameaça: \"dai a mão ao Senhor, e vinde ao seu santuário\" (2Cr 30:8), com a promessa de que \"o Senhor vosso Deus é misericordioso e compassivo, e não desviará de vós o seu rosto, se vos converterdes a ele\" (2Cr 30:9). Foi lida em voz alta de cidade em cidade e recebida com gargalhada (2Cr 30:10) — e mesmo assim alguns vieram.",
+  },
+  "altares-de-incenso-lancados-no-cedrom": {
+    title: "Os altares de incenso lançados no ribeiro de Cedrom",
+    subtitle: "2Cr 30:14 • o primeiro serviço da multidão que chegou para a páscoa",
+    text: "\"E levantaram-se, e tiraram os altares que havia em Jerusalém; também tiraram todos os altares de incenso, e os lançaram no ribeiro de Cedrom\" (2Cr 30:14). A congregação chegou à cidade para uma festa e começou pelo trabalho de demolição: são os altares que Acaz mandara fazer \"em todos os cantos de Jerusalém\" (2Cr 28:24), arrancados pelas mãos do povo, não por decreto do rei. O destino é significativo — o mesmo vale onde os levitas tinham despejado a imundícia do templo um mês antes (2Cr 29:16), e onde Asa queimara o ídolo da própria avó (2Cr 15:16) e Josias queimaria os vasos de Baal (2Rs 23:4). Cedrom é o esgoto sagrado de Jerusalém, o lugar para onde vai o que não pode ficar. Não há páscoa em cidade que ainda guarda os seus altares de reserva: primeiro se tira o que estorva, depois se come o cordeiro.",
+  },
+  "estatuas-quebradas-de-juda": {
+    title: "As estátuas quebradas de Judá",
+    subtitle: "2Cr 31:1 • o que sobrou das imagens depois que o povo saiu da festa",
+    text: "\"E acabando tudo isto, todos os israelitas que ali se achavam saíram às cidades de Judá e quebraram as estátuas, cortaram os bosques, e derrubaram os altos e altares por toda Judá e Benjamim, como também em Efraim e Manassés, até que tudo destruíram\" (2Cr 31:1). O montão de pedra em cena é o que restou das colunas sagradas (as matsevot) e das imagens fundidas de Acaz (2Cr 28:2). O gesto é obediência literal a uma ordem antiga: \"E derrubareis os seus altares, e quebrareis as suas estátuas… e apagareis o seu nome daquele lugar\" (Dt 12:3). O que impressiona é quem faz: não é o exército do rei, é a multidão que veio para a páscoa e, em vez de voltar direto para casa, passou pelas cidades derrubando. E passou a fronteira — derrubou também em Efraim e Manassés, território que já não era de Judá. Só depois disso \"tornaram todos os filhos de Israel, cada um para sua possessão\" (2Cr 31:1).",
+  },
+  "bosques-cortados-de-juda": {
+    title: "Os bosques cortados de Judá",
+    subtitle: "2Cr 31:1 • os postes de Aserá derrubados a machado depois da páscoa",
+    text: "\"quebraram as estátuas, cortaram os bosques, e derrubaram os altos e altares\" (2Cr 31:1). \"Bosque\" na ARC traduz asherah, o poste ou tronco sagrado plantado ao lado do altar dos altos — o símbolo da deusa cananeia, sempre associado à \"árvore verde\" debaixo da qual Judá sacrificava (2Cr 28:4). A lei mandava exatamente isto: \"os seus bosques queimareis a fogo\" (Dt 12:3), e Gideão começou o seu chamado cortando o de casa e usando a lenha no holocausto (Jz 6:25-26). O bosque é o mais teimoso dos ídolos de Judá: Asa cortou (2Cr 14:3), Josafá tirou (2Cr 17:6), Ezequias corta aqui — e Manassés, filho deste rei, voltaria a levantá-los e a pôr um na casa de que Deus dissera \"Nesta casa e em Jerusalém, que escolhi de todas as tribos de Israel, porei o meu nome para sempre\" (2Cr 33:7). Cortar árvore de culto é trabalho de machado, e é o povo inteiro que o faz, não uma comissão.",
+  },
+  "lei-do-senhor": {
+    title: "A lei do SENHOR",
+    subtitle: "2Cr 31:3-4 • o texto que rege as turmas, os holocaustos e a porção dos sacerdotes",
+    text: "O capítulo cita a lei duas vezes em dois versículos, e as duas vezes como norma prática. Primeiro no calendário do altar: os holocaustos da manhã e da tarde, os dos sábados, os das luas novas e os das solenidades, \"como está escrito na lei do Senhor\" (2Cr 31:3) — a agenda de Números 28-29, paga da fazenda do próprio rei. Depois na razão do sustento do clero: o povo dá a porção dos sacerdotes e levitas \"para que eles pudessem se dedicar à lei do Senhor\" (2Cr 31:4). Israel não sustentava a tribo de Levi por deferência: ela não recebera herança de terra, e o SENHOR era a sua parte (Nm 18:20-21). Livrar o sacerdote de plantar para que ele possa estudar e ensinar é a lógica que Malaquias resumiria — \"os lábios do sacerdote devem guardar o conhecimento, e da sua boca devem os homens buscar a lei\" (Ml 2:7) — e que Paulo aplicaria à igreja (1Co 9:13-14).",
+  },
+  "montoes-das-primicias-e-dos-dizimos": {
+    title: "Os montões das primícias e dos dízimos",
+    subtitle: "2Cr 31:5-10 • as pilhas que começaram no terceiro mês e só acabaram no sétimo",
+    text: "\"os filhos de Israel trouxeram muitas primícias de trigo, mosto, azeite, mel, e de todo o produto do campo; também os dízimos de tudo trouxeram em abundância\" (2Cr 31:5), \"e fizeram muitos montões\" (2Cr 31:6). O calendário é o das colheitas: \"No terceiro mês começaram a fazer os primeiros montões; e no sétimo mês acabaram\" (2Cr 31:7) — do começo da ceifa do trigo ao fim da vindima e da azeitona, cinco meses de gente subindo carregada. O rei viu as pilhas e perguntou o que eram (2Cr 31:9); a resposta do sumo sacerdote é o fecho do trecho: \"Desde que se começou a trazer estas ofertas à casa do Senhor, temos comido e temos fartado, e ainda sobejou em abundância; porque o Senhor abençoou ao seu povo\" (2Cr 31:10). O montão é a forma visível da promessa: \"Honra ao Senhor com os teus bens, e com a primeira parte de todos os teus ganhos; E se encherão os teus celeiros\" (Pv 3:9-10).",
+  },
+  "camaras-da-casa-do-senhor": {
+    title: "As câmaras preparadas na casa do SENHOR",
+    subtitle: "2Cr 31:11-13 • o depósito que Ezequias mandou fazer para o que sobejou",
+    text: "\"Então ordenou Ezequias que se preparassem câmaras na casa do Senhor, e as prepararam\" (2Cr 31:11). São as salas laterais do templo, previstas desde a planta de Salomão (1Rs 6:5-6) e usadas como tesouraria e armazém do santuário; foi para elas que o povo passou a levar as primícias e os dízimos. O versículo seguinte diz o que ali se fez e com que espírito: \"Ali recolheram fielmente as ofertas, e os dízimos, e as coisas consagradas; e tinham cargo disto Conanias, o levita principal, e Simei, seu irmão, o segundo\" (2Cr 31:12), com dez superintendentes nomeados um a um sob a direção deles e a dupla autoridade do rei e de Azarias, líder da casa de Deus (2Cr 31:13). Abundância sem armazém apodrece, e armazém sem homem fiel some: Israel se lembrava dos filhos de Eli, que tomavam a carne das ofertas com garfo de três dentes (1Sm 2:13-17). Neemias teria de reabrir e limpar estas mesmas câmaras séculos depois (Ne 13:4-9).",
+  },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
