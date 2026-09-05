@@ -26,7 +26,11 @@ export type BossShape =
   | "death"     // a morte: caveira com foice e manto
   | "chains"    // cárcere: massa acorrentada / grilhões
   | "legion"    // legião: massa com muitos olhos
-  | "crown";    // rei soberbo: figura com coroa e cetro
+  | "crown"     // rei soberbo: figura com coroa e cetro
+  | "accuser"   // o adversário da corte celestial: asas escuras, dedo apontado
+  | "chariot"   // carro de guerra atrelado (o exército do Faraó)
+  | "siege"     // torre de assalto e aríete (o cerco)
+  | "decree";   // o edito que manda cessar a obra (uma carta como inimigo)
 
 export interface BossInfo {
   name: string;
@@ -40,7 +44,7 @@ export interface BossInfo {
 export const BOSS_BY_BOOK: Record<string, BossInfo> = {
   // — Antigo Testamento —
   genesis:      { name: "A Antiga Serpente", emoji: "🐍", color: "#63b84a", shape: "serpent",  taunt: "Será que Deus disse mesmo...?" },
-  exodus:       { name: "O Exército do Faraó", emoji: "🐎", color: "#c23a3a", shape: "horseman", taunt: "Ninguém escapa do meu Egito!" },
+  exodus:       { name: "O Exército do Faraó", emoji: "🛞", color: "#c23a3a", shape: "chariot", taunt: "Ninguém escapa do meu Egito!" },
   leviticus:    { name: "O Fogo do Altar", emoji: "🔥", color: "#ff8a3a", shape: "flame",    taunt: "Quem se aproximará do Santo?" },
   numbers:      { name: "As Serpentes Ardentes", emoji: "🐍", color: "#d1503a", shape: "serpent", taunt: "O deserto será o seu túmulo." },
   deuteronomy:  { name: "Os Gigantes de Anaque", emoji: "🗿", color: "#b98a4a", shape: "giant", taunt: "Quem enfrenta os filhos de Anaque?" },
@@ -48,15 +52,15 @@ export const BOSS_BY_BOOK: Record<string, BossInfo> = {
   judges:       { name: "As Nações Opressoras", emoji: "⚔️", color: "#a05030", shape: "horseman", taunt: "Israel se curvará outra vez." },
   ruth:         { name: "A Sombra da Perda", emoji: "🥀", color: "#7a8bb0", shape: "shadow",  taunt: "Não te resta ninguém, Noemi." },
   "1samuel":    { name: "O Gigante Golias", emoji: "🗡️", color: "#e0c24a", shape: "giant",   taunt: "Envia-me um homem, para lutarmos!" },
-  "2samuel":    { name: "A Revolta de Absalão", emoji: "👑", color: "#b04a6a", shape: "horseman", taunt: "O trono de teu pai será meu!" },
-  "1kings":     { name: "Os Profetas de Baal", emoji: "🔥", color: "#ff6a3a", shape: "flame",  taunt: "Onde está o teu Deus, Elias?" },
-  "2kings":     { name: "O Cerco da Assíria", emoji: "🏹", color: "#8a5a3a", shape: "horseman", taunt: "Nenhum deus livrou sua cidade de mim." },
+  "2samuel":    { name: "A Revolta de Absalão", emoji: "👑", color: "#b04a6a", shape: "crown",  taunt: "O trono de teu pai será meu!" },
+  "1kings":     { name: "Os Profetas de Baal", emoji: "🗿", color: "#c08a3a", shape: "idol",   taunt: "Onde está o teu Deus, Elias?" },
+  "2kings":     { name: "O Cerco da Assíria", emoji: "🏯", color: "#8a5a3a", shape: "siege",   taunt: "Nenhum deus livrou sua cidade de mim." },
   "1chronicles":{ name: "As Guerras do Reino", emoji: "⚔️", color: "#c0955a", shape: "horseman", taunt: "O trono se ergue sobre sangue." },
   "2chronicles":{ name: "O Fogo da Babilônia", emoji: "🔥", color: "#e0542a", shape: "flame",  taunt: "Sua cidade santa arderá." },
-  ezra:         { name: "Os Adversários da Obra", emoji: "🧱", color: "#9a7a4a", shape: "wall", taunt: "Este templo jamais se levantará." },
+  ezra:         { name: "Os Adversários da Obra", emoji: "📜", color: "#d0a04a", shape: "decree", taunt: "Este templo jamais se levantará." },
   nehemiah:     { name: "A Zombaria de Sambalate", emoji: "🧱", color: "#8a9a6a", shape: "wall", taunt: "Uma raposa derruba esse muro!" },
   esther:       { name: "Hamã, o Perseguidor", emoji: "👑", color: "#b04a8a", shape: "crown", taunt: "Nenhum judeu restará no império." },
-  job:          { name: "O Acusador", emoji: "🌪️", color: "#6aa0c0", shape: "storm",  taunt: "Tira a mão sobre tudo o que ele tem!" },
+  job:          { name: "O Acusador", emoji: "👁️", color: "#8a6ac0", shape: "accuser", taunt: "Tira a mão sobre tudo o que ele tem!" },
   psalms:       { name: "O Vale da Sombra", emoji: "🌑", color: "#6a7ab0", shape: "shadow", taunt: "Nenhuma canção te salva no vale." },
   proverbs:     { name: "A Voz da Insensatez", emoji: "🍷", color: "#b06ab0", shape: "tempter", taunt: "As águas roubadas são doces." },
   ecclesiastes: { name: "A Vaidade", emoji: "🌪️", color: "#8a8a9a", shape: "storm", taunt: "Tudo é correr atrás do vento." },
@@ -417,6 +421,107 @@ function drawLegion(R: Rect, bx: number, feetY: number, t: number, reduce: boole
 }
 
 // o REI SOBERBO — figura com coroa dourada e cetro
+// O ACUSADOR (Jó 1-2): NÃO é uma tempestade. O redemoinho de Jó 38 é a voz do
+// SENHOR, e desenhá-lo como o inimigo punha Deus no lugar do adversário — o
+// contrário da regra fixa do projeto. Aqui ele é o que o texto diz: um vulto da
+// corte celestial, de asas escuras e sem auréola, com o dedo apontado — "veio
+// também Satanás entre eles" —, igual ao que a cena viva desenha em Jó 1:6.
+function drawAccuser(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.0035) * 1.5);
+  const topY = feetY - 44 - bob;
+  const flap = reduce ? 0 : Math.round(Math.sin(t * 0.005) * 4);
+  // ASAS: dois leques que sobem e abrem, para a silhueta ser de figura ALADA e
+  // não de vulto encapuzado (que é o arquétipo `shadow`, e saía igual).
+  for (const sg of [-1, 1]) {
+    for (let i = 0; i < 7; i++) {
+      const dx = 7 + i * 5;
+      const yTop = topY + 2 - i * 3 - flap + Math.round(i * i * 0.35);
+      const len = 20 - i * 2;
+      R(bx + sg * dx - (sg < 0 ? 5 : 0), yTop, 5, len, i % 2 ? BODY_L : BODY);
+      R(bx + sg * dx - (sg < 0 ? 5 : 0), yTop - 1, 5, 1, OUT);
+      R(bx + sg * dx - (sg < 0 ? 5 : 0), yTop + len, 5, 1, OUT);
+    }
+  }
+  // manto ESTREITO, para as asas dominarem
+  for (let i = 0; i <= 30; i++) {
+    const y = topY + 10 + i, pr = i / 30;
+    const w = Math.round(3 + pr * 8);
+    R(bx - w - 1, y, w * 2 + 3, 1, OUT); R(bx - w, y, w * 2 + 1, 1, BODY);
+  }
+  R(bx - 8, topY + 40, 17, 2, OUT);
+  blob(R, bx, topY + 5, 6, 6, BODY_L);                                    // cabeça, SEM auréola
+  R(bx - 7, topY + 10, 15, 2, OUT);                                       // gola
+  eyes(R, bx - 4, topY + 4, 4, color, t, reduce);
+  // O DEDO QUE APONTA — é o que ele faz no livro inteiro ("porventura teme Jó a
+  // Deus debalde?"). Braço horizontal, longo, contra o corpo escuro.
+  const ap = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 2);
+  R(bx + 9, topY + 17 + ap, 16, 4, BODY_L); R(bx + 8, topY + 16 + ap, 18, 1, OUT);
+  R(bx + 25, topY + 17 + ap, 6, 2, BODY_L); R(bx + 31, topY + 17 + ap, 3, 2, color);
+}
+
+// O DECRETO (Ed 4): o inimigo de Esdras não é um exército nem uma muralha — é
+// uma CARTA. "Então cessou a obra da casa de Deus, que estava em Jerusalém."
+// Um rolo aberto e enorme, com o selo do rei e a escrita que manda parar.
+function drawDecree(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.003) * 1.5);
+  const topY = feetY - 48 - bob, H = 40, W = 17;
+  for (const sg of [-1, 1]) {                                             // hastes enroladas
+    const rx = bx + sg * (W + 4);
+    R(rx - 4, topY - 3, 9, H + 8, BODY_L); R(rx - 5, topY - 4, 11, 1, OUT);
+    R(rx - 5, topY + H + 4, 11, 1, OUT); R(rx - 2, topY - 1, 3, H + 4, BODY);
+  }
+  R(bx - W, topY, W * 2, H, BONE);                                        // folha
+  R(bx - W - 1, topY - 1, W * 2 + 2, 1, OUT); R(bx - W - 1, topY + H, W * 2 + 2, 1, OUT);
+  for (let i = 0; i < 7; i++) {                                           // linhas de escrita
+    const w = i % 3 === 2 ? W : W * 1.6;
+    R(bx - W + 3, topY + 5 + i * 4, w, 1, BONE_D);
+  }
+  const p = reduce ? 1 : 0.6 + Math.abs(Math.sin(t * 0.004)) * 0.4;       // selo de lacre
+  R(bx - 6, topY + H - 12, 13, 12, "#8a2030");
+  R(bx - 7, topY + H - 13, 15, 1, OUT); R(bx - 4, topY + H - 10, 8, 7, "#b03040");
+  eyes(R, bx - 4, topY + H - 9, 4, color, t, reduce);
+  if (!reduce) { R(bx - 7, topY + H - 13, 15, 1, p > 0.85 ? color : OUT); }
+}
+
+// O CARRO DE GUERRA (Êx 14): o exército do Faraó é CARRO, não cavaleiro solto —
+// "tomou seiscentos carros escolhidos". Roda, timão, cavalo atrelado e o auriga.
+function drawChariot(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const gy = reduce ? 0 : Math.round(Math.abs(Math.sin(t * 0.018)) * 2);
+  const b = feetY - gy;
+  hblob(R, bx - 20, b - 14, 11, 5, BODY);                                 // cavalo (atrás, menor)
+  for (const lx of [-28, -22, -16, -10]) R(bx + lx, b - 9, 3, 9, BODY);
+  R(bx - 33, b - 23, 4, 10, BODY); blob(R, bx - 33, b - 25, 4, 4, BODY_L);
+  eyes(R, bx - 35, b - 26, 3, color, t, reduce);
+  R(bx - 10, b - 17, 20, 3, BODY_L);                                      // timão
+  R(bx + 6, b - 30, 20, 16, BODY); R(bx + 5, b - 31, 22, 1, OUT);         // caixa do carro
+  R(bx + 8, b - 28, 16, 2, BODY_L);
+  const ang = reduce ? 0 : (t / 90) % 6.283;                              // roda com raios
+  const wx = bx + 16, wy = b - 8, rr = 8;
+  for (let i = 0; i < 6; i++) {
+    const a = ang + (i * Math.PI) / 3;
+    R(wx + Math.cos(a) * rr * 0.6 - 1, wy + Math.sin(a) * rr * 0.6 - 1, 2, 2, IRON_L);
+  }
+  for (let a = 0; a < 6.283; a += 0.22) R(wx + Math.cos(a) * rr, wy + Math.sin(a) * rr, 2, 2, IRON);
+  R(bx + 13, b - 40, 6, 15, BODY_L); blob(R, bx + 16, b - 42, 4, 4, BODY); // auriga
+  R(bx + 21, b - 52, 2, 26, BODY_L); R(bx + 20, b - 54, 4, 4, color);      // lança erguida
+}
+
+// O CERCO (2Rs 18-19; 2Cr 32): torre de assalto e aríete contra a muralha — o
+// inimigo de Ezequias não é um cavaleiro, é uma máquina que não pára de vir.
+function drawSiege(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const push = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 3);
+  const b = feetY;
+  R(bx - 18 + push, b - 46, 34, 46, BODY); R(bx - 19 + push, b - 47, 36, 1, OUT); // torre
+  for (let i = 0; i < 4; i++) R(bx - 16 + push, b - 42 + i * 11, 30, 1, BODY_L);   // andares
+  for (const mx of [-14, -6, 2, 10]) R(bx + mx + push, b - 50, 5, 4, BODY);        // ameias
+  eyes(R, bx - 6 + push, b - 38, 6, color, t, reduce);
+  R(bx + 14 + push, b - 22, 22, 6, IRON);                                          // aríete
+  R(bx + 34 + push, b - 24, 7, 10, IRON_L); R(bx + 33 + push, b - 25, 9, 1, OUT);  // cabeça de ferro
+  for (const wx of [bx - 12 + push, bx + 8 + push]) {                              // rodas
+    for (let a = 0; a < 6.283; a += 0.3) R(wx + Math.cos(a) * 6, b - 6 + Math.sin(a) * 6, 2, 2, IRON);
+  }
+}
+
 function drawCrown(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
   const bob = reduce ? 0 : Math.round(Math.sin(t * 0.004));
   const cy = feetY - 34 - bob;
@@ -435,6 +540,7 @@ function drawCrown(R: Rect, bx: number, feetY: number, t: number, reduce: boolea
 const RENDER: Record<BossShape, (R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) => void> = {
   serpent: drawSerpent, giant: drawGiant, beast: drawBeast, leviathan: drawLeviathan,
   storm: drawStorm, dragon: drawDragon, wall: drawWall, shadow: drawShadow,
+  accuser: drawAccuser, chariot: drawChariot, siege: drawSiege, decree: drawDecree,
   swarm: drawSwarm, flame: drawFlame, horseman: drawHorseman, idol: drawIdol,
   tempter: drawTempter, death: drawDeath, chains: drawChains, legion: drawLegion, crown: drawCrown,
 };
@@ -443,16 +549,33 @@ const RENDER: Record<BossShape, (R: Rect, bx: number, feetY: number, t: number, 
  * Desenha o chefe do livro `bookId`: silhueta pixel do arquétipo, com sombra no
  * chão e uma aura pulsante na cor do chefe. `bx` centro, `feetY` base.
  */
+// Porte de cada arquétipo na câmera da batalha (multiplica a arte de ~45 px).
+// Não é enfeite: é o que separa "um ícone no canto" de "um chefe".
+const BOSS_SCALE: Partial<Record<BossShape, number>> = {
+  giant: 2.2, wall: 2.15, dragon: 2.1, leviathan: 2.0, serpent: 1.95,
+  storm: 1.9, legion: 1.9, flame: 1.85, death: 1.85, idol: 1.8,
+  crown: 1.75, tempter: 1.75, horseman: 1.7, beast: 1.7, chains: 1.7,
+  shadow: 1.7, swarm: 1.6, accuser: 1.8, chariot: 1.75, siege: 2.05, decree: 1.9,
+};
+
 export function drawBoss(g: G, bookId: string, bx: number, feetY: number, t: number, reduce: boolean): void {
   const info = getBoss(bookId);
   const R = mkRect(g);
   const cx = Math.round(bx);
 
+  // PRESENÇA DO CHEFE. A arte foi desenhada numa grade de ~45 px de altura, e a
+  // câmera da batalha tem 360×200 com o chão em 150: o chefe saía do tamanho do
+  // herói (que é desenhado a 0,9), e uma batalha de chefe em que o chefe não
+  // domina o quadro não é uma batalha de chefe. Cada arquétipo tem o seu porte:
+  // o gigante e a muralha TOWERAM, a serpente ergue-se, o enxame espalha-se.
+  const K = BOSS_SCALE[info.shape] ?? 1.7;
+  const sombraW = 20 * K, auraW = 28 * K, auraH = 26 * K;
+
   // sombra no chão
   g.globalAlpha = 0.3;
   g.fillStyle = "#000";
   g.beginPath();
-  g.ellipse(cx, feetY + 3, 20, 4, 0, 0, 6.29);
+  g.ellipse(cx, feetY + 3, sombraW, 4 + K, 0, 0, 6.29);
   g.fill();
   g.globalAlpha = 1;
 
@@ -461,12 +584,17 @@ export function drawBoss(g: G, bookId: string, bx: number, feetY: number, t: num
     g.globalAlpha = 0.1 + Math.abs(Math.sin(t * 0.005)) * 0.12;
     g.fillStyle = info.color;
     g.beginPath();
-    g.ellipse(cx, feetY - 22, 28, 26, 0, 0, 6.29);
+    g.ellipse(cx, feetY - 22 * K, auraW, auraH, 0, 0, 6.29);
     g.fill();
     g.globalAlpha = 1;
   }
 
+  g.save();
+  g.translate(cx, feetY);
+  g.scale(K, K);
+  g.translate(-cx, -feetY);
   (RENDER[info.shape] ?? drawShadow)(R, cx, Math.round(feetY), t, reduce, info.color);
+  g.restore();
 }
 
 // Miniatura estática do chefe (mesma arte da cena) para o nó do mapa — assim o
@@ -481,11 +609,15 @@ export function bossThumbnail(bookId: string, size = 64): string {
   const g = cv.getContext("2d");
   if (!g) return "";
   g.imageSmoothingEnabled = false;
-  const s = size / 74;
+  // A caixa da arte cresce com o PORTE do arquétipo (BOSS_SCALE), senão o chefe
+  // aumentado na batalha sai cortado no nó do mapa — o ícone tem de ser a mesma
+  // figura, inteira.
+  const K = BOSS_SCALE[getBoss(bookId).shape] ?? 1.7;
+  const s = size / (74 * K);
   g.save();
   g.translate(size / 2, size * 0.09);
   g.scale(s, s);
-  drawBoss(g, bookId, 0, 64, 900, true); // reduce=true → estático, sem aura/animação
+  drawBoss(g, bookId, 0, 64 * K, 900, true); // reduce=true → estático, sem aura/animação
   g.restore();
   const url = cv.toDataURL();
   thumbCache[key] = url;
