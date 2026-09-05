@@ -15,6 +15,7 @@ import { CHAPTER_ACTORS_10_14 } from "@/lib/stageInfo/2chronicles-10-14";
 import { CHAPTER_ACTORS_15_20 } from "@/lib/stageInfo/2chronicles-15-20";
 import { CHAPTER_ACTORS_21_26 } from "@/lib/stageInfo/2chronicles-21-26";
 import { CHAPTER_ACTORS_27_31 } from "@/lib/stageInfo/2chronicles-27-31";
+import { CHAPTER_ACTORS_32_36 } from "@/lib/stageInfo/2chronicles-32-36";
 
 export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
   ...CHAPTER_ACTORS_01_04,
@@ -23,4 +24,5 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
   ...CHAPTER_ACTORS_15_20,
   ...CHAPTER_ACTORS_21_26,
   ...CHAPTER_ACTORS_27_31,
+  ...CHAPTER_ACTORS_32_36,
 };
