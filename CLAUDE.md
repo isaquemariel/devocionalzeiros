@@ -88,6 +88,13 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    `rebanho` desenha NOVE ovelhas. Os doze bois debaixo do mar de fundição
    (1Rs 7:25; 2Cr 4:4) estavam com doze marcas — 108 animais, que afogavam o
    mar. São quatro grupos, um por ponto cardeal, como o versículo diz.
+3b. **`anjo` tem SEMPRE asas, e a `palette` não as tira.** Ela troca a veste e
+   apaga a coroa e a auréola, mas as asas ficam — então `anjo` só serve para
+   quem é mesmo do céu. Os assombros que espantam o ímpio e o "primogênito da
+   morte" de Jó 18 saíam de asas brancas, lidos como mensageiros de Deus,
+   que é o contrário do que o texto diz. Terror personificado é `homem` com
+   paleta escura. (Satanás em Jó 1-2 é a exceção legítima: ele vem ENTRE os
+   filhos de Deus, é da corte.)
 4. **Fogo só é desenhado por `campfire`, `pillar` ou `altar` com `fire`.** `env.fire`
    NÃO desenha chama (é ambiência/som) — cidade queimada precisa de `campfire`.
    **`env.water` é o contrário: DESENHA.** Acima de 0,05 põe uma faixa de água
@@ -151,6 +158,12 @@ de Salomão (1Rs 4:26) e os currais do gado de Mesa (2Rs 3:4) saíam desenhados
 como barraca de feira. Para gado, conte pelo `rebanho` e por `crate`/`rock`; se
 o objeto-marco precisar de `tag`, pendure-a no `rebanho` que não existe como
 prop — então pendure-a no `crate` ou no `horse`, que é o que se vê.
+
+**`lampstand` desenha SEMPRE a chama acesa** — não há lâmpada apagada. No
+versículo em que "a sua lâmpada sobre ele se apagará" (Jó 18:6), declare os
+props do beat SEM ela e deixe a tenda no escuro; com o candeeiro em cena, a
+luz do ímpio continua acesa no versículo que diz que ela se apaga. É a mesma
+classe do muro de Jericó intacto — e desta vez em miniatura.
 
 `rod` é só a vara de Arão. `calf` é só um ídolo fundido (o bezerro de ouro, os
 terafins, Dagom) — nunca um animal vivo, que é `rebanho` ou `horse`/`donkey`.
