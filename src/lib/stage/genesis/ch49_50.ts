@@ -378,7 +378,7 @@ const TENDA_JURAMENTO: StagePropSpec[] = [
 // candeeiro: um ataúde que é, na verdade, uma promessa guardada.
 const TENDA_CAIXAO: StagePropSpec[] = [
   ...TENDA_ISRAEL,
-  P("crate", -138, 1.25, undefined, 0.18),      // o caixão de José, à espera do Êxodo
+  { ...P("crate", -138, 1.9, undefined, 0.46), tag: "caixao-de-jose-no-egito" },   // o caixão de José, à espera do Êxodo
   P("rock", -190, 1.1, undefined, 0.38),        // e a terra prometida, ainda longe
 ];
 
@@ -722,10 +722,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 190, "raise", { dy: 0.4 }),
       ] }),
       b(26, { props: TENDA_CAIXAO, env: { night: 0.4, glory: 0.3 }, cast: [                          // MORREU JOSÉ de cento e dez anos — "e o puseram num CAIXÃO no Egito"
+        // "E morreu José… e o embalsamaram e o puseram num caixão no Egito": o
+        // último versículo do livro precisa do CORPO e do CAIXÃO em cena. E aqui
+        // não cabe `multidao`, que o motor desenha sempre comemorando de braços
+        // erguidos — este é o luto de setenta dias, não festa.
+        C("jose", -92, "lie", { dy: 0.72, facing: 1, scale: 1.3, glow: 0.2 }),
         C("homem", -44, "bow", { dy: 0.6 }),
         C("homem", 26, "bow", { id: "irmaoB", dy: 0.66 }),
-        C("multidao", 172, "bow", { dy: 0.42 }),
-        C("multidao", 268, "stand", { id: "israelFundo", dy: 0.24 }),
+        C("homem", 118, "bow", { id: "irmao-ao-fundo", dy: 0.46, scale: 0.95 }),
+        C("mulherComum", 178, "bow", { id: "pranteadora-do-egito", dy: 0.42, scale: 0.92 }),
+        C("homem", 246, "bow", { id: "egipcio-que-chorou-jose", dy: 0.28, scale: 0.88 }),
       ] }),
     ],
   },

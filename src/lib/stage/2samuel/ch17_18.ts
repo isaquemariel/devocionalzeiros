@@ -573,6 +573,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "gilo", props: GILO,
         env: { terrain: "city", night: 0.78, glory: 0.02, storm: 0.22, fire: 0.04, verdure: 0.14 }, cast: [
         C("anciao", -110, "walk", { dy: 0.5, facing: 1, id: "aitofel", scale: 0.9 }),
+        // "…e se enforcou e morreu, e foi sepultado na sepultura de seu pai": o
+        // versículo acaba na morte, e sem corpo em cena o quadro só mostrava um
+        // velho a caminhar para casa.
+        C("anciao", 40, "lie", { dy: 0.86, facing: -1, id: "aitofel-morto", scale: 1.45, palette: "#5c5348" }),
       ] }),
       // v.24 — a geografia da guerra se fecha: DAVI FOI A MAANAIM (à direita, já
       // dentro da porta da cidade) e ABSALÃO PASSOU O JORDÃO com todo o homem de

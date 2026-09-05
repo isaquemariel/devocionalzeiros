@@ -161,21 +161,33 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -60, "stand", { glow: 0.45, dy: 0.52, facing: 1 }),
       ] }),
       b(2, { q: "saiu fogo de diante do Senhor e os consumiu", props: [...ATRIO, P("campfire", 22, 2.2, 1, 0.54), P("campfire", 64, 2.0, 1, 0.56), P("campfire", 44, 1.6, 1, 0.5)], env: { terrain: "desert", glory: 0.35, fire: 1, storm: 0.55, night: 0.45 }, cast: [ // SAIU FOGO de diante do Senhor e os consumiu; morreram
+        // "e morreram perante o Senhor": os dois TÊM de continuar em cena, aos
+        // pés das chamas. No v.1 estavam de pé com os incensários erguidos e o
+        // beat seguinte trocava o elenco inteiro — de modo que, no versículo em
+        // que morrem, eles simplesmente sumiam do quadro.
+        C("servo", 140, "lie", { dy: 0.82, facing: -1, id: "nadabe", scale: 1.35 }),
+        C("servo", 215, "lie", { dy: 0.76, facing: -1, id: "abiu", scale: 1.3 }),
         C("arao", -70, "bow", { dy: 0.52, facing: 1 }),
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       b(3, { by: "moises", q: "Serei santificado", env: { glory: 0.8, storm: 0.2, fire: 0.6, night: 0.24 }, cast: [ // Moisés: "Serei santificado…"; Arão CALOU-SE
         C("moises", -60, "raise", { dy: 0.5, facing: 1 }),
         C("arao", 20, "bow", { dy: 0.52, facing: 1 }),
+        C("servo", 140, "lie", { dy: 0.82, facing: -1, id: "nadabe", scale: 1.35 }),
+        C("servo", 215, "lie", { dy: 0.76, facing: -1, id: "abiu", scale: 1.3 }),
       ] }),
       b(4, { by: "moises", q: "para fora do arraial", env: { storm: 0.15 }, cast: [ // Moisés chama Misael e Elzafã: "Levai vossos irmãos para fora"
         C("moises", -60, "point", { dy: 0.5, facing: 1 }),
         C("homem", 30, "stand", { dy: 0.52, facing: -1, id: "misael" }),
         C("homem", 80, "stand", { dy: 0.5, facing: -1, id: "elzafa" }),
+        C("servo", 150, "lie", { dy: 0.84, facing: -1, id: "nadabe", scale: 1.35 }),
+        C("servo", 228, "lie", { dy: 0.78, facing: -1, id: "abiu", scale: 1.3 }),
       ] }),
       b(5, { env: { night: 0.3, storm: 0.1, glory: 0.5 }, cast: [                  // levam-nos nas túnicas para fora do arraial
         C("homem", -40, "walk", { dy: 0.52, facing: 1, id: "misael" }),
         C("homem", 20, "walk", { dy: 0.5, facing: 1, id: "elzafa" }),
+        C("servo", -70, "lie", { dy: 0.8, facing: 1, id: "nadabe", scale: 1.3 }),
+        C("servo", 4, "lie", { dy: 0.76, facing: 1, id: "abiu", scale: 1.25 }),
         C("arao", -110, "bow", { dy: 0.52, facing: 1 }),
       ] }),
       b(6, { by: "moises", q: "para que não morrais", env: { night: 0.26, glory: 0.55 }, cast: [ // "Não descobrireis as cabeças nem rasgareis as vestes"
