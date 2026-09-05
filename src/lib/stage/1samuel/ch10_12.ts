@@ -840,7 +840,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // DOS MOABITAS. Três opressores num quadro só; noite alta, sem glória.
       b(9, { by: "patriarca", q: "então os vendeu à mão de Sísera",
         set: "opressores", props: OPRESSORES,
-        env: { terrain: "city", night: 0.6, glory: 0.14, storm: 0.3, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.6, glory: 0.14, storm: 0.3, verdure: 0.14 }, cast: [
         C("patriarca", -305, "stand", { dy: 0.4, facing: 1, id: "samuel", glow: 0.3 }),
         C("cavaleiro", 90, "stand", { dy: 0.44, facing: -1, id: "sisera" }),
         C("homem", 210, "stand", { dy: 0.48, facing: -1, id: "filisteu-opressor" }),
@@ -862,7 +862,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // campo livre, trombeta do juiz, sol de meio-dia.
       b(11, { by: "patriarca", q: "E o Senhor enviou a Jerubaal, e a Bedã, e a Jefté",
         set: "libertadores", props: LIBERTADORES,
-        env: { terrain: "field", night: 0.14, glory: 0.8, storm: 0, verdure: 0.44 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.14, glory: 0.8, storm: 0, verdure: 0.44 }, cast: [
         C("patriarca", -290, "raise", { dy: 0.44, facing: 1, id: "samuel", glow: 0.6 }),
         C("homem", -30, "raise", { dy: 0.6, facing: 1, id: "jerubaal" }),
         C("homem", 110, "stand", { dy: 0.54, facing: 1, id: "beda" }),
@@ -874,7 +874,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // desculpa.
       b(12, { by: "patriarca", q: "me dissestes:",
         set: "gilgal-assembleia", props: GILGAL_ASSEMBLEIA,
-        env: { terrain: "field", night: 0.36, glory: 0.42, storm: 0.14, verdure: 0.32 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.36, glory: 0.42, storm: 0.14, verdure: 0.32 }, cast: [
         C("patriarca", -150, "point", { dy: 0.52, facing: 1, id: "samuel", glow: 0.5 }),
         C("homem", 40, "bow", { dy: 0.62, facing: 1, id: "israelita-de-gilgal1" }),
         C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "saul" }),

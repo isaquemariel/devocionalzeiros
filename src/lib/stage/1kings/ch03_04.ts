@@ -1038,7 +1038,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // FERROLHOS DE COBRE". O portão ferrado é o detalhe que o texto guardou.
       b(13, { q: "sessenta grandes cidades, com muros e ferrolhos de cobre",
         set: "ramote-de-gileade", props: RAMOTE_DE_GILEADE,
-        env: { terrain: "field", night: 0.26, glory: 0.44, storm: 0.12, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.26, glory: 0.44, storm: 0.12, verdure: 0.3 }, cast: [
         C("homem", -60, "stand", { dy: 0.58, facing: 1, id: "filho-de-geber" }),
         C("homem", 100, "stand", { dy: 0.6, facing: -1, id: "porteiro-de-argobe" }),
       ] }),
@@ -1066,7 +1066,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a lavradora enchendo mais uma do lado.
       b(16, { q: "Baaná, filho de Husai, em Aser e em Alote",
         set: "aser-e-alote", props: ASER_E_ALOTE,
-        env: { terrain: "field", night: 0.16, glory: 0.56, storm: 0.02, verdure: 0.54 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.16, glory: 0.56, storm: 0.02, verdure: 0.54 }, cast: [
         C("homem", -50, "point", { dy: 0.6, facing: 1, id: "baana-filho-de-husai" }),
         C("mulherComum", 110, "kneel", { dy: 0.64, facing: -1, id: "lavradora-de-aser" }),
       ] }),
@@ -1075,7 +1075,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fundo e o pastor tocando as reses.
       b(17, { q: "Jeosafá, filho de Parua, em Issacar",
         set: "issacar", props: ISSACAR,
-        env: { terrain: "field", night: 0.18, glory: 0.54, storm: 0.04, verdure: 0.48 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.18, glory: 0.54, storm: 0.04, verdure: 0.48 }, cast: [
         C("homem", -140, "walk", { dy: 0.58, facing: 1, id: "jeosafa-de-issacar" }),
         C("pastor", 150, "stand", { dy: 0.6, facing: -1, id: "pastor-de-issacar" }),
         C("rebanho", 250, "stand", { dy: 0.64, facing: -1, id: "gado-de-issacar" }),
@@ -1085,7 +1085,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // provedor. A torre de Gibeá, o arco encostado na pedra e o vigia no alto.
       b(18, { q: "Simei, filho de Elá, em Benjamim",
         set: "benjamim", props: BENJAMIM,
-        env: { terrain: "field", night: 0.24, glory: 0.46, storm: 0.1, verdure: 0.32 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.46, storm: 0.1, verdure: 0.32 }, cast: [
         C("homem", -110, "stand", { dy: 0.58, facing: 1, id: "simei-de-benjamim" }),
         C("homem", 140, "point", { dy: 0.5, facing: -1, id: "vigia-de-gibea-de-benjamim" }),
       ] }),
@@ -1094,7 +1094,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // "só uma guarnição havia naquela terra". Uma torre só, e mato até o fim.
       b(19, { q: "e só uma guarnição havia naquela terra",
         set: "terra-de-siom-e-ogue", props: TERRA_DE_SIOM_E_OGUE,
-        env: { terrain: "desert", night: 0.28, glory: 0.42, storm: 0.14, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "desert", night: 0.28, glory: 0.42, storm: 0.14, verdure: 0.2 }, cast: [
         C("homem", -90, "stand", { dy: 0.58, facing: 1, id: "geber-filho-de-uri" }),
         C("homem", 190, "stand", { dy: 0.5, facing: -1, id: "guarda-da-guarnicao-de-gileade" }),
       ] }),
@@ -1103,7 +1103,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // legítima — é festa mesmo, e ninguém está caído no quadro.
       b(20, { q: "como a areia que está junto ao mar em multidão, comendo, e bebendo, e alegrando-se",
         set: "festa-do-povo", props: FESTA_DO_POVO,
-        env: { terrain: "field", night: 0.16, glory: 0.7, storm: 0, fire: 0.24, verdure: 0.56 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.16, glory: 0.7, storm: 0, fire: 0.24, verdure: 0.56 }, cast: [
         C("multidao", 0, "raise", { dy: 0.52, facing: 1, id: "povo-de-juda-e-israel-em-festa" }),
         C("homem", -230, "raise", { dy: 0.64, facing: 1, id: "lavrador-de-juda-na-festa" }),
         C("mulherComum", 250, "stand", { dy: 0.62, facing: -1, id: "moradora-de-israel-na-festa" }),
@@ -1113,7 +1113,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Salomão todos os dias da sua vida". A sala dos presentes cheia de fardos.
       b(21, { q: "E dominava Salomão sobre todos os reinos desde o rio até à terra dos filisteus, e até ao termo do Egito",
         set: "sala-dos-presentes", props: SALA_DOS_PRESENTES,
-        env: { terrain: "city", night: 0.16, glory: 0.72, storm: 0, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.16, glory: 0.72, storm: 0, verdure: 0.24 }, cast: [
         C("rei", -40, "stand", { dy: 0.38, facing: 1, id: "salomao", glow: 0.26 }),
         C("rei", 130, "bow", { dy: 0.56, facing: -1, id: "rei-tributario-do-rio" }),
         C("rei", 250, "bow", { dy: 0.6, facing: -1, id: "rei-tributario-do-egito" }),
@@ -1124,7 +1124,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a bacia do amassadouro e os servos pesando o que sai hoje.
       b(22, { q: "trinta coros de flor de farinha, e sessenta coros de farinha",
         set: "mesa-da-provisao", props: MESA_DA_PROVISAO,
-        env: { terrain: "city", night: 0.18, glory: 0.62, storm: 0, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.18, glory: 0.62, storm: 0, verdure: 0.28 }, cast: [
         C("servo", -170, "kneel", { dy: 0.62, facing: 1, id: "servo-da-farinha-do-rei" }),
         C("servo", 60, "stand", { dy: 0.6, facing: -1, id: "servo-do-amassadouro-do-rei" }),
         C("homem", 200, "write", { dy: 0.54, facing: -1, id: "aisar-mordomo" }),
@@ -1133,7 +1133,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // CEM CARNEIROS, "afora os veados e as cabras montesas, e os corços, e
       // aves cevadas". O curral esvaziando e o pastor trazendo mais.
       b(23, { q: "Dez bois cevados, e vinte bois de pasto, e cem carneiros",
-        env: { terrain: "city", night: 0.2, glory: 0.58, fire: 0.16, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.2, glory: 0.58, fire: 0.16, verdure: 0.3 }, cast: [
         C("rebanho", 150, "stand", { dy: 0.56, facing: -1, id: "bois-cevados-da-mesa-do-rei" }),
         C("rebanho", -60, "stand", { dy: 0.66, facing: 1, id: "carneiros-da-mesa-do-rei" }),
         C("pastor", -230, "walk", { dy: 0.6, facing: 1, id: "pastor-da-mesa-do-rei" }),
@@ -1154,7 +1154,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // família na sombra do quintal — nenhum soldado, nenhuma torre.
       b(25, { q: "cada um debaixo da sua videira, e debaixo da sua figueira, desde Dã até Berseba",
         set: "videira-e-figueira", props: VIDEIRA_E_FIGUEIRA,
-        env: { terrain: "field", night: 0.12, glory: 0.78, storm: 0, verdure: 0.66 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.12, glory: 0.78, storm: 0, verdure: 0.66 }, cast: [
         C("homem", -190, "stand", { dy: 0.62, facing: 1, id: "lavrador-sob-a-sua-videira" }),
         C("mulherComum", 20, "stand", { dy: 0.64, facing: -1, id: "moradora-sob-a-sua-figueira" }),
         C("servo", 100, "kneel", { dy: 0.68, facing: 1, scale: 0.7, id: "menino-de-berseba" }),
@@ -1164,7 +1164,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // atrelado no meio do pátio e o cavaleiro conferindo a tropa.
       b(26, { q: "quarenta mil estrebarias de cavalos para os seus carros, e doze mil cavaleiros",
         set: "cavalaricas-de-salomao", props: CAVALARICAS_DE_SALOMAO,
-        env: { terrain: "city", night: 0.2, glory: 0.6, storm: 0.04, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.2, glory: 0.6, storm: 0.04, verdure: 0.26 }, cast: [
         C("cavaleiro", 30, "stand", { dy: 0.58, facing: -1, id: "cavaleiro-de-salomao" }),
         C("servo", -110, "kneel", { dy: 0.64, facing: 1, id: "servo-da-estrebaria-de-salomao" }),
         C("homem", 210, "point", { dy: 0.6, facing: -1, id: "chefe-dos-carros-de-salomao" }),
@@ -1174,7 +1174,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // faltar". A mesa posta, o rei à cabeceira e o provedor do mês entregando.
       b(27, { q: "cada um no seu mês, ao rei Salomão e a todos quantos se chegaram à mesa do rei Salomão; coisa nenhuma deixavam faltar",
         set: "mesa-do-rei-salomao", props: MESA_DO_REI_SALOMAO,
-        env: { terrain: "city", night: 0.16, glory: 0.7, storm: 0, fire: 0.1, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.16, glory: 0.7, storm: 0, fire: 0.1, verdure: 0.26 }, cast: [
         C("rei", 240, "stand", { dy: 0.42, facing: -1, id: "salomao" }),
         C("homem", -80, "bow", { dy: 0.6, facing: 1, id: "provedor-do-primeiro-mes" }),
         C("servo", 60, "walk", { dy: 0.62, facing: -1, id: "servo-da-mesa-do-rei" }),
@@ -1185,7 +1185,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SEU CARGO". O jumento chegando com a carga, a baia esperando.
       b(28, { q: "E traziam a cevada e a palha para os cavalos e para os ginetes",
         set: "celeiro-da-cevada", props: CELEIRO_DA_CEVADA,
-        env: { terrain: "city", night: 0.22, glory: 0.54, storm: 0.02, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.22, glory: 0.54, storm: 0.02, verdure: 0.28 }, cast: [
         C("servo", -130, "walk", { dy: 0.62, facing: 1, id: "servo-da-cevada-do-rei" }),
         C("servo", 130, "kneel", { dy: 0.66, facing: -1, id: "servo-da-palha-do-rei" }),
         C("homem", 260, "point", { dy: 0.56, facing: -1, id: "chefe-dos-carros-de-salomao" }),
@@ -1203,7 +1203,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sentados diante do rolo, e o rei de pé entre as colunas.
       b(30, { q: "maior do que a sabedoria de todos os do oriente e do que toda a sabedoria dos egípcios",
         set: "patio-dos-sabios", props: PATIO_DOS_SABIOS,
-        env: { terrain: "city", night: 0.18, glory: 0.7, storm: 0, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.18, glory: 0.7, storm: 0, verdure: 0.24 }, cast: [
         C("rei", -30, "point", { dy: 0.44, facing: 1, id: "salomao", glow: 0.3 }),
         C("anciao", 120, "kneel", { dy: 0.6, facing: -1, id: "sabio-do-oriente" }),
         C("anciao", 240, "bow", { dy: 0.62, facing: -1, id: "sabio-do-egito" }),
@@ -1213,7 +1213,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // de canto. As duas harpas no chão, e o nome dele correndo pelas nações.
       b(31, { q: "do que Etã, ezraíta, e Hemã, e Calcol, e Darda, filhos de Maol",
         set: "atrio-dos-cantores", props: ATRIO_DOS_CANTORES,
-        env: { terrain: "city", night: 0.2, glory: 0.66, storm: 0, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.2, glory: 0.66, storm: 0, verdure: 0.22 }, cast: [
         C("homem", -180, "kneel", { dy: 0.6, facing: 1, id: "eta-ezraita" }),
         C("homem", -70, "kneel", { dy: 0.64, facing: 1, id: "hema-filho-de-maol" }),
         C("homem", 130, "stand", { dy: 0.58, facing: -1, id: "calcol-filho-de-maol" }),
@@ -1224,7 +1224,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // e o escriba copiando enquanto o rei dita.
       b(32, { q: "E disse três mil provérbios, e foram os seus cânticos mil e cinco.",
         set: "camara-dos-proverbios", props: CAMARA_DOS_PROVERBIOS,
-        env: { terrain: "city", night: 0.24, glory: 0.6, storm: 0, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.6, storm: 0, verdure: 0.18 }, cast: [
         C("rei", -140, "point", { dy: 0.5, facing: 1, id: "salomao", glow: 0.26 }),
         C("servo", 60, "write", { dy: 0.6, facing: -1, id: "escriba-dos-proverbios-de-salomao" }),
       ] }),
@@ -1243,7 +1243,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o rei estrangeiro curvado e o povo entrando pela porta escancarada.
       b(34, { q: "E vinham de todos os povos a ouvir a sabedoria de Salomão",
         set: "patio-dos-povos", props: PATIO_DOS_POVOS,
-        env: { terrain: "city", night: 0.12, glory: 0.9, storm: 0, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.12, glory: 0.9, storm: 0, verdure: 0.3 }, cast: [
         C("rei", -20, "stand", { dy: 0.4, facing: 1, id: "salomao", glow: 0.38 }),
         C("rei", 130, "bow", { dy: 0.56, facing: -1, id: "rei-que-veio-ouvir-salomao" }),
         C("anciao", -180, "kneel", { dy: 0.62, facing: 1, id: "sabio-do-oriente" }),

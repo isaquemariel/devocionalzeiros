@@ -580,7 +580,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // certo: é literalmente uma festa. O egípcio aponta; Davi olha da beira.
       b(16, { q: "comendo, e bebendo, e dançando",
         set: "arraial-amalequita", props: ARRAIAL_AMALEQUITA,
-        env: { terrain: "field", night: 0.54, glory: 0.12, storm: 0.08, fire: 0.5, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.54, glory: 0.12, storm: 0.08, fire: 0.5, verdure: 0.18 }, cast: [
         C("multidao", 85, "stand", { dy: 0.42, facing: -1, id: "tropa-amalequita-em-festa" }),
         C("homem", -55, "stand", { dy: 0.56, facing: 1, id: "amalequita-do-despojo" }),
         C("servo", -235, "point", { dy: 0.62, facing: 1, id: "egipcio-de-amaleque" }),
@@ -708,7 +708,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // amigos. A cidade reconstruída é o mesmo lugar do v.1, ao contrário.
       b(26, { by: "homem", q: "seus amigos, dizendo:",
         set: "ziclague-despojo", props: ZICLAGUE_DESPOJO,
-        env: { terrain: "city", night: 0.28, glory: 0.6, storm: 0.04, fire: 0.06, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.28, glory: 0.6, storm: 0.04, fire: 0.06, verdure: 0.2 }, cast: [
         C("homem", -75, "point", { dy: 0.62, facing: 1, id: "davi" }),
         C("servo", 90, "walk", { dy: 0.56, facing: 1, id: "mensageiro-do-despojo-de-davi" }),
         C("servo", 205, "walk", { dy: 0.5, facing: 1, id: "segundo-mensageiro-do-despojo-de-davi" }),
@@ -717,7 +717,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // estrada de Judá, com o poço da aldeia e o ancião recebendo o presente.
       b(27, { q: "Aos de Betel, e aos de Ramote do sul, e aos de Jater",
         set: "caminho-de-juda", props: CAMINHO_DE_JUDA,
-        env: { terrain: "field", night: 0.24, glory: 0.5, storm: 0.02, verdure: 0.42 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.5, storm: 0.02, verdure: 0.42 }, cast: [
         C("servo", -60, "walk", { dy: 0.62, facing: 1, id: "mensageiro-do-despojo-de-davi" }),
         C("anciao", 145, "stand", { dy: 0.5, facing: -1, id: "anciao-de-betel" }),
       ] }),
@@ -742,7 +742,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("rock", 320, 1.0, undefined, 0.54),
           P("grass", -320, 0.72, undefined, 0.76),
         ],
-        env: { terrain: "desert", night: 0.22, glory: 0.48, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "desert", night: 0.22, glory: 0.48, verdure: 0.16 }, cast: [
         C("servo", -20, "walk", { dy: 0.62, facing: 1, id: "mensageiro-do-despojo-de-davi" }),
         C("anciao", 160, "stand", { dy: 0.5, facing: -1, id: "anciao-dos-queneus" }),
         C("homem", 265, "stand", { dy: 0.44, facing: -1, id: "jerameelita-de-racal" }),
@@ -751,7 +751,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Davi andara fugindo. Agora ele chega com presente, não pedindo pão.
       b(30, { q: "E aos de Hormá, e aos de Corasã, e aos de Ataca",
         set: "caminho-de-juda", props: CAMINHO_DE_JUDA,
-        env: { terrain: "field", night: 0.2, glory: 0.54, verdure: 0.42 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.2, glory: 0.54, verdure: 0.42 }, cast: [
         C("servo", 60, "walk", { dy: 0.6, facing: 1, id: "segundo-mensageiro-do-despojo-de-davi" }),
         C("anciao", 215, "bow", { dy: 0.46, facing: -1, id: "anciao-de-horma" }),
         C("anciao", -130, "stand", { dy: 0.56, facing: 1, id: "anciao-de-corasa" }),
@@ -771,7 +771,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           { ...P("sun", 120, 1.1, undefined, 0.6), sky: true },
           P("grass", 300, 0.74, undefined, 0.76),
         ],
-        env: { terrain: "field", night: 0.14, glory: 0.7, storm: 0, verdure: 0.5 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.14, glory: 0.7, storm: 0, verdure: 0.5 }, cast: [
         C("homem", -80, "stand", { dy: 0.6, facing: 1, id: "davi", glow: 0.4 }),
         C("anciao", 120, "bow", { dy: 0.54, facing: -1, id: "anciao-de-hebrom" }),
         C("servo", 250, "stand", { dy: 0.48, facing: -1, id: "mensageiro-do-despojo-de-davi" }),

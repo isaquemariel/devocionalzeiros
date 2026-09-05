@@ -395,7 +395,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.8 — os SETE DIAS de Gilgal: o prazo de Samuel se cumpre e ele não vem.
       // Saul de pé junto ao altar vazio; o povo já se dispersando dele, de costas.
       b(8, { q: "E esperou Saul sete dias", set: "gilgal", props: GILGAL,
-        env: { terrain: "field", night: 0.5, glory: 0.16, storm: 0.18, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.5, glory: 0.16, storm: 0.18, verdure: 0.3 }, cast: [
         C("rei", -30, "stand", { dy: 0.52, facing: 1, id: "saul" }),
         C("homem", 160, "walk", { dy: 0.6, facing: -1, id: "soldado-que-se-dispersa-de-gilgal" }),
         C("servo", 265, "walk", { dy: 0.5, facing: -1, id: "moco-que-deixou-gilgal" }),
@@ -403,7 +403,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.9 — o rei toma o que não era seu: "Trazei-me aqui um holocausto". A
       // chama sobe do altar pela mão de Saul — e não pela de Samuel.
       b(9, { by: "rei", q: "Então disse Saul:", props: GILGAL_HOLOCAUSTO,
-        env: { terrain: "field", night: 0.44, glory: 0.3, fire: 0.4, storm: 0.16, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.44, glory: 0.3, fire: 0.4, storm: 0.16, verdure: 0.28 }, cast: [
         C("rei", -60, "point", { dy: 0.56, facing: 1, id: "saul" }),
         C("servo", 130, "stand", { dy: 0.58, facing: -1, id: "servo-do-holocausto-de-gilgal" }),
       ] }),
@@ -449,7 +449,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.15 — Samuel SOBE de Gilgal a Gibeá e vai embora da cena (de costas, a
       // glória saindo com ele); Saul conta o que restou: UNS SEISCENTOS HOMENS.
       b(15, { q: "uns seiscentos homens", set: "gibea-seiscentos", props: GIBEA_SEISCENTOS,
-        env: { terrain: "field", night: 0.46, glory: 0.24, storm: 0.14, fire: 0, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.24, storm: 0.14, fire: 0, verdure: 0.24 }, cast: [
         C("patriarca", 290, "walk", { dy: 0.36, facing: -1, id: "samuel", glow: 0.55 }),
         C("rei", -80, "stand", { dy: 0.56, facing: 1, id: "saul" }),
         C("homem", 40, "stand", { dy: 0.6, facing: -1, id: "soldado-dos-seiscentos" }),
@@ -468,7 +468,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sem defesa: a ocupação se espalhando pelos caminhos.
       b(17, { q: "os saqueadores saíram do campo dos filisteus em três companhias",
         set: "tres-companhias", props: TRES_COMPANHIAS,
-        env: { terrain: "desert", night: 0.44, glory: 0.1, storm: 0.22, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "desert", night: 0.44, glory: 0.1, storm: 0.22, verdure: 0.08 }, cast: [
         C("homem", -180, "walk", { dy: 0.5, facing: 1, id: "saqueador-de-ofra" }),
         C("homem", -40, "walk", { dy: 0.58, facing: 1, id: "saqueador-de-sual" }),
         C("homem", 150, "stand", { dy: 0.44, facing: -1, id: "capitao-dos-saqueadores" }),
@@ -487,7 +487,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // é DELES — o fogo da fragua no meio, e o ferreiro filisteu como senhor.
       b(19, { q: "em toda a terra de Israel nem um ferreiro se achava",
         set: "ferraria", props: FERRARIA,
-        env: { terrain: "city", night: 0.5, glory: 0.1, storm: 0.12, fire: 0.5, verdure: 0.06 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.1, storm: 0.12, fire: 0.5, verdure: 0.06 }, cast: [
         C("homem", -105, "stand", { dy: 0.56, facing: 1, id: "ferreiro-filisteu" }),
         C("homem", 60, "bow", { dy: 0.62, facing: -1, id: "lavrador-israelita-da-relha" }),
         C("servo", 205, "stand", { dy: 0.44, facing: -1, id: "guarda-da-forja-filisteia" }),
@@ -517,7 +517,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // centro; ao redor, homens de mãos vazias.
       b(22, { q: "não se achou nem espada nem lança na mão de todo o povo",
         set: "gibea-seiscentos", props: GIBEA_SEISCENTOS,
-        env: { terrain: "field", night: 0.5, glory: 0.2, storm: 0.24, fire: 0.08, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.5, glory: 0.2, storm: 0.24, fire: 0.08, verdure: 0.22 }, cast: [
         C("rei", -60, "stand", { dy: 0.54, facing: 1, id: "saul" }),
         C("homem", 40, "stand", { dy: 0.58, facing: -1, id: "jonatas" }),
         C("homem", 190, "bow", { dy: 0.64, facing: -1, id: "soldado-dos-seiscentos" }),
@@ -528,7 +528,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Jônatas vai subir no capítulo seguinte.
       b(23, { q: "E saiu a guarnição dos filisteus ao desfiladeiro de Micmás",
         set: "desfiladeiro", props: DESFILADEIRO,
-        env: { terrain: "mountain", night: 0.58, glory: 0.1, storm: 0.26, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "mountain", night: 0.58, glory: 0.1, storm: 0.26, verdure: 0.1 }, cast: [
         C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "filisteu-da-guarnicao-de-micmas" }),
         C("homem", 80, "stand", { dy: 0.46, facing: 1, id: "sentinela-filisteia-de-micmas" }),
         C("servo", 210, "walk", { dy: 0.4, facing: 1, id: "moco-de-armas-filisteu" }),

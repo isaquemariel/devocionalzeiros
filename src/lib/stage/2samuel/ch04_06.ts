@@ -692,7 +692,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // mas guarda a semente do capítulo 11 e da casa dividida do capítulo 13.
       b(13, { q: "E tomou Davi mais concubinas e mulheres de Jerusalém",
         set: "casa-do-rei-jlm", props: CASA_DO_REI_JLM,
-        env: { terrain: "city", night: 0.3, glory: 0.44, storm: 0.06, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.3, glory: 0.44, storm: 0.06, verdure: 0.2 }, cast: [
         C("rei", -30, "stand", { dy: 0.46, facing: 1, id: "davi" }),
         C("mulherComum", 95, "stand", { dy: 0.54, facing: -1, id: "mulher-de-jerusalem1" }),
         C("mulherComum", 185, "stand", { dy: 0.58, facing: -1, id: "mulher-de-jerusalem2" }),
@@ -735,7 +735,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // TODOS SUBIRAM EM BUSCA DELE — e Davi DESCEU À FORTALEZA. Corte para a
       // muralha de Sião à noite, com o rei descendo e a tropa em alerta.
       b(17, { q: "todos os filisteus subiram em busca de Davi", set: "cidade-de-davi", props: CIDADE_DE_DAVI,
-        env: { terrain: "city", night: 0.58, glory: 0.2, storm: 0.38, fire: 0.14, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.58, glory: 0.2, storm: 0.38, fire: 0.14, verdure: 0.2 }, cast: [
         C("rei", -85, "walk", { dy: 0.56, facing: 1, id: "davi" }),
         C("homem", 20, "stand", { dy: 0.5, facing: -1, id: "joabe" }),
         C("homem", 105, "stand", { dy: 0.54, facing: -1, id: "abisai" }),
@@ -745,7 +745,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // arraial inimigo montado a um dia de marcha da cidade nova. Tendas,
       // fogueira de vigília e os paredões do vale fechando os dois lados.
       b(18, { q: "e se estenderam pelo vale de Refaim", set: "vale-de-refaim", props: VALE_DE_REFAIM,
-        env: { terrain: "field", night: 0.52, glory: 0.12, storm: 0.34, fire: 0.24, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.52, glory: 0.12, storm: 0.34, fire: 0.24, verdure: 0.24 }, cast: [
         C("homem", -160, "stand", { dy: 0.5, facing: 1, id: "filisteu-de-refaim1" }),
         C("homem", -55, "stand", { dy: 0.56, facing: 1, id: "filisteu-de-refaim2" }),
         C("homem", 235, "stand", { dy: 0.46, facing: -1, id: "soldado-de-davi1" }),
@@ -754,7 +754,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // `by:"deus"`, sem figura, glória a 0.86 sobre o vale escuro — o rei
       // ajoelhado sozinho, e a resposta vindo de cima de todo o quadro.
       b(19, { by: "deus", q: "E disse o Senhor a Davi:",
-        env: { terrain: "field", night: 0.4, glory: 0.86, storm: 0.16, fire: 0.06, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.4, glory: 0.86, storm: 0.16, fire: 0.06, verdure: 0.28 }, cast: [
         C("rei", -20, "kneel", { dy: 0.56, facing: 1, id: "davi", glow: 0.36 }),
         C("homem", 190, "bow", { dy: 0.5, facing: -1, id: "soldado-de-davi1" }),
       ] }),
@@ -782,7 +782,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // do capítulo: a segunda pergunta parecia dispensável.
       b(22, { q: "E os filisteus tornaram a subir, e se estenderam pelo vale de Refaim",
         set: "vale-de-refaim", props: VALE_DE_REFAIM,
-        env: { terrain: "field", night: 0.5, glory: 0.14, storm: 0.4, fire: 0.22, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.5, glory: 0.14, storm: 0.4, fire: 0.22, verdure: 0.22 }, cast: [
         C("homem", -180, "stand", { dy: 0.48, facing: 1, id: "filisteu-de-refaim1" }),
         C("homem", -70, "stand", { dy: 0.54, facing: 1, id: "filisteu-de-refaim2" }),
         C("homem", 60, "stand", { dy: 0.5, facing: 1, id: "filisteu-de-refaim3" }),
@@ -792,7 +792,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SUBIRÁS; MAS RODEIA POR DETRÁS DELES, E VIRÁS A ELES POR DEFRONTE DAS
       // AMOREIRAS". Corte para o bosque; sem figura, só glória e vento.
       b(23, { by: "deus", q: "o qual disse:", set: "amoreiras", props: AMOREIRAS,
-        env: { terrain: "field", night: 0.42, glory: 0.88, storm: 0.34, verdure: 0.5 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.42, glory: 0.88, storm: 0.34, verdure: 0.5 }, cast: [
         C("rei", -25, "kneel", { dy: 0.6, facing: 1, id: "davi", glow: 0.38 }),
         C("homem", 150, "bow", { dy: 0.56, facing: -1, id: "joabe" }),
       ] }),
@@ -802,7 +802,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // parado, de cabeça erguida, escutando as árvores — o vento é o exército
       // de Deus passando por cima deles. Glória no auge, storm no vento.
       b(24, { by: "deus", q: "ouvindo tu um estrondo de marcha pelas copas das amoreiras",
-        env: { terrain: "field", night: 0.34, glory: 0.94, storm: 0.52, verdure: 0.58 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.34, glory: 0.94, storm: 0.52, verdure: 0.58 }, cast: [
         C("rei", -105, "raise", { dy: 0.62, facing: 1, id: "davi", glow: 0.46 }),
         C("homem", 0, "stand", { dy: 0.66, facing: 1, id: "joabe" }),
         C("homem", 110, "stand", { dy: 0.6, facing: 1, id: "abisai" }),
@@ -813,7 +813,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // exata, e a perseguição DESDE GEBA ATÉ GEZER. O bosque fica para trás e
       // o rei sai à frente pela estrada, com o inimigo caído no caminho.
       b(25, { q: "e feriu os filisteus desde Geba, até chegar a Gezer",
-        env: { terrain: "field", night: 0.24, glory: 0.74, storm: 0.3, verdure: 0.46 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.74, storm: 0.3, verdure: 0.46 }, cast: [
         C("rei", -190, "walk", { dy: 0.6, facing: 1, id: "davi", glow: 0.34 }),
         C("homem", -90, "walk", { dy: 0.64, facing: 1, id: "joabe" }),
         C("homem", 60, "lie", { dy: 0.72, facing: -1, id: "filisteu-de-refaim1" }),

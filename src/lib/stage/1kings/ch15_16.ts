@@ -841,7 +841,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // distante — e ainda assim o coração do rei foi reto todos os seus dias.
       b(14, { q: "todavia foi o coração de Asa reto para com o Senhor todos os seus dias",
         set: "os-altos-que-ficaram", props: OS_ALTOS_QUE_FICARAM,
-        env: { terrain: "field", night: 0.24, glory: 0.6, storm: 0.08, verdure: 0.42 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.6, storm: 0.08, verdure: 0.42 }, cast: [
         C("rei", -50, "stand", { dy: 0.52, facing: 1, id: "asa" }),
         C("homem", 170, "kneel", { dy: 0.6, facing: -1, id: "adorador-dos-altos" }),
       ] }),
@@ -850,7 +850,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // postos diante do altar do pátio.
       b(15, { q: "prata, ouro e vasos",
         set: "casa-do-senhor-em-jerusalem", props: CASA_DO_SENHOR_EM_JERUSALEM,
-        env: { terrain: "city", night: 0.2, glory: 0.7, storm: 0.04, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.2, glory: 0.7, storm: 0.04, verdure: 0.3 }, cast: [
         C("rei", -50, "kneel", { dy: 0.54, facing: 1, id: "asa" }),
         C("anciao", 120, "raise", { dy: 0.5, facing: -1, id: "sacerdote-da-casa-do-senhor" }),
         C("servo", 230, "walk", { dy: 0.6, facing: -1, id: "servo-da-casa-de-asa" }),
@@ -860,7 +860,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // mesmo palmo de terra que Roboão e Jeroboão mediam.
       b(16, { q: "E houve guerra entre Asa e Baasa, rei de Israel, todos os seus dias.",
         set: "fronteira-de-juda", props: FRONTEIRA_DE_JUDA,
-        env: { terrain: "field", night: 0.46, glory: 0.14, storm: 0.42, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.14, storm: 0.42, verdure: 0.26 }, cast: [
         C("rei", -100, "stand", { dy: 0.54, facing: 1, id: "asa" }),
         C("rei", 120, "point", { dy: 0.5, facing: -1, id: "baasa" }),
         C("homem", 260, "stand", { dy: 0.6, facing: -1, id: "capitao-de-baasa" }),
@@ -870,7 +870,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // entrar a ter com Asa". O viajante barrado curvado diante do portão.
       b(17, { q: "edificou a Ramá, para que a ninguém fosse permitido sair, nem entrar a ter com Asa",
         set: "rama-fortificada", props: RAMA_FORTIFICADA,
-        env: { terrain: "city", night: 0.44, glory: 0.1, storm: 0.36, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.1, storm: 0.36, verdure: 0.24 }, cast: [
         C("rei", 110, "point", { dy: 0.48, facing: -1, id: "baasa" }),
         C("homem", -10, "stand", { dy: 0.58, facing: -1, id: "pedreiro-de-rama1" }),
         C("homem", 210, "walk", { dy: 0.62, facing: -1, id: "pedreiro-de-rama2" }),
@@ -881,7 +881,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // servos. O que o rei acabou de consagrar no v.15 sai pela porta.
       b(18, { q: "Então Asa tomou toda a prata e ouro que ficaram nos tesouros da casa do Senhor",
         set: "tesouros-entregues", props: TESOUROS_ENTREGUES,
-        env: { terrain: "city", night: 0.42, glory: 0.2, storm: 0.24, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.42, glory: 0.2, storm: 0.24, verdure: 0.22 }, cast: [
         C("rei", -70, "point", { dy: 0.5, facing: 1, id: "asa" }),
         C("servo", 90, "kneel", { dy: 0.62, facing: -1, id: "tesoureiro-da-casa-do-senhor" }),
         C("servo", 230, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-asa-a-damasco" }),
@@ -891,7 +891,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o jumento do presente já carregado de prata e ouro.
       b(19, { by: "rei", q: "Haja acordo entre mim e ti, como houve entre meu pai e teu pai",
         set: "estrada-para-damasco", props: ESTRADA_PARA_DAMASCO,
-        env: { terrain: "city", night: 0.3, glory: 0.24, storm: 0.18, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.3, glory: 0.24, storm: 0.18, verdure: 0.28 }, cast: [
         C("rei", -100, "point", { dy: 0.5, facing: 1, id: "asa" }),
         C("servo", 150, "walk", { dy: 0.58, facing: 1, id: "mensageiro-de-asa-a-damasco" }),
       ] }),
@@ -901,7 +901,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // que arde ao fundo.
       b(20, { q: "e feriu a Ijom, e a Dã, e a Abel-Bete-Maaca, e a toda a Quinerete, com toda a terra de Naftali",
         set: "corte-de-ben-hadade", props: CORTE_DE_BEN_HADADE,
-        env: { terrain: "city", night: 0.5, glory: 0.12, storm: 0.34, fire: 0.3, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.12, storm: 0.34, fire: 0.3, verdure: 0.2 }, cast: [
         C("rei", -190, "point", { dy: 0.5, facing: 1, id: "ben-hadade" }),
         C("servo", -100, "bow", { dy: 0.62, facing: 1, id: "mensageiro-de-asa-a-damasco" }),
         C("cavaleiro", 110, "walk", { dy: 0.56, facing: 1, id: "capitao-siro-de-ijom" }),
@@ -911,7 +911,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a porta por onde chegou a notícia.
       b(21, { q: "deixou de edificar a Ramá; e ficou em Tirza",
         set: "tirza-palacio", props: TIRZA_PALACIO,
-        env: { terrain: "city", night: 0.48, glory: 0.12, storm: 0.28, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.48, glory: 0.12, storm: 0.28, verdure: 0.22 }, cast: [
         C("rei", 40, "stand", { dy: 0.5, facing: 1, id: "baasa" }),
         C("homem", -110, "walk", { dy: 0.58, facing: 1, id: "capitao-de-baasa" }),
         C("servo", 230, "bow", { dy: 0.6, facing: -1, id: "servo-do-paco-de-tirza" }),
@@ -922,7 +922,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // que fechava a estrada vira o muro que guarda o reino.
       b(22, { q: "com elas edificou o rei Asa a Geba de Benjamim e a Mizpá",
         set: "mizpa-em-obras", props: MIZPA_EM_OBRAS,
-        env: { terrain: "city", night: 0.18, glory: 0.62, storm: 0.06, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.18, glory: 0.62, storm: 0.06, verdure: 0.34 }, cast: [
         C("rei", -180, "point", { dy: 0.52, facing: 1, id: "asa" }),
         C("multidao", 130, "raise", { dy: 0.5, facing: -1, id: "todo-o-juda-em-mizpa" }),
         C("homem", -40, "walk", { dy: 0.64, facing: 1, id: "carregador-das-pedras-de-rama" }),
@@ -933,7 +933,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escrevendo, o trono a um passo e vazio.
       b(23, { q: "no tempo da sua velhice, padeceu dos pés",
         set: "camara-da-velhice-de-asa", props: CAMARA_DA_VELHICE_DE_ASA,
-        env: { terrain: "city", night: 0.62, glory: 0.18, storm: 0.14, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.18, storm: 0.14, verdure: 0.18 }, cast: [
         C("rei", 90, "lie", { dy: 0.58, facing: -1, id: "asa" }),
         C("anciao", -30, "write", { dy: 0.64, facing: 1, id: "escriba-do-reino-de-juda" }),
         C("servo", 250, "kneel", { dy: 0.6, facing: -1, id: "servo-da-casa-de-asa" }),
@@ -943,7 +943,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // filho de pé ao lado dela.
       b(24, { q: "e Jeosafá, seu filho, reinou em seu lugar",
         set: "sepulcro-na-cidade-de-davi", props: SEPULCRO_NA_CIDADE_DE_DAVI,
-        env: { terrain: "city", night: 0.68, glory: 0.24, storm: 0.12, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.68, glory: 0.24, storm: 0.12, verdure: 0.2 }, cast: [
         C("rei", -120, "lie", { dy: 0.66, facing: 1, id: "asa" }),
         C("rei", 70, "stand", { dy: 0.52, facing: -1, id: "josafa" }),
         C("servo", 210, "bow", { dy: 0.6, facing: -1, id: "servo-da-casa-de-asa" }),
@@ -953,7 +953,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // arauto anunciando o nome do novo rei.
       b(25, { q: "E Nadabe, filho de Jeroboão, começou a reinar sobre Israel",
         set: "porta-de-tirza", props: PORTA_DE_TIRZA,
-        env: { terrain: "city", night: 0.38, glory: 0.24, storm: 0.14, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.38, glory: 0.24, storm: 0.14, verdure: 0.26 }, cast: [
         C("rei", 20, "stand", { dy: 0.48, facing: -1, id: "nadabe" }),
         C("homem", -150, "raise", { dy: 0.56, facing: 1, id: "arauto-de-tirza" }),
         C("servo", 230, "bow", { dy: 0.6, facing: -1, id: "servo-do-paco-de-tirza" }),
@@ -963,7 +963,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // do BEZERRO DE OURO de Betel, com o sacerdote de braços erguidos.
       b(26, { q: "andou nos caminhos de seu pai, e no seu pecado com que seu pai fizera pecar a Israel",
         set: "betel-do-bezerro", props: BETEL_DO_BEZERRO,
-        env: { terrain: "field", night: 0.52, glory: 0.06, storm: 0.26, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.52, glory: 0.06, storm: 0.26, verdure: 0.24 }, cast: [
         C("rei", 30, "bow", { dy: 0.56, facing: 1, id: "nadabe" }),
         C("homem", -150, "raise", { dy: 0.52, facing: 1, id: "sacerdote-do-bezerro-de-betel" }),
       ] }),
@@ -973,7 +973,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // veste de campanha.)
       b(27, { q: "feriu-o Baasa em Gibetom, que era dos filisteus",
         set: "cerco-de-gibetom", props: CERCO_DE_GIBETOM,
-        env: { terrain: "field", night: 0.56, glory: 0.06, storm: 0.46, fire: 0.2, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.56, glory: 0.06, storm: 0.46, fire: 0.2, verdure: 0.2 }, cast: [
         C("rei", -40, "raise", { dy: 0.56, facing: 1, palette: "#6b7280", id: "baasa" }),
         C("rei", 90, "stand", { dy: 0.52, facing: -1, id: "nadabe" }),
         C("homem", -230, "stand", { dy: 0.62, facing: 1, id: "soldado-de-issacar" }),
@@ -982,7 +982,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Israel estendido na terra do cerco, o assassino de pé com a espada e o
       // arraial dele atrás. A casa de Jeroboão dura duas gerações.
       b(28, { q: "E matou-o, pois, Baasa no ano terceiro de Asa, rei de Judá, e reinou em seu lugar.",
-        env: { terrain: "field", night: 0.68, glory: 0.04, storm: 0.5, fire: 0.24, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.68, glory: 0.04, storm: 0.5, fire: 0.24, verdure: 0.16 }, cast: [
         C("rei", -60, "raise", { dy: 0.5, facing: 1, palette: "#6b7280", id: "baasa" }),
         C("rei", 110, "lie", { dy: 0.66, facing: -1, id: "nadabe" }),
         C("homem", -230, "stand", { dy: 0.6, facing: 1, id: "soldado-de-issacar" }),
@@ -993,7 +993,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // neste quadro.
       b(29, { q: "nada de Jeroboão deixou que tivesse fôlego, até o destruir",
         set: "casa-de-jeroboao-ferida", props: CASA_DE_JEROBOAO_FERIDA,
-        env: { terrain: "city", night: 0.82, glory: 0.05, storm: 0.4, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.82, glory: 0.05, storm: 0.4, verdure: 0.14 }, cast: [
         C("rei", 160, "stand", { dy: 0.5, facing: -1, palette: "#6b7280", id: "baasa" }),
         C("homem", -60, "lie", { dy: 0.66, facing: 1, id: "filho-da-casa-de-jeroboao1" }),
         C("servo", -180, "lie", { dy: 0.62, facing: 1, id: "filho-da-casa-de-jeroboao2" }),
@@ -1005,7 +1005,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escuro.
       b(30, { q: "Por causa dos pecados que Jeroboão cometera, e fez pecar a Israel",
         set: "betel-do-bezerro", props: BETEL_DO_BEZERRO,
-        env: { terrain: "field", night: 0.7, glory: 0.04, storm: 0.34, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.7, glory: 0.04, storm: 0.34, verdure: 0.18 }, cast: [
         C("homem", -120, "bow", { dy: 0.6, facing: 1, id: "sacerdote-do-bezerro-de-betel" }),
       ] }),
       // v.31 — a fórmula do Norte pela primeira vez: os atos de Nadabe no livro
@@ -1013,7 +1013,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // aberto e o trono vazio ao fundo — vai ficar vazio muitas vezes.
       b(31, { q: "porventura não está escrito no livro das crônicas dos reis de Israel?",
         set: "cronicas-de-israel", props: CRONICAS_DE_ISRAEL,
-        env: { terrain: "city", night: 0.56, glory: 0.16, storm: 0.14, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.56, glory: 0.16, storm: 0.14, verdure: 0.18 }, cast: [
         C("anciao", -20, "write", { dy: 0.62, facing: 1, id: "escriba-do-reino-de-israel" }),
         C("servo", 210, "stand", { dy: 0.56, facing: -1, id: "servo-do-paco-de-tirza" }),
       ] }),
@@ -1022,7 +1022,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // reis já não se aproximam, só se vigiam.
       b(32, { q: "E houve guerra entre Asa e Baasa, rei de Israel, todos os seus dias.",
         set: "fronteira-de-juda", props: FRONTEIRA_DE_JUDA,
-        env: { terrain: "field", night: 0.6, glory: 0.1, storm: 0.5, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.6, glory: 0.1, storm: 0.5, verdure: 0.22 }, cast: [
         C("rei", -210, "stand", { dy: 0.5, facing: 1, id: "asa" }),
         C("rei", 210, "stand", { dy: 0.52, facing: -1, id: "baasa" }),
         C("homem", 290, "stand", { dy: 0.62, facing: -1, id: "capitao-de-baasa" }),
@@ -1032,7 +1032,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ele abriu à espada.
       b(33, { q: "começou a reinar sobre todo o Israel em Tirza",
         set: "tirza-palacio", props: TIRZA_PALACIO,
-        env: { terrain: "city", night: 0.4, glory: 0.2, storm: 0.18, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.4, glory: 0.2, storm: 0.18, verdure: 0.24 }, cast: [
         C("rei", 40, "stand", { dy: 0.46, facing: -1, id: "baasa" }),
         C("homem", -120, "bow", { dy: 0.58, facing: 1, id: "capitao-de-baasa" }),
         C("servo", 240, "stand", { dy: 0.56, facing: -1, id: "servo-do-paco-de-tirza" }),
@@ -1042,7 +1042,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // um lado, Dã do outro — e o novo rei andando no meio dele.
       b(34, { q: "andou no caminho de Jeroboão, e no pecado com que ele tinha feito Israel pecar",
         set: "caminho-de-jeroboao", props: CAMINHO_DE_JEROBOAO,
-        env: { terrain: "field", night: 0.56, glory: 0.05, storm: 0.3, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.56, glory: 0.05, storm: 0.3, verdure: 0.22 }, cast: [
         C("rei", -20, "walk", { dy: 0.58, facing: 1, id: "baasa" }),
         C("homem", -250, "raise", { dy: 0.62, facing: -1, id: "sacerdote-do-bezerro-de-betel" }),
         C("homem", 250, "raise", { dy: 0.6, facing: 1, id: "sacerdote-do-bezerro-de-da" }),

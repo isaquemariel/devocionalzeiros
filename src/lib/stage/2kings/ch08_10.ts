@@ -1686,7 +1686,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // remissão bibliográfica, com o escrivão fechando o rolo.
       b(34, { q: "porventura não está escrito no livro das crônicas de Israel?",
         set: "sepulcro-de-jeu", props: SEPULCRO_DE_JEU,
-        env: { terrain: "city", night: 0.6, glory: 0.18, storm: 0.16, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.6, glory: 0.18, storm: 0.16, verdure: 0.12 }, cast: [
         C("rei", -60, "stand", { dy: 0.5, facing: -1, id: "jeu-rei" }),
         C("anciao", 200, "write", { dy: 0.56, facing: -1, id: "escriba-de-israel" }),
       ] }),
@@ -1694,7 +1694,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o sepultaram em Samaria; JEOACAZ, seu filho, reinou em seu lugar. A
       // primeira das quatro gerações prometidas fica de pé junto ao túmulo.
       b(35, { q: "E Jeú dormiu com seus pais, e o sepultaram em Samaria; e Jeoacaz, seu filho, reinou em seu lugar.",
-        env: { terrain: "city", night: 0.74, glory: 0.22, storm: 0.08, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.74, glory: 0.22, storm: 0.08, verdure: 0.1 }, cast: [
         C("rei", -70, "lie", { dy: 0.68, facing: 1, id: "jeu-rei" }),
         C("rei", 110, "stand", { dy: 0.5, facing: -1, id: "jeoacaz-de-israel" }),
         C("anciao", 250, "bow", { dy: 0.56, facing: -1, id: "anciao-de-israel" }),
@@ -1703,7 +1703,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // do que qualquer rei de Israel antes dele — e o livro já disse tudo o que
       // tinha a dizer sobre eles no versículo 31.
       b(36, { q: "E os dias que Jeú reinou sobre Israel, em Samaria, foram vinte e oito anos.",
-        env: { terrain: "city", night: 0.64, glory: 0.16, storm: 0.12, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.64, glory: 0.16, storm: 0.12, verdure: 0.14 }, cast: [
         C("rei", -40, "stand", { dy: 0.46, facing: 1, id: "jeoacaz-de-israel" }),
         C("anciao", 130, "stand", { dy: 0.52, facing: -1, id: "anciao-de-israel" }),
         C("anciao", 250, "write", { dy: 0.58, facing: -1, id: "escriba-de-israel" }),

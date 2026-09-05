@@ -1166,7 +1166,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escrivão fecha o verbete de um reinado.
       b(39, { q: "e à casa de marfim que edificou",
         set: "casa-de-marfim", props: CASA_DE_MARFIM,
-        env: { terrain: "city", night: 0.44, glory: 0.24, storm: 0.08, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.24, storm: 0.08, verdure: 0.18 }, cast: [
         C("homem", 190, "write", { dy: 0.62, facing: -1, id: "escrivao-de-samaria" }),
         C("servo", -30, "stand", { dy: 0.56, facing: 1, id: "servo-da-casa-de-marfim" }),
       ] }),
@@ -1174,7 +1174,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // vazio um dia sequer: ACAZIAS, seu filho, já está de pé ao lado dele.
       b(40, { q: "Assim dormiu Acabe com seus pais; e Acazias, seu filho, reinou em seu lugar.",
         set: "corte-de-samaria", props: CORTE_DE_SAMARIA,
-        env: { terrain: "city", night: 0.5, glory: 0.14, storm: 0.12, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.14, storm: 0.12, verdure: 0.14 }, cast: [
         C("rei", -20, "stand", { dy: 0.44, facing: 1, id: "acazias" }),
         C("servo", 160, "bow", { dy: 0.6, facing: -1, id: "servo-de-samaria" }),
       ] }),
@@ -1183,7 +1183,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a casa do SENHOR à esquerda do trono.
       b(41, { q: "E Jeosafá, filho de Asa, começou a reinar sobre Judá no quarto ano de Acabe",
         set: "jerusalem-de-jeosafa", props: JERUSALEM_DE_JEOSAFA,
-        env: { terrain: "city", night: 0.24, glory: 0.52, storm: 0.04, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.52, storm: 0.04, verdure: 0.3 }, cast: [
         C("rei", 40, "stand", { dy: 0.44, facing: 1, id: "josafa", glow: 0.18 }),
         C("anciao", -100, "bow", { dy: 0.58, facing: 1, id: "anciao-de-juda" }),
       ] }),
@@ -1191,7 +1191,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // anos em Jerusalém, e o nome da mãe — AZUBA, filha de Sili — anotado como
       // se anota o que importa. Ela em cena, ao lado do filho.
       b(42, { q: "e era o nome de sua mãe Azuba, filha de Sili.",
-        env: { terrain: "city", night: 0.24, glory: 0.5, storm: 0.04, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.5, storm: 0.04, verdure: 0.3 }, cast: [
         C("rei", -30, "stand", { dy: 0.5, facing: 1, id: "josafa" }),
         C("mulherComum", 110, "stand", { dy: 0.56, facing: -1, id: "azuba" }),
         C("anciao", -220, "stand", { dy: 0.62, facing: 1, id: "anciao-de-juda" }),
@@ -1200,7 +1200,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // desviou deles, fazendo o que era reto aos olhos do SENHOR. A glória sobe
       // sobre a casa do SENHOR; o rei de joelhos diante dela.
       b(43, { q: "fazendo o que era reto aos olhos do Senhor.",
-        env: { terrain: "city", night: 0.14, glory: 0.82, storm: 0.02, verdure: 0.36 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.14, glory: 0.82, storm: 0.02, verdure: 0.36 }, cast: [
         C("rei", -80, "kneel", { dy: 0.56, facing: 1, id: "josafa", glow: 0.34 }),
         C("anciao", 120, "bow", { dy: 0.6, facing: -1, id: "anciao-de-juda" }),
       ] }),
@@ -1209,7 +1209,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // incensário fumegando, e nenhum rei no quadro para impedir.
       b(44, { q: "Todavia os altos não se tiraram; ainda o povo sacrificava e queimava incenso nos altos.",
         set: "altos-de-juda", props: ALTOS_DE_JUDA,
-        env: { terrain: "field", night: 0.42, glory: 0.16, storm: 0.12, fire: 0.3, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.42, glory: 0.16, storm: 0.12, fire: 0.3, verdure: 0.4 }, cast: [
         C("homem", -110, "stand", { dy: 0.6, facing: 1, id: "sacrificador-dos-altos-de-juda" }),
         C("mulherComum", 100, "kneel", { dy: 0.66, facing: -1, id: "moradora-dos-altos-de-juda" }),
       ] }),
@@ -1218,7 +1218,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // gerações de guerra entre Judá e Israel, isto é notícia.
       b(45, { q: "E Jeosafá esteve em paz com o rei de Israel.",
         set: "fronteira-quieta", props: FRONTEIRA_QUIETA,
-        env: { terrain: "field", night: 0.2, glory: 0.52, storm: 0.02, verdure: 0.6 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.2, glory: 0.52, storm: 0.02, verdure: 0.6 }, cast: [
         C("rei", -80, "stand", { dy: 0.58, facing: 1, id: "josafa", glow: 0.2 }),
         C("rei", 70, "stand", { dy: 0.58, facing: -1, id: "acabe" }),
         C("pastor", 250, "stand", { dy: 0.5, facing: -1, id: "pastor-da-fronteira-de-gileade" }),
@@ -1228,7 +1228,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escrevendo, o rolo aberto sobre o joelho.
       b(46, { q: "porventura não está escrito no livro das crônicas dos reis de Judá?",
         set: "jerusalem-de-jeosafa", props: JERUSALEM_DE_JEOSAFA,
-        env: { terrain: "city", night: 0.28, glory: 0.46, storm: 0.04, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.28, glory: 0.46, storm: 0.04, verdure: 0.28 }, cast: [
         C("homem", 140, "write", { dy: 0.66, facing: -1, id: "escrivao-de-juda" }),
         C("rei", -60, "stand", { dy: 0.5, facing: 1, id: "josafa" }),
       ] }),
@@ -1236,7 +1236,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // restante dos sodomitas que ficaram nos dias de seu pai. O rei apontando a
       // porta; o expulso saindo por ela.
       b(47, { q: "Também expulsou da terra o restante dos sodomitas, que ficaram nos dias de seu pai Asa.",
-        env: { terrain: "city", night: 0.3, glory: 0.5, storm: 0.1, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.3, glory: 0.5, storm: 0.1, verdure: 0.26 }, cast: [
         C("rei", -80, "point", { dy: 0.52, facing: 1, id: "josafa", glow: 0.22 }),
         C("homem", 200, "walk", { dy: 0.6, facing: 1, id: "restante-dos-sodomitas" }),
       ] }),
@@ -1245,7 +1245,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // abre para Judá o caminho do golfo e o sonho do ouro de Ofir.
       b(48, { q: "Então não havia rei em Edom, porém um vice-rei.",
         set: "edom-sem-rei", props: EDOM_SEM_REI,
-        env: { terrain: "desert", night: 0.3, glory: 0.3, storm: 0.06, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "desert", night: 0.3, glory: 0.3, storm: 0.06, verdure: 0.08 }, cast: [
         C("homem", 100, "stand", { dy: 0.56, facing: -1, id: "vice-rei-de-edom" }),
         C("servo", -160, "stand", { dy: 0.62, facing: 1, id: "servo-de-edom" }),
       ] }),
@@ -1273,7 +1273,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // em paz, ao contrário do de Samaria — a lua sobre a casa do SENHOR.
       b(51, { q: "E Jeosafá dormiu com seus pais, e foi sepultado junto a eles, na cidade de Davi, seu pai",
         set: "cidade-de-davi", props: CIDADE_DE_DAVI,
-        env: { terrain: "city", night: 0.68, glory: 0.34, storm: 0.04, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.68, glory: 0.34, storm: 0.04, verdure: 0.2 }, cast: [
         C("rei", -60, "lie", { dy: 0.68, facing: 1, id: "josafa", glow: 0.24 }),
         C("rei", 120, "stand", { dy: 0.56, facing: -1, id: "jeorao" }),
         C("anciao", -220, "bow", { dy: 0.62, facing: 1, id: "anciao-de-juda" }),
@@ -1283,7 +1283,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // incensário de Baal já dentro da sala.
       b(52, { q: "E Acazias, filho de Acabe, começou a reinar sobre Israel, em Samaria",
         set: "corte-de-acazias", props: CORTE_DE_ACAZIAS,
-        env: { terrain: "city", night: 0.52, glory: 0.1, storm: 0.14, fire: 0.16, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.52, glory: 0.1, storm: 0.14, fire: 0.16, verdure: 0.12 }, cast: [
         C("rei", -30, "stand", { dy: 0.46, facing: 1, id: "acazias" }),
         C("servo", 170, "bow", { dy: 0.62, facing: -1, id: "servo-de-acazias" }),
       ] }),
@@ -1291,7 +1291,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sua MÃE e no caminho de JEROBOÃO. Os três caminhos aparecem atrás dele,
       // pequenos e ao fundo, como as trilhas já abertas que ele só teve de seguir.
       b(53, { q: "porque andou no caminho de seu pai, como também no caminho de sua mãe",
-        env: { terrain: "city", night: 0.62, glory: 0.04, storm: 0.24, fire: 0.18, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.04, storm: 0.24, fire: 0.18, verdure: 0.08 }, cast: [
         C("rei", -40, "walk", { dy: 0.66, facing: 1, id: "acazias" }),
         C("rei", 60, "stand", { dy: 0.28, facing: 1, id: "acabe" }),
         C("mulherComum", 170, "stand", { dy: 0.24, facing: 1, id: "jezabel" }),
@@ -1302,7 +1302,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // de Israel curvado diante de um metal fundido, e a ira do SENHOR provocada.
       b(54, { q: "E serviu a Baal, e adorou-o, e provocou a ira do Senhor Deus de Israel",
         set: "altar-de-baal", props: ALTAR_DE_BAAL,
-        env: { terrain: "field", night: 0.72, glory: 0.02, storm: 0.4, fire: 0.5, verdure: 0.06 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.72, glory: 0.02, storm: 0.4, fire: 0.5, verdure: 0.06 }, cast: [
         C("rei", -110, "bow", { dy: 0.62, facing: 1, id: "acazias" }),
         C("homem", 180, "kneel", { dy: 0.6, facing: -1, id: "sacerdote-de-baal-de-samaria" }),
       ] }),

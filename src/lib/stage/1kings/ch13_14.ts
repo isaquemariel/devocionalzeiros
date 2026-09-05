@@ -858,7 +858,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // entrando, a criança já estendida. Sem multidão: a morte é doméstica.
       b(17, { q: "chegando ela ao limiar da porta, morreu o menino.",
         set: "limiar-de-tirza", props: LIMIAR_DE_TIRZA,
-        env: { terrain: "city", night: 0.68, glory: 0.1, storm: 0.24, fire: 0.04, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.68, glory: 0.1, storm: 0.24, fire: 0.04, verdure: 0.12 }, cast: [
         C("mulherComum", -25, "walk", { dy: 0.58, facing: 1, id: "mulher-de-jeroboao", palette: "#6b5b45" }),
         C("servo", 130, "lie", { dy: 0.68, facing: -1, id: "abias-filho-de-jeroboao", scale: 0.5 }),
       ] }),
@@ -866,7 +866,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pranto é encenado por figuras individuais curvadas — nunca por
       // `multidao`, que o motor desenha sempre comemorando.
       b(18, { q: "E o sepultaram, e todo o Israel o pranteou",
-        env: { terrain: "city", night: 0.7, glory: 0.16, storm: 0.14, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.7, glory: 0.16, storm: 0.14, verdure: 0.12 }, cast: [
         C("mulherComum", -60, "bow", { dy: 0.62, facing: 1, id: "mulher-de-jeroboao", palette: "#6b5b45" }),
         C("servo", 120, "lie", { dy: 0.7, facing: -1, id: "abias-filho-de-jeroboao", scale: 0.5 }),
         C("anciao", 215, "bow", { dy: 0.56, facing: -1, id: "anciao-de-israel-no-pranto" }),
@@ -877,7 +877,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // livro das crônicas dos reis de Israel.
       b(19, { q: "está escrito no livro das crônicas dos reis de Israel.",
         set: "cronicas-de-israel", props: CRONICAS_DE_ISRAEL,
-        env: { terrain: "city", night: 0.5, glory: 0.22, storm: 0.1, fire: 0.06, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.22, storm: 0.1, fire: 0.06, verdure: 0.14 }, cast: [
         C("homem", -35, "write", { dy: 0.58, facing: 1, id: "escrivao-das-cronicas-de-israel" }),
         C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "jeroboao" }),
       ] }),
@@ -885,7 +885,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // NADABE, seu filho, reina em seu lugar. O pai estendido diante do trono
       // que o filho vai herdar por dois anos apenas.
       b(20, { q: "E foram os dias que Jeroboão reinou vinte e dois anos",
-        env: { terrain: "city", night: 0.62, glory: 0.18, storm: 0.14, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.18, storm: 0.14, verdure: 0.12 }, cast: [
         C("rei", -20, "lie", { dy: 0.66, facing: 1, id: "jeroboao" }),
         C("rei", 155, "stand", { dy: 0.5, facing: -1, id: "nadabe-filho-de-jeroboao" }),
         C("homem", -240, "bow", { dy: 0.56, facing: 1, id: "escrivao-das-cronicas-de-israel" }),
@@ -895,7 +895,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escolhera" — e o texto anota o nome da mãe: Naamá, amonita.
       b(21, { q: "E Roboão, filho de Salomão, reinava em Judá",
         set: "salao-de-roboao", props: SALAO_DE_ROBOAO,
-        env: { terrain: "city", night: 0.4, glory: 0.34, storm: 0.1, fire: 0.06, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.4, glory: 0.34, storm: 0.1, fire: 0.06, verdure: 0.2 }, cast: [
         C("rei", 0, "stand", { dy: 0.46, facing: 1, id: "roboao" }),
         C("mulherComum", -120, "stand", { dy: 0.58, facing: 1, id: "naama-amonita" }),
         C("servo", 165, "bow", { dy: 0.56, facing: -1, id: "servo-do-palacio-de-roboao" }),
@@ -904,7 +904,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // zelos "mais do que todos os seus pais fizeram". A luz do salão de
       // Salomão cai; o rei fica de costas para o trono.
       b(22, { q: "E fez Judá o que era mau aos olhos do Senhor",
-        env: { terrain: "city", night: 0.54, glory: 0.08, storm: 0.36, fire: 0.1, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.54, glory: 0.08, storm: 0.36, fire: 0.1, verdure: 0.16 }, cast: [
         C("rei", 60, "stand", { dy: 0.5, facing: -1, id: "roboao" }),
         C("homem", -110, "point", { dy: 0.58, facing: 1, id: "principe-de-juda" }),
         C("servo", 210, "stand", { dy: 0.54, facing: -1, id: "servo-do-palacio-de-roboao" }),
@@ -914,7 +914,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // altar aceso, a estela fincada e a árvore do santuário no mesmo quadro.
       b(23, { q: "edificaram altos, e estátuas, e imagens de Aserá sobre todo o alto outeiro e debaixo de toda a árvore verde.",
         set: "altos-de-juda", props: ALTOS_DE_JUDA,
-        env: { terrain: "mountain", night: 0.5, glory: 0.08, storm: 0.28, fire: 0.34, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "mountain", night: 0.5, glory: 0.08, storm: 0.28, fire: 0.34, verdure: 0.4 }, cast: [
         C("homem", -105, "raise", { dy: 0.6, facing: 1, id: "sacerdote-dos-altos-de-juda" }),
         C("homem", 15, "kneel", { dy: 0.66, facing: -1, id: "adorador-dos-altos-de-juda" }),
         C("mulherComum", 185, "bow", { dy: 0.58, facing: -1, id: "mulher-de-juda-nos-altos" }),
@@ -923,7 +923,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fez "conforme a todas as abominações dos povos que o Senhor tinha
       // expulsado". O culto estrangeiro tomou conta do outeiro inteiro.
       b(24, { q: "Havia também sodomitas na terra",
-        env: { terrain: "mountain", night: 0.6, glory: 0.05, storm: 0.44, fire: 0.3, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "mountain", night: 0.6, glory: 0.05, storm: 0.44, fire: 0.3, verdure: 0.34 }, cast: [
         C("homem", -40, "stand", { dy: 0.62, facing: 1, id: "adorador-dos-altos-de-juda" }),
         C("homem", -195, "bow", { dy: 0.56, facing: 1, id: "sacerdote-dos-altos-de-juda" }),
         C("mulherComum", 130, "kneel", { dy: 0.62, facing: -1, id: "mulher-de-juda-nos-altos" }),
@@ -933,7 +933,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pátio da casa do SENHOR, sem uma batalha sequer narrada.
       b(25, { q: "Sisaque, rei do Egito, subiu contra Jerusalém",
         set: "jerusalem-saqueada", props: JERUSALEM_SAQUEADA,
-        env: { terrain: "city", night: 0.52, glory: 0.08, storm: 0.5, fire: 0.22, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.52, glory: 0.08, storm: 0.5, fire: 0.22, verdure: 0.14 }, cast: [
         C("rei", -70, "bow", { dy: 0.62, facing: 1, id: "roboao" }),
         C("rei", 130, "stand", { dy: 0.5, facing: -1, id: "sisaque" }),
         C("homem", 235, "walk", { dy: 0.56, facing: -1, id: "soldado-egipcio-de-sisaque" }),
@@ -942,7 +942,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rei, e os ESCUDOS DE OURO que Salomão fizera. O ouro do templo sai pela
       // porta em carga; Roboão de joelhos vendo o reino esvaziar.
       b(26, { q: "Também tomou todos os escudos de ouro que Salomão tinha feito.",
-        env: { terrain: "city", night: 0.56, glory: 0.06, storm: 0.54, fire: 0.24, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.56, glory: 0.06, storm: 0.54, fire: 0.24, verdure: 0.12 }, cast: [
         C("rei", -95, "kneel", { dy: 0.64, facing: 1, id: "roboao" }),
         C("homem", 165, "walk", { dy: 0.58, facing: 1, id: "soldado-egipcio-de-sisaque" }),
         C("rei", 265, "stand", { dy: 0.48, facing: -1, id: "sisaque" }),
@@ -952,7 +952,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // porta. Roboão apontando a pilha nova; o chefe da guarda recebendo.
       b(27, { q: "E em lugar deles fez o rei Roboão escudos de cobre",
         set: "camara-da-guarda", props: CAMARA_DA_GUARDA,
-        env: { terrain: "city", night: 0.46, glory: 0.16, storm: 0.22, fire: 0.08, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.46, glory: 0.16, storm: 0.22, fire: 0.08, verdure: 0.12 }, cast: [
         C("rei", -155, "point", { dy: 0.56, facing: 1, id: "roboao" }),
         C("homem", 40, "stand", { dy: 0.62, facing: -1, id: "chefe-da-guarda-de-roboao" }),
         C("servo", 175, "stand", { dy: 0.56, facing: -1, id: "guarda-da-porta-de-roboao" }),
@@ -961,7 +961,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rei entra na casa do SENHOR os guardas LEVAM os escudos e depois os
       // tornam à câmara. A procissão do cobre, repetida a vida inteira.
       b(28, { q: "os da guarda os levavam, e depois os tornavam à câmara da guarda.",
-        env: { terrain: "city", night: 0.42, glory: 0.24, storm: 0.14, fire: 0.06, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.42, glory: 0.24, storm: 0.14, fire: 0.06, verdure: 0.14 }, cast: [
         C("rei", -95, "walk", { dy: 0.58, facing: 1, id: "roboao" }),
         C("homem", 85, "walk", { dy: 0.62, facing: 1, id: "chefe-da-guarda-de-roboao" }),
         C("servo", 205, "walk", { dy: 0.56, facing: 1, id: "guarda-da-porta-de-roboao" }),
@@ -971,7 +971,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // narrador remetendo o leitor para fora do livro.
       b(29, { q: "não está escrito no livro das crônicas dos reis de Judá?",
         set: "arquivo-cronicas-juda", props: ARQUIVO_DAS_CRONICAS_DE_JUDA,
-        env: { terrain: "city", night: 0.44, glory: 0.26, storm: 0.1, fire: 0.06, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.26, storm: 0.1, fire: 0.06, verdure: 0.14 }, cast: [
         C("homem", 20, "write", { dy: 0.6, facing: -1, id: "escrivao-das-cronicas-de-juda" }),
         C("rei", -145, "stand", { dy: 0.54, facing: 1, id: "roboao" }),
       ] }),
@@ -980,7 +980,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // vencedor — só a lança e a espada fincadas na terra de ninguém.
       b(30, { q: "E houve guerra entre Roboão e Jeroboão todos os seus dias.",
         set: "fronteira-da-guerra", props: FRONTEIRA_DA_GUERRA,
-        env: { terrain: "field", night: 0.52, glory: 0.1, storm: 0.5, fire: 0.24, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.52, glory: 0.1, storm: 0.5, fire: 0.24, verdure: 0.22 }, cast: [
         C("rei", -170, "stand", { dy: 0.58, facing: 1, id: "roboao" }),
         C("rei", 155, "stand", { dy: 0.56, facing: -1, id: "jeroboao" }),
         C("homem", -55, "stand", { dy: 0.64, facing: 1, id: "soldado-de-juda-na-fronteira" }),
@@ -991,7 +991,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ("Naamá, amonita") e ABIAS, seu filho, já de pé ao lado da cova.
       b(31, { q: "e foi sepultado com seus pais na cidade de Davi",
         set: "sepulcro-cidade-de-davi", props: SEPULCRO_NA_CIDADE_DE_DAVI,
-        env: { terrain: "city", night: 0.62, glory: 0.2, storm: 0.1, fire: 0, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.2, storm: 0.1, fire: 0, verdure: 0.16 }, cast: [
         C("rei", 45, "lie", { dy: 0.64, facing: 1, id: "roboao" }),
         C("mulherComum", -120, "bow", { dy: 0.6, facing: 1, id: "naama-amonita" }),
         C("rei", 195, "stand", { dy: 0.54, facing: -1, id: "abias-rei-de-juda" }),

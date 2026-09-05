@@ -110,7 +110,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   8: {
     start: { terrain: "city", night: 0.14, glory: 0.55, storm: 0, fire: 0, water: 0.2, verdure: 0.4 },
     beats: [
-      b(1, { by: "deus", q: "Depois disse o SENHOR a Moisés: Vai a Faraó e dize-lhe: Assim diz o SENHOR: ", set: "envio", cast: [C("moises", -20, "kneel", { dy: 0.5, facing: 1 })], props: EGITO, env: { terrain: "city", glory: 0.65, night: 0.1 } }), // "Deixa ir o meu povo, para que me sirva"
+      b(1, { by: "deus", q: "Depois disse o SENHOR a Moisés: Vai a Faraó e dize-lhe: Assim diz o SENHOR: ", set: "envio", cast: [C("moises", -20, "kneel", { dy: 0.5, facing: 1 })], props: EGITO, env: { water: 0, terrain: "city", glory: 0.65, night: 0.1 } }), // "Deixa ir o meu povo, para que me sirva"
       b(2, { by: "deus", env: { glory: 0.62, water: 0.3 } }), // "se recusares, ferirei com rãs todos os teus termos"
       b(3, { by: "deus", env: { glory: 0.6, water: 0.4, storm: 0.15 } }), // "o rio criará rãs que virão à tua casa, à tua cama, aos teus fornos"
       b(4, { by: "deus", env: { water: 0.42 } }), // "as rãs subirão sobre ti, sobre o teu povo e sobre todos os teus servos"
@@ -133,15 +133,15 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(21, { by: "deus", env: { glory: 0.55, storm: 0.2 } }), // "se não deixares ir o meu povo, enviarei enxames de moscas sobre ti e o teu povo"
       b(22, { by: "deus", env: { glory: 0.7 } }), // "naquele dia separarei a terra de Gósen, onde meu povo habita, sem enxames"
       b(23, { by: "deus", env: { glory: 0.65 } }), // "porei separação entre o meu povo e o teu povo; amanhã se fará este sinal"
-      b(24, { set: "palacio", cast: [C("farao", 90, "bow", { dy: 0.44, facing: -1 }), C("homem", 150, "kneel", { dy: 0.5, id: "servo", facing: -1 })], props: PALACIO, env: { terrain: "city", storm: 0.55, night: 0.22, glory: 0.15, verdure: 0.3 } }), // vêm grandes enxames de moscas à casa de Faraó e a toda a terra
+      b(24, { set: "palacio", cast: [C("farao", 90, "bow", { dy: 0.44, facing: -1 }), C("homem", 150, "kneel", { dy: 0.5, id: "servo", facing: -1 })], props: PALACIO, env: { water: 0, terrain: "city", storm: 0.55, night: 0.22, glory: 0.15, verdure: 0.3 } }), // vêm grandes enxames de moscas à casa de Faraó e a toda a terra
       b(25, { by: "farao", q: "e disse: ", cast: [C("farao", 90, "point", { dy: 0.44, facing: -1 }), C("moises", -60, "stand", { dy: 0.5, facing: 1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.4, glory: 0.25 } }), // Faraó chama Moisés e Arão: "Ide, e sacrificai ao vosso Deus nesta terra"
       b(26, { by: "moises", q: "E Moisés disse: ", cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 }), C("farao", 90, "stand", { dy: 0.44, facing: -1 })], env: { glory: 0.4 } }), // "não convém... sacrificaríamos a abominação dos egípcios; não nos apedrejariam?"
       b(27, { by: "moises" }), // "deixa-nos ir caminho de três dias ao deserto, e sacrifiquemos ao Senhor nosso Deus"
       b(28, { by: "farao", q: "Então disse Faraó: ", cast: [C("farao", 90, "raise", { dy: 0.44, facing: -1 }), C("moises", -60, "stand", { dy: 0.5, facing: 1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.3, glory: 0.3 } }), // "Deixar-vos-ei ir... somente não vades longe; orai também por mim"
       b(29, { by: "moises", q: "E Moisés disse: ", cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("farao", 90, "stand", { dy: 0.44, facing: -1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.4 } }), // "orarei ao Senhor que os enxames se retirem amanhã; somente que Faraó não me engane"
-      b(30, { set: "clamor", cast: [C("moises", -20, "raise", { dy: 0.5, facing: 1 })], props: EGITO, env: { terrain: "city", storm: 0.2, glory: 0.6, night: 0.16 } }), // Moisés sai da presença de Faraó e ora ao Senhor
+      b(30, { set: "clamor", cast: [C("moises", -20, "raise", { dy: 0.5, facing: 1 })], props: EGITO, env: { water: 0, terrain: "city", storm: 0.2, glory: 0.6, night: 0.16 } }), // Moisés sai da presença de Faraó e ora ao Senhor
       b(31, { env: { storm: 0.05, glory: 0.65, night: 0.12 } }), // o Senhor faz conforme a palavra de Moisés: os enxames se retiram, não fica um só
-      b(32, { by: "farao", set: "palacio", cast: [C("farao", 60, "stand", { dy: 0.44, facing: -1 })], props: PALACIO, env: { terrain: "city", storm: 0.1, night: 0.32, glory: 0.1 } }), // mas Faraó endurece ainda esta vez o coração, e não deixa ir o povo
+      b(32, { by: "farao", set: "palacio", cast: [C("farao", 60, "stand", { dy: 0.44, facing: -1 })], props: PALACIO, env: { water: 0, terrain: "city", storm: 0.1, night: 0.32, glory: 0.1 } }), // mas Faraó endurece ainda esta vez o coração, e não deixa ir o povo
     ],
   },
 };

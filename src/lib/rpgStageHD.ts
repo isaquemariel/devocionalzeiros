@@ -5952,6 +5952,12 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     cfg.robe0 = mixHex(spec.palette, "#ffffff", 0.12);
     cfg.robe1 = mixHex(spec.palette, "#000000", 0.28);
     cfg.crown = false;
+    // O AURÉOLA TAMBÉM É TRAJE. Quem está de saco e cinza, ou caído morto, ou
+    // no meio da corte celestial sem ser dos que resplandecem, não pode sair
+    // com o halo da glória por cima da veste de luto: Eliaquim e Sebna diante
+    // de Rabsaqué (2Rs 18:37), Aitofel enforcado (2Sm 17:23) e o adversário
+    // que veio entre os filhos de Deus (Jó 1:6) saíam todos aureolados.
+    cfg.halo = 0;
     if (cfg.trim) cfg.trim = mixHex(spec.palette, "#000000", 0.45);
     if (cfg.sash) cfg.sash = mixHex(spec.palette, "#000000", 0.5);
   }

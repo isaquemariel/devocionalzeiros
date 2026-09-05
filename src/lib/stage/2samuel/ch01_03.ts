@@ -975,7 +975,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pares, e o lugar ganha nome: HELCATE-HAZURIM, o campo das espadas.
       b(16, { q: "E cada um lançou mão da cabeça do outro, cravou-lhe a espada no lado, e caíram juntos",
         set: "helcate", props: HELCATE,
-        env: { terrain: "field", night: 0.6, glory: 0.06, storm: 0.4, fire: 0.14, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.6, glory: 0.06, storm: 0.4, fire: 0.14, verdure: 0.16 }, cast: [
         C("servo", -140, "lie", { dy: 0.66, facing: 1, id: "moco-de-benjamim1" }),
         C("servo", -60, "lie", { dy: 0.62, facing: -1, id: "moco-de-davi1" }),
         C("servo", 70, "lie", { dy: 0.7, facing: 1, id: "moco-de-benjamim2" }),
@@ -998,7 +998,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // COMO AS GAZELAS DO CAMPO". Ele já está à frente dos irmãos.
       b(18, { q: "e Asael era ligeiro de pés, como as gazelas do campo",
         set: "corrida", props: CORRIDA,
-        env: { terrain: "field", night: 0.42, glory: 0.14, storm: 0.3, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.42, glory: 0.14, storm: 0.3, verdure: 0.28 }, cast: [
         C("homem", 120, "walk", { dy: 0.56, facing: 1, id: "asael" }),
         C("homem", -60, "walk", { dy: 0.62, facing: 1, id: "joabe" }),
         C("homem", -190, "walk", { dy: 0.66, facing: 1, id: "abisai" }),
@@ -1043,7 +1043,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // TODOS OS QUE CHEGAVAM ALI PARAVAM.
       b(23, { q: "Abner o feriu com a ponta da lança pela quinta costela, e a lança lhe saiu por detrás",
         set: "lanca", props: LANCA,
-        env: { terrain: "field", night: 0.62, glory: 0.05, storm: 0.44, fire: 0.12, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.62, glory: 0.05, storm: 0.44, fire: 0.12, verdure: 0.14 }, cast: [
         C("homem", 40, "lie", { dy: 0.68, facing: -1, id: "asael" }),
         C("homem", -110, "stand", { dy: 0.56, facing: 1, id: "abner" }),
         C("homem", 210, "bow", { dy: 0.5, facing: -1, id: "homem-de-davi1" }),
@@ -1054,7 +1054,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rente ao horizonte (sky:true, dy 0.12) marca a hora do verso.
       b(24, { q: "e pôs-se o sol, chegando eles ao outeiro de Amá",
         set: "outeiro", props: OUTEIRO,
-        env: { terrain: "mountain", night: 0.56, glory: 0.2, storm: 0.3, fire: 0.16, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "mountain", night: 0.56, glory: 0.2, storm: 0.3, fire: 0.16, verdure: 0.14 }, cast: [
         C("homem", -20, "walk", { dy: 0.62, facing: 1, id: "joabe" }),
         C("homem", -150, "walk", { dy: 0.66, facing: 1, id: "abisai" }),
         C("homem", 190, "walk", { dy: 0.4, facing: 1, id: "abner" }),
@@ -1116,7 +1116,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sozinho, e é o que pesa.
       b(30, { q: "e dos servos de Davi faltaram dezenove homens, e Asael",
         set: "contagem", props: CONTAGEM,
-        env: { terrain: "field", night: 0.5, glory: 0.14, storm: 0.24, fire: 0.1, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.5, glory: 0.14, storm: 0.24, fire: 0.1, verdure: 0.2 }, cast: [
         C("homem", -40, "point", { dy: 0.54, facing: 1, id: "joabe" }),
         C("homem", 90, "stand", { dy: 0.6, facing: -1, id: "abisai" }),
         C("servo", 210, "kneel", { dy: 0.64, facing: -1, id: "moco-de-davi3" }),
@@ -1140,7 +1140,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           ...BELEM,
           { ...P("sun", 250, 1.0, undefined, 0.16), sky: true },
         ],
-        env: { terrain: "city", night: 0.56, glory: 0.24, storm: 0.14, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.56, glory: 0.24, storm: 0.14, verdure: 0.24 }, cast: [
         C("homem", 130, "lie", { dy: 0.68, facing: -1, id: "asael" }),
         C("homem", -110, "kneel", { dy: 0.62, facing: 1, id: "joabe" }),
         C("homem", 20, "bow", { dy: 0.58, facing: 1, id: "abisai" }),

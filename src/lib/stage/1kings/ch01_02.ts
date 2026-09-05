@@ -809,7 +809,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // "por que há tal ruído de cidade alvoroçada?".
       b(41, { by: "homem", q: "Por que há tal ruído de cidade alvoroçada?",
         set: "banquete-de-adonias", props: BANQUETE_DE_ADONIAS,
-        env: { terrain: "field", night: 0.4, glory: 0.3, storm: 0.24, fire: 0.2, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.4, glory: 0.3, storm: 0.24, fire: 0.2, verdure: 0.3 }, cast: [
         C("homem", 60, "point", { dy: 0.62, facing: -1, id: "joabe" }),
         C("homem", -70, "stand", { dy: 0.58, facing: 1, id: "adonias" }),
         C("anciao", 190, "stand", { dy: 0.56, facing: -1, id: "abiatar" }),
@@ -863,7 +863,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ele, que já não se levanta, SE INCLINA NO LEITO.
       b(47, { by: "servo", q: "Faça teu Deus que o nome de Salomão seja melhor do que o teu nome",
         set: "alcova-da-ordem", props: ALCOVA_DA_ORDEM,
-        env: { terrain: "city", night: 0.24, glory: 0.7, storm: 0.06, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.7, storm: 0.06, verdure: 0.2 }, cast: [
         C("servo", 60, "bow", { dy: 0.62, facing: -1, id: "servo-do-rei-que-abencoa" }),
         C("servo", 190, "bow", { dy: 0.56, facing: -1, id: "servo-da-camara-de-davi1" }),
         C("rei", -200, "bow", { dy: 0.46, facing: 1, id: "davi", glow: 0.26 }),
@@ -873,7 +873,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SENHOR DEUS DE ISRAEL, QUE HOJE TEM DADO QUEM SE ASSENTE NO MEU TRONO, E
       // QUE OS MEUS OLHOS O VISSEM". A glória enche a alcova fria do v.1.
       b(48, { by: "rei", q: "Bendito o Senhor Deus de Israel, que hoje tem dado quem se assente no meu trono, e que os meus olhos o vissem.",
-        env: { terrain: "city", night: 0.1, glory: 0.95, storm: 0.02, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.1, glory: 0.95, storm: 0.02, verdure: 0.24 }, cast: [
         C("rei", -180, "raise", { dy: 0.46, facing: 1, id: "davi", glow: 0.44 }),
         C("servo", 60, "bow", { dy: 0.62, facing: -1, id: "servo-do-rei-que-abencoa" }),
         C("mulherComum", -40, "kneel", { dy: 0.62, facing: -1, id: "abisague" }),
@@ -883,7 +883,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // quatro lados e Adonias sozinho no meio da mesa posta.
       b(49, { q: "e cada um se foi ao seu caminho",
         set: "banquete-de-adonias", props: BANQUETE_DE_ADONIAS,
-        env: { terrain: "field", night: 0.6, glory: 0.12, storm: 0.44, fire: 0.04, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.6, glory: 0.12, storm: 0.44, fire: 0.04, verdure: 0.24 }, cast: [
         C("homem", -30, "stand", { dy: 0.6, facing: 1, id: "adonias" }),
         C("homem", 150, "walk", { dy: 0.66, facing: 1, id: "filho-do-rei-em-en-rogel1" }),
         C("homem", 250, "walk", { dy: 0.54, facing: -1, id: "filho-do-rei-em-en-rogel2" }),
@@ -895,14 +895,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sacerdote, nem pai: só a misericórdia de um irmão mais novo.
       b(50, { q: "e apegou-se às pontas do altar",
         set: "pontas-do-altar", props: PONTAS_DO_ALTAR,
-        env: { terrain: "city", night: 0.5, glory: 0.36, storm: 0.3, fire: 0.4, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.36, storm: 0.3, fire: 0.4, verdure: 0.2 }, cast: [
         C("homem", 30, "kneel", { dy: 0.62, facing: 1, id: "adonias" }),
       ] }),
       // v.51 — na sala do trono, o recado chega ao rei de horas: "EIS QUE ADONIAS
       // TEME AO REI SALOMÃO" — e pede juramento de que não morrerá à espada.
       b(51, { by: "servo", q: "Eis que Adonias teme ao rei Salomão",
         set: "sala-do-trono", props: SALA_DO_TRONO,
-        env: { terrain: "throne", night: 0.24, glory: 0.6, storm: 0.14, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.24, glory: 0.6, storm: 0.14, verdure: 0.2 }, cast: [
         C("servo", 150, "point", { dy: 0.58, facing: -1, id: "mensageiro-do-rei-salomao" }),
         C("rei", -20, "stand", { dy: 0.46, facing: 1, id: "salomao" }),
         C("homem", -180, "stand", { dy: 0.56, facing: 1, id: "benaia" }),
@@ -911,7 +911,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SEUS CABELOS CAIRÁ EM TERRA; se, porém, se achar nele maldade, morrerá".
       // Toda a vida de Adonias passa a depender de uma condicional.
       b(52, { by: "rei", q: "Se for homem de bem, nem um de seus cabelos cairá em terra",
-        env: { terrain: "throne", night: 0.22, glory: 0.66, storm: 0.18 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.22, glory: 0.66, storm: 0.18 }, cast: [
         C("rei", -20, "point", { dy: 0.46, facing: 1, id: "salomao", glow: 0.24 }),
         C("servo", 160, "bow", { dy: 0.6, facing: -1, id: "mensageiro-do-rei-salomao" }),
         C("homem", -190, "stand", { dy: 0.56, facing: 1, id: "benaia" }),
@@ -920,7 +920,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Salomão o despede com três palavras que são clemência e advertência ao
       // mesmo tempo: "VAI PARA TUA CASA".
       b(53, { by: "rei", q: "Vai para tua casa.",
-        env: { terrain: "throne", night: 0.26, glory: 0.62, storm: 0.2 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.26, glory: 0.62, storm: 0.2 }, cast: [
         C("rei", -30, "stand", { dy: 0.44, facing: 1, id: "salomao", glow: 0.2 }),
         C("homem", 110, "bow", { dy: 0.68, facing: -1, id: "adonias" }),
         C("homem", 230, "stand", { dy: 0.56, facing: -1, id: "benaia" }),
@@ -1264,7 +1264,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // estrangeiro os recebendo. A armadilha se arma longe de Jerusalém.
       b(39, { q: "dois servos de Simei fugiram para Aquis, filho de Maaca, rei de Gate",
         set: "gate", props: GATE,
-        env: { terrain: "city", night: 0.38, glory: 0.3, storm: 0.2, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.38, glory: 0.3, storm: 0.2, verdure: 0.24 }, cast: [
         C("servo", -140, "walk", { dy: 0.64, facing: 1, id: "servo-fugido-de-simei1" }),
         C("servo", -240, "walk", { dy: 0.68, facing: 1, id: "servo-fugido-de-simei2" }),
         C("rei", 100, "stand", { dy: 0.5, facing: -1, id: "aquis-rei-de-gate" }),
@@ -1273,7 +1273,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // levanta, ALBARDA O SEU JUMENTO e vai a Gate atrás de dois escravos — e
       // volta com eles, sem perceber que já morreu na saída.
       b(40, { q: "Então Simei se levantou, e albardou o seu jumento, e foi a Gate",
-        env: { terrain: "city", night: 0.44, glory: 0.24, storm: 0.28, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.24, storm: 0.28, verdure: 0.22 }, cast: [
         C("homem", 130, "walk", { dy: 0.58, facing: -1, id: "simei" }),
         C("servo", -60, "walk", { dy: 0.66, facing: -1, id: "servo-fugido-de-simei1" }),
         C("servo", -170, "walk", { dy: 0.7, facing: -1, id: "servo-fugido-de-simei2" }),
@@ -1283,7 +1283,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rei já sabe o que vai fazer.
       b(41, { by: "servo", q: "como Simei fora de Jerusalém a Gate, e já tinha voltado",
         set: "sala-do-trono", props: SALA_DO_TRONO,
-        env: { terrain: "throne", night: 0.34, glory: 0.5, storm: 0.28, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.34, glory: 0.5, storm: 0.28, verdure: 0.18 }, cast: [
         C("servo", 160, "point", { dy: 0.58, facing: -1, id: "mensageiro-do-rei-salomao" }),
         C("rei", -20, "stand", { dy: 0.46, facing: 1, id: "salomao" }),
       ] }),
@@ -1291,7 +1291,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // CONJUREI EU PELO SENHOR… e tu me disseste: BOA É ESSA PALAVRA QUE OUVI".
       // A frase dele volta como prova.
       b(42, { by: "rei", q: "Não te conjurei eu pelo Senhor, e protestei contra ti",
-        env: { terrain: "throne", night: 0.36, glory: 0.5, storm: 0.36 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.36, glory: 0.5, storm: 0.36 }, cast: [
         C("rei", -20, "point", { dy: 0.46, facing: 1, id: "salomao" }),
         C("homem", 150, "bow", { dy: 0.66, facing: -1, id: "simei" }),
         C("homem", 270, "stand", { dy: 0.56, facing: -1, id: "benaia" }),
@@ -1299,7 +1299,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.43 — e a pergunta que não tem resposta: "por que, pois, não guardaste
       // O JURAMENTO DO SENHOR, nem a ordem que te dei?". Simei cala.
       b(43, { by: "rei", q: "Por que, pois, não guardaste o juramento do Senhor, nem a ordem que te dei?",
-        env: { terrain: "throne", night: 0.4, glory: 0.46, storm: 0.44 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.4, glory: 0.46, storm: 0.44 }, cast: [
         C("rei", -20, "raise", { dy: 0.46, facing: 1, id: "salomao" }),
         C("homem", 140, "kneel", { dy: 0.68, facing: -1, id: "simei" }),
         C("homem", 260, "stand", { dy: 0.56, facing: -1, id: "benaia" }),
@@ -1308,7 +1308,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // que o teu coração reconhece, QUE FIZESTE A DAVI, MEU PAI" — as pedras de
       // Baurim, o pó atirado, a maldição na fuga.
       b(44, { by: "rei", q: "pelo que o Senhor fez recair a tua maldade sobre a tua cabeça",
-        env: { terrain: "throne", night: 0.42, glory: 0.48, storm: 0.46 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.42, glory: 0.48, storm: 0.46 }, cast: [
         C("rei", -20, "point", { dy: 0.46, facing: 1, id: "salomao" }),
         C("homem", 130, "bow", { dy: 0.7, facing: -1, id: "simei" }),
       ] }),
@@ -1316,7 +1316,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ABENÇOADO, e o trono de Davi será confirmado perante o SENHOR PARA
       // SEMPRE". A glória sobe sobre o assento, não sobre o rosto do rei.
       b(45, { by: "rei", q: "Mas o rei Salomão será abençoado, e o trono de Davi será confirmado perante o Senhor para sempre.",
-        env: { terrain: "throne", night: 0.2, glory: 0.82, storm: 0.16, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.2, glory: 0.82, storm: 0.16, verdure: 0.24 }, cast: [
         C("rei", -20, "raise", { dy: 0.46, facing: 1, id: "salomao", glow: 0.36 }),
         C("homem", 130, "bow", { dy: 0.7, facing: -1, id: "simei" }),
         C("anciao", -190, "stand", { dy: 0.58, facing: 1, id: "zadoque" }),
@@ -1326,7 +1326,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // homens saíram de cena para que esta frase pudesse ser escrita.
       b(46, { q: "assim foi confirmado o reino na mão de Salomão",
         set: "sala-do-trono-com-a-espada", props: SALA_DO_TRONO_COM_A_ESPADA,
-        env: { terrain: "throne", night: 0.18, glory: 0.86, storm: 0.12, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.18, glory: 0.86, storm: 0.12, verdure: 0.26 }, cast: [
         C("rei", -20, "raise", { dy: 0.46, facing: 1, id: "salomao", glow: 0.42 }),
         C("homem", 190, "walk", { dy: 0.58, facing: -1, id: "benaia" }),
         C("anciao", -200, "bow", { dy: 0.6, facing: 1, id: "zadoque" }),

@@ -778,7 +778,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // continua no chão: Deus não disse nada em trinta e nove versículos.
       b(39, { q: "Então tinha o rei Davi saudades de Absalão",
         set: "casa-do-rei", props: CASA_DO_REI,
-        env: { terrain: "city", night: 0.56, glory: 0.08, storm: 0.16, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.56, glory: 0.08, storm: 0.16, verdure: 0.08 }, cast: [
         C("rei", -20, "stand", { dy: 0.42, facing: -1, id: "davi" }),
         C("servo", 265, "stand", { dy: 0.62, facing: 1, id: "servo-da-casa-do-rei" }),
       ] }),
@@ -1007,7 +1007,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // invisível. É este umbral que vai gerar a revolta do cap. 15.
       b(24, { by: "rei", q: "E disse o rei:",
         set: "porta-da-face", props: PORTA_DA_FACE,
-        env: { terrain: "city", night: 0.5, glory: 0.16, storm: 0.16, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.16, storm: 0.16, verdure: 0.1 }, cast: [
         C("rei", -230, "stand", { dy: 0.3, facing: 1, id: "davi" }),
         C("homem", 150, "stand", { dy: 0.62, facing: -1, id: "absalao" }),
         C("servo", 55, "stand", { dy: 0.52, facing: -1, id: "guarda-da-porta-do-rei" }),
@@ -1018,7 +1018,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // cordeiro sem mácula — e nenhum `glow`: aqui a beleza não é glória.
       b(25, { q: "desde a planta do pé até à cabeça não havia nele defeito algum",
         set: "casa-de-absalao-jm", props: CASA_DE_ABSALAO_JM,
-        env: { terrain: "city", night: 0.26, glory: 0.24, storm: 0.04, verdure: 0.36 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.26, glory: 0.24, storm: 0.04, verdure: 0.36 }, cast: [
         C("homem", -10, "stand", { dy: 0.62, facing: 1, id: "absalao" }),
         C("servo", 175, "bow", { dy: 0.58, facing: -1, id: "servo-da-casa-de-absalao" }),
       ] }),
@@ -1028,7 +1028,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // cabelo que, em 18:9, o vai deixar pendurado no carvalho.
       b(26, { q: "pesava o cabelo da sua cabeça duzentos siclos, segundo o peso real",
         set: "terraco-de-absalao", props: TERRACO_DE_ABSALAO,
-        env: { terrain: "city", night: 0.24, glory: 0.22, storm: 0.04, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.22, storm: 0.04, verdure: 0.22 }, cast: [
         C("homem", -95, "stand", { dy: 0.6, facing: 1, id: "absalao" }),
         C("servo", 55, "kneel", { dy: 0.66, facing: -1, id: "servo-que-pesava-o-cabelo" }),
       ] }),
@@ -1037,7 +1037,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // 13 — é o único luto que Absalão consegue expressar em palavras.
       b(27, { q: "Também nasceram a Absalão três filhos e uma filha, cujo nome era Tamar",
         set: "casa-de-absalao-jm", props: CASA_DE_ABSALAO_JM,
-        env: { terrain: "city", night: 0.26, glory: 0.26, storm: 0.04, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.26, glory: 0.26, storm: 0.04, verdure: 0.4 }, cast: [
         C("homem", -120, "stand", { dy: 0.56, facing: 1, id: "absalao" }),
         C("mulherComum", 30, "stand", { dy: 0.64, facing: -1, id: "tamar-filha-de-absalao" }),
         C("servo", 130, "stand", { dy: 0.6, facing: -1, id: "filho-de-absalao1" }),
@@ -1049,7 +1049,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // tosquia) — e nas duas vezes o silêncio termina em fogo. Casa cheia,
       // homem sozinho, noite alta.
       b(28, { q: "Assim ficou Absalão dois anos inteiros em Jerusalém, e não viu a face do rei",
-        env: { terrain: "city", night: 0.62, glory: 0.12, storm: 0.14, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.12, storm: 0.14, verdure: 0.24 }, cast: [
         C("homem", -40, "kneel", { dy: 0.66, facing: 1, id: "absalao" }),
         C("servo", 205, "stand", { dy: 0.54, facing: -1, id: "servo-da-casa-de-absalao" }),
       ] }),
@@ -1057,7 +1057,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Manda SEGUNDA VEZ; e, contudo, NÃO QUIS VIR. O mensageiro voltando de
       // mãos vazias pela porta, duas vezes — e a paciência de Absalão acaba.
       b(29, { q: "porém não quis vir a ele; e enviou ainda segunda vez",
-        env: { terrain: "city", night: 0.58, glory: 0.1, storm: 0.2, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.58, glory: 0.1, storm: 0.2, verdure: 0.22 }, cast: [
         C("homem", -60, "stand", { dy: 0.62, facing: 1, id: "absalao" }),
         C("servo", 125, "walk", { dy: 0.58, facing: 1, id: "mensageiro-de-absalao" }),
       ] }),
@@ -1067,7 +1067,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o `campfire`; `env.fire` aqui é só o calor e o estalo.
       b(30, { by: "homem", q: "Então disse aos seus servos:",
         set: "campo-de-cevada", props: CAMPO_DE_CEVADA,
-        env: { terrain: "field", night: 0.42, glory: 0.08, storm: 0.26, fire: 0.62, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.42, glory: 0.08, storm: 0.26, fire: 0.62, verdure: 0.3 }, cast: [
         C("homem", -195, "point", { dy: 0.5, facing: 1, id: "absalao" }),
         C("servo", -40, "stand", { dy: 0.66, facing: 1, id: "servo-incendiario-de-absalao1" }),
         C("servo", 70, "kneel", { dy: 0.7, facing: 1, id: "servo-incendiario-de-absalao2" }),
@@ -1086,7 +1086,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("amphora", 200, 0.8, undefined, 0.62),
           P("grass", -270, 0.76, undefined, 0.72),
         ],
-        env: { terrain: "city", night: 0.5, glory: 0.1, storm: 0.28, fire: 0.5, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.1, storm: 0.28, fire: 0.5, verdure: 0.2 }, cast: [
         C("homem", -95, "point", { dy: 0.62, facing: 1, id: "joabe" }),
         C("homem", 80, "stand", { dy: 0.6, facing: -1, id: "absalao" }),
       ] }),
@@ -1106,7 +1106,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // em paz e é essa paz que, no capítulo seguinte, vira conspiração.
       b(33, { q: "e o rei beijou a Absalão",
         set: "sala-de-audiencias", props: SALA_DE_AUDIENCIAS,
-        env: { terrain: "throne", night: 0.3, glory: 0.4, storm: 0.08, fire: 0, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "throne", night: 0.3, glory: 0.4, storm: 0.08, fire: 0, verdure: 0.1 }, cast: [
         C("homem", 130, "lie", { dy: 0.7, facing: -1, id: "absalao" }),
         C("rei", -30, "stand", { dy: 0.5, facing: 1, id: "davi" }),
         C("homem", -215, "stand", { dy: 0.44, facing: 1, id: "joabe" }),

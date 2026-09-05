@@ -1183,7 +1183,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // exatamente isto: ídolo fundido, nunca bicho vivo.
       b(28, { by: "rei", q: "Muito trabalho vos será o subir a Jerusalém; vês aqui teus deuses, ó Israel, que te fizeram subir da terra do Egito.",
         set: "fundicao-dos-bezerros", props: FUNDICAO_DOS_BEZERROS,
-        env: { terrain: "city", night: 0.5, glory: 0.1, storm: 0.34, fire: 0.44, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.1, storm: 0.34, fire: 0.44, verdure: 0.18 }, cast: [
         C("rei", -60, "point", { dy: 0.64, facing: 1, id: "jeroboao" }),
         C("homem", 190, "stand", { dy: 0.6, facing: -1, id: "conselheiro-de-jeroboao1" }),
         C("homem", 60, "kneel", { dy: 0.7, facing: -1, id: "fundidor-dos-bezerros" }),
@@ -1193,7 +1193,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fazer, enquanto o outro segue estrada acima nos ombros dos carregadores.
       b(29, { q: "E pôs um em Betel, e colocou o outro em Dã.",
         set: "betel", props: BETEL,
-        env: { terrain: "city", night: 0.44, glory: 0.14, storm: 0.28, fire: 0.24, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.14, storm: 0.28, fire: 0.24, verdure: 0.26 }, cast: [
         C("rei", -170, "point", { dy: 0.56, facing: 1, id: "jeroboao" }),
         C("servo", 30, "bow", { dy: 0.68, facing: -1, id: "carregador-do-bezerro1" }),
         C("servo", 160, "walk", { dy: 0.62, facing: 1, id: "carregador-do-bezerro2" }),
@@ -1214,7 +1214,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // homens que escolheu a dedo, e o altar do outeiro já aceso atrás deles.
       b(31, { q: "Também fez casa nos altos; e constituiu sacerdotes dos mais baixos do povo, que não eram dos filhos de Levi.",
         set: "casas-nos-altos", props: CASAS_NOS_ALTOS,
-        env: { terrain: "field", night: 0.46, glory: 0.12, storm: 0.26, fire: 0.28, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.12, storm: 0.26, fire: 0.28, verdure: 0.28 }, cast: [
         C("rei", -190, "point", { dy: 0.54, facing: 1, id: "jeroboao" }),
         C("homem", -40, "stand", { dy: 0.62, facing: -1, id: "sacerdote-dos-altos1" }),
         C("homem", 90, "stand", { dy: 0.66, facing: -1, id: "sacerdote-dos-altos2" }),
@@ -1225,7 +1225,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a multidão é legítima: é festa, e não há morte no quadro.
       b(32, { q: "E fez Jeroboão uma festa no oitavo mês, no dia décimo quinto do mês, como a festa que se fazia em Judá",
         set: "betel", props: BETEL,
-        env: { terrain: "city", night: 0.36, glory: 0.24, storm: 0.18, fire: 0.34, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.24, storm: 0.18, fire: 0.34, verdure: 0.3 }, cast: [
         C("rei", -170, "raise", { dy: 0.56, facing: 1, id: "jeroboao" }),
         C("multidao", 190, "raise", { dy: 0.64, facing: -1, id: "povo-da-festa-do-oitavo-mes" }),
         C("homem", 40, "stand", { dy: 0.68, facing: -1, id: "sacerdote-dos-altos1" }),
@@ -1245,7 +1245,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("rock", -320, 1.0, undefined, 0.56),
           P("grass", 20, 0.78, undefined, 0.76),
         ],
-        env: { terrain: "city", night: 0.62, glory: 0.06, storm: 0.32, fire: 0.6, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.62, glory: 0.06, storm: 0.32, fire: 0.6, verdure: 0.2 }, cast: [
         C("rei", 40, "raise", { dy: 0.6, facing: 1, id: "jeroboao" }),
         C("homem", -110, "bow", { dy: 0.66, facing: 1, id: "sacerdote-dos-altos1" }),
         C("homem", 230, "kneel", { dy: 0.62, facing: -1, id: "adorador-do-bezerro-de-betel1" }),

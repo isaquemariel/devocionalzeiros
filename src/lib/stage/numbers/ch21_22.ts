@@ -182,7 +182,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.16-18 — O CÂNTICO DO POÇO.
       b(16, { q: "Ajunta o povo e lhe darei água", set: "poco", props: POCO,
-        env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.3 }, cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "stand", { dy: 0.5 }),
       ] }),
@@ -191,7 +191,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 140, "raise", { dy: 0.46, id: "cantores" }),
       ] }),
       b(18), b(19), b(20),                                                          // do poço à marcha rumo ao campo de Moabe
-      b(21, { set: "guerra", props: GUERRA, env: { terrain: "desert", glory: 0.5, night: 0.15, verdure: 0.15 }, cast: [ // mensageiros a Siom, rei dos amorreus
+      b(21, { set: "guerra", props: GUERRA, env: { water: 0, terrain: "desert", glory: 0.5, night: 0.15, verdure: 0.15 }, cast: [ // mensageiros a Siom, rei dos amorreus
         C("multidao", -140, "walk", { dy: 0.5, facing: 1 }),
         C("rei", 160, "stand", { dy: 0.48, facing: -1, id: "siom" }),
       ] }),
@@ -213,7 +213,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("church", 235, 1.1, undefined, 0.36),
         P("tent", -300, 1.0, undefined, 0.46),
         P("grass", 150, 0.8, undefined, 0.8),
-      ], env: { terrain: "city", glory: 0.56, night: 0.14, storm: 0, verdure: 0.34 }, cast: [
+      ], env: { water: 0, terrain: "city", glory: 0.56, night: 0.14, storm: 0, verdure: 0.34 }, cast: [
         C("multidao", -60, "stand", { dy: 0.56 }),
       ] }),
       b(26, { q: "Hesbom era cidade de Siom, rei dos amorreus", env: { glory: 0.44, night: 0.3, storm: 0.1 }, cast: [ // a história atrás da cidade: Siom a tomara ao rei de Moabe
@@ -226,7 +226,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 90, 1.2, undefined, 0.26),
         P("crate", 220, 0.9, undefined, 0.6),
         P("crate", 300, 0.85, undefined, 0.5),
-      ], env: { terrain: "city", glory: 0.5, night: 0.16, verdure: 0.2 }, cast: [
+      ], env: { water: 0, terrain: "city", glory: 0.5, night: 0.16, verdure: 0.2 }, cast: [
         C("homem", -30, "raise", { dy: 0.62, facing: -1, id: "o-que-fala-em-proverbios" }),
       ] }),
       b(28, { q: "Porque fogo saiu de Hesbom, e uma chama da cidade de Siom", set: "hesbom-em-chamas", props: [ // o FOGO que saíra de Hesbom e consumira Ar de Moabe
@@ -234,13 +234,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         { ...P("campfire", -20, 1.35, 1, 0.54), tag: "fogo-destruicao" },
         P("campfire", 140, 1.05, 0.9, 0.66),
         P("rock", 275, 0.95, undefined, 0.42),
-      ], env: { terrain: "city", glory: 0.2, night: 0.62, storm: 0.25, fire: 0.85, verdure: 0.08 } }),
+      ], env: { water: 0, terrain: "city", glory: 0.2, night: 0.62, storm: 0.25, fire: 0.85, verdure: 0.08 } }),
       b(29, { q: "Ai de ti, Moabe! perdido és, povo de Quemos", set: "moabe-cativo", props: [ // os filhos fugindo e as filhas cativas de Moabe
         P("rock", -280, 1.15, undefined, 0.28),
         P("tower", 210, 1.05, undefined, 0.3),
         { ...P("calf", 60, 0.95, undefined, 0.46), tag: "idolo" },
         P("grass", -100, 0.76, undefined, 0.82),
-      ], env: { terrain: "desert", glory: 0.16, night: 0.72, storm: 0.2, fire: 0.2, verdure: 0.08 }, cast: [
+      ], env: { water: 0, terrain: "desert", glory: 0.16, night: 0.72, storm: 0.2, fire: 0.2, verdure: 0.08 }, cast: [
         C("homem", -170, "walk", { dy: 0.66, facing: -1, id: "filho-de-moabe" }),
         C("mulherComum", -60, "bow", { dy: 0.72, facing: -1, id: "cativa-de-moabe" }),
       ] }),
@@ -250,7 +250,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 110, 1.15, undefined, 0.44),
         P("tower", 265, 0.9, undefined, 0.28),
         P("grass", 20, 0.72, undefined, 0.84),
-      ], env: { terrain: "desert", glory: 0.24, night: 0.55, storm: 0.15, fire: 0, verdure: 0.06 } }),
+      ], env: { water: 0, terrain: "desert", glory: 0.24, night: 0.55, storm: 0.15, fire: 0, verdure: 0.06 } }),
       b(31, { q: "Assim Israel habitou na terra dos amorreus", set: "hesbom", props: [ // e Israel HABITA na terra dos amorreus
         P("tower", -180, 1.25, undefined, 0.26),
         P("tent", -40, 1.15, undefined, 0.44),
@@ -258,7 +258,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("well", 300, 1.0, undefined, 0.4),
         P("palm", -320, 1.05, undefined, 0.16),
         P("grass", 220, 0.8, undefined, 0.78),
-      ], env: { terrain: "city", glory: 0.62, night: 0.12, storm: 0, fire: 0, verdure: 0.45 }, cast: [
+      ], env: { water: 0, terrain: "city", glory: 0.62, night: 0.12, storm: 0, fire: 0, verdure: 0.45 }, cast: [
         C("multidao", 40, "stand", { dy: 0.6 }),
       ] }),
       b(32, { q: "mandou Moisés espiar a Jazer", set: "jazer", props: [              // Moisés manda espiar JAZER, e as suas aldeias são tomadas
@@ -267,7 +267,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grapes", 290, 1.0, undefined, 0.36),
         P("rock", 40, 0.9, undefined, 0.5),
         P("grass", -120, 0.78, undefined, 0.8),
-      ], env: { terrain: "field", glory: 0.54, night: 0.14, verdure: 0.55 }, cast: [
+      ], env: { water: 0, terrain: "field", glory: 0.54, night: 0.14, verdure: 0.55 }, cast: [
         C("moises", -180, "point", { dy: 0.56, facing: -1 }),
         C("homem", -50, "walk", { dy: 0.62, facing: -1, id: "guerreiro" }),
       ] }),

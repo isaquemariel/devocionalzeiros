@@ -520,7 +520,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Jerusalém, de costas, na beira esquerda do quadro.
       b(18, { q: "o qual tinha um poço no seu pátio, e ali dentro desceram",
         set: "baurim", props: BAURIM,
-        env: { terrain: "field", night: 0.66, glory: 0.08, storm: 0.14, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.66, glory: 0.08, storm: 0.14, verdure: 0.22 }, cast: [
         C("servo", 0, "kneel", { dy: 0.58, facing: 1, id: "aimaas" }),
         C("servo", 105, "bow", { dy: 0.62, facing: 1, id: "jonatas-filho-de-abiatar" }),
         C("mulherComum", -110, "stand", { dy: 0.5, facing: 1, id: "mulher-de-baurim" }),
@@ -546,7 +546,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // campinas: "LEVANTAI-VOS, E PASSAI DEPRESSA AS ÁGUAS". A fogueira do
       // arraial ainda está acesa quando a ordem de levantar acampamento chega.
       b(21, { by: "servo", q: "e disseram a Davi:", set: "campinas", props: CAMPINAS,
-        env: { terrain: "desert", night: 0.68, glory: 0.12, storm: 0.14, fire: 0.2, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "desert", night: 0.68, glory: 0.12, storm: 0.14, fire: 0.2, verdure: 0.12 }, cast: [
         C("servo", -75, "raise", { dy: 0.6, facing: 1, id: "aimaas" }),
         C("servo", -180, "walk", { dy: 0.56, facing: 1, id: "jonatas-filho-de-abiatar" }),
         C("rei", 95, "stand", { dy: 0.48, facing: -1, id: "davi" }),
@@ -571,7 +571,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pai à direita. Glória em zero: é o suicídio do homem mais sábio do reino.
       b(23, { q: "albardou o jumento, e levantou-se, e foi para sua casa e para a sua cidade",
         set: "gilo", props: GILO,
-        env: { terrain: "city", night: 0.78, glory: 0.02, storm: 0.22, fire: 0.04, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.78, glory: 0.02, storm: 0.22, fire: 0.04, verdure: 0.14 }, cast: [
         C("anciao", -110, "walk", { dy: 0.5, facing: 1, id: "aitofel", scale: 0.9 }),
         // "…e se enforcou e morreu, e foi sepultado na sepultura de seu pai": o
         // versículo acaba na morte, e sem corpo em cena o quadro só mostrava um
@@ -584,7 +584,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // do rio pela primeira vez.
       b(24, { q: "E Davi foi a Maanaim; e Absalão passou o Jordão",
         set: "maanaim", props: MAANAIM,
-        env: { terrain: "city", night: 0.5, glory: 0.24, storm: 0.16, verdure: 0.28 }, cast: [
+        env: { water: 0.3, terrain: "city", night: 0.5, glory: 0.24, storm: 0.16, verdure: 0.28 }, cast: [
         C("rei", 130, "walk", { dy: 0.5, facing: -1, id: "davi" }),
         C("servo", 225, "stand", { dy: 0.56, facing: -1, id: "servo-de-davi-na-fuga" }),
         C("homem", -280, "walk", { dy: 0.42, facing: 1, id: "absalao" }),
@@ -595,7 +595,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // homens de Israel diante das tendas.
       b(25, { q: "E Absalão constituiu a Amasa em lugar de Joabe sobre o arraial",
         set: "gileade", props: GILEADE,
-        env: { terrain: "field", night: 0.46, glory: 0.2, storm: 0.14, fire: 0.18, verdure: 0.38 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.2, storm: 0.14, fire: 0.18, verdure: 0.38 }, cast: [
         C("homem", -70, "point", { dy: 0.48, facing: 1, id: "absalao" }),
         C("homem", 65, "stand", { dy: 0.54, facing: -1, id: "amasa" }),
         C("homem", 200, "stand", { dy: 0.5, facing: -1, id: "homem-de-israel-no-bosque1" }),
@@ -605,7 +605,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // acesa, tendas armadas, ninguém perseguindo ninguém. A noite que Aitofel
       // queria gastar em marcha, Absalão gasta dormindo.
       b(26, { q: "Israel, pois, e Absalão acamparam na terra de Gileade",
-        env: { terrain: "field", night: 0.6, glory: 0.14, storm: 0.1, fire: 0.24, verdure: 0.36 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.6, glory: 0.14, storm: 0.1, fire: 0.24, verdure: 0.36 }, cast: [
         C("homem", 30, "stand", { dy: 0.5, facing: -1, id: "absalao" }),
         C("homem", 155, "kneel", { dy: 0.6, facing: -1, id: "amasa" }),
         C("homem", -170, "stand", { dy: 0.44, facing: 1, id: "homem-de-israel-no-bosque1" }),
@@ -614,7 +614,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // MAQUIR, filho de Amiel, de Lo-Debar; e BARZILAI, o gileadita, de Rogelim
       // — três estrangeiros e um velho rico saindo ao encontro do rei arruinado.
       b(27, { q: "e Barzilai, o gileadita, de Rogelim,", set: "maanaim", props: MAANAIM,
-        env: { terrain: "city", night: 0.42, glory: 0.36, storm: 0.06, verdure: 0.32 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.42, glory: 0.36, storm: 0.06, verdure: 0.32 }, cast: [
         C("anciao", 55, "stand", { dy: 0.52, facing: -1, id: "barzilai" }),
         C("homem", 165, "walk", { dy: 0.58, facing: -1, id: "sobi-de-raba" }),
         C("homem", 250, "walk", { dy: 0.64, facing: -1, id: "maquir-filho-de-amiel" }),
@@ -625,7 +625,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // lentilhas. O `bed` entra aqui como o que é — leito de descanso para
       // quem atravessou o Jordão a pé de noite.
       b(28, { q: "Tomaram camas e bacias, e vasilhas de barro", set: "presentes", props: PRESENTES,
-        env: { terrain: "city", night: 0.36, glory: 0.44, storm: 0.02, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.44, storm: 0.02, verdure: 0.34 }, cast: [
         C("anciao", -95, "bow", { dy: 0.58, facing: 1, id: "barzilai" }),
         C("homem", 20, "kneel", { dy: 0.64, facing: 1, id: "sobi-de-raba" }),
         C("homem", 145, "bow", { dy: 0.6, facing: -1, id: "maquir-filho-de-amiel" }),
@@ -636,7 +636,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fala (é o 1º anciao do cast), o rebanho entra no pátio e a glória sobe:
       // é a única hora luminosa entre a traição e o bosque de Efraim.
       b(29, { by: "anciao", q: "porque disseram:",
-        env: { terrain: "city", night: 0.3, glory: 0.56, storm: 0, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.3, glory: 0.56, storm: 0, verdure: 0.4 }, cast: [
         C("anciao", -70, "raise", { dy: 0.56, facing: 1, id: "barzilai" }),
         C("rei", 105, "stand", { dy: 0.5, facing: -1, id: "davi" }),
         C("rebanho", 240, "stand", { dy: 0.66, facing: -1, id: "ovelhas-de-barzilai" }),

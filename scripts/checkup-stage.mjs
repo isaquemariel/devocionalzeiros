@@ -18,6 +18,9 @@
 //   5. FICHA GENÉRICA — figurante ANÔNIMO (multidão, homem, servo, rei…) cuja
 //      ficha "?" cai no texto genérico do papel em vez de dizer QUEM é ali.
 //   6. TAG SEM FICHA — objeto marcado com `tag` sem verbete em PROP_TAG_INFO.
+//   7. ÁGUA HERDADA — o lugar mudou e `water` alto veio por herança do beat
+//      anterior. Como `env.water` DESENHA uma faixa de mar (ao contrário de
+//      `env.fire`, que é só ambiência), o lugar novo aparece alagado.
 //
 // NÃO checamos (regras que soam boas e dão falso positivo demais):
 //  • "fogo sem fogueira": no motor da cena viva `env.fire` não é lido para
@@ -82,8 +85,19 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
     for (const bt of script.beats) {
       if (bt.cast) cast = bt.cast;
       if (bt.props) props = bt.props;
+      // 7. ÁGUA HERDADA DE OUTRO LUGAR — `env` é Object.assign: a chave omitida
+      // MANTÉM o valor anterior. Depois de um beat com `water` alto, todo beat
+      // seguinte que não o zerar continua com a faixa de mar no horizonte —
+      // e como `water` DESENHA (ao contrário de `fire`), o lugar novo aparece
+      // alagado. Foi assim que Hesbom, a ferraria de Israel, o palácio de Davi
+      // e a casa de Faraó saíram com o casario dentro do mar.
+      const aguaAntes = env.water ?? 0;
+      const declarouAgua = !!bt.env && Object.prototype.hasOwnProperty.call(bt.env, "water");
       if (bt.env) env = { ...env, ...bt.env };
       ctx = `${bookId} ${ch}:${bt.v} —`;
+      if (!declarouAgua && aguaAntes >= 0.15 && (bt.set || bt.env?.terrain)) {
+        hit("warn", "agua-herdada", `o lugar mudou (${bt.set ? `set "${bt.set}"` : `terreno "${bt.env.terrain}"`}) e water=${aguaAntes} veio por herança — declare water no beat (0 se aqui não há água)`);
+      }
 
       // 4. BALÃO ÓRFÃO — o motor procura cast por id e depois por papel; sem
       // achar, a fala é creditada na barra do narrador (flashback).

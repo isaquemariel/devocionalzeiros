@@ -664,7 +664,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.41 — e o filisteu vinha se aproximando, COM O ESCUDEIRO ADIANTE: o
       // palco esvazia para o duelo, cada um entrando por um lado do vale.
       b(41, { q: "e o que lhe levava o escudo ia adiante dele", set: "duelo", props: DUELO,
-        env: { terrain: "field", night: 0.32, glory: 0.5, storm: 0.18, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.32, glory: 0.5, storm: 0.18, verdure: 0.22 }, cast: [
         C("homem", -180, "walk", { dy: 0.68, facing: 1, id: "golias", scale: 2.18 }),
         C("servo", -60, "walk", { dy: 0.62, facing: 1, id: "escudeiro-golias" }),
         C("pastor", 210, "walk", { dy: 0.56, facing: -1, id: "davi" }),
@@ -740,7 +740,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.48 — o filisteu se levanta e vem; e DAVI SE APRESSA E CORRE AO
       // COMBATE. O menino é quem ataca — os dois em `walk`, fechando o vão.
       b(48, { q: "apressou-se Davi, e correu ao combate", set: "duelo", props: DUELO,
-        env: { terrain: "field", night: 0.16, glory: 0.86, storm: 0.12, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.16, glory: 0.86, storm: 0.12, verdure: 0.26 }, cast: [
         C("pastor", 90, "walk", { dy: 0.6, facing: -1, id: "davi" }),
         C("homem", -80, "walk", { dy: 0.72, facing: 1, id: "golias", scale: 2.2 }),
         C("servo", -240, "stand", { dy: 0.58, facing: 1, id: "escudeiro-golias" }),
@@ -783,7 +783,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // multidão é legítima: é festa de vitória, e não há ninguém em `lie`.
       b(52, { q: "e caíram os feridos dos filisteus pelo caminho de Saaraim até Gate e até Ecrom",
         set: "saaraim", props: SAARAIM,
-        env: { terrain: "field", night: 0.24, glory: 0.8, storm: 0.12, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.8, storm: 0.12, verdure: 0.3 }, cast: [
         C("multidao", 120, "raise", { dy: 0.6, facing: 1, id: "exercito-de-israel" }),
         C("homem", -100, "walk", { dy: 0.52, facing: 1, id: "filisteu-de-soco" }),
         C("homem", -210, "walk", { dy: 0.46, facing: 1, id: "filisteu-de-azeca" }),
@@ -791,7 +791,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.53 — voltam da perseguição e DESPOJAM OS ARRAIAIS: o acampamento de
       // Socó, agora vazio de filisteus e cheio de fardos abertos.
       b(53, { q: "e despojaram os seus arraiais", set: "soco", props: SOCO,
-        env: { terrain: "field", night: 0.3, glory: 0.66, storm: 0.06, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.3, glory: 0.66, storm: 0.06, verdure: 0.26 }, cast: [
         C("homem", -40, "stand", { dy: 0.58, facing: 1, id: "soldado-de-israel1" }),
         C("homem", 110, "kneel", { dy: 0.62, facing: -1, id: "soldado-de-israel2" }),
         C("servo", 230, "walk", { dy: 0.56, facing: -1, id: "escudeiro-de-israel" }),
@@ -799,7 +799,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.54 — a cabeça do filisteu vai a JERUSALÉM; as ARMAS ficam na TENDA DE
       // DAVI (o `rod` marcado é a espada tomada, agora troféu guardado).
       b(54, { q: "porém pôs as armas dele na sua tenda", set: "jerusalem", props: JERUSALEM,
-        env: { terrain: "city", night: 0.28, glory: 0.7, storm: 0.04, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.28, glory: 0.7, storm: 0.04, verdure: 0.24 }, cast: [
         C("pastor", -110, "stand", { dy: 0.58, facing: 1, id: "davi" }),
         C("servo", 100, "stand", { dy: 0.54, facing: -1, id: "escudeiro-de-israel" }),
       ] }),
@@ -807,7 +807,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // perguntava a ABNER, o capitão do exército: "DE QUEM É FILHO ESTE MOÇO?"
       // — e Abner não sabia. O rei olha o vale de longe, da sua tenda.
       b(55, { by: "rei", q: "De quem é filho este moço, Abner?", set: "tenda-de-saul", props: TENDA_SAUL,
-        env: { terrain: "field", night: 0.36, glory: 0.4, storm: 0.14, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.36, glory: 0.4, storm: 0.14, verdure: 0.22 }, cast: [
         C("rei", 40, "point", { dy: 0.5, facing: 1, id: "saul" }),
         C("homem", -110, "stand", { dy: 0.56, facing: 1, id: "abner" }),
         C("servo", 220, "stand", { dy: 0.54, facing: -1, id: "escudeiro-de-israel" }),

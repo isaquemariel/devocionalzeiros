@@ -678,7 +678,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // servos — mas o texto diz o que nenhum cantor de corte diria do rei:
       // "QUE DAVI SE CANSOU". Ele aparece curvado, no fundo da própria tropa.
       b(15, { q: "que Davi se cansou", set: "peleja-dos-filisteus", props: PELEJA_DOS_FILISTEUS,
-        env: { terrain: "field", night: 0.5, glory: 0.18, storm: 0.36, fire: 0.14, verdure: 0.22 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.5, glory: 0.18, storm: 0.36, fire: 0.14, verdure: 0.22 }, cast: [
         C("rei", -105, "bow", { dy: 0.64, facing: 1, id: "davi" }),
         C("homem", 30, "stand", { dy: 0.56, facing: 1, id: "abisai" }),
         C("servo", 175, "stand", { dy: 0.5, facing: 1, id: "servo-de-davi2" }),
@@ -705,7 +705,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("rock", 300, 0.95, undefined, 0.5),
           P("grass", 30, 0.76, undefined, 0.76),
         ],
-        env: { terrain: "field", night: 0.52, glory: 0.42, storm: 0.3, fire: 0.12, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.52, glory: 0.42, storm: 0.3, fire: 0.12, verdure: 0.24 }, cast: [
         C("homem", 55, "raise", { dy: 0.58, facing: -1, id: "valente-de-davi" }),
         C("homem", -40, "stand", { dy: 0.62, facing: 1, id: "abisai" }),
         C("rei", -180, "kneel", { dy: 0.6, facing: 1, id: "davi" }),
@@ -716,7 +716,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // inteiro, do começo ao fim, por quem estiver de longe.
       b(18, { q: "então Sibecai, o husatita, feriu a Safe, que era dos filhos do gigante",
         set: "gobe", props: GOBE,
-        env: { terrain: "field", night: 0.44, glory: 0.3, storm: 0.34, fire: 0.1, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.44, glory: 0.3, storm: 0.34, fire: 0.1, verdure: 0.3 }, cast: [
         C("homem", -80, "raise", { dy: 0.6, facing: 1, id: "sibecai" }),
         C("homem", 90, "lie", { dy: 0.72, facing: -1, id: "safe", scale: 1.85 }),
         C("servo", 235, "stand", { dy: 0.46, facing: -1, id: "servo-de-davi1" }),
@@ -733,7 +733,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("grass", 120, 0.78, undefined, 0.78),
           P("palm", 305, 1.05, undefined, 0.16),
         ],
-        env: { terrain: "field", night: 0.46, glory: 0.34, storm: 0.36, fire: 0.12, verdure: 0.28 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.34, storm: 0.36, fire: 0.12, verdure: 0.28 }, cast: [
         C("homem", -105, "stand", { dy: 0.62, facing: 1, id: "elana" }),
         C("homem", 120, "lie", { dy: 0.74, facing: -1, id: "golias-o-giteu", scale: 2.0 }),
         C("servo", 250, "stand", { dy: 0.46, facing: -1, id: "servo-de-davi2" }),
@@ -743,7 +743,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // gigante. Ele sai da porta da cidade, e a cidade inteira é grande.
       b(20, { q: "que tinha em cada mão seis dedos, e em cada pé outros seis, vinte e quatro ao todo",
         set: "gate", props: GATE,
-        env: { terrain: "city", night: 0.5, glory: 0.16, storm: 0.4, fire: 0.14, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.16, storm: 0.4, fire: 0.14, verdure: 0.14 }, cast: [
         C("homem", 60, "raise", { dy: 0.74, facing: -1, id: "gigante-de-gate", scale: 1.9 }),
         C("homem", -175, "stand", { dy: 0.52, facing: 1, id: "jonatas-filho-de-simeia" }),
         C("servo", -280, "stand", { dy: 0.46, facing: 1, id: "servo-de-davi1" }),
@@ -761,7 +761,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // MÃO DE DAVI E PELA MÃO DE SEUS SERVOS. Os quatro no chão, os servos de
       // pé, o rei em pé outra vez — e a glória sobe sobre a cidade dos gigantes.
       b(22, { q: "e caíram pela mão de Davi e pela mão de seus servos",
-        env: { terrain: "city", night: 0.34, glory: 0.74, storm: 0.16, fire: 0.06, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.34, glory: 0.74, storm: 0.16, fire: 0.06, verdure: 0.18 }, cast: [
         C("rei", -120, "raise", { dy: 0.58, facing: 1, id: "davi" }),
         C("homem", -25, "stand", { dy: 0.54, facing: 1, id: "abisai" }),
         C("homem", 75, "lie", { dy: 0.78, facing: -1, id: "gigante-de-gate", scale: 1.9 }),

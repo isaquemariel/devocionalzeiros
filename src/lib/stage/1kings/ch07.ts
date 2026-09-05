@@ -463,7 +463,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // colunas em pé no fundo, o fundidor esticando o cordão em torno.
       b(15, { q: "E formou duas colunas de cobre; a altura de cada coluna era de dezoito côvados",
         set: "oficina-de-hirao", props: OFICINA_DE_HIRAO,
-        env: { terrain: "city", night: 0.42, glory: 0.28, storm: 0.06, fire: 0.6, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.42, glory: 0.28, storm: 0.06, fire: 0.6, verdure: 0.1 }, cast: [
         C("homem", -105, "point", { dy: 0.62, facing: 1, id: "hirao-artifice" }),
         C("servo", 95, "kneel", { dy: 0.66, facing: -1, id: "fundidor-de-cobre1" }),
       ] }),
@@ -471,7 +471,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sobre as cabeças das colunas. O cadinho vai ao forno: Hirão de costas
       // para nós diante do fogo, o aprendiz soprando o fole, a luz vindo de baixo.
       b(16, { q: "Também fez dois capitéis de fundição de cobre para pôr sobre as cabeças das colunas",
-        env: { terrain: "city", night: 0.5, glory: 0.24, storm: 0.04, fire: 0.85, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.24, storm: 0.04, fire: 0.85, verdure: 0.08 }, cast: [
         C("homem", -215, "stand", { dy: 0.66, facing: -1, id: "hirao-artifice" }),
         C("servo", -110, "kneel", { dy: 0.72, facing: 1, id: "aprendiz-de-hirao" }),
         C("servo", 130, "stand", { dy: 0.56, facing: -1, id: "fundidor-de-cobre2" }),
@@ -480,7 +480,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // um capitel e sete para o outro. Trabalho de dedo, não de martelo — dois
       // homens sentados baixo, trançando o cobre fio a fio.
       b(17, { q: "sete para um capitel e sete para o outro capitel",
-        env: { terrain: "city", night: 0.44, glory: 0.3, fire: 0.5, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.3, fire: 0.5, verdure: 0.08 }, cast: [
         C("servo", -60, "kneel", { dy: 0.76, facing: 1, id: "fundidor-de-cobre1" }),
         C("servo", 80, "kneel", { dy: 0.72, facing: -1, id: "fundidor-de-cobre2" }),
         C("homem", 245, "stand", { dy: 0.58, facing: -1, id: "hirao-artifice" }),
@@ -498,7 +498,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("amphora", 300, 0.85, undefined, 0.68),
           P("rock", -320, 1.0, undefined, 0.72),
         ],
-        env: { terrain: "city", night: 0.4, glory: 0.34, fire: 0.45, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.4, glory: 0.34, fire: 0.45, verdure: 0.08 }, cast: [
         C("homem", 20, "raise", { dy: 0.38, facing: 1, id: "hirao-artifice" }),
         C("servo", 150, "point", { dy: 0.7, facing: -1, id: "aprendiz-de-hirao" }),
       ] }),
@@ -506,7 +506,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pórtico: a peça mais delicada da fundição inteira sai do molde. Os dois
       // fundidores levantam o capitel acabado; a luz do forno cai baixa.
       b(19, { q: "eram de obra de lírios no pórtico, de quatro côvados",
-        env: { terrain: "city", night: 0.34, glory: 0.44, fire: 0.35, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.34, glory: 0.44, fire: 0.35, verdure: 0.12 }, cast: [
         C("servo", -130, "raise", { dy: 0.66, facing: 1, id: "fundidor-de-cobre1" }),
         C("servo", 10, "raise", { dy: 0.68, facing: -1, id: "fundidor-de-cobre2" }),
         C("homem", 215, "stand", { dy: 0.6, facing: -1, id: "hirao-artifice" }),
@@ -515,7 +515,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // globular junto à rede, num capitel e no outro. O escriba conta em voz
       // baixa com o dedo; Hirão espera, de braços caídos, que ele termine.
       b(20, { q: "e duzentas romãs, em fileiras em redor, estavam também sobre o outro capitel",
-        env: { terrain: "city", night: 0.36, glory: 0.36, fire: 0.3, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.36, fire: 0.3, verdure: 0.1 }, cast: [
         C("homem", -190, "write", { dy: 0.64, facing: 1, id: "escriba-da-obra" }),
         C("homem", -50, "stand", { dy: 0.7, facing: -1, id: "hirao-artifice" }),
         C("servo", 175, "stand", { dy: 0.6, facing: -1, id: "aprendiz-de-hirao" }),
@@ -526,7 +526,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // glória subindo sobre a fachada da casa.
       b(21, { q: "e levantando a coluna direita, pôs-lhe o nome de Jaquim",
         set: "portico-do-templo", props: PORTICO_DO_TEMPLO,
-        env: { terrain: "city", night: 0.1, glory: 0.72, storm: 0.02, fire: 0.06, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.1, glory: 0.72, storm: 0.02, fire: 0.06, verdure: 0.3 }, cast: [
         C("rei", -35, "raise", { dy: 0.66, facing: 1, id: "salomao", glow: 0.22 }),
         C("homem", 95, "raise", { dy: 0.6, facing: -1, id: "hirao-artifice" }),
         C("servo", 215, "raise", { dy: 0.7, facing: -1, id: "fundidor-de-cobre1" }),
@@ -536,7 +536,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // obra das colunas". A câmera abre, os obreiros dão um passo atrás, o povo
       // do adro comemora — a única multidão do capítulo, e ela é de alegria.
       b(22, { q: "e assim se acabou a obra das colunas",
-        env: { terrain: "city", night: 0.08, glory: 0.8, storm: 0, fire: 0.04, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.08, glory: 0.8, storm: 0, fire: 0.04, verdure: 0.34 }, cast: [
         C("multidao", 230, "raise", { dy: 0.74, facing: -1, id: "povo-do-adro-do-templo" }),
         C("homem", -60, "stand", { dy: 0.68, facing: 1, id: "hirao-artifice", glow: 0.18 }),
         C("rei", -215, "stand", { dy: 0.64, facing: 1, id: "salomao" }),
@@ -600,7 +600,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // caixotes.
       b(27, { q: "Fez também as dez bases de cobre; o comprimento de uma base de quatro côvados",
         set: "oficina-das-bases", props: OFICINA_DAS_BASES,
-        env: { terrain: "city", night: 0.4, glory: 0.28, storm: 0.04, fire: 0.55, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.4, glory: 0.28, storm: 0.04, fire: 0.55, verdure: 0.08 }, cast: [
         C("homem", -110, "point", { dy: 0.7, facing: 1, id: "hirao-artifice" }),
         C("servo", 95, "kneel", { dy: 0.74, facing: -1, id: "fundidor-de-cobre2" }),
       ] }),
@@ -608,7 +608,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // AS MOLDURAS. Hirão de joelhos com as mãos na armação, mostrando ao
       // aprendiz onde uma coisa encaixa na outra.
       b(28, { q: "tinham cintas, e as cintas estavam entre as molduras",
-        env: { terrain: "city", night: 0.38, glory: 0.3, fire: 0.45, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.38, glory: 0.3, fire: 0.45, verdure: 0.08 }, cast: [
         C("homem", -40, "kneel", { dy: 0.78, facing: 1, id: "hirao-artifice" }),
         C("servo", 105, "bow", { dy: 0.74, facing: -1, id: "aprendiz-de-hirao" }),
       ] }),
@@ -616,7 +616,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // junturas de obra estendida por baixo. O entalhador levanta o querubim de
       // cobre contra a luz do forno para ver se a asa ficou limpa.
       b(29, { q: "havia leões, bois, e querubins",
-        env: { terrain: "city", night: 0.34, glory: 0.42, fire: 0.5, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.34, glory: 0.42, fire: 0.5, verdure: 0.08 }, cast: [
         C("homem", 165, "raise", { dy: 0.62, facing: -1, id: "entalhador-dos-querubins" }),
         C("homem", -70, "stand", { dy: 0.72, facing: 1, id: "hirao-artifice" }),
         C("servo", -230, "kneel", { dy: 0.76, facing: 1, id: "fundidor-de-cobre1" }),
@@ -634,7 +634,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("rock", -330, 1.0, undefined, 0.72),
           P("amphora", 60, 0.8, undefined, 0.74),
         ],
-        env: { terrain: "city", night: 0.36, glory: 0.32, fire: 0.4, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.32, fire: 0.4, verdure: 0.08 }, cast: [
         C("homem", -140, "kneel", { dy: 0.76, facing: 1, id: "rodeiro-das-bases" }),
         C("homem", 95, "stand", { dy: 0.68, facing: -1, id: "hirao-artifice" }),
       ] }),
@@ -652,7 +652,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("column", -330, 1.2, undefined, 0.26),
           P("amphora", 100, 0.8, undefined, 0.74),
         ],
-        env: { terrain: "city", night: 0.34, glory: 0.34, fire: 0.35, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.34, glory: 0.34, fire: 0.35, verdure: 0.08 }, cast: [
         C("servo", 90, "point", { dy: 0.78, facing: 1, id: "aprendiz-de-hirao" }),
         C("homem", -160, "stand", { dy: 0.7, facing: 1, id: "hirao-artifice" }),
       ] }),
@@ -660,7 +660,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // altura de cada roda: CÔVADO E MEIO. O escriba de pé com a vara de medir
       // encostada na roda; o rodeiro segura a peça no lugar.
       b(32, { q: "e era a altura de cada roda de côvado e meio",
-        env: { terrain: "city", night: 0.32, glory: 0.36, fire: 0.3, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.32, glory: 0.36, fire: 0.3, verdure: 0.08 }, cast: [
         C("homem", -85, "write", { dy: 0.72, facing: 1, id: "escriba-da-obra" }),
         C("homem", 60, "kneel", { dy: 0.78, facing: -1, id: "rodeiro-das-bases" }),
         C("servo", 230, "stand", { dy: 0.64, facing: -1, id: "fundidor-de-cobre2" }),
@@ -679,7 +679,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("column", -325, 1.2, undefined, 0.26),
           P("rock", 40, 0.95, undefined, 0.8),
         ],
-        env: { terrain: "city", night: 0.3, glory: 0.4, fire: 0.32, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.3, glory: 0.4, fire: 0.32, verdure: 0.1 }, cast: [
         C("homem", 20, "point", { dy: 0.66, facing: 1, id: "rodeiro-das-bases" }),
         C("homem", -180, "stand", { dy: 0.72, facing: 1, id: "hirao-artifice" }),
       ] }),
@@ -687,7 +687,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SAÍAM DA BASE: não são apliques, são osso da mesma peça. Dois homens
       // erguem a base pelos cantos para provar que aguenta.
       b(34, { q: "E havia quatro suportes aos quatro cantos de cada base",
-        env: { terrain: "city", night: 0.32, glory: 0.34, fire: 0.3, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.32, glory: 0.34, fire: 0.3, verdure: 0.08 }, cast: [
         C("servo", -100, "raise", { dy: 0.74, facing: 1, id: "fundidor-de-cobre1" }),
         C("servo", 55, "raise", { dy: 0.74, facing: -1, id: "fundidor-de-cobre2" }),
         C("homem", 240, "stand", { dy: 0.62, facing: -1, id: "hirao-artifice" }),
@@ -696,7 +696,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // dali saem as asas e as cintas. A câmera olha a base de cima: o disco de
       // cobre na mão de Hirão, ainda morno.
       b(35, { q: "E no alto de cada base havia uma peça redonda de meio côvado de altura",
-        env: { terrain: "city", night: 0.28, glory: 0.44, fire: 0.28, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.28, glory: 0.44, fire: 0.28, verdure: 0.08 }, cast: [
         C("homem", -30, "raise", { dy: 0.7, facing: 1, id: "hirao-artifice", glow: 0.16 }),
         C("servo", 140, "stand", { dy: 0.74, facing: -1, id: "aprendiz-de-hirao" }),
       ] }),
@@ -713,7 +713,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("column", 320, 1.2, undefined, 0.26),
           P("rock", 0, 0.95, undefined, 0.82),
         ],
-        env: { terrain: "city", night: 0.26, glory: 0.46, fire: 0.26, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.26, glory: 0.46, fire: 0.26, verdure: 0.14 }, cast: [
         C("homem", -35, "bow", { dy: 0.76, facing: 1, id: "entalhador-dos-querubins" }),
         C("homem", 235, "stand", { dy: 0.64, facing: -1, id: "hirao-artifice" }),
       ] }),
@@ -730,7 +730,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           { ...P("chariot", 285, 1.05, undefined, 0.42), tag: "obra-de-roda-de-carro" },
           P("campfire", -320, 1.0, 0.4, 0.34),
         ],
-        env: { terrain: "city", night: 0.24, glory: 0.5, fire: 0.24, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.5, fire: 0.24, verdure: 0.08 }, cast: [
         C("homem", -240, "walk", { dy: 0.72, facing: 1, id: "hirao-artifice" }),
         C("servo", -20, "stand", { dy: 0.5, facing: -1, id: "fundidor-de-cobre1" }),
       ] }),
@@ -765,7 +765,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("campfire", -320, 1.0, 0.3, 0.5),
           P("column", 330, 1.2, undefined, 0.26),
         ],
-        env: { terrain: "city", night: 0.2, glory: 0.56, fire: 0.18, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.2, glory: 0.56, fire: 0.18, verdure: 0.1 }, cast: [
         C("homem", -20, "stand", { dy: 0.58, facing: 1, id: "hirao-artifice", glow: 0.2 }),
         C("servo", 120, "kneel", { dy: 0.62, facing: -1, id: "aprendiz-de-hirao" }),
       ] }),
@@ -774,7 +774,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // que cobrem os globos. Jaquim e Boaz de pé, e o escriba lendo o rol.
       b(41, { q: "as duas colunas, e os globos dos capitéis que estavam sobre a cabeça das duas colunas",
         set: "portico-do-templo", props: PORTICO_DO_TEMPLO,
-        env: { terrain: "city", night: 0.12, glory: 0.66, storm: 0, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.12, glory: 0.66, storm: 0, verdure: 0.3 }, cast: [
         C("homem", -30, "write", { dy: 0.72, facing: 1, id: "escriba-da-obra" }),
         C("rei", 200, "stand", { dy: 0.66, facing: -1, id: "salomao" }),
       ] }),
@@ -782,7 +782,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // uma, cobrindo os globos dos capitéis. A câmera sobe pela coluna até o alto
       // e o escriba conta de cabeça erguida.
       b(42, { q: "E as quatrocentas romãs para as duas redes",
-        env: { terrain: "city", night: 0.1, glory: 0.7, verdure: 0.32 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.1, glory: 0.7, verdure: 0.32 }, cast: [
         C("homem", -105, "point", { dy: 0.78, facing: 1, id: "escriba-da-obra" }),
         C("servo", 105, "raise", { dy: 0.8, facing: -1, id: "aprendiz-de-hirao" }),
       ] }),
@@ -822,7 +822,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("church", 60, 1.25, undefined, 0.16),
           { ...P("sun", -60, 1.15, undefined, 0.64), sky: true },
         ],
-        env: { terrain: "city", night: 0.04, glory: 0.82, storm: 0, fire: 0.06, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.04, glory: 0.82, storm: 0, fire: 0.06, verdure: 0.26 }, cast: [
         C("homem", -190, "raise", { dy: 0.8, facing: 1, id: "hirao-artifice", glow: 0.24 }),
         C("servo", 200, "stand", { dy: 0.82, facing: -1, id: "fundidor-de-cobre2" }),
       ] }),
@@ -859,7 +859,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // luz aqui não entra pela janela — sai do metal.
       b(48, { q: "o altar de ouro, e a mesa de ouro, sobre a qual estavam os pães da proposição",
         set: "interior-dourado", props: INTERIOR_DOURADO,
-        env: { terrain: "glory", night: 0.3, glory: 0.72, storm: 0, fire: 0.1, verdure: 0.04 }, cast: [
+        env: { water: 0, terrain: "glory", night: 0.3, glory: 0.72, storm: 0, fire: 0.1, verdure: 0.04 }, cast: [
         C("rei", -25, "stand", { dy: 0.7, facing: 1, id: "salomao" }),
         C("anciao", 175, "bow", { dy: 0.74, facing: -1, id: "levita-do-tesouro" }),
       ] }),
@@ -881,7 +881,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("lampstand", 105, 0.9, undefined, 0.7),
           P("lampstand", 45, 0.9, undefined, 0.78),
         ],
-        env: { terrain: "glory", night: 0.38, glory: 0.85, storm: 0, fire: 0.18, verdure: 0.02 }, cast: [
+        env: { water: 0, terrain: "glory", night: 0.38, glory: 0.85, storm: 0, fire: 0.18, verdure: 0.02 }, cast: [
         C("anciao", -140, "stand", { dy: 0.86, facing: 1, id: "levita-do-tesouro" }),
         C("servo", 150, "kneel", { dy: 0.86, facing: -1, id: "servo-das-lampadas" }),
       ] }),
@@ -898,7 +898,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("lampstand", -310, 0.9, undefined, 0.5),
           P("column", 30, 1.25, undefined, 0.24),
         ],
-        env: { terrain: "glory", night: 0.34, glory: 0.8, storm: 0, fire: 0.14, verdure: 0.02 }, cast: [
+        env: { water: 0, terrain: "glory", night: 0.34, glory: 0.8, storm: 0, fire: 0.14, verdure: 0.02 }, cast: [
         C("servo", -150, "kneel", { dy: 0.78, facing: 1, id: "ourives-das-dobradicas" }),
         C("rei", 60, "stand", { dy: 0.8, facing: -1, id: "salomao" }),
       ] }),
@@ -909,7 +909,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // acompanha do corredor.
       b(51, { q: "então trouxe Salomão as coisas que seu pai Davi havia consagrado",
         set: "tesouros-da-casa", props: TESOUROS_DA_CASA,
-        env: { terrain: "glory", night: 0.16, glory: 0.92, storm: 0, fire: 0.08, verdure: 0.06 }, cast: [
+        env: { water: 0, terrain: "glory", night: 0.16, glory: 0.92, storm: 0, fire: 0.08, verdure: 0.06 }, cast: [
         C("rei", -110, "raise", { dy: 0.72, facing: 1, id: "salomao", glow: 0.3 }),
         C("anciao", 25, "bow", { dy: 0.76, facing: -1, id: "levita-do-tesouro" }),
         C("servo", 145, "walk", { dy: 0.8, facing: -1, id: "carregador-do-tesouro" }),

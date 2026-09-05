@@ -398,7 +398,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fire (env.fire sozinho não desenha chama nenhuma).
       b(9, { q: "tomou Samuel um cordeiro de mama, e sacrificou-o inteiro em holocausto ao Senhor",
         set: "mizpa-altar", props: MIZPA_ALTAR,
-        env: { night: 0.5, glory: 0.76, storm: 0.5, fire: 0.4 }, cast: [
+        env: { water: 0, night: 0.5, glory: 0.76, storm: 0.5, fire: 0.4 }, cast: [
         C("patriarca", -110, "kneel", { dy: 0.56, facing: 1, id: "samuel", glow: 0.75 }),
         C("homem", -240, "bow", { dy: 0.58, facing: 1, id: "homem-de-israel-em-mizpa1" }),
         C("rei", 290, "walk", { dy: 0.4, facing: -1, id: "maioral-filisteu1" }),
@@ -425,7 +425,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // direita; a torre de Mizpá já é pequena ao fundo.
       b(11, { q: "e perseguiram os filisteus, e os feriram até abaixo de Bete-Car",
         set: "bete-car", props: BETE_CAR,
-        env: { terrain: "field", night: 0.48, glory: 0.6, storm: 0.5, fire: 0.1, verdure: 0.26 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.48, glory: 0.6, storm: 0.5, fire: 0.1, verdure: 0.26 }, cast: [
         C("homem", -140, "walk", { dy: 0.58, facing: 1, id: "homem-de-israel-em-mizpa1" }),
         C("homem", -30, "walk", { dy: 0.66, facing: 1, id: "homem-de-israel-em-mizpa2" }),
         C("homem", 200, "walk", { dy: 0.52, facing: 1, id: "filisteu-de-mizpa2" }),
@@ -434,7 +434,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.12 — ⭐ a PEDRA entre Mizpá e Sem, chamada EBENÉZER: "ATÉ AQUI NOS
       // AJUDOU O SENHOR". Memorial, não batalha — sol aberto, storm zerado.
       b(12, { by: "patriarca", q: "e disse:", set: "eben-ezer", props: EBEN_EZER,
-        env: { terrain: "field", night: 0.2, glory: 0.82, storm: 0, fire: 0, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.2, glory: 0.82, storm: 0, fire: 0, verdure: 0.34 }, cast: [
         C("patriarca", -70, "raise", { dy: 0.54, facing: 1, id: "samuel", glow: 0.85 }),
         C("homem", 150, "stand", { dy: 0.6, facing: -1, id: "homem-de-israel-em-mizpa1" }),
         C("anciao", 245, "bow", { dy: 0.5, facing: -1, id: "anciao-de-israel1" }),
@@ -451,7 +451,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.14 — as cidades RESTITUÍDAS, de Ecrom até Gate, e PAZ com os amorreus.
       // Aqui a multidão cabe: é festa de povo, e o motor a desenha comemorando.
       b(14, { q: "houve paz entre Israel e entre os amorreus", set: "cidades", props: CIDADES,
-        env: { terrain: "city", night: 0.24, glory: 0.68, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.24, glory: 0.68, verdure: 0.3 }, cast: [
         C("multidao", 110, "stand", { dy: 0.6, id: "povo-de-israel-restituido" }),
         C("patriarca", -180, "stand", { dy: 0.48, facing: 1, id: "samuel", glow: 0.6 }),
         C("homem", 265, "stand", { dy: 0.44, facing: -1, id: "amorreu-em-paz" }),
@@ -460,7 +460,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // tribunal de estrada — dois que litigam diante dele, no caminho.
       b(15, { q: "E Samuel julgou a Israel todos os dias da sua vida",
         set: "circuito", props: CIRCUITO,
-        env: { terrain: "field", night: 0.3, glory: 0.55, verdure: 0.34 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.3, glory: 0.55, verdure: 0.34 }, cast: [
         C("patriarca", -170, "stand", { dy: 0.5, facing: 1, id: "samuel", glow: 0.58 }),
         C("homem", 30, "bow", { dy: 0.6, facing: 1, id: "litigante-de-israel1" }),
         C("mulherComum", 140, "kneel", { dy: 0.64, facing: -1, id: "litigante-de-israel2" }),
@@ -479,7 +479,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // um ALTAR ao Senhor. O capítulo fecha em casa, com o altar aceso pela
       // glória e não pela guerra.
       b(17, { q: "e edificou ali um altar ao Senhor", set: "rama", props: RAMA,
-        env: { terrain: "field", night: 0.24, glory: 0.74, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.24, glory: 0.74, verdure: 0.4 }, cast: [
         C("patriarca", 30, "kneel", { dy: 0.56, facing: 1, id: "samuel", glow: 0.8 }),
         C("homem", -220, "stand", { dy: 0.54, facing: 1, id: "litigante-de-israel1" }),
       ] }),

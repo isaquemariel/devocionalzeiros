@@ -691,7 +691,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("rock", 300, 1.0, undefined, 0.58),
           P("grass", 110, 0.78, undefined, 0.74),
         ],
-        env: { terrain: "field", night: 0.46, glory: 0.36, storm: 0.42, fire: 0.14, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.46, glory: 0.36, storm: 0.42, fire: 0.14, verdure: 0.2 }, cast: [
         C("homem", 90, "lie", { dy: 0.68, facing: -1, id: "sobaque" }),
         C("cavaleiro", -30, "lie", { dy: 0.62, facing: 1, id: "cavaleiro-sirio" }),
         C("rei", -230, "stand", { dy: 0.56, facing: 1, id: "davi" }),
@@ -709,7 +709,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("grass", 40, 0.78, undefined, 0.76),
           { ...P("sun", -60, 1.15, undefined, 0.62), sky: true },
         ],
-        env: { terrain: "field", night: 0.18, glory: 0.72, storm: 0.06, verdure: 0.4 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.18, glory: 0.72, storm: 0.06, verdure: 0.4 }, cast: [
         C("rei", -120, "stand", { dy: 0.6, facing: 1, id: "davi", glow: 0.3 }),
         C("rei", 70, "bow", { dy: 0.58, facing: -1, id: "rei-de-maaca" }),
         C("rei", 190, "bow", { dy: 0.52, facing: -1, id: "hadadezer" }),
@@ -755,7 +755,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // testemunha — e a luz cai para 0,08.
       b(4, { q: "Então enviou Davi mensageiros, e mandou trazê-la; e ela veio",
         set: "camara-real", props: CAMARA_REAL,
-        env: { terrain: "city", night: 0.66, glory: 0.08, storm: 0.12, verdure: 0.14 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.66, glory: 0.08, storm: 0.12, verdure: 0.14 }, cast: [
         C("rei", -60, "stand", { dy: 0.52, facing: 1, id: "davi" }),
         C("mulherComum", 90, "stand", { dy: 0.56, facing: -1, id: "bate-seba" }),
         C("servo", 260, "stand", { dy: 0.44, facing: -1, id: "mensageiro-de-davi" }),
@@ -764,7 +764,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Ela entrega o recado na mão de um servo — "ESTOU GRÁVIDA" — e é a única
       // fala dela no capítulo inteiro.
       b(5, { by: "mulherComum", q: "Estou grávida.", set: "casa-urias", props: CASA_DE_URIAS,
-        env: { terrain: "city", night: 0.34, glory: 0.14, storm: 0.2, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.34, glory: 0.14, storm: 0.2, verdure: 0.3 }, cast: [
         C("mulherComum", -60, "stand", { dy: 0.6, facing: 1, id: "bate-seba" }),
         C("servo", 90, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-davi" }),
       ] }),
@@ -772,7 +772,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // meio do cerco. A ordem sai do salão pela boca dele e desce pela estrada
       // na mão do mensageiro.
       b(6, { by: "rei", q: "Envia-me Urias, o heteu.", set: "salao-davi", props: SALAO_DE_DAVI,
-        env: { terrain: "city", night: 0.5, glory: 0.14, storm: 0.18, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.5, glory: 0.14, storm: 0.18, verdure: 0.2 }, cast: [
         C("rei", -50, "point", { dy: 0.46, facing: 1, id: "davi" }),
         C("servo", 120, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-davi" }),
       ] }),
@@ -802,7 +802,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pedra, a lanterna acesa, a casa dele em algum lugar lá embaixo.
       b(9, { q: "Porém Urias se deitou à porta da casa real, com todos os servos do seu senhor",
         set: "porta-casa-real", props: PORTA_DA_CASA_REAL,
-        env: { terrain: "city", night: 0.7, glory: 0.16, storm: 0.08, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.7, glory: 0.16, storm: 0.08, verdure: 0.12 }, cast: [
         C("homem", -30, "lie", { dy: 0.68, facing: 1, id: "urias" }),
         C("servo", 110, "lie", { dy: 0.62, facing: -1, id: "servo-da-porta1" }),
         C("servo", 230, "lie", { dy: 0.58, facing: -1, id: "servo-da-porta2" }),
@@ -839,7 +839,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // diante dele e o embebeda — e à tarde o homem torna a se deitar com os
       // servos, e não desce à sua casa. A taça no centro do quadro.
       b(13, { q: "e comeu e bebeu diante dele, e o embebedou", set: "mesa-do-rei", props: MESA_DO_REI,
-        env: { terrain: "city", night: 0.64, glory: 0.1, storm: 0.16, fire: 0.14, verdure: 0.12 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.64, glory: 0.1, storm: 0.16, fire: 0.14, verdure: 0.12 }, cast: [
         C("rei", -170, "stand", { dy: 0.52, facing: 1, id: "davi" }),
         C("homem", 20, "kneel", { dy: 0.66, facing: -1, id: "urias" }),
         C("servo", 170, "stand", { dy: 0.54, facing: -1, id: "servo-do-presente" }),
@@ -849,7 +849,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // é o pior detalhe do livro: "mandou-lha POR MÃO DE URIAS".
       b(14, { q: "pela manhã Davi escreveu uma carta a Joabe; e mandou-lha por mão de Urias",
         set: "gabinete-do-rei", props: GABINETE_DO_REI,
-        env: { terrain: "city", night: 0.36, glory: 0.12, storm: 0.24, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.12, storm: 0.24, verdure: 0.18 }, cast: [
         C("rei", -100, "write", { dy: 0.58, facing: 1, id: "davi" }),
         C("homem", 80, "stand", { dy: 0.62, facing: -1, id: "urias" }),
       ] }),
@@ -866,7 +866,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // heteu já andando para lá, os flecheiros na torre.
       b(16, { q: "pôs a Urias no lugar onde sabia que havia homens valentes",
         set: "muro-de-raba", props: MURO_DE_RABA,
-        env: { terrain: "city", night: 0.44, glory: 0.06, storm: 0.4, fire: 0.12, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.44, glory: 0.06, storm: 0.4, fire: 0.12, verdure: 0.16 }, cast: [
         C("homem", -190, "point", { dy: 0.6, facing: 1, id: "joabe" }),
         C("homem", -40, "walk", { dy: 0.66, facing: 1, id: "urias" }),
         C("homem", 150, "stand", { dy: 0.3, facing: -1, id: "valente-de-raba" }),
@@ -885,7 +885,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // já com a estrada nos pés.
       b(18, { q: "enviou Joabe, e fez saber a Davi todo o sucesso daquela peleja",
         set: "tenda-joabe", props: TENDA_DE_JOABE,
-        env: { terrain: "field", night: 0.52, glory: 0.08, storm: 0.3, fire: 0.18, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.52, glory: 0.08, storm: 0.3, fire: 0.18, verdure: 0.18 }, cast: [
         C("homem", -80, "stand", { dy: 0.6, facing: 1, id: "joabe" }),
         C("servo", 90, "stand", { dy: 0.58, facing: -1, id: "mensageiro-de-joabe" }),
       ] }),
@@ -928,7 +928,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // no meio do piso.
       b(22, { q: "fez saber a Davi tudo o que Joabe o enviara a dizer",
         set: "salao-davi", props: SALAO_DE_DAVI,
-        env: { terrain: "city", night: 0.54, glory: 0.1, storm: 0.2, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.54, glory: 0.1, storm: 0.2, verdure: 0.16 }, cast: [
         C("servo", 60, "kneel", { dy: 0.62, facing: -1, id: "mensageiro-de-joabe" }),
         C("rei", -110, "stand", { dy: 0.44, facing: 1, id: "davi" }),
       ] }),
@@ -964,7 +964,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // morreu e LAMENTA A SEU SENHOR. Uma figura só no pátio, em `bow`, sob a
       // lua — nenhuma multidão perto de um luto.
       b(26, { q: "lamentou a seu senhor", set: "luto-bate-seba", props: LUTO_DE_BATE_SEBA,
-        env: { terrain: "city", night: 0.74, glory: 0.05, storm: 0.14, verdure: 0.16 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.74, glory: 0.05, storm: 0.14, verdure: 0.16 }, cast: [
         C("mulherComum", -20, "bow", { dy: 0.66, facing: 1, id: "bate-seba" }),
         C("servo", 180, "kneel", { dy: 0.58, facing: -1, id: "serva-da-casa-de-urias" }),
       ] }),
@@ -974,7 +974,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // AOS OLHOS DO SENHOR". Sem balão, sem voz do céu: só a luz caindo a 0,02.
       b(27, { q: "Porém esta coisa que Davi fez pareceu mal aos olhos do Senhor.",
         set: "casa-de-davi", props: CASA_DE_DAVI,
-        env: { terrain: "city", night: 0.86, glory: 0.02, storm: 0.24, fire: 0.06, verdure: 0.08 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.86, glory: 0.02, storm: 0.24, fire: 0.06, verdure: 0.08 }, cast: [
         C("rei", -110, "stand", { dy: 0.5, facing: 1, id: "davi" }),
         C("mulherComum", 20, "stand", { dy: 0.56, facing: -1, id: "bate-seba" }),
         C("servo", 150, "lie", { dy: 0.6, facing: -1, id: "crianca-de-bate-seba", scale: 0.45 }),
@@ -1292,7 +1292,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // quadro): o povo entrando pela brecha atrás do rei.
       b(29, { q: "Então ajuntou Davi a todo o povo, e marchou para Rabá, e pelejou contra ela, e a tomou.",
         set: "raba-tomada", props: RABA_TOMADA,
-        env: { terrain: "city", night: 0.36, glory: 0.5, storm: 0.24, fire: 0.2, verdure: 0.2 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.36, glory: 0.5, storm: 0.24, fire: 0.2, verdure: 0.2 }, cast: [
         C("rei", -110, "walk", { dy: 0.62, facing: 1, id: "davi" }),
         C("multidao", 130, "raise", { dy: 0.5, facing: -1, id: "povo-de-israel-em-raba" }),
         C("homem", 250, "stand", { dy: 0.56, facing: -1, id: "joabe" }),
@@ -1301,7 +1301,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // tirada da cabeça dele e posta sobre a cabeça de Davi. A coroa está no
       // palco como prop com tag; o rei vencido de joelhos, Davi de pé com ela.
       b(30, { q: "cujo peso era de um talento de ouro, e havia nela pedras preciosas, e foi posta sobre a cabeça de Davi",
-        env: { terrain: "city", night: 0.26, glory: 0.7, storm: 0.1, fire: 0.14, verdure: 0.24 }, cast: [
+        env: { water: 0, terrain: "city", night: 0.26, glory: 0.7, storm: 0.1, fire: 0.14, verdure: 0.24 }, cast: [
         C("rei", -110, "raise", { dy: 0.64, facing: 1, id: "davi", glow: 0.36 }),
         C("rei", 90, "kneel", { dy: 0.6, facing: -1, id: "rei-de-raba" }),
         C("homem", 250, "stand", { dy: 0.54, facing: -1, id: "joabe" }),
@@ -1312,7 +1312,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // aceso, os prisioneiros em trabalho forçado e a estrada de volta.
       b(31, { q: "e voltou Davi e todo o povo para Jerusalém.",
         set: "forno-de-tijolos", props: FORNO_DE_TIJOLOS,
-        env: { terrain: "field", night: 0.48, glory: 0.32, storm: 0.26, fire: 0.28, verdure: 0.18 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.48, glory: 0.32, storm: 0.26, fire: 0.28, verdure: 0.18 }, cast: [
         C("homem", -10, "bow", { dy: 0.66, facing: 1, id: "amonita-do-forno1" }),
         C("homem", 110, "kneel", { dy: 0.62, facing: -1, id: "amonita-do-forno2" }),
         C("rei", 250, "walk", { dy: 0.56, facing: 1, id: "davi" }),

@@ -557,7 +557,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(24, "a tua grandeza e a tua forte mão"),                               // exalta a grandeza do Senhor
       // v.25 — "deixa-me passar, para ver a boa terra e a boa montanha".
       b(25, { by: "moises", q: "me deixes passar, para que veja esta boa terra", set: "pisga", props: PISGA,
-        env: { terrain: "field", glory: 0.5, night: 0.16, verdure: 0.36 }, cast: [
+        env: { water: 0.15, terrain: "field", glory: 0.5, night: 0.16, verdure: 0.36 }, cast: [
         C("moises", -40, "raise", { dy: 0.46, facing: 1, glow: 0.2 }),
       ] }),
       // v.26 — o Senhor se INDIGNA: "não me fales mais deste assunto".
@@ -565,12 +565,12 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -20, "bow", { dy: 0.52, facing: 1 }),
       ] }),
       // v.27 — SOBE AO CUME DO PISGA e vê a terra; não passará o Jordão. ÍCONE solene.
-      b(27, { by: "moises", q: "Sobe ao cume de Pisga", env: { terrain: "mountain", glory: 0.4, night: 0.28, verdure: 0.16 }, cast: [
+      b(27, { by: "moises", q: "Sobe ao cume de Pisga", env: { water: 0.15, terrain: "mountain", glory: 0.4, night: 0.28, verdure: 0.16 }, cast: [
         C("moises", -30, "point", { dy: 0.36, facing: 1, glow: 0.25 }),
       ] }),
       // v.28 — anima e fortalece JOSUÉ, que passará adiante.
       b(28, { by: "moises", q: "anima-o, e fortalece-o", set: "moabe2", props: MOABE,
-        env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.4 }, cast: [
+        env: { water: 0.15, terrain: "field", glory: 0.56, night: 0.12, verdure: 0.4 }, cast: [
         C("moises", -140, "raise", { dy: 0.5, facing: 1, glow: 0.18 }),
         C("servo", 120, "stand", { dy: 0.5, facing: -1, id: "josue", glow: 0.2 }),
       ] }),

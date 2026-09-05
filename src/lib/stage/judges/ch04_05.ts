@@ -408,7 +408,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       //        (glória mais alta do capítulo: `field`, para o sol de glória entrar —
       //        `mountain` escurece o céu, e Baraque desce do Tabor logo em seguida.)
       b(14, { by: "mulherComum", q: "Então disse Débora a Baraque:", set: "tabor", props: TABOR,
-        env: { terrain: "field", night: 0.2, glory: 0.72, storm: 0.1, verdure: 0.3 }, cast: [
+        env: { water: 0, terrain: "field", night: 0.2, glory: 0.72, storm: 0.1, verdure: 0.3 }, cast: [
         C("mulherComum", -120, "point", { dy: 0.5, facing: 1, id: "debora-juiza" }),
         C("servo", 70, "raise", { dy: 0.54, facing: -1, id: "baraque" }),
         C("multidao", 240, "stand", { dy: 0.34, facing: 1 }),
@@ -513,7 +513,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.5 — os montes se derreteram; até o Sinai, diante do Deus de Israel.
       b(5, { by: "mulherComum", q: "Os montes se derreteram diante do Senhor", set: "sinai", props: SINAI,
-        env: { terrain: "mountain", night: 0.34, glory: 0.85, storm: 0.4, verdure: 0.1 }, cast: [
+        env: { water: 0, terrain: "mountain", night: 0.34, glory: 0.85, storm: 0.4, verdure: 0.1 }, cast: [
         C("mulherComum", 210, "bow", { dy: 0.66, facing: -1, id: "debora-juiza" }),
       ] }),
       // v.6 — nos dias de Sangar e de Jael, cessaram os caminhos: veredas torcidas.

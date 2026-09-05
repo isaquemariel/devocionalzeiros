@@ -57,6 +57,14 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
 2. **`multidao` ignora a pose** e é SEMPRE desenhada comemorando (braços erguidos,
    palmas). Nunca no 1º plano de morte/juízo/luto — ali use figuras individuais
    (`homem`/`mulherComum`/`servo`) em `lie`/`bow`/`kneel`.
+2b. **Escala e profundidade.** `dy` baixo é FUNDO e sai pequeno. O protagonista
+   de um beat de clímax precisa de `dy` alto (0,7-0,9) e/ou `scale` 1,3-1,6,
+   senão fica menor que os figurantes — o rei que rasga as vestes, Hulda e Ciro
+   saíam todos assim. Um objeto que É o assunto do versículo (o livro achado, a
+   carta, a coroa) precisa de `scale` 1,8-2,5: no tamanho natural, o rolo da lei
+   lia-se como um banco de pedra.
+   **`palette` (cor hex) troca a veste e TIRA a coroa E A AURÉOLA** — é como se
+   conta quem não está no seu traje próprio (saco e cinza, disfarce, morto).
 3. **`mulher` ignora a pose** e é sempre dourada e em pé. Para deitar/curvar/ajoelhar,
    ou para qualquer mulher que não seja figura de glória, use **`mulherComum`**.
    Isto vale para TODOS os papéis desenhados por `rpgStageBeings` — `multidao`,
@@ -86,8 +94,19 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    Use `water` só quando a água É o assunto (o Nilo do Egito, o Jordão, o mar
    que brame); para um poço ou um tanque na cena, o prop (`well`, `pool`,
    `river`) basta e não alaga o horizonte.
-5. **`terrain:"mountain"` escurece o céu** e mata o sol de glória. Cena de bênção ou
-   glória radiante → `field`/`desert`.
+   **E `env` é `Object.assign`: a chave que você OMITE mantém o valor do beat
+   anterior.** Depois de um beat com `water` alto, todo beat seguinte que não o
+   zerar continua alagado — mesmo mudando de `set` e de terreno. Hesbom, a
+   ferraria de Israel (1Sm 13:19), o palácio de Davi e a casa de Faraó saíram
+   com o casario dentro do mar por causa disto, em 220 beats de oito livros.
+   Ao trocar de lugar, **declare `water` explicitamente** (0 se ali não há
+   água). O `checkup-stage` acusa como `agua-herdada`.
+5. **`terrain:"city"` DESENHA O CASARIO** — a silhueta de uma cidade inteira ao
+   fundo, e nenhum prop a apaga. No versículo em que a cidade é queimada ou o
+   muro é derribado, use `field` e conte a ruína por `campfire` grande e `rock`;
+   com `city`, Jerusalém aparecia intacta atrás de 2Cr 36:19.
+   **`terrain:"mountain"` escurece o céu** e mata o sol de glória. Cena de bênção
+   ou glória radiante → `field`/`desert`.
 6. **Props e cast VAZAM por herança** entre beats: no beat de clímax, declare os seus
    próprios `props`/`cast` para não herdar o cenário anterior.
 7. **Quem fala tem de estar no cast do beat**, e ser o PRIMEIRO do seu papel — o balão
