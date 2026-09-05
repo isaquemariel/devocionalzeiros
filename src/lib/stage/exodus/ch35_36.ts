@@ -101,7 +101,7 @@ const LISTA_ARCA: StagePropSpec[] = [
   P("grass", 40, 0.8, undefined, 0.88),
 ];
 const LISTA_MESA: StagePropSpec[] = [
-  { ...P("stall", -20, 1.15, undefined, 0.46), tag: "mesa-proposicao" },
+  { ...P("table", -20, 1.15, undefined, 0.46), tag: "mesa-proposicao" },
   P("bowl", 110, 0.7, 0, 0.62),
   P("bowl", 180, 0.65, 0, 0.72),
   P("tent", -260, 1, undefined, 0.16),

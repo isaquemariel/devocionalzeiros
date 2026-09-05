@@ -232,7 +232,7 @@ const OFICINA_DE_OURO: StagePropSpec[] = [
 // O PÁTIO DO CARRO NOVO — a jangada de madeira nova em que nunca se carregou
 // nada, as duas vacas de leite que nunca levaram jugo e o cofre do ouro.
 const CARRO_NOVO: StagePropSpec[] = [
-  { ...P("stall", -40, 1.25, undefined, 0.46), tag: "carro-novo-dos-filisteus" },
+  { ...P("chariot", -40, 1.25, undefined, 0.46), tag: "carro-novo-dos-filisteus" },
   P("tent", -270, 1.15, undefined, 0.26),
   { ...P("crate", 110, 0.85, undefined, 0.6), tag: "cofre-de-ouro-dos-filisteus" },
   P("bush", 250, 0.9, undefined, 0.4),
@@ -244,7 +244,7 @@ const CARRO_NOVO: StagePropSpec[] = [
 // carro com a arca em cima seguindo sozinho, a árvore do marco e o mato da
 // beira. Nenhum boieiro guia: as vacas vão direto.
 const ESTRADA: StagePropSpec[] = [
-  { ...P("stall", -60, 1.2, undefined, 0.52), tag: "carro-novo-dos-filisteus" },
+  { ...P("chariot", -60, 1.2, undefined, 0.52), tag: "carro-novo-dos-filisteus" },
   { ...P("ark", 0, 1.0, undefined, 0.36), tag: "arca-do-concerto" },
   P("rock", -280, 1.0, undefined, 0.46),
   P("bush", 130, 0.9, undefined, 0.4),
@@ -269,7 +269,7 @@ const CAMPO_DE_TRIGO: StagePropSpec[] = [
 // que virou altar-mesa, a madeira do carro fendida e ardendo em holocausto.
 const PEDRA_GRANDE: StagePropSpec[] = [
   { ...P("rock", -20, 1.6, undefined, 0.5), tag: "pedra-de-abel" },
-  { ...P("stall", -230, 1.1, undefined, 0.42), tag: "carro-novo-dos-filisteus" },
+  { ...P("chariot", -230, 1.1, undefined, 0.42), tag: "carro-novo-dos-filisteus" },
   P("altar", 170, 1.05, 1, 0.46),
   P("sheaf", 280, 0.95, undefined, 0.6),
   P("tree", 320, 1.05, undefined, 0.18),
@@ -742,7 +742,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // enviareis, PARA QUE SE VÁ". Props próprios — a arca agora está em cima.
       b(8, { by: "anciao", q: "Então tomai a arca do Senhor, e ponde-a sobre o carro",
         props: [
-          { ...P("stall", -40, 1.25, undefined, 0.5), tag: "carro-novo-dos-filisteus" },
+          { ...P("chariot", -40, 1.25, undefined, 0.5), tag: "carro-novo-dos-filisteus" },
           { ...P("ark", 20, 1.0, undefined, 0.32), tag: "arca-do-concerto" },
           { ...P("crate", 120, 0.85, undefined, 0.62), tag: "cofre-de-ouro-dos-filisteus" },
           P("tent", -270, 1.15, undefined, 0.26),
@@ -825,7 +825,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           { ...P("ark", -20, 1.0, undefined, 0.34), tag: "arca-do-concerto" },
           { ...P("crate", 110, 0.85, undefined, 0.62), tag: "cofre-de-ouro-dos-filisteus" },
           P("altar", 200, 1.05, 1, 0.46),
-          { ...P("stall", -250, 1.05, undefined, 0.42), tag: "carro-novo-dos-filisteus" },
+          { ...P("chariot", -250, 1.05, undefined, 0.42), tag: "carro-novo-dos-filisteus" },
           P("sheaf", 300, 0.95, undefined, 0.62),
           P("grass", 90, 0.74, undefined, 0.78),
         ],

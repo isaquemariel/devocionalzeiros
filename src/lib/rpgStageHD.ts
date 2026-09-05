@@ -1569,6 +1569,7 @@ const PROP_MULT: Record<string, number> = {
   // uma coroa fica maior que a cabeça que a usaria).
   spear: 0.9, crown: 1.15, harp: 1.1, pool: 1.05,
   column: 1.25,   // coluna de predio: mais alta que gente, menor que torre
+  table: 1.1,     // a mesa dos paes da proposicao: movel, na altura da cintura
   // o carro de Absalão é veículo de guerra e tem de dominar; a mula é menor
   // que o cavalo na vida real, e drawMountHD desenha as duas quase iguais.
   chariot: 1.15, horse: 1.0, donkey: 0.85,
@@ -1925,6 +1926,46 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
           g.beginPath(); g.moveTo(sx, sy); g.lineTo(sx - 1.6 * S, sy + 5.5 * S); g.stroke();
         }
       }
+      g.restore();
+      return;
+    }
+    case "table": {
+      // A MESA DOS PÃES DA PROPOSIÇÃO (Êx 25:23-30): acácia coberta de ouro,
+      // "uma coroa de ouro ao redor", quatro pés, e sobre ela os doze pães
+      // "perante a minha face perpetuamente". Existe porque a mesa vinha sendo
+      // desenhada com o prop `stall` — que é uma BANCA DE MERCADO, com toldo
+      // listrado e romãs sobre a bancada. O móvel mais santo do santuário saía
+      // como barraca de feira em Êxodo, Levítico, Números e Samuel.
+      softShadow(g, x, fy, 20 * S, 0.3);
+      g.save();
+      const legG = g.createLinearGradient(x, fy - 15 * S, x, fy);
+      legG.addColorStop(0, "#d9b25e"); legG.addColorStop(1, "#8a6522");
+      g.fillStyle = legG;
+      for (const dx of [-13, -8.5, 8.5, 13]) rr(g, x + dx * S, fy - 15 * S, 2.6 * S, 15 * S, 0.9 * S), g.fill();
+      // travessa entre os pés
+      g.fillStyle = "#a57d2c";
+      rr(g, x - 13 * S, fy - 7.5 * S, 28.6 * S, 1.8 * S, 0.8 * S); g.fill();
+      // tampo
+      const topG = g.createLinearGradient(x, fy - 20 * S, x, fy - 14 * S);
+      topG.addColorStop(0, "#f2d98a"); topG.addColorStop(1, "#c39a34");
+      g.fillStyle = topG;
+      rr(g, x - 17 * S, fy - 19.5 * S, 34 * S, 4.4 * S, 1.2 * S); g.fill();
+      // "uma coroa de ouro ao redor" — o friso saliente da borda
+      g.fillStyle = "#ffe9a8";
+      rr(g, x - 18 * S, fy - 21.4 * S, 36 * S, 2.2 * S, 1 * S); g.fill();
+      // os doze pães, em duas fileiras de seis
+      g.fillStyle = "#e8cf9a";
+      for (let i2 = 0; i2 < 6; i2++) {
+        const bx = x + (i2 - 2.5) * 5.2 * S;
+        rr(g, bx - 2.1 * S, fy - 25.4 * S, 4.2 * S, 4.2 * S, 1.1 * S); g.fill();
+        rr(g, bx - 2.1 * S, fy - 29.2 * S, 4.2 * S, 4 * S, 1.1 * S); g.fill();
+      }
+      g.strokeStyle = "rgba(120,90,40,0.35)"; g.lineWidth = 0.7 * S;
+      for (let i2 = 0; i2 < 6; i2++) {
+        const bx = x + (i2 - 2.5) * 5.2 * S;
+        g.beginPath(); g.moveTo(bx - 2.1 * S, fy - 25.4 * S); g.lineTo(bx + 2.1 * S, fy - 25.4 * S); g.stroke();
+      }
+      glowCircle(g, x, fy - 22 * S, 22 * S, "#ffe9b0", 0.16);
       g.restore();
       return;
     }

@@ -472,7 +472,7 @@ const JERUSALEM_ANJO: StagePropSpec[] = [
 // templo (2Cr 3:1).
 const EIRA: StagePropSpec[] = [
   { ...P("sheaf", -50, 1.1, undefined, 0.56), tag: "eira-de-arauna" },
-  { ...P("stall", 100, 1.05, undefined, 0.36), tag: "trilhos-e-aparelho-dos-bois" },
+  { ...P("crate", 100, 1.05, undefined, 0.36), tag: "trilhos-e-aparelho-dos-bois" },
   P("rock", -280, 1.15, undefined, 0.3),
   P("tower", 235, 1.2, undefined, 0.2),
   P("crate", 190, 0.85, undefined, 0.66),
@@ -1162,7 +1162,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(24, { by: "rei", q: "Porém o rei disse a Araúna:",
         props: [
           { ...P("sheaf", -50, 1.1, undefined, 0.56), tag: "eira-de-arauna" },
-          { ...P("stall", 100, 1.05, undefined, 0.36), tag: "trilhos-e-aparelho-dos-bois" },
+          { ...P("crate", 100, 1.05, undefined, 0.36), tag: "trilhos-e-aparelho-dos-bois" },
           { ...P("bowl", -175, 0.9, undefined, 0.64), tag: "cinquenta-siclos-de-prata" },
           P("rock", -285, 1.15, undefined, 0.3),
           P("tower", 240, 1.2, undefined, 0.2),
@@ -1183,7 +1183,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           { ...P("altar", -20, 1.25, 1, 0.52), tag: "altar-da-eira-de-arauna" },
           { ...P("sheaf", -175, 1.0, undefined, 0.6), tag: "eira-de-arauna" },
-          { ...P("stall", 120, 1.0, undefined, 0.34), tag: "trilhos-e-aparelho-dos-bois" },
+          { ...P("crate", 120, 1.0, undefined, 0.34), tag: "trilhos-e-aparelho-dos-bois" },
           P("rock", -290, 1.15, undefined, 0.3),
           P("tower", 245, 1.2, undefined, 0.2),
           { ...P("sun", 200, 1.3, undefined, 0.6), sky: true },

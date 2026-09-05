@@ -169,7 +169,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", 130, "stand", { dy: 0.52 }),
       ] }),
       b(17, { by: "deus", q: "sete dias se comerão pães ázimos", set: "azimos", props: [ // a festa dos ÁZIMOS: sete dias de pão sem fermento
-        { ...P("stall", -40, 1.15, undefined, 0.5), tag: "mesa-azimos" },
+        { ...P("table", -40, 1.15, undefined, 0.5), tag: "mesa-azimos" },
         { ...P("campfire", 110, 1.0, 0.85, 0.64), tag: "cordeiro-assado" },
         { ...P("tent", -250, 1.3, undefined, 0.14), tag: "tabernaculo" },
         P("bowl", 215, 0.85, undefined, 0.56),

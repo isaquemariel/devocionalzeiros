@@ -208,7 +208,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // nada sobra, a porta onde NÃO se sacrifica, o lugar do Nome ao pôr do
       // sol, a volta às tendas de madrugada e a solenidade do sétimo dia.
       b(3, { by: "moises", q: "sete dias nela comerás pães ázimos, pão de aflição", set: "pao-de-aflicao", props: [
-        { ...P("stall", -30, 1.15, undefined, 0.52), tag: "mesa-azimos" },
+        { ...P("table", -30, 1.15, undefined, 0.52), tag: "mesa-azimos" },
         P("bowl", 90, 0.9, undefined, 0.66),
         P("campfire", 205, 0.95, 0.75, 0.56),
         P("tent", -260, 1.1, undefined, 0.24),
@@ -218,7 +218,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(4, { by: "moises", q: "nada ficará até à manhã", set: "manha-da-pascoa", props: [
         { ...P("sun", -200, 0.95, undefined, 0.16), sky: true },
-        { ...P("stall", 40, 1.1, undefined, 0.54), tag: "mesa-azimos" },
+        { ...P("table", 40, 1.1, undefined, 0.54), tag: "mesa-azimos" },
         P("tent", 250, 1.1, undefined, 0.28),
         P("grass", -60, 0.82, undefined, 0.84),
       ], env: { terrain: "field", glory: 0.5, night: 0.3, fire: 0, verdure: 0.3 } }),

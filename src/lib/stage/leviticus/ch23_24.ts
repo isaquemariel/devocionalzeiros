@@ -91,7 +91,7 @@ const ARRAIAL_RIXA: StagePropSpec[] = [
 const LUZ_PAO: StagePropSpec[] = [
   { ...P("tent", -20, 1.5, undefined, 0.06), tag: "tabernaculo" },
   { ...P("menorah", -120, 1.15, undefined, 0.44), tag: "candelabro-ouro" },
-  { ...P("stall", 120, 1.05, undefined, 0.46), tag: "mesa-proposicao" },
+  { ...P("table", 120, 1.05, undefined, 0.46), tag: "mesa-proposicao" },
   P("tower", -300, 1.15, undefined, 0.06),
   P("palm", 260, 1.0, undefined, 0.16),
   P("grass", -60, 0.8, undefined, 0.82),

@@ -198,7 +198,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(18, { by: "deus", q: "o peito da oferta de movimento, e o ombro direito", props: [ // a carne é do sacerdote: o peito movido e o ombro direito
         { ...P("tent", -250, 1.3, undefined, 0.14), tag: "tenda-congregacao" },
-        { ...P("stall", -30, 1.1, undefined, 0.52), tag: "coisas-santas" },
+        { ...P("table", -30, 1.1, undefined, 0.52), tag: "coisas-santas" },
         { ...P("bowl", 110, 0.9, undefined, 0.66), tag: "ofertas-santuario" },
         P("amphora", 205, 0.8, undefined, 0.56),
         P("grass", 300, 0.78, undefined, 0.82),
@@ -283,7 +283,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(31, { by: "deus", q: "porque vosso galardão é pelo vosso ministério", props: [ // o galardão do levita: come em toda parte, com a sua casa
         { ...P("tent", -230, 1.3, undefined, 0.3), tag: "tenda-familia" },
-        { ...P("stall", -40, 1.05, undefined, 0.58), tag: "coisas-santas" },
+        { ...P("table", -40, 1.05, undefined, 0.58), tag: "coisas-santas" },
         P("bowl", 75, 0.9, undefined, 0.7),
         P("amphora", 175, 0.85, undefined, 0.6),
         P("campfire", 285, 0.9, 0.7, 0.5),

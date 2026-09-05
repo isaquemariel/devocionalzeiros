@@ -140,7 +140,7 @@ const ERGUER_MESA: StagePropSpec[] = [
   { ...P("tent", 0, 1.6, undefined, 0.36), tag: "tabernaculo" },
   { ...P("ark", -230, 0.85, undefined, 0.54), tag: "arca-testemunho" },
   { ...P("door", -140, 0.9, undefined, 0.62), tag: "veu-santissimo" },
-  { ...P("stall", 110, 0.9, undefined, 0.58), tag: "mesa-proposicao" },
+  { ...P("table", 110, 0.9, undefined, 0.58), tag: "mesa-proposicao" },
   { ...P("menorah", 225, 1.0, undefined, 0.62), tag: "candelabro-ouro" },
 ];
 const ERGUER_INCENSO: StagePropSpec[] = [

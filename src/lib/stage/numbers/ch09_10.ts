@@ -111,7 +111,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(11, { by: "deus", q: "com pães ázimos e ervas amargas a comerão", props: [ // a segunda páscoa, à tarde: os ázimos e as ervas amargas
         { ...P("tent", -230, 1.35, undefined, 0.16), tag: "tabernaculo" },
-        { ...P("stall", -40, 1.05, undefined, 0.5), tag: "mesa-azimos" },
+        { ...P("table", -40, 1.05, undefined, 0.5), tag: "mesa-azimos" },
         { ...P("campfire", 110, 1.0, 0.9, 0.66), tag: "cordeiro-assado" },
         P("bowl", 215, 0.8, undefined, 0.54),
         P("grass", 290, 0.8, undefined, 0.8),

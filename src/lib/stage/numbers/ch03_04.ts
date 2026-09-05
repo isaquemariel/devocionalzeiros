@@ -160,7 +160,7 @@ const COATE_AO_SUL: StagePropSpec[] = [
 // os utensílios do santuário e o véu — as coisas santíssimas, uma a uma.
 const GUARDA_SANTISSIMA: StagePropSpec[] = [
   { ...P("ark", -230, 0.95, undefined, 0.42), tag: "arca-testemunho" },
-  { ...P("stall", -120, 1.0, undefined, 0.5), tag: "mesa-proposicao" },
+  { ...P("table", -120, 1.0, undefined, 0.5), tag: "mesa-proposicao" },
   { ...P("menorah", -10, 1.0, 0.5, 0.56), tag: "candelabro-ouro" },
   { ...P("altar", 105, 0.85, 0.4, 0.48), tag: "altar-incenso" },
   { ...P("bowl", 195, 0.8, undefined, 0.62), tag: "ofertas-santuario" },
@@ -416,7 +416,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 60, "bow", { dy: 0.62, facing: 1, id: "eleazar" }),
       ] }),
       b(7, { by: "deus", q: "sobre a mesa da proposição estenderão um pano azul", props: EMBRULHO( // a MESA da proposição, com os pratos, as taças e o pão contínuo
-        { ...P("stall", -30, 1.1, undefined, 0.46), tag: "mesa-proposicao" },
+        { ...P("table", -30, 1.1, undefined, 0.46), tag: "mesa-proposicao" },
         { ...P("bowl", 90, 0.85, undefined, 0.62), tag: "ofertas-santuario" },
         P("amphora", 175, 0.8, undefined, 0.54),
         P("amphora", 240, 0.7, undefined, 0.46),
@@ -425,7 +425,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 25, "bow", { dy: 0.66, facing: 1, id: "itamar" }),
       ] }),
       b(8, { by: "deus", q: "um pano de carmesim", props: EMBRULHO(               // sobre a mesa, o pano de CARMESIM, e depois as peles e os varais
-        { ...P("stall", -60, 1.1, undefined, 0.5), tag: "mesa-proposicao" },
+        { ...P("table", -60, 1.1, undefined, 0.5), tag: "mesa-proposicao" },
         P("crate", 65, 0.9, undefined, 0.64),
         P("crate", 165, 0.8, undefined, 0.56),
       ), env: { glory: 0.66 }, cast: [

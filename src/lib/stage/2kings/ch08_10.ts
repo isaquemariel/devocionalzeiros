@@ -587,7 +587,7 @@ const JIZREEL_VARRIDA: StagePropSpec[] = [
 // da tosquia, o poço onde os quarenta e dois foram mortos, a árvore de sombra e
 // a espada. Um lugar de trabalho manso escolhido para uma matança.
 const BETE_EQUEDE_DA_TOSQUIA: StagePropSpec[] = [
-  { ...P("stall", -150, 1.15, undefined, 0.34), tag: "casa-da-tosquia" },
+  { ...P("crate", -150, 1.15, undefined, 0.34), tag: "casa-da-tosquia" },
   { ...P("well", 20, 1.0, undefined, 0.46), tag: "poco-de-bete-equede" },
   P("tree", 170, 1.1, undefined, 0.24),
   P("sword", 250, 0.9, undefined, 0.44),

@@ -71,7 +71,7 @@ const TERRA_PROMESSA: StagePropSpec[] = [
 // A FESTA DOS ÁZIMOS (Êx 13:6-7): a mesa dos sete dias, o pão sem levedura, e
 // o fermento varrido de todos os termos da casa.
 const AZIMOS: StagePropSpec[] = [
-  { ...P("stall", 0, 1.15, undefined, 0.46), tag: "mesa-azimos" },
+  { ...P("table", 0, 1.15, undefined, 0.46), tag: "mesa-azimos" },
   P("tent", -230, 1.1, undefined, 0.16),
   P("tent", 240, 1.0, undefined, 0.2),
   P("crate", -110, 0.8, undefined, 0.62),

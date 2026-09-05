@@ -340,7 +340,7 @@ const BAALIM_DE_JUDA: StagePropSpec[] = [
 const CASA_DE_ABINADABE: StagePropSpec[] = [
   P("church", -215, 1.2, undefined, 0.24),
   P("door", -105, 1.0, undefined, 0.32),
-  { ...P("stall", 30, 1.25, undefined, 0.46), tag: "carro-novo-de-abinadabe" },
+  { ...P("chariot", 30, 1.25, undefined, 0.46), tag: "carro-novo-de-abinadabe" },
   { ...P("ark", 130, 1.05, undefined, 0.4), tag: "arca-do-concerto" },
   P("tree", 265, 1.15, undefined, 0.2),
   P("rock", -310, 0.95, undefined, 0.58),
@@ -351,7 +351,7 @@ const CASA_DE_ABINADABE: StagePropSpec[] = [
 // andando: o carro novo à frente, a arca em cima, as HARPAS e as TROMBETAS do
 // povo, a palmeira do caminho. Tudo alegre, tudo errado.
 const CAMINHO_DA_FOLIA: StagePropSpec[] = [
-  { ...P("stall", -140, 1.2, undefined, 0.44), tag: "carro-novo-de-abinadabe" },
+  { ...P("chariot", -140, 1.2, undefined, 0.44), tag: "carro-novo-de-abinadabe" },
   { ...P("ark", -35, 1.05, undefined, 0.38), tag: "arca-do-concerto" },
   { ...P("harp", 105, 1.0, undefined, 0.6), tag: "harpas-da-folia-de-israel" },
   { ...P("trumpet", 215, 0.95, undefined, 0.56), tag: "trombetas-da-subida-da-arca" },
@@ -364,7 +364,7 @@ const CAMINHO_DA_FOLIA: StagePropSpec[] = [
 // tropeçam: o carro novo inclinado, a arca pendendo, os feixes da eira em
 // volta. O palco esvazia de gente de propósito — aqui não há multidão nenhuma.
 const EIRA_DE_NACOM: StagePropSpec[] = [
-  { ...P("stall", -60, 1.25, undefined, 0.48), tag: "carro-novo-de-abinadabe" },
+  { ...P("chariot", -60, 1.25, undefined, 0.48), tag: "carro-novo-de-abinadabe" },
   { ...P("ark", 55, 1.1, undefined, 0.42), tag: "arca-do-concerto" },
   { ...P("sheaf", 175, 0.95, undefined, 0.62), tag: "eira-de-nacom" },
   P("sheaf", -180, 0.9, undefined, 0.6),

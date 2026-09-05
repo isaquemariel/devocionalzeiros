@@ -248,7 +248,7 @@ const EN_GEDI: StagePropSpec[] = [
 // O fundo é escuro; quem está atrás vê quem entra, e quem entra não vê ninguém.
 const CAVERNA_EN_GEDI: StagePropSpec[] = [
   { ...P("rock", 30, 1.95, undefined, 0.34), tag: "caverna-de-en-gedi" },
-  { ...P("stall", -225, 1.1, undefined, 0.44), tag: "currais-do-caminho-de-en-gedi" },
+  { ...P("crate", -225, 1.1, undefined, 0.44), tag: "currais-do-caminho-de-en-gedi" },
   P("palm", 285, 1.15, undefined, 0.2),
   P("bush", 170, 0.9, undefined, 0.6),
   P("grass", -85, 0.8, undefined, 0.76),

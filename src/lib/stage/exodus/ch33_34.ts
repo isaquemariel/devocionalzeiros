@@ -73,7 +73,7 @@ const TABUAS: StagePropSpec[] = [
 // as nações lançadas fora e o território alargado, a páscoa que não fica da
 // noite para a manhã, e as primícias trazidas à casa do Senhor.
 const FESTA_AZIMOS: StagePropSpec[] = [
-  { ...P("stall", 70, 1.15, undefined, 0.46), tag: "mesa-azimos" },
+  { ...P("table", 70, 1.15, undefined, 0.46), tag: "mesa-azimos" },
   P("rock", 0, 1.6, undefined, 0.24),
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),

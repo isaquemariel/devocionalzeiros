@@ -144,7 +144,7 @@ const ARCA_QUERUBINS: StagePropSpec[] = [
   P("rock", 305, 1.05, undefined, 0.52),
 ];
 const MESA: StagePropSpec[] = [
-  { ...P("stall", 0, 1.1, undefined, 0.44), tag: "mesa-proposicao" },
+  { ...P("table", 0, 1.1, undefined, 0.44), tag: "mesa-proposicao" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),
   P("grass", -40, 0.78, undefined, 0.82),
@@ -153,20 +153,20 @@ const MESA: StagePropSpec[] = [
 // dedos, as quatro argolas fundidas nos pés, os varais de acácia, e os pratos,
 // colheres, cobertas e tigelas de ouro puro que hão de estar sobre ela.
 const MESA_OURO: StagePropSpec[] = [
-  { ...P("stall", 0, 1.2, undefined, 0.44), tag: "mesa-proposicao" },
+  { ...P("table", 0, 1.2, undefined, 0.44), tag: "mesa-proposicao" },
   P("amphora", -150, 0.85, undefined, 0.6),
   P("amphora", 155, 0.8, undefined, 0.62),
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),
 ];
 const MESA_MOLDURA: StagePropSpec[] = [
-  { ...P("stall", 0, 1.45, undefined, 0.5), tag: "mesa-proposicao" },
+  { ...P("table", 0, 1.45, undefined, 0.5), tag: "mesa-proposicao" },
   P("rock", -305, 1.1, undefined, 0.46),
   P("rock", 305, 1.05, undefined, 0.5),
   P("grass", -100, 0.8, undefined, 0.86),
 ];
 const MESA_ARGOLAS: StagePropSpec[] = [
-  { ...P("stall", 0, 1.25, undefined, 0.46), tag: "mesa-proposicao" },
+  { ...P("table", 0, 1.25, undefined, 0.46), tag: "mesa-proposicao" },
   P("amphora", -85, 0.6, undefined, 0.68),
   P("amphora", -30, 0.6, undefined, 0.73),
   P("amphora", 30, 0.6, undefined, 0.73),
@@ -175,14 +175,14 @@ const MESA_ARGOLAS: StagePropSpec[] = [
   P("rock", 300, 1.05, undefined, 0.52),
 ];
 const MESA_VARAS: StagePropSpec[] = [
-  { ...P("stall", 80, 1.2, undefined, 0.46), tag: "mesa-proposicao" },
+  { ...P("table", 80, 1.2, undefined, 0.46), tag: "mesa-proposicao" },
   P("crate", -170, 0.9, undefined, 0.58),
   P("crate", -100, 0.85, undefined, 0.63),
   P("rock", -305, 1.1, undefined, 0.5),
   P("rock", 305, 1.05, undefined, 0.52),
 ];
 const MESA_VASOS: StagePropSpec[] = [
-  { ...P("stall", -50, 1.15, undefined, 0.42), tag: "mesa-proposicao" },
+  { ...P("table", -50, 1.15, undefined, 0.42), tag: "mesa-proposicao" },
   P("bowl", 70, 0.7, 0, 0.62),
   P("bowl", 145, 0.62, 0, 0.7),
   P("bowl", 210, 0.66, 0, 0.56),

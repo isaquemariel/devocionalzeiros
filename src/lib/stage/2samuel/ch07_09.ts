@@ -164,7 +164,7 @@ const ARRAIAL_DAS_TRIBOS: StagePropSpec[] = [
 // aprisco de pedra, o poço do rebanho, a árvore da sombra e o sol alto. O lugar
 // mais baixo da vida de Davi, lembrado no ponto mais alto da promessa.
 const MALHADA_DE_BELEM: StagePropSpec[] = [
-  { ...P("stall", -120, 1.15, undefined, 0.32), tag: "malhada-de-belem" },
+  { ...P("crate", -120, 1.15, undefined, 0.32), tag: "malhada-de-belem" },
   P("well", 110, 1.0, undefined, 0.44),
   P("tree", 265, 1.1, undefined, 0.2),
   P("bush", -260, 0.9, undefined, 0.48),
