@@ -5990,8 +5990,13 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
 
   // PROPORÇÕES HUMANIZADAS: cabeça menor, corpo mais alto, pescoço visível
   const kneel = pose === "kneel" ? 8 * S : 0;
+  // `bow` só baixava a CABEÇA 4*S e deixava o tronco ereto — e por isso o luto
+  // inteiro do projeto saía de pé: Esdras "assentado atônito" (Ed 9:3) com o
+  // cajado na mão, Jó no meio da cinza, os que se prostram diante do rei. Aqui
+  // o tronco encolhe junto, e a figura curva-se de verdade.
+  const bow = pose === "bow" ? 6 * S : 0;
   const hemY = fy - 4.5 * S + kneel * 0.4;
-  const bodyH = 25 * S;
+  const bodyH = 25 * S - bow;
   const bodyTop = hemY - bodyH + bob + kneel * 0.4;
   const headR = 7.6 * S;
   const headCy = bodyTop - headR - 1.2 * S + (pose === "bow" ? 4 * S : 0);
