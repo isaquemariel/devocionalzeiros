@@ -17,6 +17,7 @@ import { CHAPTER_ACTORS as firstChronicles } from "@/lib/stageInfo/1chronicles";
 import { CHAPTER_ACTORS as secondChronicles } from "@/lib/stageInfo/2chronicles";
 import { CHAPTER_ACTORS as ezra } from "@/lib/stageInfo/ezra";
 import { CHAPTER_ACTORS as esther } from "@/lib/stageInfo/esther";
+import { CHAPTER_ACTORS as job } from "@/lib/stageInfo/job";
 import { CHAPTER_ACTORS as revelation } from "@/lib/stageInfo/revelation";
 
 export const ACTOR_INFO_BY_CHAPTER: Record<string, Record<number, Record<string, StageInfo>>> = {
@@ -29,5 +30,6 @@ export const ACTOR_INFO_BY_CHAPTER: Record<string, Record<number, Record<string,
   "2chronicles": secondChronicles,
   ezra,
   esther,
+  job,
   revelation,
 };
