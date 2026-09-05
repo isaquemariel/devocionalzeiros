@@ -470,7 +470,7 @@ const CASA_DE_MEREDE_E_BITIA: StagePropSpec[] = [
 ];
 
 // OS PASTOS DE BENE-HANÃ — a franja onde Judá encosta em Simeão e as casas
-// já são currais: o cercado de pedra solta, a manjedoura sob o toldo, o
+// já são currais: o cercado de pedra solta, o caixote da ração ao lado, o
 // cântaro do leite e a colina pelada por trás. Aldeia de gente que conta a
 // vida por cabeças de gado, não por gerações.
 const PASTOS_DE_BENE_HANA: StagePropSpec[] = [
@@ -486,7 +486,7 @@ const PASTOS_DE_BENE_HANA: StagePropSpec[] = [
 ];
 
 // A CASA DO LINHO FINO EM ASBÉIA — a oficina das famílias de Selá: o tear
-// armado debaixo do toldo listrado, as peças de linho branco estendidas para
+// armado no caixote da oficina, as peças de linho branco estendidas para
 // secar, os cestos do fio e a bacia da tinta. O Cronista guardou o nome desta
 // gente por causa do pano que ela fazia, e por mais nada.
 const CASA_DO_LINHO_FINO: StagePropSpec[] = [
@@ -518,8 +518,8 @@ const COISAS_ANTIGAS_DE_COZEBA: StagePropSpec[] = [
 ];
 
 // OS OLEIROS DO REI — as hortas e os cerrados de Netaim e Gedera, onde a
-// olaria trabalhava para a casa real: o forno aceso, a roda do oleiro debaixo
-// do alpendre, as talhas cruas em fileira esperando a queima, as tigelas
+// olaria trabalhava para a casa real: o forno aceso, o caixote da roda do
+// oleiro, as talhas cruas em fileira esperando a queima, as tigelas
 // prontas e o horto irrigado logo atrás. Gente que morava dentro do serviço.
 const OLEIROS_DO_REI: StagePropSpec[] = [
   { ...P("campfire", -155, 1.2, 0.9, 0.5), tag: "forno-dos-oleiros-do-rei" },
@@ -602,8 +602,8 @@ const ZICLAGUE: StagePropSpec[] = [
 
 // BETE-MARCABOTE E HAZAR-SUSIM — "a casa dos carros" e "o curral dos cavalos":
 // duas cidades cujos nomes são, eles mesmos, o desenho da cena. O carro de
-// guerra parado debaixo do alpendre, os cavalos no cercado, o cocho e o barracão
-// dos arreios. Estas duas não precisam de imaginação nenhuma: são o que dizem.
+// guerra parado ao relento, os cavalos no cercado, o cocho e o caixote dos
+// arreios. Estas duas não precisam de imaginação nenhuma: são o que dizem.
 const BETE_MARCABOTE_E_HAZAR_SUSIM: StagePropSpec[] = [
   { ...P("chariot", -145, 1.2, undefined, 0.5), tag: "carro-de-bete-marcabote" },
   { ...P("horse", 70, 1.1, undefined, 0.56), tag: "cavalos-de-hazar-susim" },

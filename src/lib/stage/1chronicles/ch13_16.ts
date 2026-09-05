@@ -1290,7 +1290,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rachada, a torrente arrebentando pela fenda, e os ídolos caídos no chão.
       b(11, { by: "rei", q: "e disse Davi:",
         set: "baal-perazim", props: BAAL_PERAZIM,
-        env: { terrain: "field", night: 0.16, glory: 0.74, storm: 0.3, fire: 0.08, water: 0.38, verdure: 0.26 }, cast: [
+        env: { terrain: "field", night: 0.16, glory: 0.74, storm: 0.3, fire: 0.08, water: 0.05, verdure: 0.26 }, cast: [
         C("rei", -178, "raise", { dy: 0.5, facing: 1, id: "davi" }),
         C("homem", 92, "lie", { dy: 0.66, facing: -1, id: "filisteu-de-refaim1" }),
         C("homem", 218, "bow", { dy: 0.58, facing: -1, id: "filisteu-de-refaim2" }),
@@ -1785,7 +1785,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // frente, duas cidades nos cantos opostos e a árvore do meio.
       b(14, { by: "rei", q: "os seus juízos estão em toda a terra",
         set: "terra-inteira-sob-os-juizos", props: TERRA_INTEIRA_SOB_OS_JUIZOS,
-        env: { terrain: "field", night: 0.18, glory: 0.7, storm: 0.14, fire: 0.06, water: 0.3, verdure: 0.36 }, cast: [
+        env: { terrain: "field", night: 0.18, glory: 0.7, storm: 0.14, fire: 0.06, water: 0.05, verdure: 0.36 }, cast: [
         C("rei", -302, "point", { dy: 0.64, facing: 1, id: "davi", palette: "#f3ecdc", glow: 0.4 }),
         C("servo", 252, "stand", { dy: 0.6, facing: -1, id: "morador-das-terras-em-volta" }),
       ] }),
