@@ -82,7 +82,13 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       const raw = verses[bt.v - 1];
       const vtext = (typeof raw === "string" ? raw : raw?.t) ?? "";
       if (bt.q && !vtext.includes(bt.q)) err(`v.${bt.v}: q ${JSON.stringify(bt.q)} não é substring do versículo ARC`);
-      if (bt.by && !ROLES.has(bt.by)) err(`v.${bt.v}: by role inválido "${bt.by}"`);
+      // `by` pode ser um PAPEL ou o `id` de quem está em cena. O motor resolve
+      // `cast.find(id === by) ?? cast.find(role === by)`, e o balão sai nomeado
+      // pela ficha do id — que é mais seguro do que o papel quando há dois
+      // patriarcas na mesma cena (Jó e os três amigos, Elifaz e Bildade).
+      const castAqui = bt.cast ?? castNow;
+      if (bt.by && !ROLES.has(bt.by) && !castAqui.some((c) => c.id === bt.by))
+        err(`v.${bt.v}: by "${bt.by}" não é papel válido nem id de quem está em cena`);
       if (bt.env?.terrain && !TERRAINS.has(bt.env.terrain)) err(`v.${bt.v}: terreno inválido "${bt.env.terrain}"`);
       for (const k of ["night","glory","storm","fire","water","verdure"]) {
         const val = bt.env?.[k];

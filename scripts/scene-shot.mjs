@@ -11,6 +11,11 @@
 // Uso:  node scripts/scene-shot.mjs "livro:cap:v,livro:cap:v,..." saida.png
 // Ex.:  node scripts/scene-shot.mjs "1kings:18:38,1kings:19:12" /tmp/carmelo.png
 //
+// Para um livro que AINDA NÃO está em `rpgStageRegistry.ts`, aponte o arquivo:
+//   node scripts/scene-shot.mjs --add job=src/lib/stage/job/ch01_03.ts \
+//        "job:1:6,job:1:19" /tmp/jo.png
+// (`--add` pode repetir-se; cada um exporta `CHAPTERS` e é somado ao livro.)
+//
 // Cada quadro traz, embaixo, a referencia, o `by` do beat e o texto que o balao
 // vai mostrar — para conferir de uma vez a imagem E a fala.
 // ============================================================================
@@ -19,15 +24,21 @@ import { writeFileSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os"; import { join, resolve } from "node:path";
 import { chromium } from "playwright-core";
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
-const ALVOS=process.argv[2].split(",").map(s=>s.split(":"));
-const OUT=process.argv[3]??"/tmp/scenes.png";
+const argv=process.argv.slice(2);
+const EXTRA=[];                       // [{livro, arquivo}] de --add livro=caminho
+while (argv[0]==="--add") { const [l,f]=argv[1].split("="); EXTRA.push({livro:l, arquivo:resolve(f)}); argv.splice(0,2); }
+const ALVOS=argv[0].split(",").map(s=>s.split(":"));
+const OUT=argv[1]??"/tmp/scenes.png";
 const tmp=mkdtempSync(join(tmpdir(),"sc-"));
 writeFileSync(join(tmp,"e.ts"),`
 import { drawBackdropHD, drawPropHD, drawHumanHD } from "${ROOT}/src/lib/rpgStageHD";
 import { drawBeingHD, BEING_ROLES } from "${ROOT}/src/lib/rpgStageBeings";
 import { STAGE_BOOKS } from "${ROOT}/src/lib/rpgStageRegistry";
 import { stagedAt, makeDrawState, envAt, depthToFeetY, depthScale, SET_W, balloonText } from "${ROOT}/src/lib/rpgStage";
-Object.assign(window as any,{drawBackdropHD,drawPropHD,drawHumanHD,drawBeingHD,BEING_ROLES,STAGE_BOOKS,stagedAt,makeDrawState,envAt,depthToFeetY,depthScale,SET_W,balloonText});`);
+${EXTRA.map((e,i)=>`import { CHAPTERS as X${i} } from "${e.arquivo}";`).join("\n")}
+const LIVROS: any = { ...STAGE_BOOKS };
+${EXTRA.map((e,i)=>`LIVROS[${JSON.stringify(e.livro)}] = { ...(LIVROS[${JSON.stringify(e.livro)}] ?? {}), ...X${i} };`).join("\n")}
+Object.assign(window as any,{drawBackdropHD,drawPropHD,drawHumanHD,drawBeingHD,BEING_ROLES,STAGE_BOOKS:LIVROS,stagedAt,makeDrawState,envAt,depthToFeetY,depthScale,SET_W,balloonText});`);
 await build({entryPoints:[join(tmp,"e.ts")],bundle:true,format:"iife",outfile:join(tmp,"b.js"),alias:{"@":join(ROOT,"src")},logLevel:"silent"});
 const js=readFileSync(join(tmp,"b.js"),"utf8");
 const bible=JSON.parse(readFileSync(join(ROOT,"public/bible/arc.json"),"utf8"));
@@ -39,8 +50,10 @@ const g=document.getElementById('c').getContext('2d');
 g.fillStyle='#0d0f16'; g.fillRect(0,0,${COLS*CW},${rows*(CH+30)});
 const skyPropY=(dy,ground)=>Math.round(ground*(1-Math.max(0,Math.min(1,dy)))*0.92+6);
 A.forEach(([book,chS,vS],i)=>{
-  const ch=+chS, v=+vS, script=window.STAGE_BOOKS[book][ch];
+  const ch=+chS, v=+vS, script=window.STAGE_BOOKS[book]?.[ch];
+  if(!script) throw new Error(book+" "+ch+": livro nao esta no registro (use --add livro=arquivo.ts) ou o capitulo nao existe");
   const idx=script.beats.findIndex(b=>b.v===v);
+  if(idx<0) throw new Error(book+" "+ch+":"+v+": nao ha beat para este versiculo");
   const dims={W:CW,H:CH,GROUND:Math.round(CH*0.44),BOT:CH-26};
   const cx=(i%COLS)*CW, cy=Math.floor(i/COLS)*(CH+30);
   g.save(); g.translate(cx,cy);
@@ -87,5 +100,11 @@ const errs=[]; p.on("pageerror",e=>errs.push(e.message));
 await p.goto("file://"+join(tmp,"p.html")); await p.waitForTimeout(700);
 await p.locator("#c").screenshot({path:OUT});
 await b.close();
-if(errs.length) console.error("ERROS:",errs.slice(0,3).join(" | "));
+if(errs.length){
+  // sem isto o script saía com codigo 0 e um PNG PRETO, e quem "olhou a imagem"
+  // via um retangulo vazio sem saber que o livro nem estava no registro.
+  console.error("ERROS:",errs.slice(0,3).join(" | "));
+  console.error("(o PNG saiu incompleto — corrija o erro acima antes de olhar a imagem)");
+  process.exit(1);
+}
 console.log("escrito:",OUT);
