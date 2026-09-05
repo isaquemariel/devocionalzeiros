@@ -59,9 +59,9 @@ A.forEach(([book,chS,vS],i)=>{
   const items=[]; let skyN=0;
   for(const pr of S.props){
     const sx=(pr.x/window.SET_W)*dims.W;
-    if(pr.sky){ const syy=skyPropY(pr.feetDy,dims.GROUND); items.push({fy:-9999+skyN++,d:()=>window.drawPropHD(g,pr.kind,sx,syy,{scale:pr.scale??1,t:1500,reduce:false,fire:pr.fire})}); continue; }
+    if(pr.sky){ const syy=skyPropY(pr.feetDy,dims.GROUND); items.push({fy:-9999+skyN++,d:()=>window.drawPropHD(g,pr.kind,sx,syy,{scale:pr.scale??1,t:1500,reduce:false,fire:pr.fire,night:e.night})}); continue; }
     const fy=window.depthToFeetY(pr.feetDy,dims);
-    items.push({fy,d:()=>window.drawPropHD(g,pr.kind,sx,fy,{scale:(pr.scale??1)*window.depthScale(pr.feetDy),t:1500,reduce:false,fire:pr.fire})});
+    items.push({fy,d:()=>window.drawPropHD(g,pr.kind,sx,fy,{scale:(pr.scale??1)*window.depthScale(pr.feetDy),t:1500,reduce:false,fire:pr.fire,night:e.night})});
   }
   for(const a of S.cast){
     const fy=window.depthToFeetY(a.feetDy,dims), sx=(a.x/window.SET_W)*dims.W;

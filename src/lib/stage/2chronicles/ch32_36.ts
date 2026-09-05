@@ -960,8 +960,8 @@ const CARREGADORES_ESCRIVAES_E_PORTEIROS: StagePropSpec[] = [
 // debaixo das arcas: o livro no meio do quadro, a caixa do dinheiro empurrada
 // para o lado, a fachada da casa atrás e o candeeiro dando na página.
 const LIVRO_DA_LEI_ACHADO: StagePropSpec[] = [
-  { ...P("scroll", -20, 1.48, undefined, 0.44), tag: "livro-da-lei" },
-  P("crate", -170, 0.95, undefined, 0.56),
+  { ...P("scroll", 10, 2.5, undefined, 0.62), tag: "livro-da-lei" },
+  P("crate", -240, 0.95, undefined, 0.56),
   P("column", -270, 1.2, undefined, 0.24),
   P("column", 232, 1.2, undefined, 0.26),
   P("lampstand", 122, 0.85, undefined, 0.54),
@@ -1403,9 +1403,9 @@ const VALE_DE_MEGIDO_COM_O_REI_DISFARCADO: StagePropSpec[] = [
 const FLECHEIROS_ATIRANDO_CONTRA_O_REI: StagePropSpec[] = [
   { ...P("bow", -220, 1.15, undefined, 0.5), tag: "flecheiros-que-atiraram-contra-josias" },
   P("bow", -110, 1.05, undefined, 0.54),
-  P("chariot", 42, 1.22, undefined, 0.4),
-  P("spear", 182, 1.05, undefined, 0.52),
-  P("horse", 252, 1.1, undefined, 0.48),
+  P("chariot", 42, 1.5, undefined, 0.62),
+  P("spear", 212, 1.05, undefined, 0.52),
+  P("horse", 292, 1.1, undefined, 0.48),
   P("rock", 300, 1.05, undefined, 0.5),
   P("grass", 120, 0.6, undefined, 0.86),
   { ...P("clouds", -20, 1.32, undefined, 0.7), sky: true },
@@ -1732,14 +1732,14 @@ const TODOS_OS_VASOS_LEVADOS: StagePropSpec[] = [
 // palácios, e as pedras dos muros de Jerusalém espalhadas pelo chão, com os
 // vasos preciosos quebrados no meio dos escombros. Nada de pé.
 const CASA_QUEIMADA_E_MUROS_DERRIBADOS: StagePropSpec[] = [
-  { ...P("campfire", -110, 2.0, 1, 0.5), tag: "jerusalem-ardendo-no-cativeiro" },
-  P("campfire", 132, 1.7, 1, 0.58),
-  { ...P("rock", -252, 1.3, undefined, 0.52), tag: "muros-de-jerusalem-derribados" },
-  P("rock", -20, 1.15, undefined, 0.62),
-  P("rock", 232, 1.2, undefined, 0.5),
-  P("rock", 302, 1.05, undefined, 0.64),
-  P("crate", 52, 0.9, undefined, 0.66),
-  P("grass", 180, 0.45, undefined, 0.88),
+  { ...P("campfire", -150, 5.4, 1, 0.66), tag: "jerusalem-ardendo-no-cativeiro" },
+  P("campfire", 62, 4.6, 1, 0.72),
+  P("campfire", 252, 4.0, 1, 0.6),
+  { ...P("rock", -262, 1.5, undefined, 0.5), tag: "muros-de-jerusalem-derribados" },
+  P("rock", -40, 1.35, undefined, 0.56),
+  P("rock", 172, 1.4, undefined, 0.48),
+  P("rock", 312, 1.2, undefined, 0.62),
+  P("grass", 130, 0.45, undefined, 0.9),
 ];
 
 // OS QUE ESCAPARAM DA ESPADA, LEVADOS A BABILÔNIA — a estrada do cativeiro: o
@@ -1788,7 +1788,7 @@ const ESPIRITO_DE_CIRO_DESPERTADO: StagePropSpec[] = [
 // que há de ser edificada em Jerusalém, com o sol alto por cima dela.
 const DECRETO_DE_CIRO: StagePropSpec[] = [
   P("throne", -140, 1.12, undefined, 0.32),
-  { ...P("scroll", -20, 1.28, undefined, 0.46), tag: "pregao-de-ciro-rei-da-persia" },
+  { ...P("scroll", -8, 1.9, undefined, 0.56), tag: "pregao-de-ciro-rei-da-persia" },
   { ...P("church", 122, 1.3, undefined, 0.2), tag: "casa-a-edificar-em-jerusalem" },
   P("column", 252, 1.2, undefined, 0.24),
   P("tower", -280, 1.15, undefined, 0.22),
@@ -2037,8 +2037,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.5, glory: 0.08, storm: 0.6, fire: 0.12, water: 0.03, verdure: 0.12 }, cast: [
         C("homem", -60, "raise", { dy: 0.66, facing: 1, id: "rabsaque" }),
         C("homem", -180, "raise", { dy: 0.7, facing: 1, id: "soldado-assirio-diante-de-laquis" }),
-        C("multidao", 120, "stand", { dy: 0.5, facing: -1, id: "povo-de-jerusalem-em-cima-do-muro" }),
-        C("mulherComum", 240, "stand", { dy: 0.56, facing: -1, id: "mulher-de-jerusalem-sobre-o-muro" }),
+        C("homem", 110, "bow", { dy: 0.5, facing: -1, id: "homem-de-jerusalem-em-cima-do-muro" }),
+        C("mulherComum", 200, "kneel", { dy: 0.54, facing: -1, id: "mulher-de-jerusalem-sobre-o-muro" }),
+        C("homem", 285, "stand", { dy: 0.58, facing: -1, id: "guarda-do-muro-de-jerusalem" }),
       ] }),
       // v.19 — o versículo põe o dedo na ferida da teologia deles: falaram do
       // Deus de Jerusalém COMO DOS DEUSES DOS POVOS DA TERRA — "OBRAS DAS MÃOS
@@ -2081,9 +2082,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "arraial-ferido-pelo-anjo", props: ARRAIAL_FERIDO_PELO_ANJO,
         env: { terrain: "field", night: 0.6, glory: 0.92, storm: 0.22, fire: 0.06, water: 0.03, verdure: 0.1 }, cast: [
         C("anjo", -10, "raise", { dy: 0.4, facing: 1, id: "anjo-que-destruiu-o-arraial-da-assiria", glow: 1, scale: 1.2 }),
-        C("homem", -150, "lie", { dy: 0.66, facing: 1, id: "valente-morto-no-arraial-da-assiria" }),
-        C("homem", 120, "lie", { dy: 0.7, facing: -1, id: "capitao-morto-no-arraial-da-assiria" }),
-        C("homem", 240, "lie", { dy: 0.62, facing: -1, id: "lider-morto-no-arraial-da-assiria" }),
+        C("homem", -170, "lie", { dy: 0.84, facing: 1, id: "valente-morto-no-arraial-da-assiria", scale: 1.5 }),
+        C("homem", 110, "lie", { dy: 0.9, facing: -1, id: "capitao-morto-no-arraial-da-assiria", scale: 1.55 }),
+        C("homem", 265, "lie", { dy: 0.76, facing: -1, id: "lider-morto-no-arraial-da-assiria", scale: 1.35 }),
         C("rei", -262, "walk", { dy: 0.56, facing: -1, id: "senaqueribe", palette: "#5c5148" }),
       ] }),
       // v.22 — o cronista faz a soma: "ASSIM LIVROU O SENHOR a Ezequias, e aos
@@ -2697,8 +2698,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(14, { q: "Hilquias, o sacerdote, achou o livro da lei do Senhor, dada pela mão de Moisés",
         set: "livro-da-lei-achado", props: LIVRO_DA_LEI_ACHADO,
         env: { terrain: "city", night: 0.24, glory: 0.82, storm: 0.06, fire: 0.06, water: 0.03, verdure: 0.24 }, cast: [
-        C("anciao", -120, "kneel", { dy: 0.62, facing: 1, id: "hilquias", glow: 0.35 }),
-        C("servo", 172, "stand", { dy: 0.64, facing: -1, id: "porteiro-levita-que-guardava-a-entrada" }),
+        C("anciao", -120, "kneel", { dy: 0.76, facing: 1, id: "hilquias", glow: 0.6, scale: 1.45 }),
+        C("servo", 205, "stand", { dy: 0.68, facing: -1, id: "porteiro-levita-que-guardava-a-entrada", scale: 1.1 }),
       ] }),
       // v.15 — e ele diz em voz alta a frase mais curta e mais pesada do
       // capítulo: "ACHEI O LIVRO DA LEI NA CASA DO SENHOR" — e põe o rolo na mão
@@ -2756,9 +2757,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { q: "ouvindo o rei as palavras da lei, rasgou as suas vestes",
         set: "vestes-rasgadas-de-josias", props: VESTES_RASGADAS_DE_JOSIAS,
         env: { terrain: "city", night: 0.46, glory: 0.44, storm: 0.5, fire: 0.06, water: 0.03, verdure: 0.14 }, cast: [
-        C("rei", -30, "kneel", { dy: 0.58, facing: 1, id: "josias", palette: "#6e6459" }),
-        C("anciao", 132, "bow", { dy: 0.62, facing: -1, id: "safa-escriba" }),
-        C("anciao", 232, "stand", { dy: 0.66, facing: -1, id: "hilquias" }),
+        C("rei", -60, "kneel", { dy: 0.78, facing: 1, id: "josias", palette: "#6e6459", scale: 1.5 }),
+        C("anciao", 152, "bow", { dy: 0.66, facing: -1, id: "safa-escriba", scale: 1.1 }),
+        C("anciao", 262, "stand", { dy: 0.6, facing: -1, id: "hilquias" }),
       ] }),
       // v.20 — e a primeira coisa que ele faz é mandar CONSULTAR. Cinco nomes,
       // um a um: Hilquias, Aicão filho de Safã, Abdom filho de Mica, Safã o
@@ -2803,8 +2804,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { q: "foram ter com a profetisa Hulda, mulher de Salum, filho de Tocate, filho de Harás, guarda das vestimentas",
         set: "casa-de-hulda-na-segunda-parte", props: CASA_DE_HULDA_NA_SEGUNDA_PARTE,
         env: { terrain: "city", night: 0.32, glory: 0.5, storm: 0.18, fire: 0.05, water: 0.03, verdure: 0.24 }, cast: [
-        C("mulherComum", 62, "stand", { dy: 0.52, facing: -1, id: "hulda", glow: 0.42 }),
-        C("homem", 192, "stand", { dy: 0.58, facing: -1, id: "salum-guarda-das-vestiduras" }),
+        C("mulherComum", 82, "stand", { dy: 0.74, facing: -1, id: "hulda", glow: 0.85, scale: 1.5 }),
+        C("homem", 232, "stand", { dy: 0.6, facing: -1, id: "salum-guarda-das-vestiduras" }),
         C("anciao", -160, "walk", { dy: 0.56, facing: 1, id: "hilquias" }),
         C("homem", -60, "walk", { dy: 0.62, facing: 1, id: "aicao-filho-de-safa" }),
         C("anciao", -250, "walk", { dy: 0.64, facing: 1, id: "safa-escriba" }),
@@ -3205,11 +3206,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fala do próprio carro, curvado, com os arcos ainda armados à esquerda.
       b(23, { by: "rei", q: "Então o rei disse a seus servos:",
         set: "flecheiros-atirando-contra-o-rei", props: FLECHEIROS_ATIRANDO_CONTRA_O_REI,
-        env: { terrain: "field", night: 0.52, glory: 0.14, storm: 0.66, fire: 0.08, water: 0.03, verdure: 0.16 }, cast: [
-        C("rei", 22, "bow", { dy: 0.6, facing: 1, id: "josias", palette: "#6b6255" }),
-        C("servo", 132, "kneel", { dy: 0.66, facing: -1, id: "servo-que-tirou-josias-do-carro" }),
-        C("homem", -270, "stand", { dy: 0.62, facing: 1, id: "flecheiro-que-atirou-contra-josias" }),
-        C("homem", -160, "stand", { dy: 0.66, facing: 1, id: "segundo-flecheiro-de-megido" }),
+        env: { terrain: "field", night: 0.72, glory: 0.1, storm: 0.86, fire: 0.08, water: 0.03, verdure: 0.14 }, cast: [
+        C("rei", 42, "bow", { dy: 0.78, facing: 1, id: "josias", palette: "#6b6255", scale: 1.5 }),
+        C("servo", 172, "kneel", { dy: 0.8, facing: -1, id: "servo-que-tirou-josias-do-carro", scale: 1.3 }),
+        C("homem", -260, "stand", { dy: 0.68, facing: 1, id: "flecheiro-que-atirou-contra-josias", scale: 1.2 }),
+        C("homem", -150, "stand", { dy: 0.72, facing: 1, id: "segundo-flecheiro-de-megido", scale: 1.15 }),
       ] }),
       // v.24 — o transporte e o enterro num só verso: tirado do carro de guerra,
       // posto no SEGUNDO CARRO, trazido a Jerusalém, morto e sepultado nos
@@ -3435,10 +3436,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { q: "o qual matou os seus jovens à espada, na casa do seu santuário",
         set: "caldeus-matando-no-santuario", props: CALDEUS_MATANDO_NO_SANTUARIO,
         env: { terrain: "city", night: 0.82, glory: 0.04, storm: 0.8, fire: 0.12, water: 0.02, verdure: 0.08 }, cast: [
-        C("homem", -170, "stand", { dy: 0.58, facing: 1, id: "caldeu-que-matou-no-santuario" }),
-        C("homem", 42, "lie", { dy: 0.72, facing: -1, id: "jovem-morto-na-casa-do-santuario" }),
-        C("mulherComum", 152, "lie", { dy: 0.76, facing: -1, id: "donzela-morta-na-casa-do-santuario" }),
-        C("anciao", 262, "lie", { dy: 0.7, facing: -1, id: "velho-morto-na-casa-do-santuario" }),
+        C("homem", -190, "stand", { dy: 0.66, facing: 1, id: "caldeu-que-matou-no-santuario", scale: 1.3 }),
+        C("homem", 22, "lie", { dy: 0.84, facing: -1, id: "jovem-morto-na-casa-do-santuario", scale: 1.5 }),
+        C("mulherComum", 162, "lie", { dy: 0.9, facing: -1, id: "donzela-morta-na-casa-do-santuario", scale: 1.45 }),
+        C("anciao", 282, "lie", { dy: 0.78, facing: -1, id: "velho-morto-na-casa-do-santuario", scale: 1.35 }),
       ] }),
       // v.18 — e o saque é total, e o verso faz questão do inventário: TODOS os
       // vasos da casa de Deus, GRANDES E PEQUENOS, os tesouros da casa do SENHOR,
@@ -3457,10 +3458,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // lugar do muro, pedras espalhadas pelo chão.
       b(19, { q: "E queimaram a casa de Deus, e derrubaram os muros de Jerusalém",
         set: "casa-queimada-e-muros-derribados", props: CASA_QUEIMADA_E_MUROS_DERRIBADOS,
-        env: { terrain: "city", night: 0.74, glory: 0.03, storm: 0.86, fire: 1, water: 0.02, verdure: 0.05 }, cast: [
-        C("homem", -30, "lie", { dy: 0.78, facing: -1, id: "morto-nos-escombros-de-jerusalem" }),
-        C("mulherComum", 82, "kneel", { dy: 0.74, facing: -1, id: "mulher-de-jerusalem-sobre-os-escombros" }),
-        C("homem", 262, "bow", { dy: 0.7, facing: -1, id: "homem-de-juda-diante-da-casa-queimada" }),
+        env: { terrain: "field", night: 0.74, glory: 0.03, storm: 0.86, fire: 1, water: 0.02, verdure: 0.05 }, cast: [
+        C("homem", -60, "lie", { dy: 0.9, facing: -1, id: "morto-nos-escombros-de-jerusalem", scale: 1.6 }),
+        C("mulherComum", 152, "kneel", { dy: 0.86, facing: -1, id: "mulher-de-jerusalem-sobre-os-escombros", scale: 1.4 }),
+        C("homem", 302, "bow", { dy: 0.8, facing: -1, id: "homem-de-juda-diante-da-casa-queimada", scale: 1.25 }),
       ] }),
       // v.20 — e os que escaparam da espada foram levados, e o verso mede o
       // cativeiro por dinastias: "fizeram-se servos dele e de seus filhos, ATÉ AO
@@ -3501,9 +3502,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(23, { by: "rei", q: "Assim diz Ciro, rei da Pérsia:",
         set: "decreto-de-ciro", props: DECRETO_DE_CIRO,
         env: { terrain: "city", night: 0.1, glory: 0.96, storm: 0.03, fire: 0.04, water: 0.02, verdure: 0.36 }, cast: [
-        C("rei", -80, "raise", { dy: 0.52, facing: 1, id: "ciro-rei-da-persia" }),
-        C("homem", 202, "stand", { dy: 0.62, facing: -1, id: "judeu-do-cativeiro-que-ouviu-o-pregao" }),
-        C("homem", 292, "walk", { dy: 0.66, facing: -1, id: "judeu-que-subiu-a-jerusalem-com-o-pregao" }),
+        C("rei", -80, "raise", { dy: 0.66, facing: 1, id: "ciro-rei-da-persia", scale: 1.5 }),
+        C("homem", 212, "stand", { dy: 0.72, facing: -1, id: "judeu-do-cativeiro-que-ouviu-o-pregao", scale: 1.2 }),
+        C("homem", 302, "walk", { dy: 0.78, facing: -1, id: "judeu-que-subiu-a-jerusalem-com-o-pregao", scale: 1.15 }),
       ] }),
     ],
   },

@@ -1552,7 +1552,7 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 // PROPS HD
 // ============================================================================
 
-export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number }
+export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number; night?: number }
 
 // escala natural de cada objeto — construções e árvores MAIORES que o
 // personagem, mas sem "estourar" quando o roteiro já usa scale alto
@@ -5674,7 +5674,14 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
     }
     case "clouds": {
       // NUVENS volumosas em 2 camadas, iluminadas por cima, derivando devagar.
+      // A NOITE APAGA A NUVEM: sem isto, uma cena de meia-noite saía com cúmulos
+      // brancos de meio-dia por cima das estrelas — foi assim que o vale de
+      // Megido, a estrada do cativeiro e a noite de Nabucodonosor apareceram
+      // com céu de tarde de verão. O `night` vem do estado do palco.
       const Wd = 430 * S;
+      const nite = clamp01(o.night ?? 0);
+      const NOITE = "#232a44";                        // azul frio de céu noturno
+      const escurece = (hex: string) => mixHex(hex, NOITE, nite * 0.88);
       g.save();
       for (let layer = 0; layer < 2; layer++) {
         const k = layer === 0 ? 0.7 : 1;
@@ -5683,9 +5690,9 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
         // UM gradiente por camada (coordenadas absolutas): topo iluminado,
         // ventre em sombra fria — vale para todas as bolhas da camada.
         const vol = g.createLinearGradient(0, ly - 16 * S * k, 0, ly + 12 * S * k);
-        vol.addColorStop(0, "#ffffff");
-        vol.addColorStop(0.42, "#eef3fb");
-        vol.addColorStop(1, "#b9c6da");
+        vol.addColorStop(0, escurece("#ffffff"));
+        vol.addColorStop(0.42, escurece("#eef3fb"));
+        vol.addColorStop(1, escurece("#b9c6da"));
         g.fillStyle = vol;
         g.globalAlpha = layer === 0 ? 0.5 : 0.85;
         for (let i = 0; i < 4; i++) {
@@ -5697,8 +5704,8 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
           g.fill();
         }
         // crista iluminada por cima
-        g.globalAlpha = (layer === 0 ? 0.3 : 0.5);
-        g.fillStyle = "#fffdf6";
+        g.globalAlpha = (layer === 0 ? 0.3 : 0.5) * (1 - nite * 0.72);
+        g.fillStyle = escurece("#fffdf6");
         for (let i = 0; i < 4; i++) {
           const r1 = hsh(i, 11 + layer), r2 = hsh(i, 59 + layer);
           const cx2 = x - Wd * 0.5 + ((r1 * Wd + drift) % Wd);
