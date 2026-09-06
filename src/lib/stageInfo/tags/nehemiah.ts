@@ -6,7 +6,7 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-do-paco-de-susa": {
     title: "A porta do paço de Susã, a fortaleza",
     subtitle: "Ne 1:1 — a capital de inverno do império, no mês de Quislev",
-    text: "\"E sucedeu no mês de Quislev, no ano vigésimo, estando eu em Susã, a fortaleza\" (Ne 1:1). Susã era a residência de inverno dos reis persas e o mesmo lugar em que Assuero se assentara no trono do seu reino (Et 1:2); a \"fortaleza\" é a acrópole murada onde ficavam o palácio, os arquivos e a guarda. Por esta porta passa a caravana que traz a notícia de Jerusalém, e por ela sairá, quatro meses depois, um copeiro com cartas seladas para os governadores dalém do rio. É o único portão do livro que não precisou de ser reconstruído — e é o contraste que o autor quer: um homem que vive dentro da cidade mais bem guardada do mundo chora por outra que não tem porta nenhuma.",
+    text: "\"E sucedeu no mês de Quislev, no ano vigésimo, estando eu em Susã, a fortaleza\" (Ne 1:1). Susã era a residência de inverno dos reis persas, o mesmo lugar em que Assuero se assentara no trono do seu reino (Et 1:2); a \"fortaleza\" é a acrópole murada onde ficavam o palácio, os arquivos e a guarda. Por esta porta passa a caravana que traz a notícia, e por ela sairá um copeiro com cartas seladas. É o único portão do livro que não precisou de ser reconstruído — e é esse o contraste: um homem que vive na cidade mais bem guardada do mundo chora por outra que não tem porta nenhuma.",
   },
   "jumento-da-caravana-vinda-de-juda": {
     title: "O jumento da caravana que veio de Judá com Hanani",
@@ -16,42 +16,42 @@ export const TAGS: Record<string, StageInfo> = {
   "portas-de-jerusalem-queimadas-a-fogo": {
     title: "As portas de Jerusalém queimadas a fogo",
     subtitle: "Ne 1:3 — a metade da notícia que dói mais do que a brecha",
-    text: "\"e o muro de Jerusalém fendido e as suas portas queimadas a fogo\" (Ne 1:3). Muro fendido ainda se contorna; porta queimada é cidade aberta de noite. Jeremias vira acontecer o que estas cinzas ainda mostram: \"As suas portas caíram por terra; ele destruiu e quebrou os seus ferrolhos\" (Lm 2:9). Passaram cento e quarenta anos desde que o exército dos caldeus derrubou os muros em redor de Jerusalém (2Rs 25:10), e a madeira nunca foi reposta — em parte porque em Judá não há mata de porte, e por isso a primeira coisa que Neemias pedirá ao rei é uma carta para o guarda da floresta real (Ne 2:8). Estas portas voltarão a arder na memória do livro em cada vez que ele repetir a frase.",
+    text: "\"E o muro de Jerusalém fendido e as suas portas queimadas a fogo\" (Ne 1:3). Muro fendido ainda se contorna; porta queimada é cidade aberta de noite. Jeremias vira acontecer o que estas cinzas ainda mostram: \"As suas portas caíram por terra; ele destruiu e quebrou os seus ferrolhos\" (Lm 2:9). Passaram cento e quarenta anos desde que os caldeus derrubaram os muros (2Rs 25:10), e a madeira nunca foi reposta — em parte porque em Judá não há mata de porte, e por isso a primeira coisa que Neemias pedirá é uma carta para o guarda da floresta real (Ne 2:8).",
   },
   "muro-de-jerusalem-fendido": {
     title: "O muro de Jerusalém fendido",
     subtitle: "Ne 1:3 — a ruína que já tinha cento e quarenta anos",
-    text: "\"Os restantes, que ficaram do cativeiro, lá na província estão em grande miséria e desprezo; e o muro de Jerusalém fendido\" (Ne 1:3). Não é a destruição de Nabucodonosor a ser noticiada com atraso: o templo fora reconstruído havia quase setenta anos, e o que estas pedras contam é uma tentativa recente e fracassada de levantar o muro, embargada por carta do próprio Artaxerxes — \"dai ordem para impedirdes aqueles homens, a fim de que não se edifique aquela cidade, até que eu dê uma ordem\" (Ed 4:21) — e executada \"à força e com violência\" (Ed 4:23). É por isso que a notícia abala tanto um funcionário do palácio: ele sabe de que gabinete saiu a ordem.",
+    text: "\"Os restantes, que ficaram do cativeiro, lá na província estão em grande miséria e desprezo; e o muro de Jerusalém fendido\" (Ne 1:3). Não é a destruição de Nabucodonosor noticiada com atraso: o templo fora reconstruído havia quase setenta anos, e o que estas pedras contam é uma tentativa recente e fracassada de levantar o muro, embargada por carta do próprio Artaxerxes (Ed 4:21) e executada \"à força e com violência\" (Ed 4:23). É por isso que a notícia abala tanto um funcionário do palácio: ele sabe de que gabinete saiu a ordem.",
   },
   "palavra-ordenada-a-moises-teu-servo": {
     title: "A palavra que ordenaste a Moisés, teu servo",
     subtitle: "Ne 1:8-9 — a promessa que Neemias devolve a Deus na oração",
-    text: "\"Lembra-te, pois, da palavra que ordenaste a Moisés, teu servo, dizendo: Vós transgredireis, e eu vos espalharei entre os povos. E vós vos convertereis a mim, e guardareis os meus mandamentos, e os cumprireis; então, ainda que os vossos rejeitados estejam na extremidade do céu, de lá os ajuntarei e os trarei ao lugar que tenho escolhido para ali fazer habitar o meu nome\" (Ne 1:8-9). Neemias não inventa um pedido: cita a Lei. Está a resumir as promessas de Deuteronômio sobre o exílio e o regresso e a apresentá-las como quem apresenta um documento. Toda a oração do capítulo 1 se apoia neste rolo, e é a única autoridade que ele invoca antes de falar com o rei mais poderoso do mundo.",
+    text: "\"Lembra-te, pois, da palavra que ordenaste a Moisés, teu servo... ainda que os vossos rejeitados estejam na extremidade do céu, de lá os ajuntarei e os trarei ao lugar que tenho escolhido para ali fazer habitar o meu nome\" (Ne 1:8-9). Neemias não inventa um pedido: cita a Lei. Resume as promessas de Deuteronômio sobre o exílio e o regresso e apresenta-as como quem apresenta um documento. Toda a oração do capítulo 1 se apoia neste rolo, e é a única autoridade que ele invoca antes de falar com o rei mais poderoso do mundo.",
   },
   "copo-do-copeiro-do-rei": {
     title: "O copo do copeiro do rei",
     subtitle: "Ne 1:11 — o ofício que a última linha do capítulo revela",
-    text: "\"e dá-lhe graça perante este homem. Então era eu copeiro do rei\" (Ne 1:11). O autor guarda a informação para o fim, e ela muda tudo: \"este homem\" é Artaxerxes, senhor de cento e vinte e sete províncias. Copeiro é quem prova o vinho antes de o rei o beber — cargo de altíssima confiança, ocupado por gente próxima do corpo do monarca e presente nas conversas privadas. É por isso que um judeu do cativeiro pode, quatro meses depois, mudar a política da Pérsia a respeito de Jerusalém entre um cálice e outro. O copo é o instrumento do ofício e o lugar exato onde a oração do versículo 11 vai ser respondida.",
+    text: "\"E dá-lhe graça perante este homem. Então era eu copeiro do rei\" (Ne 1:11). O autor guarda a informação para o fim, e ela muda tudo: \"este homem\" é Artaxerxes, senhor de cento e vinte e sete províncias. Copeiro é quem prova o vinho antes de o rei o beber — cargo de altíssima confiança, ocupado por gente próxima do corpo do monarca e presente nas conversas privadas. É por isso que um judeu do cativeiro pode, quatro meses depois, mudar a política da Pérsia entre um cálice e outro.",
   },
   "vinho-posto-diante-do-rei-artaxerxes": {
     title: "O vinho posto diante do rei Artaxerxes",
     subtitle: "Ne 2:1 — o cálice em que se decidiu a reconstrução de Jerusalém",
-    text: "\"Sucedeu, pois, no mês de Nisã, no ano vigésimo do rei Artaxerxes, que estava posto vinho diante dele, e eu peguei o vinho e o dei ao rei; porém eu nunca estivera triste diante dele\" (Ne 2:1). Quatro meses separam este versículo do mês de Quislev do capítulo 1: quatro meses de jejum e de oração antes de uma única oportunidade. O gesto é rotina — pegar a taça, provar, entregar —, e o que quebra a rotina é o rosto. Num paço persa, tristeza diante do rei podia ser lida como desagrado ou conspiração, e por isso vem a linha seguinte: \"então temi sobremaneira\" (Ne 2:2). Todo o livro nasce de um copo de vinho servido por um homem que não conseguiu disfarçar.",
+    text: "\"Estava posto vinho diante dele, e eu peguei o vinho e o dei ao rei; porém eu nunca estivera triste diante dele\" (Ne 2:1). Quatro meses separam este versículo do mês de Quislev do capítulo 1: quatro meses de jejum antes de uma única oportunidade. O gesto é rotina — pegar a taça, provar, entregar —, e o que quebra a rotina é o rosto. Num paço persa, tristeza diante do rei podia ser lida como conspiração, e por isso vem a linha seguinte: \"então temi sobremaneira\" (Ne 2:2).",
   },
   "cartas-para-os-governadores-dalem-do-rio": {
     title: "As cartas para os governadores dalém do rio",
     subtitle: "Ne 2:7 — o salvo-conduto de uma província a outra",
-    text: "\"Disse mais ao rei: Se ao rei parece bem, dêem-se-me cartas para os governadores dalém do rio, para que me permitam passar até que chegue a Judá\" (Ne 2:7). \"Dalém do rio\" é o nome administrativo persa de toda a satrapia a oeste do Eufrates — a mesma de onde Tatenai escrevera a Dario a respeito do templo (Ed 5:3). Sem estas cartas, um judeu a subir com projeto de fortificar uma cidade seria detido na primeira barreira; com elas, os mesmos governadores que poderiam impedi-lo ficam obrigados a deixá-lo passar. Neemias pede quatro meses depois de ter começado a orar, e pede em ordem: primeiro a missão, depois o prazo, depois o trânsito, depois a madeira.",
+    text: "\"Dêem-se-me cartas para os governadores dalém do rio, para que me permitam passar até que chegue a Judá\" (Ne 2:7). \"Dalém do rio\" é o nome administrativo persa de toda a satrapia a oeste do Eufrates — a mesma de onde Tatenai escrevera a Dario (Ed 5:3). Sem estas cartas, um judeu a subir com projeto de fortificar uma cidade seria detido na primeira barreira. Neemias pede quatro meses depois de ter começado a orar, e pede em ordem: primeiro a missão, depois o prazo, depois o trânsito, depois a madeira.",
   },
   "carta-para-asafe-guarda-da-floresta-do-rei": {
     title: "A carta para Asafe, guarda da floresta do rei",
     subtitle: "Ne 2:8 — o pedido de madeira, e a boa mão de Deus na mesma frase",
-    text: "\"Como também uma carta para Asafe, guarda da floresta do rei, para que me dê madeira para cobrir as portas do paço da casa, para o muro da cidade e para a casa em que eu houver de entrar. E o rei mas deu, segundo a boa mão de Deus sobre mim\" (Ne 2:8). É o pedido mais concreto do livro e o mais teológico: vigas de um bosque imperial, e no fim da mesma frase o crédito entregue a Deus. Repare na ordem das prioridades — primeiro as portas da fortaleza junto ao templo, depois o muro, e só por último a casa onde ele próprio vai morar. Sem esta carta não há porta nenhuma para pendurar nos portais que o capítulo 3 vai levantar.",
+    text: "\"Como também uma carta para Asafe, guarda da floresta do rei, para que me dê madeira para cobrir as portas... E o rei mas deu, segundo a boa mão de Deus sobre mim\" (Ne 2:8). É o pedido mais concreto do livro e o mais teológico: vigas de um bosque imperial, e no fim da mesma frase o crédito entregue a Deus. Repare na ordem das prioridades — primeiro as portas da fortaleza junto ao templo, depois o muro, e só por último a casa onde ele próprio vai morar.",
   },
   "madeira-para-as-portas-do-paco-e-do-muro": {
     title: "A madeira para as portas do paço e do muro",
     subtitle: "Ne 2:8 — a carga que subiu da floresta real para Jerusalém",
-    text: "Judá é terra de pedra, oliveira e figueira; madeira de construção era importada desde sempre — Salomão comprou-a a Hirão, e os que voltaram do cativeiro pagaram \"azeite aos sidônios, e aos tírios, para trazerem do Líbano madeira de cedro ao mar, para Jope\" (Ed 3:7). Neemias resolve o problema de outra maneira: consegue por decreto a madeira de um bosque do rei. É com estas toras que se fazem as portas, os travessões e as coberturas que o capítulo seguinte repetirá porta a porta — \"a qual emadeiraram, e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:3). Cada porta reerguida da volta do muro sai desta pilha.",
+    text: "Judá é terra de pedra, oliveira e figueira; madeira de construção era importada desde sempre — os que voltaram do cativeiro pagaram \"azeite aos sidônios, e aos tírios, para trazerem do Líbano madeira de cedro ao mar, para Jope\" (Ed 3:7). Neemias resolve o problema de outra maneira: consegue por decreto a madeira de um bosque do rei. É com estas toras que se fazem as portas e os travessões que o capítulo seguinte repetirá porta a porta (Ne 3:3). Cada porta reerguida da volta do muro sai desta pilha.",
   },
   "grande-rio-dalem-do-qual-vinham-os-governadores": {
     title: "O grande rio dalém do qual vinham os governadores",
@@ -76,12 +76,12 @@ export const TAGS: Record<string, StageInfo> = {
   "tanque-do-rei-em-jerusalem": {
     title: "O tanque do rei",
     subtitle: "Ne 2:14 — o reservatório ao pé do jardim, no canto sudeste",
-    text: "\"E passei à porta da fonte, e ao tanque do rei; e não havia lugar por onde pudesse passar o animal em que estava montado\" (Ne 2:14). É o reservatório junto ao jardim real, no ponto em que os vales do Cedrom e de Hinom se juntam — provavelmente o mesmo \"tanque de Hasselá, ao pé do jardim do rei\" que Salum, filho de Col-Hoze, reparará no capítulo seguinte (Ne 3:15). Água era a questão de vida ou morte de Jerusalém em cerco, e por isso os seus tanques e o seu aqueduto entram na lista de obras logo a seguir às portas. Aqui, porém, o tanque só serve de última referência antes de a montaria ter de parar.",
+    text: "\"E passei à porta da fonte, e ao tanque do rei; e não havia lugar por onde pudesse passar o animal em que estava montado\" (Ne 2:14). É o reservatório junto ao jardim real, no ponto em que os vales do Cedrom e de Hinom se juntam — provavelmente o mesmo \"tanque de Hasselá, ao pé do jardim do rei\" que Salum reparará no capítulo seguinte (Ne 3:15). Água era questão de vida ou morte em cerco, e por isso os tanques entram na lista logo a seguir às portas. Aqui, porém, o tanque só serve de última referência antes de a montaria ter de parar.",
   },
   "porta-da-fonte-de-jerusalem": {
     title: "A porta da fonte",
     subtitle: "Ne 2:14 • 3:15 • 12:37 — a porta do sul, junto às águas de Siloé",
-    text: "Aparece três vezes no livro e nas três é a mesma dobradiça da história. Na ronda noturna, é onde Neemias passa antes de o entulho lhe barrar o caminho (Ne 2:14). No relatório da obra, é reparada com um cuidado que nenhuma outra recebe: \"E a porta da fonte reparou-a Salum, filho de Col-Hoze, líder do distrito de Mizpá; este a edificou, e a cobriu, e lhe levantou as portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:15). E, no dia da dedicação, é por ali que o primeiro coro sobe as escadas da cidade de Davi (Ne 12:37). Fica ao sul, junto à fonte que abastecia a cidade — o ponto mais sensível de toda a muralha.",
+    text: "Aparece três vezes no livro e nas três é a mesma dobradiça da história. Na ronda noturna, é onde Neemias passa antes de o entulho lhe barrar o caminho (Ne 2:14). No relatório da obra, é reparada com um cuidado que nenhuma outra recebe: \"este a edificou, e a cobriu, e lhe levantou as portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:15). E, no dia da dedicação, é por ali que o primeiro coro sobe as escadas da cidade de Davi (Ne 12:37). Fica ao sul, junto à fonte que abastecia a cidade.",
   },
   "ribeiro-por-onde-neemias-subiu-de-noite": {
     title: "O ribeiro por onde Neemias subiu de noite",
@@ -96,12 +96,12 @@ export const TAGS: Record<string, StageInfo> = {
   "primeiro-entulho-tirado-do-muro-de-jerusalem": {
     title: "O primeiro entulho tirado do muro de Jerusalém",
     subtitle: "Ne 2:19-20 — o cesto que arranca a obra debaixo de zombaria",
-    text: "\"O que ouvindo Sambalate, o horonita, e Tobias, o servo amonita, e Gesém, o árabe, zombaram de nós, e desprezaram-nos, e disseram: Que é isto que fazeis? Quereis rebelar-vos contra o rei?\" (Ne 2:19). A obra começa a ser ridicularizada no mesmo dia em que o primeiro cesto de escombro é retirado. Antes de assentar uma pedra é preciso limpar cento e quarenta anos de ruína, e é esse trabalho invisível que mais tarde quebrará as costas dos carregadores: \"Já desfaleceram as forças dos carregadores, e o pó é muito\" (Ne 4:10). A resposta de Neemias à zombaria não discute: \"O Deus dos céus é o que nos fará prosperar: e nós, seus servos, nos levantaremos e edificaremos\" (Ne 2:20).",
+    text: "\"Zombaram de nós, e desprezaram-nos, e disseram: Que é isto que fazeis? Quereis rebelar-vos contra o rei?\" (Ne 2:19). A obra começa a ser ridicularizada no mesmo dia em que o primeiro cesto de escombro é retirado. Antes de assentar uma pedra é preciso limpar cento e quarenta anos de ruína, e é esse trabalho invisível que mais tarde quebrará as costas dos carregadores (Ne 4:10). A resposta de Neemias não discute: \"O Deus dos céus é o que nos fará prosperar: e nós, seus servos, nos levantaremos e edificaremos\" (Ne 2:20).",
   },
   "porta-do-gado-consagrada-por-eliasibe": {
     title: "A porta do gado, consagrada por Eliasibe e pelos sacerdotes",
     subtitle: "Ne 3:1,32 — onde a volta do muro começa e acaba",
-    text: "\"E levantou-se Eliasibe, o sumo sacerdote, com os seus irmãos, os sacerdotes, e reedificaram a porta do gado, a qual consagraram\" (Ne 3:1). É a porta pela qual entravam os animais do sacrifício, do lado norte, junto ao templo — por isso é o sumo sacerdote que a levanta, e é a única de todo o capítulo que é CONSAGRADA. O circuito inteiro do muro parte daqui e volta a fechar-se aqui trinta e um versículos depois: \"E entre a câmara do canto e a porta do gado, repararam os ourives e os mercadores\" (Ne 3:32). A obra começa no ponto por onde entra o sacrifício, e essa ordem não é acidental no livro em que o povo, cinco capítulos adiante, se ajuntará para ouvir a lei antes de povoar a cidade.",
+    text: "\"Levantou-se Eliasibe, o sumo sacerdote, com os seus irmãos, os sacerdotes, e reedificaram a porta do gado, a qual consagraram\" (Ne 3:1). É a porta pela qual entravam os animais do sacrifício, do lado norte, junto ao templo — por isso é o sumo sacerdote que a levanta, e é a única de todo o capítulo que é CONSAGRADA. O circuito inteiro parte daqui e volta a fechar-se aqui trinta e um versículos depois (Ne 3:32). A obra começa no ponto por onde entra o sacrifício, e essa ordem não é acidental.",
   },
   "torre-de-mea": {
     title: "A torre de Meá",
@@ -121,12 +121,12 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-do-peixe-com-fechaduras-e-ferrolhos": {
     title: "A porta do peixe, com as suas fechaduras e os seus ferrolhos",
     subtitle: "Ne 3:3 — a porta do mercado, no muro norte",
-    text: "\"E à porta do peixe edificaram os filhos de Hassenaá; a qual emadeiraram, e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:3). Chamava-se assim porque era por ali que entrava o peixe trazido do Mediterrâneo e do lago — o mesmo comércio que, no último capítulo, Neemias encontrará a laborar ao sábado pelas mãos dos tírios (Ne 13:16). Os filhos de Hassenaá eram a maior casa paterna do rol inteiro, três mil novecentos e trinta (Ne 7:38), e por isso lhes coube um portão de mercado. A fórmula técnica repete-se em cada porta reerguida: madeira, batentes, fechaduras, ferrolhos.",
+    text: "\"E à porta do peixe edificaram os filhos de Hassenaá; a qual emadeiraram, e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:3). Chamava-se assim porque era por ali que entrava o peixe trazido do Mediterrâneo — o mesmo comércio que, no último capítulo, Neemias encontrará a laborar ao sábado pelas mãos dos tírios (Ne 13:16). Os filhos de Hassenaá eram a maior casa paterna do rol inteiro, três mil novecentos e trinta (Ne 7:38), e por isso lhes coube um portão de mercado.",
   },
   "fechaduras-e-ferrolhos-das-portas-do-muro": {
     title: "As fechaduras e os ferrolhos das portas do muro",
     subtitle: "Ne 3:3,6,13,14,15 — a ferragem que faz de um vão uma porta",
-    text: "Cinco vezes o capítulo repete a mesma fórmula: \"e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:3,6,13,14,15). É a diferença entre um buraco na parede e uma cidade que se fecha ao anoitecer. Jeremias descrevera a ruína exatamente por aqui: \"ele destruiu e quebrou os seus ferrolhos\" (Lm 2:9). E é esta ferragem que tornará possível a ordem do capítulo 7 — \"Não se abram as portas de Jerusalém até que o sol aqueça… e vós trancai-as\" (Ne 7:3) — e a do capítulo 13, quando as portas forem fechadas ao anoitecer da véspera do sábado para que nenhuma carga entrasse (Ne 13:19).",
+    text: "Cinco vezes o capítulo repete a mesma fórmula: \"e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:3,6,13,14,15). É a diferença entre um buraco na parede e uma cidade que se fecha ao anoitecer. Jeremias descrevera a ruína exatamente por aqui: \"ele destruiu e quebrou os seus ferrolhos\" (Lm 2:9). E é esta ferragem que tornará possível a ordem do capítulo 7 — \"e vós trancai-as\" (Ne 7:3) — e a do capítulo 13, quando as portas forem fechadas na véspera do sábado (Ne 13:19).",
   },
   "nobres-dos-tecoitas-que-nao-submeteram-a-cerviz": {
     title: "Os nobres dos tecoítas, que não submeteram a cerviz ao serviço de seu Senhor",
@@ -136,12 +136,12 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-velha-de-jerusalem": {
     title: "A porta velha",
     subtitle: "Ne 3:6 • 12:39 — o portão do canto noroeste",
-    text: "\"E a porta velha repararam-na Joiada, filho de Paséia, e Mesulão, filho de Besodias; estes a emadeiraram, e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:6). O nome sugere um portão da muralha antiga, anterior às ampliações dos reis de Judá, e fica no ângulo noroeste, entre a porta do peixe e o muro largo. Volta a aparecer no percurso do segundo coro da dedicação: \"E desde a porta de Efraim, passaram por cima da porta velha, e da porta do peixe\" (Ne 12:39). Reparar uma porta velha é o resumo do livro inteiro: nada aqui é fundação nova, tudo é coisa antiga levantada outra vez.",
+    text: "\"E a porta velha repararam-na Joiada, filho de Paséia, e Mesulão, filho de Besodias; estes a emadeiraram, e levantaram as suas portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:6). O nome sugere um portão da muralha antiga, anterior às ampliações dos reis de Judá, no ângulo noroeste. Volta a aparecer no percurso do segundo coro da dedicação (Ne 12:39). Reparar uma porta velha é o resumo do livro inteiro: nada aqui é fundação nova, tudo é coisa antiga levantada outra vez.",
   },
   "obra-dos-ourives-no-muro-de-jerusalem": {
     title: "A obra dos ourives no muro de Jerusalém",
     subtitle: "Ne 3:8,32 — a corporação do ouro no andaime",
-    text: "\"Ao seu lado reparou Uziel, filho de Haraías, um dos ourives\" (Ne 3:8), e no fecho da volta: \"E entre a câmara do canto e a porta do gado, repararam os ourives e os mercadores\" (Ne 3:32). O ourives é o artesão mais fino da cidade — trabalha a peso de grama, com balança e martelo pequeno —, e o capítulo põe-no a assentar alvenaria. Não é uma corporação a financiar um trecho: é uma corporação a construí-lo com as mãos. Foram eles que fortificaram Jerusalém \"até ao muro largo\", a secção espessa que provavelmente vinha do tempo de Ezequias, que \"edificou todo o muro quebrado até às torres\" (2Cr 32:5).",
+    text: "\"Ao seu lado reparou Uziel, filho de Haraías, um dos ourives\" (Ne 3:8), e no fecho da volta: \"entre a câmara do canto e a porta do gado, repararam os ourives e os mercadores\" (Ne 3:32). O ourives é o artesão mais fino da cidade — trabalha a peso de grama, com balança e martelo pequeno —, e o capítulo põe-no a assentar alvenaria. Não é uma corporação a financiar um trecho: é uma corporação a construí-lo com as mãos, até ao \"muro largo\", a secção espessa que vinha do tempo de Ezequias (2Cr 32:5).",
   },
   "obra-dos-boticarios-no-muro-de-jerusalem": {
     title: "A obra dos boticários no muro de Jerusalém",
@@ -166,7 +166,7 @@ export const TAGS: Record<string, StageInfo> = {
   "cestos-de-salum-e-de-suas-filhas": {
     title: "Os cestos de Salum, filho de Haloés, e de suas filhas",
     subtitle: "Ne 3:12 — o único trecho da Bíblia em que filhas reparam um muro",
-    text: "\"E ao seu lado reparou Salum, filho de Haloés, líder da outra meia parte de Jerusalém, ele e suas filhas\" (Ne 3:12). Três palavras que não têm paralelo em toda a Escritura: nenhum outro relatório de obra, censo de trabalhadores ou registo de reparação nomeia filhas a levantar pedra. Salum era chefe de distrito, tinha gente para mandar, e foi para o andaime com a casa toda. O cesto é a ferramenta da cena — encher, passar, subir, despejar —, o mesmo cesto que no capítulo seguinte quebrará as costas dos carregadores debaixo do pó (Ne 4:10). E fica sete versículos abaixo da nota inversa sobre os nobres de Tecoa, que \"não submeteram a cerviz\" (Ne 3:5).",
+    text: "\"E ao seu lado reparou Salum, filho de Haloés, líder da outra meia parte de Jerusalém, ele e suas filhas\" (Ne 3:12). Três palavras que não têm paralelo em toda a Escritura: nenhum outro relatório de obra nomeia filhas a levantar pedra. Salum era chefe de distrito, tinha gente para mandar, e foi para o andaime com a casa toda. O cesto é a ferramenta da cena — encher, passar, subir, despejar —, o mesmo que no capítulo seguinte quebrará as costas dos carregadores debaixo do pó (Ne 4:10).",
   },
   "porta-do-vale-reerguida-por-hanum": {
     title: "A porta do vale, reerguida por Hanum e pelos moradores de Zanoa",
@@ -181,7 +181,7 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-do-monturo-de-jerusalem": {
     title: "A porta do monturo",
     subtitle: "Ne 2:13 • 3:14 • 12:31 — a porta do lixo, no ponto mais baixo da cidade",
-    text: "\"E a porta do monturo reparou-a Malquias, filho de Recabe, líder do distrito de Bete-Haquerém; este a edificou, e lhe levantou as portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:14). É a saída para o vale de Hinom, por onde se despejava o entulho e o lixo da cidade — a porta menos honrosa do perímetro, e mesmo assim reparada por um chefe de distrito, com o mesmo cuidado das outras. No dia da dedicação, é justamente daqui que parte o primeiro dos dois grandes coros: \"ordenei dois grandes coros em procissão, um à mão direita sobre o muro do lado da porta do monturo\" (Ne 12:31). O louvor da cidade começa na porta do lixo.",
+    text: "\"E a porta do monturo reparou-a Malquias, filho de Recabe, líder do distrito de Bete-Haquerém; este a edificou, e lhe levantou as portas com as suas fechaduras e os seus ferrolhos\" (Ne 3:14). É a saída para o vale de Hinom, por onde se despejava o lixo da cidade — a porta menos honrosa do perímetro, e mesmo assim reparada por um chefe de distrito, com o mesmo cuidado das outras. No dia da dedicação é justamente daqui que parte o primeiro dos dois grandes coros (Ne 12:31): o louvor da cidade começa na porta do lixo.",
   },
   "queima-do-monturo-fora-do-muro": {
     title: "A queima do monturo, fora do muro",
@@ -221,7 +221,7 @@ export const TAGS: Record<string, StageInfo> = {
   "cestos-dos-levitas-de-queila": {
     title: "Os cestos dos levitas de Queila",
     subtitle: "Ne 3:17-18 — a tribo do santuário posta a carregar pedra",
-    text: "\"Depois dele repararam os levitas, Reum, filho de Bani; ao seu lado reparou Hasabias, líder da metade de Queila, no seu distrito. Depois dele repararam seus irmãos, Bavai, filho de Henadade, líder da outra meia parte de Queila\" (Ne 3:17-18). Os levitas do pós-exílio eram poucos — setenta e quatro no rol inteiro (Ne 7:43) — e vinham para Jerusalém em turnos para o serviço da casa de Deus. Aqui aparecem repartidos por distrito, como qualquer outra turma, com cesto ao ombro. A casa de Henadade já tinha feito o mesmo na obra do templo, sessenta anos antes (Ed 3:9): duas gerações da mesma família em dois canteiros de obras.",
+    text: "\"Depois dele repararam os levitas, Reum, filho de Bani; ao seu lado reparou Hasabias, líder da metade de Queila... Depois dele repararam seus irmãos, Bavai, filho de Henadade\" (Ne 3:17-18). Os levitas do pós-exílio eram poucos — setenta e quatro no rol inteiro (Ne 7:43) — e vinham a Jerusalém em turnos para o serviço da casa de Deus. Aqui aparecem repartidos por distrito, como qualquer outra turma, com cesto ao ombro. A casa de Henadade já fizera o mesmo na obra do templo, sessenta anos antes (Ed 3:9).",
   },
   "casa-das-armas-a-esquina-do-muro": {
     title: "A casa das armas, à esquina do muro",
@@ -296,12 +296,12 @@ export const TAGS: Record<string, StageInfo> = {
   "montoes-do-po-das-pedras-queimadas": {
     title: "Os montões do pó das pedras que foram queimadas",
     subtitle: "Ne 4:2 — a matéria-prima de que Sambalate zombou",
-    text: "\"Que fazem estes fracos judeus? Permitir-se-lhes-á isto? Sacrificarão? Acabá-lo-ão num só dia? Vivificarão dos montões do pó as pedras que foram queimadas?\" (Ne 4:2). A zombaria é tecnicamente acertada: pedra calcária que passou por incêndio esfarela-se, e cento e quarenta anos de ruína tinham reduzido boa parte da muralha a cascalho misturado com terra. Vivificar — dar vida — é o verbo que ele usa por ironia, e é justamente o verbo que descreve o que aconteceu em cinquenta e dois dias. O escárnio dito diante do exército de Samaria vira, no versículo 16 do capítulo 6, uma confissão: \"reconheceram que o nosso Deus fizera esta obra\".",
+    text: "\"Que fazem estes fracos judeus?... Vivificarão dos montões do pó as pedras que foram queimadas?\" (Ne 4:2). A zombaria é tecnicamente acertada: pedra calcária que passou por incêndio esfarela-se, e cento e quarenta anos de ruína tinham reduzido boa parte da muralha a cascalho misturado com terra. Vivificar — dar vida — é o verbo que ele usa por ironia, e é justamente o verbo que descreve o que aconteceu em cinquenta e dois dias. O escárnio vira, em Ne 6:16, uma confissão: \"reconheceram que o nosso Deus fizera esta obra\".",
   },
   "conselho-dos-que-se-ligaram-contra-jerusalem": {
     title: "O conselho dos que se ligaram entre si para virem guerrear contra Jerusalém",
     subtitle: "Ne 4:7-8 — o cerco fechado dos quatro pontos cardeais",
-    text: "\"E sucedeu que, ouvindo Sambalate e Tobias, e os árabes, os amonitas, e os asdoditas, que tanto ia crescendo a reparação dos muros de Jerusalém, que já as roturas se começavam a tapar, iraram-se sobremodo, e ligaram-se entre si todos, para virem guerrear contra Jerusalém, e para os desviarem do seu intento\" (Ne 4:7-8). Samaria a norte, Amom a leste, os árabes a sul, Asdode a poente: a coligação fecha o mapa. E o gatilho está dito no meio do versículo — não foi o começo da obra, foi o momento em que \"as roturas se começavam a tapar\". A resposta de Jerusalém tem duas metades e o texto não dispensa nenhuma: \"Porém nós oramos ao nosso Deus e pusemos uma guarda contra eles, de dia e de noite\" (Ne 4:9).",
+    text: "\"Ouvindo Sambalate e Tobias, e os árabes, os amonitas, e os asdoditas, que tanto ia crescendo a reparação dos muros... ligaram-se entre si todos, para virem guerrear contra Jerusalém\" (Ne 4:7-8). Samaria a norte, Amom a leste, os árabes a sul, Asdode a poente: a coligação fecha o mapa. E o gatilho está dito no meio do versículo — não foi o começo da obra, foi o momento em que \"as roturas se começavam a tapar\". A resposta tem duas metades e o texto não dispensa nenhuma: \"oramos ao nosso Deus e pusemos uma guarda\" (Ne 4:9).",
   },
   "fogueira-da-guarda-posta-contra-eles": {
     title: "A fogueira da guarda posta de dia e de noite",
@@ -476,7 +476,7 @@ export const TAGS: Record<string, StageInfo> = {
   "carta-aberta-que-sambalate-enviou-pela-quinta-vez": {
     title: "A carta aberta que Sambalate enviou pela quinta vez",
     subtitle: "Ne 6:5-7 — a calúnia feita para ser lida por toda a gente no caminho",
-    text: "\"Então Sambalate ainda pela quinta vez me enviou seu servo com uma carta aberta na sua mão\" (Ne 6:5). ABERTA é o detalhe: carta selada é diplomacia, carta aberta na mão de um moço é panfleto que se lê em cada aldeia da estrada. E o conteúdo é a única acusação capaz de parar a obra por decreto — rebelião contra o rei: \"Tu e os judeus intentais rebelar-vos, então edificas o muro; e tu te farás rei deles\" (Ne 6:6). Foi essa mesma acusação que, anos antes, obtivera de Artaxerxes a ordem de embargo (Ed 4:21). Neemias responde numa linha: \"De tudo o que dizes coisa nenhuma sucedeu; mas tu, do teu coração, o inventas\" (Ne 6:8).",
+    text: "\"Então Sambalate ainda pela quinta vez me enviou seu servo com uma carta aberta na sua mão\" (Ne 6:5). ABERTA é o detalhe: carta selada é diplomacia, carta aberta na mão de um moço é panfleto que se lê em cada aldeia da estrada. E o conteúdo é a única acusação capaz de parar a obra por decreto: \"Tu e os judeus intentais rebelar-vos... e tu te farás rei deles\" (Ne 6:6). Foi essa mesma acusação que anos antes obtivera o embargo (Ed 4:21). Neemias responde numa linha: \"tu, do teu coração, o inventas\" (Ne 6:8).",
   },
   "cesto-largado-quando-as-maos-afrouxaram": {
     title: "O cesto largado quando as mãos afrouxaram",
@@ -836,7 +836,7 @@ export const TAGS: Record<string, StageInfo> = {
   "capitao-levantado-para-voltarem-a-servidao": {
     title: "O capitão que levantaram para voltarem à servidão",
     subtitle: "Ne 9:17 — a rebelião que quis regressar ao Egito",
-    text: "\"E recusaram ouvir-te, e não se lembraram das tuas maravilhas, que lhes fizeste, e endureceram a sua cerviz e, na sua rebelião, levantaram um capitão, a fim de voltarem para a sua servidão; porém tu, ó Deus perdoador, clemente e misericordioso, tardio em irar-te, e grande em beneficência, tu não os desamparaste\" (Ne 9:17). Escolheram um chefe para os levar de volta à escravidão — é o retrato mais duro que a Escritura faz do coração humano, e vem no meio de uma oração em que o povo se está a comparar com aqueles pais. A resposta de Deus está na segunda metade do mesmo versículo, e é uma citação de Êxodo 34.",
+    text: "\"E recusaram ouvir-te... e, na sua rebelião, levantaram um capitão, a fim de voltarem para a sua servidão; porém tu, ó Deus perdoador, clemente e misericordioso, tardio em irar-te, e grande em beneficência, tu não os desamparaste\" (Ne 9:17). Escolheram um chefe para os levar de volta à escravidão — é o retrato mais duro que a Escritura faz do coração humano, e vem no meio de uma oração em que o povo se está a comparar com aqueles pais. A resposta de Deus está na segunda metade do mesmo versículo, e é uma citação de Êxodo 34.",
   },
   "bezerro-de-fundicao-feito-no-deserto": {
     title: "O bezerro de fundição feito no deserto",
@@ -891,12 +891,12 @@ export const TAGS: Record<string, StageInfo> = {
   "confissao-feita-uma-quarta-parte-do-dia": {
     title: "A confissão feita uma quarta parte do dia",
     subtitle: "Ne 9:32-33 — o pedido, e a sentença que o povo dá contra si mesmo",
-    text: "\"Agora, pois, nosso Deus, o grande, poderoso e terrível Deus, que guardas a aliança e a beneficência, não tenhas em pouca conta toda a aflição que nos alcançou a nós, aos nossos reis, aos nossos príncipes, aos nossos sacerdotes, aos nossos profetas, aos nossos pais e a todo o teu povo, desde os dias dos reis da Assíria até ao dia de hoje. Porém tu és justo em tudo quanto tem vindo sobre nós; porque tu tens agido fielmente, e nós temos agido impiamente\" (Ne 9:32-33). É o único pedido de toda a oração — que Deus não tenha em pouca conta a aflição —, e vem seguido de uma absolvição de Deus e de uma condenação de si mesmos.",
+    text: "\"Agora, pois, nosso Deus, o grande, poderoso e terrível Deus, que guardas a aliança... não tenhas em pouca conta toda a aflição que nos alcançou... Porém tu és justo em tudo quanto tem vindo sobre nós; porque tu tens agido fielmente, e nós temos agido impiamente\" (Ne 9:32-33). É o único pedido de toda a oração — que Deus não tenha em pouca conta a aflição —, e vem seguido de uma absolvição de Deus e de uma condenação de si mesmos.",
   },
   "reis-a-quem-a-terra-multiplica-os-seus-produtos": {
     title: "Os reis a quem a terra multiplica os seus produtos",
     subtitle: "Ne 9:36-37 — eis que hoje somos servos, na terra que deste a nossos pais",
-    text: "\"Eis que hoje somos servos; e até na terra que deste a nossos pais, para comerem o seu fruto e o seu bem, eis que somos servos nela. E ela multiplica os seus produtos para os reis, que puseste sobre nós, por causa dos nossos pecados; e conforme a sua vontade dominam sobre os nossos corpos e sobre o nosso gado; e estamos numa grande angústia\" (Ne 9:36-37). É a frase mais dura do pós-exílio: o povo está de volta, com templo e muro, e chama-se servo dentro de casa. A colheita da terra prometida vai para um rei que mora a mil e quinhentos quilómetros dali. E, mesmo assim, o que se segue não é revolta: é assinatura.",
+    text: "\"Eis que hoje somos servos; e até na terra que deste a nossos pais, para comerem o seu fruto e o seu bem, eis que somos servos nela. E ela multiplica os seus produtos para os reis, que puseste sobre nós, por causa dos nossos pecados\" (Ne 9:36-37). É a frase mais dura do pós-exílio: o povo está de volta, com templo e muro, e chama-se servo dentro de casa. A colheita da terra prometida vai para um rei que mora a mil e quinhentos quilómetros dali. E, mesmo assim, o que se segue não é revolta: é assinatura.",
   },
   "firme-alianca-escrita-e-selada": {
     title: "A firme aliança escrita e selada",
@@ -1011,7 +1011,7 @@ export const TAGS: Record<string, StageInfo> = {
   "mandado-do-rei-acerca-dos-cantores": {
     title: "O mandado do rei acerca dos cantores",
     subtitle: "Ne 11:23 — um decreto persa a regular o louvor de Jerusalém",
-    text: "\"Porque havia um mandado do rei acerca deles, e uma certa regra para os cantores, cada qual no seu dia\" (Ne 11:23). O sustento e o turno dos cantores do templo estavam fixados por decreto imperial — provavelmente uma extensão da carta de Artaxerxes a Esdras, que declarara não ser lícito impor \"nem tributo, nem contribuição, nem renda\" a \"todos os sacerdotes e levitas, cantores, porteiros, servidores do templo e ministros desta casa de Deus\" (Ed 7:24). É um dos factos mais estranhos deste livro: o louvor do Deus de Israel a ser garantido, por escrito, pelo mesmo império que o mantém em servidão.",
+    text: "\"Porque havia um mandado do rei acerca deles, e uma certa regra para os cantores, cada qual no seu dia\" (Ne 11:23). O sustento e o turno dos cantores do templo estavam fixados por decreto imperial — provavelmente uma extensão da carta de Artaxerxes a Esdras, que isentara de tributo \"todos os sacerdotes e levitas, cantores, porteiros\" (Ed 7:24). É um dos factos mais estranhos deste livro: o louvor do Deus de Israel garantido, por escrito, pelo mesmo império que o mantém em servidão.",
   },
   "mesa-dos-negocios-do-povo-diante-do-rei": {
     title: "A mesa dos negócios do povo diante do rei",
@@ -1161,7 +1161,7 @@ export const TAGS: Record<string, StageInfo> = {
   "livro-de-moises-lido-aos-ouvidos-do-povo": {
     title: "O livro de Moisés lido aos ouvidos do povo",
     subtitle: "Ne 13:1-3 — a leitura que apartou de Israel todo o elemento misto",
-    text: "\"Naquele dia leu-se no livro de Moisés, aos ouvidos do povo; e achou-se escrito nele que os amonitas e os moabitas não entrassem jamais na congregação de Deus, porquanto não tinham saído ao encontro dos filhos de Israel com pão e água; antes contra eles assalariaram a Balaão para os amaldiçoar; porém o nosso Deus converteu a maldição em bênção\" (Ne 13:1-2). É o mandamento de Deuteronômio 23:3, achado numa leitura pública — e cai em cheio sobre Tobias, o servo amonita, que naquele momento tinha uma câmara dentro do templo. \"Sucedeu, pois, que, ouvindo eles esta lei, apartaram de Israel todo o elemento misto\" (Ne 13:3).",
+    text: "\"Naquele dia leu-se no livro de Moisés, aos ouvidos do povo; e achou-se escrito nele que os amonitas e os moabitas não entrassem jamais na congregação de Deus... porém o nosso Deus converteu a maldição em bênção\" (Ne 13:1-2). É o mandamento de Deuteronômio 23:3, achado numa leitura pública — e cai em cheio sobre Tobias, o servo amonita, que naquele momento tinha uma câmara dentro do templo. \"Sucedeu, pois, que, ouvindo eles esta lei, apartaram de Israel todo o elemento misto\" (Ne 13:3).",
   },
   "camara-grande-preparada-para-tobias": {
     title: "A câmara grande que Eliasibe preparou para Tobias",
@@ -1216,7 +1216,7 @@ export const TAGS: Record<string, StageInfo> = {
   "mercadoria-vendida-no-sabado-aos-filhos-de-juda": {
     title: "A mercadoria vendida no sábado aos filhos de Judá",
     subtitle: "Ne 13:17-18 — a contenda com os nobres, e o argumento histórico",
-    text: "\"E contendi com os nobres de Judá, e lhes disse: Que mal é este que fazeis, profanando o dia de sábado? Porventura não fizeram vossos pais assim, e não trouxe o nosso Deus todo este mal sobre nós e sobre esta cidade? E vós ainda mais acrescentais o ardor de sua ira sobre Israel, profanando o sábado\" (Ne 13:17-18). O argumento não é moralista, é histórico: foi por isto que a cidade caiu. Jeremias tinha avisado precisamente sobre o sábado e as cargas às portas de Jerusalém, e o exílio veio. Neemias está a dizer aos nobres que eles estão a repetir a causa da ruína dentro dos muros que acabaram de levantar.",
+    text: "\"E contendi com os nobres de Judá, e lhes disse: Que mal é este que fazeis, profanando o dia de sábado? Porventura não fizeram vossos pais assim, e não trouxe o nosso Deus todo este mal sobre nós e sobre esta cidade?\" (Ne 13:17-18). O argumento não é moralista, é histórico: foi por isto que a cidade caiu. Jeremias tinha avisado precisamente sobre o sábado e as cargas às portas de Jerusalém. Neemias está a dizer aos nobres que eles repetem a causa da ruína dentro dos muros que acabaram de levantar.",
   },
   "portas-de-jerusalem-fechadas-antes-do-sabado": {
     title: "As portas de Jerusalém fechadas antes do sábado",
