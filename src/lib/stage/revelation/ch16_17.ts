@@ -221,14 +221,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       // 2ª TAÇA no mar: sangue como de um morto — morre toda alma vivente
       b(3, {
         set: "mar",
-        env: { terrain: "patmos", night: 0.4, storm: 0.3, fire: 0.1, glory: 0.05 },
+        env: { terrain: "patmos", night: 0.4, storm: 0.3, fire: 0.1, glory: 0.05, blood: 0.95 },
         cast: [JOAO("stand", -240, 0.62), C("anjo", -40, "flyIdle", { dy: 0.25, glow: 0.7 })],
         props: [...BLOOD_SEA, POURED_BOWL],
       }),                                                                     // 2ª taça: o mar vira sangue
       // 3ª TAÇA nos rios e nas fontes das águas: tornaram-se em sangue
       b(4, {
         set: "rios",
-        env: { terrain: "field", night: 0.35, storm: 0.25, fire: 0 },
+        env: { terrain: "field", night: 0.35, storm: 0.25, fire: 0, blood: 1 },
         cast: [JOAO(), POURER(-50)],
         props: [...RIVERS, POURED_BOWL],
       }),                                                                     // 3ª taça: rios em sangue
@@ -249,7 +249,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // 4ª TAÇA sobre o sol: foi-lhe permitido abrasar os homens com fogo
       b(8, {
         set: "sol",
-        env: { terrain: "field", fire: 0.7, glory: 0.4, night: 0.1, storm: 0 },
+        // o sangue das taças 2 e 3 PARA aqui: sem zerar, o Eufrates de 16:12
+        // secaria vermelho e Armagedom teria as águas em sangue.
+        env: { terrain: "field", fire: 0.7, glory: 0.4, night: 0.1, storm: 0, blood: 0 },
         cast: [JOAO(), C("anjo", -40, "flyIdle", { dy: 0.2, glow: 0.8 })],
         props: [...SUN_FIELD, POURED_BOWL],
       }),                                                                     // 4ª taça sobre o sol

@@ -90,7 +90,7 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       if (bt.by && !ROLES.has(bt.by) && !castAqui.some((c) => c.id === bt.by))
         err(`v.${bt.v}: by "${bt.by}" não é papel válido nem id de quem está em cena`);
       if (bt.env?.terrain && !TERRAINS.has(bt.env.terrain)) err(`v.${bt.v}: terreno inválido "${bt.env.terrain}"`);
-      for (const k of ["night","glory","storm","fire","water","verdure"]) {
+      for (const k of ["night","glory","storm","fire","water","verdure","blood"]) {
         const val = bt.env?.[k];
         if (val != null && (val < 0 || val > 1)) err(`v.${bt.v}: env.${k}=${val} fora de 0..1`);
       }

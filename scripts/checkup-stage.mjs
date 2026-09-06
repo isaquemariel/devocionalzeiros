@@ -120,6 +120,15 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       if (!declarouAgua && aguaAntes >= 0.15 && (bt.set || bt.env?.terrain)) {
         hit("warn", "agua-herdada", `o lugar mudou (${bt.set ? `set "${bt.set}"` : `terreno "${bt.env.terrain}"`}) e water=${aguaAntes} veio por herança — declare water no beat (0 se aqui não há água)`);
       }
+      // 7b. SANGUE HERDADO. `blood` tinge a faixa d'água de vermelho e é
+      // herdado como todo `env`. Depois da primeira praga, todo beat com água
+      // que não zerar `blood` continua com o rio em sangue — inclusive num
+      // outro lugar e num outro capítulo. Não basta trocar de `set`.
+      const sangueAntes = env.blood ?? 0;
+      const declarouSangue = !!bt.env && Object.prototype.hasOwnProperty.call(bt.env, "blood");
+      if (!declarouSangue && sangueAntes >= 0.1 && (bt.set || bt.env?.terrain)) {
+        hit("warn", "sangue-herdado", `o lugar mudou (${bt.set ? `set "${bt.set}"` : `terreno "${bt.env.terrain}"`}) e blood=${sangueAntes} veio por herança — declare blood no beat (0 se aqui a água é limpa)`);
+      }
 
       // 4. BALÃO ÓRFÃO — o motor procura cast por id e depois por papel; sem
       // achar, a fala é creditada na barra do narrador (flashback).

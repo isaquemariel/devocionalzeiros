@@ -491,7 +491,7 @@ const shoreWave = (x: number, amp: number, ph: number): number =>
 // andável coberta a partir do fundo: 0.45 → mar cobre ~45% do topo da faixa;
 // ≥0.95 → cobre tudo. Interpolado no env, então entra e sai sem pop.
 // ============================================================================
-function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, night: number, w: number, glory: number): void {
+function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, night: number, w: number, glory: number, blood = 0): void {
   const { W, H, GROUND } = dims;
   const bandBot = dims.BOT ?? (H - 18);
   const bandH = Math.max(14, bandBot - GROUND);
@@ -504,11 +504,18 @@ function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, ni
   const tide = reduce ? 0 : Math.sin(t * 0.0011) * 1.6 * (1 - flood);
   const ph = 0.7;
 
-  const cFar = mixHex(mixHex("#4c7fb4", "#16294a", night * 0.72), "#ffe0a8", glory * 0.22);
-  const cDeep = mixHex(mixHex("#235a8e", "#0b1a32", night * 0.75), "#e8c088", glory * 0.16);
-  const cShallow = mixHex(mixHex("#67a9c6", "#1c3c56", night * 0.7), "#ffeec0", glory * 0.24);
-  const crestC = mixHex("#bfe0f4", "#3a5c7c", night * 0.65);
-  const foamC = mixHex("#eef7fc", "#5a6a7c", night * 0.55);
+  // ÁGUA VIRADA EM SANGUE (env.blood). Só a faixa d'água muda: o céu, o chão e
+  // a luz continuam os do beat. Sem isto, o Nilo de Êx 7:20 saía azul no
+  // versículo que diz que "todas as águas... se tornaram em sangue" — a mesma
+  // classe do muro de Jericó de pé no versículo em que ele cai, e que nenhum
+  // validador vê, porque nada no tipo está errado.
+  const bl = clamp01(blood);
+  const sangue = (hex: string, tom: string) => mixHex(hex, tom, bl);
+  const cFar = sangue(mixHex(mixHex("#4c7fb4", "#16294a", night * 0.72), "#ffe0a8", glory * 0.22), "#7e1618");
+  const cDeep = sangue(mixHex(mixHex("#235a8e", "#0b1a32", night * 0.75), "#e8c088", glory * 0.16), "#4d0b10");
+  const cShallow = sangue(mixHex(mixHex("#67a9c6", "#1c3c56", night * 0.7), "#ffeec0", glory * 0.24), "#9d2420");
+  const crestC = sangue(mixHex("#bfe0f4", "#3a5c7c", night * 0.65), "#c05a4a");
+  const foamC = sangue(mixHex("#eef7fc", "#5a6a7c", night * 0.55), "#e0a89a");
 
   g.save();
   g.globalAlpha = fade;
@@ -532,7 +539,7 @@ function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, ni
   g.clip();
   // reflexo do céu na linha mais distante
   g.globalAlpha = fade * (0.3 + glory * 0.4);
-  g.fillStyle = mixHex("#dcefff", "#ffeec4", glory);
+  g.fillStyle = sangue(mixHex("#dcefff", "#ffeec4", glory), "#b8564a");
   g.fillRect(0, GROUND, W, 1.6);
   const rows = reduce ? 6 : 13;
   const step = 18;
@@ -734,11 +741,14 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 
   // ---- meio-plano por terreno ----
   if (env.terrain === "patmos") {
-    // mar do horizonte
+    // mar do horizonte — que também "se torna em sangue como de um morto"
+    // quando a 2ª taça é derramada (Ap 16:3); em Patmos o mar é o TERRENO, não
+    // a faixa de `water`, e sem isto o mar de sangue saía azul.
+    const blMar = clamp01(env.blood ?? 0);
     const seaY = GROUND * 0.6;
     const sea = g.createLinearGradient(0, seaY, 0, GROUND);
-    sea.addColorStop(0, mixHex("#1c3a60", "#0a1526", night * 0.7));
-    sea.addColorStop(1, mixHex("#3c6ea6", "#16283f", night * 0.7));
+    sea.addColorStop(0, mixHex(mixHex("#1c3a60", "#0a1526", night * 0.7), "#4a0c11", blMar));
+    sea.addColorStop(1, mixHex(mixHex("#3c6ea6", "#16283f", night * 0.7), "#8a1b1c", blMar));
     g.fillStyle = sea; g.fillRect(0, seaY, W, GROUND - seaY);
     // ilhas distantes (silhuetas suaves)
     g.save();
@@ -1546,7 +1556,7 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 
   // ---- MAR / GRANDE MASSA DE ÁGUA sobre a faixa de chão (env.water) ----
   if (water > 0.05 && env.terrain !== "patmos" && env.terrain !== "glory" && env.terrain !== "throne") {
-    drawGroundWaterHD(g, dims, t, reduce, night, water, clamp01(env.glory));
+    drawGroundWaterHD(g, dims, t, reduce, night, water, clamp01(env.glory), clamp01(env.blood ?? 0));
   }
 
   // ---- ilha: água na FRENTE (praia termina no mar) ----
@@ -1558,9 +1568,10 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
     wet.addColorStop(1, `rgba(60,48,28,${0.5 - night * 0.15})`);
     g.fillStyle = wet; g.fillRect(0, shoreY - 6, W, 6);
     // mar frontal
+    const blP = clamp01(env.blood ?? 0);
     const fsea = g.createLinearGradient(0, shoreY, 0, H);
-    fsea.addColorStop(0, mixHex("#4a7ab0", "#1c3050", night * 0.7));
-    fsea.addColorStop(1, mixHex("#274a74", "#0e1c30", night * 0.7));
+    fsea.addColorStop(0, mixHex(mixHex("#4a7ab0", "#1c3050", night * 0.7), "#8a1b1c", blP));
+    fsea.addColorStop(1, mixHex(mixHex("#274a74", "#0e1c30", night * 0.7), "#4a0c11", blP));
     g.fillStyle = fsea; g.fillRect(0, shoreY, W, H - shoreY);
     // espuma viva (borda ondulada)
     const tide = reduce ? 0 : Math.sin(t * 0.0014) * 2.4;
@@ -1604,7 +1615,10 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 // PROPS HD
 // ============================================================================
 
-export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number; night?: number }
+/** `blood` (0..1) é a água virada em sangue de env.blood — chega até aqui
+ *  porque os RIOS e as FONTES também se tornam em sangue (Ap 16:4), e o rio é
+ *  prop, não a faixa d'água do horizonte. Objetos que não são água ignoram. */
+export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number; night?: number; blood?: number }
 
 // escala natural de cada objeto — construções e árvores MAIORES que o
 // personagem, mas sem "estourar" quando o roteiro já usa scale alto
@@ -1631,6 +1645,10 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
   const S = (o.scale ?? 1) * (PROP_MULT[kind] ?? 1);
   const t = o.t ?? 0;
   const reduce = !!o.reduce;
+  const bl = clamp01(o.blood ?? 0);
+  /** tinge de sangue uma cor de água. Cores em rgba() passam pela função com o
+   *  alfa intacto (mixHex só trata hex), então cada uma tem o seu par. */
+  const sangue = (hex: string, tom = "#7e1618") => (bl > 0 ? mixHex(hex, tom, bl) : hex);
 
   switch (kind) {
     case "palm": {
@@ -2832,7 +2850,7 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       // ---- água ----
       const WX = RX * 0.84, WY = RY * 0.82;
       const water = g.createRadialGradient(x, yTop + 0.4 * S, 1, x, yTop + 0.4 * S, WX);
-      water.addColorStop(0, "#123f5e"); water.addColorStop(0.55, "#1f6c9a"); water.addColorStop(1, "#59b4d6");
+      water.addColorStop(0, sangue("#123f5e", "#3d0a0e")); water.addColorStop(0.55, sangue("#1f6c9a", "#6d1315")); water.addColorStop(1, sangue("#59b4d6", "#a83a30"));
       g.fillStyle = water;
       g.beginPath(); g.ellipse(x, yTop + 0.4 * S, WX, WY, 0, 0, TAU); g.fill();
       // reflexo do céu na margem de trás
@@ -2841,7 +2859,7 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       // ondulação lenta (anéis que abrem e somem)
       g.save();
       g.beginPath(); g.ellipse(x, yTop + 0.4 * S, WX, WY, 0, 0, TAU); g.clip();
-      g.strokeStyle = "#dff3ff"; g.lineWidth = 0.7 * S;
+      g.strokeStyle = sangue("#dff3ff", "#e6a89e"); g.lineWidth = 0.7 * S;
       for (let i2 = 0; i2 < 3; i2++) {
         const ph = reduce ? (0.25 + i2 * 0.3) : ((t * 0.00022 + i2 * 0.333) % 1);
         g.globalAlpha = (1 - ph) * 0.45;
@@ -3428,7 +3446,7 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       const flow = reduce ? 0 : t * 0.0016;
       // leito
       const wg2 = g.createLinearGradient(x, fy - RH, x, fy);
-      wg2.addColorStop(0, "#8ad4f0"); wg2.addColorStop(0.5, "#4aa8dc"); wg2.addColorStop(1, "#2a7ab8");
+      wg2.addColorStop(0, sangue("#8ad4f0", "#a33230")); wg2.addColorStop(0.5, sangue("#4aa8dc", "#7e1618")); wg2.addColorStop(1, sangue("#2a7ab8", "#4d0b10"));
       g.fillStyle = wg2;
       g.beginPath();
       g.moveTo(x - RW / 2, fy - RH * 0.4);
@@ -3446,7 +3464,7 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.quadraticCurveTo(x + RW * 0.25, fy - RH * 0.24, x + RW / 2, fy - RH * 0.72);
       g.stroke();
       // ondinhas correndo (fluxo)
-      g.strokeStyle = "rgba(235,250,255,0.65)"; g.lineWidth = 0.9 * S;
+      g.strokeStyle = bl > 0.3 ? "rgba(255,205,195,0.6)" : "rgba(235,250,255,0.65)"; g.lineWidth = 0.9 * S;
       for (let r2 = 0; r2 < 3; r2++) {
         const off = ((flow * 30 + r2 * 17) % 34) - 17;
         g.beginPath();
@@ -3467,7 +3485,7 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
         }
         g.globalAlpha = 1;
       }
-      glowCircle(g, x, fy - RH * 0.2, RW * 0.32, "#a0e0ff", 0.18);
+      glowCircle(g, x, fy - RH * 0.2, RW * 0.32, sangue("#a0e0ff", "#c04a44"), 0.18);
       g.restore();
       return;
     }

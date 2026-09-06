@@ -799,7 +799,7 @@ export const CH03_04: Record<number, StageBeat[]> = {
     // ÁGUAS VERMELHAS COMO SANGUE.
     b(22, { q: "viram os moabitas, defronte deles, as águas vermelhas como sangue.",
       set: "campo-de-moabe-ao-amanhecer", props: CAMPO_DE_MOABE_AO_AMANHECER,
-      env: { terrain: "field", night: 0.22, glory: 0.82, storm: 0.22, fire: 0.62, water: 0.78, verdure: 0.16 }, cast: [
+      env: { terrain: "field", night: 0.22, glory: 0.82, storm: 0.22, fire: 0.62, water: 0.78, blood: 0.72, verdure: 0.16 }, cast: [
       C("homem", -65, "point", { dy: 0.84, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
       C("homem", 60, "stand", { dy: 0.9, facing: 1, id: "segundo-guerreiro-moabita" }),
       C("rei", -220, "stand", { dy: 0.8, facing: 1, id: "mesa-rei-de-moabe" }),
@@ -809,7 +809,7 @@ export const CH03_04: Record<number, StageBeat[]> = {
     // À PRESA, MOABITAS! Correm para o despojo — e ainda não há nenhum morto
     // em cena, por isso a multidão pode entrar aqui.
     b(23, { by: "homem", q: "E disseram:",
-      env: { terrain: "field", night: 0.18, glory: 0.9, storm: 0.34, fire: 0.72, water: 0.8, verdure: 0.14 }, cast: [
+      env: { terrain: "field", night: 0.18, glory: 0.9, storm: 0.34, fire: 0.72, water: 0.8, blood: 0.72, verdure: 0.14 }, cast: [
       C("homem", -45, "raise", { dy: 0.86, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
       C("homem", 70, "raise", { dy: 0.92, facing: 1, id: "segundo-guerreiro-moabita" }),
       C("multidao", 225, "stand", { dy: 0.82, facing: 1, id: "povo-de-moabe-a-presa" }),
@@ -820,7 +820,7 @@ export const CH03_04: Record<number, StageBeat[]> = {
     // chão — e por isso nenhuma multidão festiva neste quadro, só figuras.
     b(24, { q: "os israelitas se levantaram, e feriram os moabitas",
       set: "arraial-de-israel", props: ARRAIAL_DE_ISRAEL,
-      env: { terrain: "field", night: 0.46, glory: 0.16, storm: 0.6, fire: 0.4, water: 0.14, verdure: 0.16 }, cast: [
+      env: { terrain: "field", night: 0.46, glory: 0.16, storm: 0.6, fire: 0.4, water: 0.14, blood: 0, verdure: 0.16 }, cast: [
       C("homem", -85, "raise", { dy: 0.54, facing: 1, id: "soldado-de-israel-na-revista" }),
       C("homem", 60, "lie", { dy: 0.7, facing: -1, id: "moabita-ferido-no-arraial" }),
       C("homem", 180, "walk", { dy: 0.62, facing: 1, id: "guerreiro-moabita-da-fronteira" }),

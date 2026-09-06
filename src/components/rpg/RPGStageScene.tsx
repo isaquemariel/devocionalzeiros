@@ -582,12 +582,12 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const ssc = pr.scale ?? 1;
           items.push({
             fy: -9999 + skyN++,
-            draw: () => drawPropHD(g, pr.kind, sx, syy, { scale: ssc, t: now, reduce, fire: pr.fire, night: drawStateRef.current.env.night }),
+            draw: () => drawPropHD(g, pr.kind, sx, syy, { scale: ssc, t: now, reduce, fire: pr.fire, night: drawStateRef.current.env.night, blood: drawStateRef.current.env.blood }),
           });
           continue;
         }
         const fy = depthToFeetY(pr.feetDy, dims);
-        items.push({ fy, draw: () => drawPropHD(g, pr.kind, sx, fy, { scale: (pr.scale ?? 1) * depthScale(pr.feetDy), t: now, reduce, fire: pr.fire, night: drawStateRef.current.env.night }) });
+        items.push({ fy, draw: () => drawPropHD(g, pr.kind, sx, fy, { scale: (pr.scale ?? 1) * depthScale(pr.feetDy), t: now, reduce, fire: pr.fire, night: drawStateRef.current.env.night, blood: drawStateRef.current.env.blood }) });
       }
       for (const [, a] of live) {
         const fy = depthToFeetY(a.dy, dims);

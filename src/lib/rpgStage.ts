@@ -32,6 +32,13 @@ export interface StageEnv {
   /** VIDA VEGETAL do chão (0 = terra nua/estéril; 1 = relva plena).
    *  Gn 1:11 faz a terra reverdecer; o deserto e o pós-dilúvio ficam baixos. */
   verdure: number;
+  /** ÁGUA VIRADA EM SANGUE (0 = água normal; 1 = sangue). Tinge a faixa de
+   *  `water` de vermelho, sem mexer no céu nem no chão. É a primeira praga
+   *  ("todas as águas... se tornaram em sangue", Êx 7:20), o vale que os
+   *  moabitas viram "vermelho como sangue" (2Rs 3:22) e o mar e os rios de
+   *  Ap 8:8 e 16:3-4. Só tem efeito onde HÁ água: sem `water`, não desenha
+   *  nada — e, como todo `env`, é HERDADO até ser zerado. */
+  blood: number;
 }
 
 export interface CastPlacement {
@@ -132,6 +139,7 @@ export function envAt(script: StageScript, idx: number): StageEnv {
     fire: script.start.fire ?? 0,
     water: script.start.water ?? 0,
     verdure: script.start.verdure ?? 1,
+    blood: script.start.blood ?? 0,
   };
   for (let i = 0; i <= Math.min(idx, script.beats.length - 1); i++) {
     const p = script.beats[i].env;
@@ -269,6 +277,7 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
   state.env.fire = lerp(state.env.fire, state.envTarget.fire, k);
   state.env.water = lerp(state.env.water, state.envTarget.water, k);
   state.env.verdure = lerp(state.env.verdure, state.envTarget.verdure, k);
+  state.env.blood = lerp(state.env.blood, state.envTarget.blood, k);
   state.env.terrain = state.envTarget.terrain;
 
   const env = state.env;
