@@ -898,23 +898,28 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             onPointerUp={(e) => { e.stopPropagation(); }}
             onClick={(e) => { e.stopPropagation(); setInfo(null); }}
           >
+            {/* A cena roda DEITADA e sobra pouca altura: a ficha tem de caber na
+                tela, nunca sair por baixo dela. O cartão fica preso a 88% da
+                altura útil, o cabeçalho e o rodapé não encolhem, e é só o texto
+                que rola. Antes disto o cartão crescia com o texto, e as fichas
+                longas saíam pela borda levando junto o botão de fechar. */}
             <motion.div
               initial={{ scale: 0.85, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", stiffness: 280, damping: 20 }}
-              className="relative w-full max-w-sm rounded-2xl border-2 border-[#e8b04b] p-4 text-left"
-              style={{ background: "linear-gradient(180deg,#1c1710,#0c0a06)" }}
+              className="relative flex w-full max-w-sm flex-col rounded-2xl border-2 border-[#e8b04b] p-4 text-left"
+              style={{ background: "linear-gradient(180deg,#1c1710,#0c0a06)", maxHeight: "88%" }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setInfo(null)}
-                className="absolute top-2 right-2 p-1 rounded-md bg-black/40 border border-[#3a2c18] text-[#cdbfa0]"
+                className="absolute top-2 right-2 z-10 p-1 rounded-md bg-black/40 border border-[#3a2c18] text-[#cdbfa0]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
-              <h3 className="text-base font-black text-[#ffd889] pr-6">{info.title}</h3>
-              <p className="text-[10px] font-bold tracking-wide text-[#9c8b68] uppercase mb-2">{info.subtitle}</p>
-              <p className="text-[12px] leading-relaxed text-[#e8dfc8]">{info.text}</p>
-              <p className="mt-2 text-[9px] text-[#6d5f43]">toque fora para fechar</p>
+              <h3 className="shrink-0 text-base font-black text-[#ffd889] pr-6">{info.title}</h3>
+              <p className="shrink-0 text-[10px] font-bold tracking-wide text-[#9c8b68] uppercase mb-2">{info.subtitle}</p>
+              <p className="min-h-0 overflow-y-auto overscroll-contain text-[12px] leading-relaxed text-[#e8dfc8]">{info.text}</p>
+              <p className="shrink-0 mt-2 text-[9px] text-[#6d5f43]">toque fora para fechar</p>
             </motion.div>
           </motion.div>
         )}

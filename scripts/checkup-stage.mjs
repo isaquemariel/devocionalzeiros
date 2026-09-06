@@ -61,13 +61,13 @@ const tmp = mkdtempSync(join(tmpdir(), "stage-checkup-"));
 const entry = join(tmp, "entry.mjs");
 writeFileSync(entry, `
 export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";
-export { actorInfo, ACTOR_INFO, PROP_TAG_INFO, PACKS } from "${join(ROOT, "src/lib/rpgStageInfoAll.ts")}";
+export { actorInfo, ACTOR_INFO, PROP_INFO, PROP_TAG_INFO, PACKS } from "${join(ROOT, "src/lib/rpgStageInfoAll.ts")}";
 `);
 await build({
   entryPoints: [entry], bundle: true, format: "esm",
   outfile: join(tmp, "out.mjs"), alias: { "@": join(ROOT, "src") }, logLevel: "silent",
 });
-const { STAGE_BOOKS, actorInfo, ACTOR_INFO, PROP_TAG_INFO, PACKS } =
+const { STAGE_BOOKS, actorInfo, ACTOR_INFO, PROP_INFO, PROP_TAG_INFO, PACKS } =
   await import(pathToFileURL(join(tmp, "out.mjs")).href);
 
 let errors = 0, warnings = 0;
@@ -184,6 +184,45 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
         }
       }
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10. FICHA QUE NÃO CABE NA TELA. O painel do "?" abre por cima da cena, que
+// roda DEITADA: sobram ~12 linhas de texto a 12 px. Acima de LIMITE_FICHA o
+// verbete deixa de ser uma ficha e vira um artigo — o leitor tem de rolar
+// dentro do cartão para chegar ao fim, e a maioria não rola. O painel foi
+// travado em 88% da altura com rolagem interna, para que NADA saia da tela;
+// esta regra é o outro lado: o texto tem de caber sem precisar da rolagem.
+// Condensar não é cortar pelo meio — é escolher a citação que ancora e a ideia
+// que fica.
+// ---------------------------------------------------------------------------
+const LIMITE_FICHA = 600;
+{
+  const vistos = new Set();
+  for (const [bookId, pack] of Object.entries(PACKS)) {
+    if (ONLY && bookId !== ONLY) continue;
+    const cobra = (tipo, chave, inf) => {
+      if (!inf || inf.text.length <= LIMITE_FICHA) return;
+      if (vistos.has(inf.text)) return;      // o mesmo verbete copiado em dois livros
+      vistos.add(inf.text);
+      ctx = `${bookId} —`;
+      hit("warn", "ficha-longa-demais", `${tipo} "${chave}" tem ${inf.text.length} caracteres (teto ${LIMITE_FICHA}) — não cabe no painel sem rolagem`);
+    };
+    for (const [k, v] of Object.entries(pack.chars)) cobra("ficha de personagem", k, v);
+    for (const [k, v] of Object.entries(pack.tags)) cobra("ficha de objeto-marco", k, v);
+    for (const [ch, papeis] of Object.entries(pack.chapterActors))
+      for (const [r, v] of Object.entries(papeis)) cobra("ficha de capítulo", `${ch}:${r}`, v);
+  }
+  if (!ONLY) {
+    const base = (rotulo, chave, inf) => {
+      if (!inf || inf.text.length <= LIMITE_FICHA || vistos.has(inf.text)) return;
+      vistos.add(inf.text);
+      ctx = "(base) —";
+      hit("warn", "ficha-longa-demais", `ficha-base de ${rotulo} "${chave}" tem ${inf.text.length} caracteres (teto ${LIMITE_FICHA})`);
+    };
+    for (const [k, v] of Object.entries(ACTOR_INFO)) base("papel", k, v);
+    for (const [k, v] of Object.entries(PROP_INFO)) base("objeto", k, v);
   }
 }
 
