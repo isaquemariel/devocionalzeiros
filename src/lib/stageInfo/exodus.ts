@@ -181,7 +181,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     homem: {
       title: "O pai israelita e o seu primogênito",
       subtitle: "Êxodo 13 • \"farás saber a teu filho\"",
-      text: "São o chefe de casa que acaba de ser poupado pelo sangue da porta e o filho mais velho que só está vivo porque outro morreu em seu lugar. A festa dos ázimos é entregue às mãos dele: sete dias sem levedura, e \"o levedado não se verá contigo em todos os teus termos\" (Êx 13:7). Mas o culto não termina no rito — termina na catequese: \"naquele mesmo dia farás saber a teu filho\" o que o Senhor fez, e, quando o menino perguntar \"Que é isto?\", o pai responderá com a história da redenção (Êx 13:8,14). Assim a memória do êxodo se transmite de geração em geração, atada à mão e posta entre os olhos (Êx 13:9,16).",
+      text: "São o chefe de casa que acaba de ser poupado pelo sangue da porta e o filho mais velho que só está vivo porque outro morreu em seu lugar. A festa dos ázimos é entregue às mãos dele: sete dias sem levedura, e \"o levedado não se verá contigo em todos os teus termos\" (Êx 13:7). Mas o culto não termina no rito — termina na catequese: \"naquele mesmo dia farás saber a teu filho\", e quando o menino perguntar \"Que é isto?\", o pai responderá com a história da redenção (Êx 13:8,14).",
     },
     mulherComum: {
       title: "A mãe de casa nos dias dos ázimos",
@@ -198,7 +198,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     mulherComum: {
       title: "As mulheres de Israel encurraladas no mar",
       subtitle: "Êxodo 14 • o povo entre o exército do Egito e a água",
-      text: "Saíram do Egito \"com mão levantada\" (Êx 14:8) e em poucos dias se viram sem saída: o mar à frente, os carros de Faraó atrás. \"E temeram muito, e os filhos de Israel clamaram ao Senhor\" (Êx 14:10). São elas que carregam as crianças na fuga e que ouvem a acusação amarga sair do meio do próprio povo: \"não é melhor que sirvamos aos egípcios do que morrermos no deserto?\" (Êx 14:12). A resposta de Moisés é dirigida também a elas — \"não temais; estai quietos e vede o livramento do Senhor\" (Êx 14:13) —, e do outro lado da água será Miriã, com as mulheres e os tamboris, quem primeiro cantará a vitória (Êx 15:20-21).",
+      text: "Saíram do Egito \"com mão levantada\" (Êx 14:8) e em poucos dias se viram sem saída: o mar à frente, os carros de Faraó atrás. São elas que carregam as crianças na fuga e que ouvem a acusação amarga sair do meio do próprio povo: \"não é melhor que sirvamos aos egípcios do que morrermos no deserto?\" (Êx 14:12). A resposta de Moisés é dirigida também a elas — \"não temais; estai quietos e vede o livramento do Senhor\" (Êx 14:13) — e do outro lado da água será Miriã, com os tamboris, quem primeiro cantará (Êx 15:20-21).",
     },
     cavaleiro: {
       title: "Os cavaleiros de Faraó",
@@ -232,12 +232,12 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     mulherComum: {
       title: "As mulheres que recolhiam o maná cada manhã",
       subtitle: "Êxodo 16 • um gômer por cabeça, cada dia",
-      text: "Quando o orvalho subia, ficava sobre a terra \"uma coisa miúda, redonda, miúda como a geada\" (Êx 16:14), e a casa inteira saía a recolher — \"cada um conforme o que pode comer, um gômer por cabeça\" (Êx 16:16). Eram elas que mediam, moíam, cozinhavam e guardavam, e que descobriram na prática as duas regras do pão do céu: o que se guardava para o dia seguinte \"criava bichos e cheirava mal\" (Êx 16:20), mas o que se preparava na véspera do sábado amanhecia intacto (Êx 16:24). O sabor ficou registrado por elas: \"como bolos de mel\" (Êx 16:31). Israel comeu deste pão quarenta anos, até chegar a terra habitada.",
+      text: "Quando o orvalho subia, ficava sobre a terra \"uma coisa miúda, redonda, miúda como a geada\" (Êx 16:14), e a casa inteira saía a recolher, \"um gômer por cabeça\" (Êx 16:16). Eram elas que mediam, moíam, cozinhavam e guardavam, e que descobriram na prática as duas regras do pão do céu: o que se guardava para o dia seguinte \"criava bichos e cheirava mal\" (Êx 16:20), mas o que se preparava na véspera do sábado amanhecia intacto (Êx 16:24). O sabor ficou registrado por elas: \"como bolos de mel\" (Êx 16:31).",
     },
     homem: {
       title: "Os filhos de Israel murmurando por pão no deserto de Sim",
       subtitle: "Êxodo 16 • um mês depois do mar, a fome",
-      text: "\"E toda a congregação dos filhos de Israel murmurou contra Moisés e contra Arão no deserto\" (Êx 16:2), e a queixa tem a nostalgia distorcida de quem esqueceu o jugo: \"quando estávamos sentados junto às panelas de carne, quando comíamos pão até fartar\" (Êx 16:3). Eram escravos, e lembram do Egito como fartura. Moisés lhes devolve a medida exata do que estão fazendo: \"as vossas murmurações não são contra nós, mas sim contra o Senhor\" (Êx 16:8). E o Senhor responde com o maná, que vinha na porção de cada dia justamente \"para que eu o prove se anda em minha lei ou não\" (Êx 16:4) — pão que ensina a depender.",
+      text: "\"E toda a congregação dos filhos de Israel murmurou contra Moisés e contra Arão no deserto\" (Êx 16:2), e a queixa tem a nostalgia distorcida de quem esqueceu o jugo: \"quando estávamos sentados junto às panelas de carne, quando comíamos pão até fartar\" (Êx 16:3). Eram escravos, e lembram do Egito como fartura. Moisés lhes devolve a medida exata: \"as vossas murmurações não são contra nós, mas sim contra o Senhor\" (Êx 16:8). E o maná vem na porção de cada dia, \"para que eu o prove se anda em minha lei ou não\" (Êx 16:4).",
     },
     multidao: {
       title: "O povo faminto que recebe o maná",

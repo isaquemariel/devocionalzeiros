@@ -208,6 +208,21 @@ errado passa por todos os validadores (o agregador de ferramenta junta tudo) e
 Cuidado com `id` montado por ajudante (`GER("naor", "tera")`): o nome não
 aparece como literal no roteiro, e foi assim que Terá ficou só em Josué.
 
+**A ficha tem TETO de 600 caracteres.** O painel do "?" abre por cima da cena,
+que roda deitada: sobram ~12 linhas de 12 px. Acima disso o verbete deixa de ser
+ficha e vira artigo — o cartão rola, mas o leitor não rola. O checkup cobra como
+`ficha-longa-demais`. Condensar não é cortar pelo meio: escolha a citação que
+ancora e a ideia que fica, e corte o resto.
+
+**Um `id` pode nomear pessoas DIFERENTES em livros diferentes.** Nadabe é o
+filho de Arão em Levítico e o filho de Jeroboão em 1 Reis; Simei é gersonita em
+Números e o benjamita de 2 Samuel; Manassés é o filho de José no Gênesis e o rei
+de Judá em 2 Reis; Jônatas é o neto de Moisés em Juízes 18 e o filho de Saul em
+Samuel. Enquanto as fichas eram um mapa global, os dois partilhavam um verbete
+só, e um deles mentia. Rode `node scripts/fichas-homonimas.mjs` — é lista de
+revisão, não teste: mostra os `id`s partilhados por livros de épocas diferentes,
+e a maioria é legítima (Davi está em Rute, Samuel, Reis e Crônicas).
+
 Depois de mexer em ficha ou em carregamento, rode também:
 - `npx vite build && node scripts/smoke-lazy.mjs` — prova que a ficha resolve
   depois do `ensureStageInfo` do livro, que cada livro tem o seu pedaço e que

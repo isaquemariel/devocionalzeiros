@@ -102,7 +102,7 @@ export const TAGS: Record<string, StageInfo> = {
   "serpente-bronze": {
     title: "A serpente de bronze",
     subtitle: "Nm 21:8-9 — olhar e viver",
-    text: "Depois que as serpentes ardentes mordiam e matavam o povo murmurador, o Senhor disse a Moisés: \"Faze-te uma serpente ardente, e põe-na sobre uma haste; e será que viverá todo o que, tendo sido picado, olhar para ela\" (Nm 21:8). Moisés fez uma serpente de metal (bronze) e a pôs sobre a haste; \"quando a serpente tinha mordido a alguém, olhava para a serpente de metal, e ficava vivo\" (Nm 21:9). Não havia poder na figura, mas na obediência da fé que olhava. O próprio Jesus tomou essa cena como figura da cruz: \"como Moisés levantou a serpente no deserto, assim importa que o Filho do Homem seja levantado, para que todo aquele que nele crê... tenha a vida eterna\" (Jo 3:14-15)." },
+    text: "Depois que as serpentes ardentes mordiam e matavam o povo murmurador, o Senhor disse a Moisés: \"Faze-te uma serpente ardente, e põe-na sobre uma haste; e será que viverá todo o que, tendo sido picado, olhar para ela\" (Nm 21:8). Moisés a fez de metal, e quem olhava \"ficava vivo\" (Nm 21:9). Não havia poder na figura, mas na obediência da fé que olhava. O próprio Jesus tomou a cena como figura da cruz: \"como Moisés levantou a serpente no deserto, assim importa que o Filho do Homem seja levantado\" (Jo 3:14-15)." },
   "vara-arao": {
     title: "A vara de Arão que floresceu",
     subtitle: "Nm 17:8 — o sinal contra a murmuração",
@@ -223,7 +223,7 @@ export const TAGS: Record<string, StageInfo> = {
   "altar-ofertas": {
     title: "O altar das ofertas e as porções dos sacerdotes",
     subtitle: "Nm 18:8-19 — o sustento de quem serve ao santuário",
-    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas, com todas as coisas santas dos filhos de Israel\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17), e a parte restante é comida pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe herança na terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20). Daqui Paulo tira a regra do evangelho: \"os que servem ao altar participam do altar\" (1Co 9:13-14).",
+    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17); o resto é comido pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20) — e daqui Paulo tira a regra do evangelho (1Co 9:13-14).",
   },
   "arca-alianca": {
     title: "A arca que ficou no arraial",

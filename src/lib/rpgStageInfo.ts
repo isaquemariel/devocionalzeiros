@@ -312,7 +312,7 @@ export const PROP_INFO: Record<string, StageInfo> = {
   column: {
     title: "A coluna",
     subtitle: "O sustento de pórtico, palácio e templo",
-    text: "Coluna de pedra lavrada ou de cobre fundido, com plinto, fuste e capitel — o que sustenta o teto e, na arquitetura antiga, o que anuncia a importância da casa. As mais famosas de Israel foram fundidas em cobre por Hirão de Tiro e postas no pórtico do templo, com capitéis \"de obra de lírios\" e duas ordens de romãs em redor: a da direita chamou-se JAQUIM e a da esquerda BOAZ (1Rs 7:15-22). Nomes que são frases inteiras — Jaquim quer dizer ELE FIRMARÁ, e Boaz, NELE HÁ FORÇA —, de modo que quem entrasse para adorar passava entre duas declarações sobre Deus. Sansão apalpou duas colunas como estas, as do meio, sobre as quais a casa de Dagom se sustinha, e as derrubou com a própria vida (Jz 16:29-30). Não confundir com a COLUNA DE NUVEM E DE FOGO do Êxodo, que é a presença do SENHOR e não obra de mão humana.",
+    text: "Coluna de pedra lavrada ou de cobre fundido — o que sustenta o teto e, na arquitetura antiga, o que anuncia a importância da casa. As mais famosas de Israel foram fundidas em cobre por Hirão de Tiro para o pórtico do templo, com capitéis \"de obra de lírios\": a da direita chamou-se JAQUIM e a da esquerda BOAZ (1Rs 7:15-22) — nomes que são frases inteiras, ELE FIRMARÁ e NELE HÁ FORÇA. Sansão apalpou duas como estas, as do meio, sobre as quais a casa de Dagom se sustinha (Jz 16:29-30). Não confundir com a COLUNA DE NUVEM E DE FOGO do Êxodo, que é a presença do SENHOR.",
   },
   river: {
     title: "O rio",
@@ -377,12 +377,12 @@ export const PROP_INFO: Record<string, StageInfo> = {
   throne: {
     title: "O trono real",
     subtitle: "A cadeira de estado de um rei",
-    text: "O trono era o lugar do poder: dele se julgava e se reinava. Faraó disse a José: \"somente no trono eu serei maior do que tu\" (Gn 41:40). O mais descrito de todos é o de Salomão: \"fez o rei um grande trono de marfim, e o cobriu de ouro puríssimo. Este trono tinha seis degraus, e era o encosto dele por detrás redondo, e de ambos os lados tinha encostos até ao assento, e dois leões junto aos encostos\" (1Rs 10:18-19) — e mais doze leões nos seis degraus, \"nunca se fez obra semelhante em nenhum dos reinos\". Mas a Bíblia insiste que há um trono acima de todos: \"o Senhor estabeleceu o seu trono nos céus, e o seu reino domina sobre tudo\" (Sl 103:19).",
+    text: "O trono era o lugar do poder: dele se julgava e se reinava. Faraó disse a José: \"somente no trono eu serei maior do que tu\" (Gn 41:40). O mais descrito de todos é o de Salomão: \"um grande trono de marfim... coberto de ouro puríssimo. Este trono tinha seis degraus, e era o encosto dele por detrás redondo, e de ambos os lados tinha encostos até ao assento, e dois leões junto aos encostos\" (1Rs 10:18-19). Mas há um trono acima de todos: \"o Senhor estabeleceu o seu trono nos céus\" (Sl 103:19).",
   },
   throneOfGod: {
     title: "O trono de Deus",
     subtitle: "O assento de quem governa tudo",
-    text: "Não é a cadeira de um rei, e por isso não se desenha como uma: dele sai luz, e ninguém é desenhado assentado. \"Eis que um trono estava posto no céu, e um assentado sobre o trono\" (Ap 4:2) — e João descreve não um rosto, mas o brilho do jaspe e do sardônio e, ao redor, \"um arco celeste semelhante à esmeralda\" (Ap 4:3), o arco da aliança de Gn 9. É diante deste trono que se apresentam os filhos de Deus em Jó 1:6, é este que Micaías vê com todo o exército do céu à direita e à esquerda (1Rs 22:19), e é a ele que Jó queria chegar: \"Ah, se eu soubesse onde o poderia achar! Então me chegaria ao seu tribunal\" (Jó 23:3).",
+    text: "Não é a cadeira de um rei, e por isso não se desenha como uma: dele sai luz, e ninguém é desenhado assentado. \"Eis que um trono estava posto no céu, e um assentado sobre o trono\" (Ap 4:2) — e João descreve não um rosto, mas o brilho do jaspe e do sardônio e, ao redor, \"um arco celeste semelhante à esmeralda\" (Ap 4:3), o arco da aliança de Gn 9. É diante dele que se apresentam os filhos de Deus (Jó 1:6), é este que Micaías vê (1Rs 22:19), e é a ele que Jó queria chegar (Jó 23:3).",
   },
   bowl: {
     title: "Taça",
@@ -512,7 +512,7 @@ export const PROP_INFO: Record<string, StageInfo> = {
   sword: {
     title: "A espada",
     subtitle: "A arma de mão do mundo antigo",
-    text: "Curta e de dois gumes, era arma de corpo a corpo, não de arremesso — por isso \"passar a fio de espada\" é a expressão bíblica para a destruição completa. Israel viveu longos períodos sem poder forjá-la: \"em toda a terra de Israel não se achava ferreiro\", e os filisteus cobravam para amolar até a relha do arado (1Sm 13:19-21). Davi enfrentou Golias sem nenhuma — \"não é do Senhor salvar com espada, nem com lança\" (1Sm 17:47) — e o matou com a espada do próprio gigante. A Escritura conhece a ferida que ela abre nos dois lados: \"a espada devora tanto um como outro\" (2Sm 11:25). E acaba transformando-a: \"converterão as suas espadas em enxadões\" (Is 2:4), enquanto a única espada que resta ao cristão é a Palavra (Ef 6:17; Hb 4:12).",
+    text: "Curta e de dois gumes, era arma de corpo a corpo, não de arremesso — por isso \"passar a fio de espada\" é a expressão bíblica para a destruição completa. Israel viveu longos períodos sem poder forjá-la: \"em toda a terra de Israel não se achava ferreiro\" (1Sm 13:19). Davi enfrentou Golias sem nenhuma — \"não é do Senhor salvar com espada, nem com lança\" (1Sm 17:47) — e o matou com a espada do próprio gigante. Um dia serão enxadões (Is 2:4), e a única que resta ao cristão é a Palavra (Ef 6:17).",
   },
   spear: {
     title: "A lança",
@@ -522,32 +522,32 @@ export const PROP_INFO: Record<string, StageInfo> = {
   bow: {
     title: "O arco e a aljava",
     subtitle: "A arma de longe, e o cântico que leva o seu nome",
-    text: "O arco alcançava o inimigo antes que ele chegasse, e por isso decidia batalhas: foram os frecheiros que alcançaram Saul em Gilboa e o feriram gravemente (1Sm 31:3). Jônatas era arqueiro, e foi com três flechas atiradas \"como se ao alvo\" que ele mandou a Davi o aviso combinado sem dizer uma palavra (1Sm 20:20-38). Quando os dois morreram, Davi compôs a elegia que a Escritura chama justamente de CÂNTICO DO ARCO, mandando que se ensinasse aos filhos de Judá (2Sm 1:18): \"o arco de Jônatas não voltava atrás\" (2Sm 1:22). Nos Salmos o arco é a imagem do poder que Deus quebra — \"quebra o arco e corta a lança\" (Sl 46:9).",
+    text: "O arco alcançava o inimigo antes que ele chegasse, e por isso decidia batalhas: foram os frecheiros que alcançaram Saul em Gilboa (1Sm 31:3). Jônatas era arqueiro, e foi com três flechas atiradas \"como se ao alvo\" que mandou a Davi o aviso combinado sem dizer palavra (1Sm 20:20-38). Quando os dois morreram, Davi compôs a elegia que a Escritura chama CÂNTICO DO ARCO (2Sm 1:18): \"o arco de Jônatas não voltava atrás\" (2Sm 1:22). Nos Salmos é a imagem do poder que Deus quebra — \"quebra o arco e corta a lança\" (Sl 46:9).",
   },
   crown: {
     title: "A coroa",
     subtitle: "O sinal do reinado — e o peso que vem com ele",
-    text: "Em Israel a coroa (nezer) era posta na cabeça do rei junto com a unção e o testemunho da lei (2Rs 11:12), lembrando que o trono estava debaixo de uma norma e não acima dela. A primeira coroa da história de Davi lhe chega das mãos de um amalequita, tirada do cadáver de Saul em Gilboa (2Sm 1:10) — e ele a recebe rasgando as vestes, não festejando. A segunda vem de Rabá: \"de um talento de ouro e pedras preciosas, e foi posta sobre a cabeça de Davi\" (2Sm 12:30), um peso de mais de trinta quilos que só se podia sustentar por instantes. As duas dizem a mesma coisa: a coroa é pesada, e não pertence a quem a usa. No fim, os anciãos lançam as suas diante do trono (Ap 4:10).",
+    text: "Em Israel a coroa era posta na cabeça do rei junto com a unção e o testemunho da lei (2Rs 11:12), lembrando que o trono estava debaixo de uma norma e não acima dela. A primeira coroa de Davi chega das mãos de um amalequita, tirada do cadáver de Saul (2Sm 1:10) — e ele a recebe rasgando as vestes, não festejando. A segunda vem de Rabá, \"de um talento de ouro e pedras preciosas\" (2Sm 12:30), um peso de mais de trinta quilos. As duas dizem o mesmo: a coroa é pesada, e não pertence a quem a usa (Ap 4:10).",
   },
   harp: {
     title: "A harpa",
     subtitle: "O kinnor de Davi, a lira de dez cordas",
-    text: "O kinnor era uma lira de madeira com oito a dez cordas, tocada com os dedos ou com plectro — instrumento de festa e de culto, e o primeiro que a Bíblia nomeia (Gn 4:21). Foi por ela que Davi entrou na história: \"sei de um filho de Jessé, que sabe tocar\", e quando o espírito mau assaltava Saul, \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:16-23). A mesma harpa subiu com a arca a Jerusalém, quando Davi e todo o Israel \"tocavam perante o Senhor com toda a sorte de instrumentos de pau de faia\" (2Sm 6:5). É o som dos Salmos: \"louvai ao Senhor com harpa\" (Sl 33:2) — e o instrumento que os cativos penduraram nos salgueiros quando não conseguiam mais cantar (Sl 137:2).",
+    text: "O kinnor era uma lira de madeira de oito a dez cordas, tocada com os dedos ou com plectro — instrumento de festa e de culto, e o primeiro que a Bíblia nomeia (Gn 4:21). Foi por ela que Davi entrou na história: quando o espírito mau assaltava Saul, \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). A mesma harpa subiu com a arca a Jerusalém (2Sm 6:5). É o som dos Salmos — \"louvai ao Senhor com harpa\" (Sl 33:2) — e o instrumento que os cativos penduraram nos salgueiros (Sl 137:2).",
   },
   bed: {
     title: "O leito",
     subtitle: "O divã baixo da casa oriental",
-    text: "Não a cama alta de hoje, mas um estrado baixo com colchão e coberta, encostado à parede, que de dia servia de assento. Na história de Davi o leito é sempre o lugar onde alguma coisa se decide às escondidas: Mical desceu o marido pela janela e pôs no dele uma estátua com pele de cabra à cabeceira (1Sm 19:13); Isbosete foi morto no seu, ao meio-dia, enquanto repousava (2Sm 4:5-7); Amnom fingiu-se doente no seu para atrair a irmã (2Sm 13:5); e foi levantando-se do seu, à tarde, que Davi viu do terraço a mulher que se lavava (2Sm 11:2). Os Salmos o conhecem como o lugar das lágrimas e do exame de consciência: \"consultai no vosso coração sobre a vossa cama, e calai-vos\" (Sl 4:4).",
+    text: "Não a cama alta de hoje, mas um estrado baixo com colchão e coberta, encostado à parede, que de dia servia de assento. Na história de Davi o leito é sempre onde alguma coisa se decide às escondidas: Mical desceu o marido pela janela e pôs no dele uma estátua (1Sm 19:13); Isbosete foi morto no seu ao meio-dia (2Sm 4:5-7); Amnom fingiu-se doente no seu para atrair a irmã (2Sm 13:5). Os Salmos o conhecem como lugar de exame: \"consultai no vosso coração sobre a vossa cama, e calai-vos\" (Sl 4:4).",
   },
   pool: {
     title: "O tanque",
     subtitle: "O reservatório de pedra da cidade antiga",
-    text: "Escavado na rocha e revestido de pedra, o tanque guardava a água da chuva e das fontes — a diferença entre resistir a um cerco e render-se. Junto ao tanque de Gibeão sentaram-se os homens de Abner de um lado e os de Joabe do outro, e dali saíram os doze de cada lado que se pegaram pela cabeça e caíram juntos (2Sm 2:12-16). Sobre o tanque de Hebrom Davi mandou pendurar os assassinos de Isbosete (2Sm 4:12). Eram lugares públicos e visíveis, e é isso que os torna cenário de acordos e de castigos exemplares. Ezequias abriria depois o mais famoso deles, trazendo água para dentro de Jerusalém (2Rs 20:20).",
+    text: "Escavado na rocha e revestido de pedra, o tanque guardava a água da chuva e das fontes — a diferença entre resistir a um cerco e render-se. Junto ao tanque de Gibeão sentaram-se os homens de Abner de um lado e os de Joabe do outro, e dali saíram os doze de cada lado que caíram juntos (2Sm 2:12-16). Sobre o tanque de Hebrom Davi mandou pendurar os assassinos de Isbosete (2Sm 4:12). Eram lugares públicos e visíveis, e é isso que os faz cenário de acordos e de castigos exemplares.",
   },
   chariot: {
     title: "O carro de guerra",
     subtitle: "A tecnologia que Israel não tinha",
-    text: "Carro leve de duas rodas puxado por cavalos, era o tanque de guerra da Idade do Ferro — e foi exatamente o que travou a conquista: \"não expulsou os moradores do vale, porquanto tinham carros de ferro\" (Jz 1:19). Israel foi avisado de que o rei que pedira tomaria os seus filhos \"para os seus carros\" (1Sm 8:11), e Absalão começou a sua rebelião comprando um: \"preparou para si carros e cavalos, e cinquenta homens que corressem adiante dele\" (2Sm 15:1). A Escritura mede a fé de um povo pelo que ele faz diante dos carros alheios: \"uns confiam em carros e outros em cavalos, mas nós faremos menção do nome do Senhor\" (Sl 20:7).",
+    text: "Carro leve de duas rodas puxado por cavalos, era o tanque de guerra da Idade do Ferro — e foi exatamente o que travou a conquista: \"não expulsou os moradores do vale, porquanto tinham carros de ferro\" (Jz 1:19). Israel foi avisado de que o rei que pedira tomaria os seus filhos \"para os seus carros\" (1Sm 8:11), e Absalão começou a rebelião comprando um (2Sm 15:1). A Escritura mede a fé de um povo pelo que ele faz diante dos carros alheios: \"uns confiam em carros e outros em cavalos, mas nós faremos menção do nome do Senhor\" (Sl 20:7).",
   },
   horse: {
     title: "O cavalo",
@@ -557,7 +557,7 @@ export const PROP_INFO: Record<string, StageInfo> = {
   donkey: {
     title: "O jumento",
     subtitle: "A montaria da paz, do trabalho e dos reis de Israel",
-    text: "Animal de carga e de estrada, sinal de vida sedentária e pacífica, e — ao contrário do cavalo — a montaria própria dos juízes e dos reis de Israel (Jz 10:4; 12:14). Foi atrás de jumentas perdidas que Saul saiu de casa e encontrou o profeta que o ungiria (1Sm 9:3). Abigail desceu num deles com duzentos pães para deter a espada de Davi (1Sm 25:18-20), e a fuga de Davi diante de Absalão foi socorrida por uma junta de jumentos albardados (2Sm 16:1-2). Absalão ia numa mula quando a cabeça se lhe prendeu no carvalho e a montaria seguiu adiante sem ele (2Sm 18:9). É neste animal, e não no cavalo, que o Messias entra em Jerusalém (Zc 9:9).",
+    text: "Animal de carga e de estrada, sinal de vida sedentária e pacífica, e — ao contrário do cavalo — a montaria própria dos juízes e dos reis de Israel (Jz 10:4; 12:14). Foi atrás de jumentas perdidas que Saul saiu de casa e encontrou o profeta que o ungiria (1Sm 9:3). Abigail desceu num deles com duzentos pães para deter a espada de Davi (1Sm 25:18-20). Absalão ia numa mula quando a cabeça se lhe prendeu no carvalho e a montaria seguiu sem ele (2Sm 18:9). É neste animal, e não no cavalo, que o Messias entra em Jerusalém (Zc 9:9).",
   },
 };
 

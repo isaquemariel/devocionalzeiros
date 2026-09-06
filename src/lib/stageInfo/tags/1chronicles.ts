@@ -102,22 +102,22 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-de-dagom": {
     title: "A casa de Dagom",
     subtitle: "Jz 16:23-30 — o templo que caiu sobre os príncipes",
-    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"Senhor Deus, peço-te que te lembres de mim… fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava de ter vencido o Deus de Israel torna-se o túmulo dos seus próprios sacerdotes e senhores (cf. 1Sm 5:3-4).",
+    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava vira o túmulo dos seus senhores.",
   },
   "casa-de-deus-em-silo": {
     title: "A casa de Deus em Siló",
     subtitle: "Jz 18:31 — o tabernáculo verdadeiro, a poucas jornadas dali",
-    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa. Séculos depois, o profeta mandaria olhar para as ruínas: \"ide agora ao meu lugar, que estava em Siló, onde, ao princípio, fiz habitar o meu nome, e vede o que lhe fiz\" (Jr 7:12).",
+    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa (cf. Jr 7:12).",
   },
   "jebus-que-e-jerusalem": {
     title: "Jebus, que é Jerusalém",
     subtitle: "Jz 19:10-12 — a cidade estranha que foi evitada",
-    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade da tribo de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21); um dia seria a cidade de Davi e o lugar do templo, mas naquela noite era apenas o lugar que um israelita julgou perigoso demais.",
+    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21).",
   },
   "gibea-de-benjamim": {
     title: "Gibeá de Benjamim",
     subtitle: "Jz 19:14-15 — a cidade onde o sol se pôs",
-    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34; Dt 10:19); o que aconteceria depois faria de Gibeá sinônimo de corrupção — \"pecaram desde os dias de Gibeá\" (Os 9:9; 10:9). Desta cidade sairia também o primeiro rei de Israel (1Sm 10:26), e a noite descrita aqui custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
+    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34). O que aconteceria depois faria de Gibeá sinônimo de corrupção (Os 9:9), e custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
   },
   "trombetas": {
     title: "As trombetas do alarido, na mão de Finéias",

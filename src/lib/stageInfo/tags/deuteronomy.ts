@@ -196,7 +196,7 @@ export const TAGS: Record<string, StageInfo> = {
   "altar-ofertas": {
     title: "O altar das ofertas e as porções dos sacerdotes",
     subtitle: "Nm 18:8-19 — o sustento de quem serve ao santuário",
-    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas, com todas as coisas santas dos filhos de Israel\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17), e a parte restante é comida pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe herança na terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20). Daqui Paulo tira a regra do evangelho: \"os que servem ao altar participam do altar\" (1Co 9:13-14).",
+    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17); o resto é comido pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20) — e daqui Paulo tira a regra do evangelho (1Co 9:13-14).",
   },
   "arca-da-alianca": {
     title: "A arca da aliança e o livro posto ao seu lado",

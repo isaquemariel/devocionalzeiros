@@ -4,7 +4,7 @@
 import type { StageInfo } from "@/lib/rpgStageInfo";
 
 export const CHARS: Record<string, StageInfo> = {
-  manasses: { title: "Manassés", subtitle: "Primogênito de José, nascido no Egito (Gn 41:51)", text: "Primeiro filho que José teve no Egito, de Asenate: \"Deus me fez esquecer de todo o meu trabalho, e de toda a casa de meu pai\" — daí Manassés, \"o que faz esquecer\" (Gn 41:51). Jacó o adotou como seu, ao lado de Rúben e Simeão (Gn 48:5); mas, sendo o mais velho, recebeu do avô a mão esquerda, cedendo a bênção maior ao irmão menor (Gn 48:14)." },
+  manasses: { title: "Manassés, rei de Judá", subtitle: "2Rs 21:1-18 — cinquenta e cinco anos, o reinado mais longo e o mais mau", text: "Filho de Ezequias, tinha doze anos quando começou a reinar, e reinou cinquenta e cinco em Jerusalém (2Rs 21:1). Desfez tudo o que o pai fizera: tornou a edificar os altos, levantou altares a Baal, pôs a imagem de Astarote na casa de que o Senhor dissera \"em Jerusalém porei o meu nome\", fez passar seu filho pelo fogo e usou de adivinhações (21:3-6). \"Manassés os fez errar, para fazerem pior do que as nações\" (21:9), e encheu Jerusalém de sangue inocente (21:16). Não é o primogênito de José (Gn 41:51)." },
   "acabe": {
     title: "Acabe",
     subtitle: "O rei de Israel que fez mais mal do que todos antes dele (1Rs 16:30)",

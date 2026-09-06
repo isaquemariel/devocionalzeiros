@@ -150,6 +150,6 @@ export const TAGS: Record<string, StageInfo> = {
   "tanque-de-gibeom": {
     title: "O tanque de Gibeom",
     subtitle: "2Sm 2:13 — a água entre os dois exércitos",
-    text: "Gibeom era \"uma cidade grande, como uma das cidades reais\" (Js 10:2), e o seu tanque, uma cisterna monumental cavada na rocha viva, com uma escada em caracol descendo pela parede — ainda hoje escancarada no sítio de el-Jib. Era o coração público da cidade, e virou linha de frente: \"se encontraram uns com os outros perto do tanque de Gibeom; e pararam estes deste lado do tanque, e os outros do outro lado do tanque\" (2Sm 2:13). O lugar aonde toda a cidade ia buscar água ficou com dois exércitos de Israel sentados frente a frente, olhando-se por cima dela. Dali se levantaram os doze e doze que morreram juntos, e é a essa mesma água que a manhã seguinte volta, com os mortos já contados. O narrador não precisa dizer que a guerra é entre irmãos: basta pôr os dois lados a beber do mesmo tanque.",
+    text: "Gibeom era \"uma cidade grande, como uma das cidades reais\" (Js 10:2), e o seu tanque, uma cisterna monumental cavada na rocha viva, com uma escada em caracol descendo pela parede — ainda hoje escancarada em el-Jib. Era o coração público da cidade, e virou linha de frente: \"pararam estes deste lado do tanque, e os outros do outro lado do tanque\" (2Sm 2:13). Dali se levantaram os doze e doze que morreram juntos. O narrador não precisa dizer que a guerra é entre irmãos: basta pôr os dois lados a beber do mesmo tanque.",
   },
 };

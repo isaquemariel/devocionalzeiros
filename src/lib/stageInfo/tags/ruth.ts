@@ -6,7 +6,7 @@ export const TAGS: Record<string, StageInfo> = {
   "voto-de-rute": {
     title: "A estrela sobre o voto de Rute",
     subtitle: "Rt 1:16-17 — a aliança jurada na estrada de Moabe",
-    text: "Na estrada entre Moabe e Judá, uma viúva moabita se apega à sogra e faz o juramento mais claro de conversão em todo o Antigo Testamento: \"aonde quer que tu fores irei eu… o teu povo é o meu povo, o teu Deus é o meu Deus\" (Rt 1:16). E o sela com a fórmula de aliança diante do Senhor: \"Faça-me assim o Senhor, e outro tanto, se outra coisa que não seja a morte me separar de ti\" (Rt 1:17). A lei excluía Moabe da congregação (Dt 23:3), mas a graça recebe quem vem \"abrigar-se sob as suas asas\" (Rt 2:12). O céu que se abre sobre a cena lembra a promessa feita a Abraão sob as estrelas (Gn 15:5): é ali, num voto de pobre, que a linhagem do Rei recomeça.",
+    text: "Na estrada entre Moabe e Judá, uma viúva moabita se apega à sogra e faz o juramento mais claro de conversão em todo o Antigo Testamento: \"aonde quer que tu fores irei eu… o teu povo é o meu povo, o teu Deus é o meu Deus\" (Rt 1:16). E o sela com a fórmula da aliança: \"Faça-me assim o Senhor, e outro tanto, se outra coisa que não seja a morte me separar de ti\" (Rt 1:17). A lei excluía Moabe da congregação (Dt 23:3), mas a graça recebe quem vem \"abrigar-se sob as suas asas\" (Rt 2:12).",
   },
   "estrela-de-belem": {
     title: "A estrela sobre Belém",

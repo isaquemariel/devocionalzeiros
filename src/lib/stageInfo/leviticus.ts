@@ -231,7 +231,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     homem: {
       title: "O homem designado que leva o bode ao deserto",
       subtitle: "Levítico 16 • o bode emissário",
-      text: "A Escritura não lhe dá o nome: é apenas \"um homem designado para isso\", escolhido para conduzir à terra solitária o bode vivo sobre cuja cabeça Arão confessou todas as iniquidades, transgressões e pecados dos filhos de Israel (Lv 16:21-22). Ele volta contaminado pelo que carregou e precisa lavar as vestes e banhar-se antes de reentrar no arraial (Lv 16:26), como também aquele que queima fora do arraial o novilho e o bode da expiação (Lv 16:27-28). Sua caminhada silenciosa desenha o que nenhum sacrifício conseguia dizer sozinho: o pecado não só é coberto, é levado para longe (Sl 103:12; Jo 1:29).",
+      text: "A Escritura não lhe dá o nome: é apenas \"um homem designado para isso\", escolhido para conduzir à terra solitária o bode vivo sobre cuja cabeça Arão confessou todas as iniquidades dos filhos de Israel (Lv 16:21-22). Volta contaminado pelo que carregou e precisa lavar as vestes e banhar-se antes de reentrar no arraial (Lv 16:26). A caminhada silenciosa dele diz o que nenhum sacrifício dizia sozinho: o pecado não só é coberto, é levado para longe (Sl 103:12; Jo 1:29).",
     },
     rebanho: {
       title: "O novilho da expiação de Arão",

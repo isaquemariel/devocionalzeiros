@@ -11,7 +11,7 @@ export const TAGS: Record<string, StageInfo> = {
   "carvalho-de-ofra": {
     title: "O carvalho de Ofra",
     subtitle: "Jz 6:11-24 — onde o Anjo do Senhor se assentou",
-    text: "\"Então o anjo do Senhor veio, e assentou-se debaixo do carvalho que está em Ofra, que pertencia a Joás, abiezrita; e Gideão, seu filho, estava malhando o trigo no lagar, para o salvar dos midianitas\" (Jz 6:11). Debaixo daquela árvore, um homem escondido no lagar por medo ouve o nome que Deus lhe dá antes de qualquer feito: \"O Senhor é contigo, homem valoroso\" (Jz 6:12). Ali mesmo Gideão traz o cabrito e os pães ázimos e os oferece \"até debaixo do carvalho\" (Jz 6:19). Deus não é desenhado como figura: quem fala e come sob a copa é o Anjo do Senhor, e a árvore comum de um lavrador temeroso se torna o lugar do chamado.",
+    text: "\"Então o anjo do Senhor veio, e assentou-se debaixo do carvalho que está em Ofra... e Gideão, seu filho, estava malhando o trigo no lagar, para o salvar dos midianitas\" (Jz 6:11). Debaixo daquela árvore, um homem escondido no lagar por medo ouve o nome que Deus lhe dá antes de qualquer feito: \"O Senhor é contigo, homem valoroso\" (Jz 6:12). Ali mesmo Gideão traz o cabrito e os pães ázimos (Jz 6:19). Deus não é desenhado como figura: quem fala e come sob a copa é o Anjo do Senhor.",
   },
   "penha-de-ofra": {
     title: "A penha que soltou fogo",
@@ -51,7 +51,7 @@ export const TAGS: Record<string, StageInfo> = {
   "portas-de-gaza": {
     title: "As portas de Gaza no cume de Hebrom",
     subtitle: "Jz 16:1-3 — o cerco que virou troféu",
-    text: "Os gazitas cercaram a cidade e puseram espias \"à porta da cidade\", dizendo: \"Até à luz da manhã esperaremos; então o mataremos\" (Jz 16:2). À meia-noite, Sansão \"arrancou as portas da entrada da cidade com ambas as umbreiras, e juntamente com a tranca as tomou, pondo-as sobre os ombros; e levou-as para cima até ao cume do monte que está defronte de Hebrom\" (Jz 16:3). A porta era a força e a honra de uma cidade antiga; arrancada e plantada num monte de Judá, tornou-se a zombaria pública da fortaleza filisteia. O escárnio, porém, é ambíguo: a mesma noite que mostra o poder do nazireu o mostra na casa de uma prostituta — a força de Deus sobre um homem que não guarda o coração.",
+    text: "Os gazitas cercaram a cidade e puseram espias à porta, dizendo: \"Até à luz da manhã esperaremos; então o mataremos\" (Jz 16:2). À meia-noite, Sansão \"arrancou as portas da entrada da cidade com ambas as umbreiras, e juntamente com a tranca as tomou, pondo-as sobre os ombros; e levou-as... até ao cume do monte que está defronte de Hebrom\" (Jz 16:3). A porta era a força e a honra de uma cidade antiga; plantada num monte de Judá, virou a zombaria pública da fortaleza filisteia — feita, porém, na noite em que ele estava na casa de uma prostituta.",
   },
   "mo-do-carcere": {
     title: "A mó do cárcere de Gaza",
@@ -61,17 +61,17 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-de-dagom": {
     title: "A casa de Dagom",
     subtitle: "Jz 16:23-30 — o templo que caiu sobre os príncipes",
-    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"Senhor Deus, peço-te que te lembres de mim… fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava de ter vencido o Deus de Israel torna-se o túmulo dos seus próprios sacerdotes e senhores (cf. 1Sm 5:3-4).",
+    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava vira o túmulo dos seus senhores.",
   },
   "sepulcro-de-manoa": {
     title: "O sepulcro de Manoá",
     subtitle: "Jz 16:31 — entre Zorá e Estaol",
-    text: "\"Então seus irmãos desceram, e toda a casa de seu pai, e tomaram-no… e sepultaram-no entre Zorá e Estaol, no sepulcro de Manoá, seu pai. Ele julgou a Israel vinte anos\" (Jz 16:31). O nazireu volta a repousar exatamente entre os dois lugares onde o Espírito do Senhor começara a movê-lo (Jz 13:25) — a vida inteira cabe entre dois marcos daquele monte. Manoá e sua mulher haviam recebido o anúncio do filho pelo Anjo do Senhor e temido morrer por terem visto a Deus (Jz 13:22); agora sepultam o filho que nunca completou a libertação prometida. Ainda assim, o Novo Testamento o conta entre os que \"pela fé\" foram fortes na fraqueza (Hb 11:32-34): Deus honra a fé que os homens desperdiçam.",
+    text: "\"Sepultaram-no entre Zorá e Estaol, no sepulcro de Manoá, seu pai. Ele julgou a Israel vinte anos\" (Jz 16:31). O nazireu volta a repousar exatamente entre os dois lugares onde o Espírito do Senhor começara a movê-lo (Jz 13:25) — a vida inteira cabe entre dois marcos daquele monte. Manoá e sua mulher haviam recebido o anúncio do filho pelo Anjo do Senhor e temido morrer por terem visto a Deus (Jz 13:22); agora sepultam o filho que nunca completou a libertação prometida (Hb 11:32-34).",
   },
   "mil-e-cem-moedas-de-prata": {
     title: "As mil e cem moedas de prata",
     subtitle: "Jz 17:2-4 — a prata amaldiçoada que virou ídolo",
-    text: "Mica confessa à mãe: \"As mil e cem moedas de prata que te foram tiradas, por cuja causa lançaste maldições… eis que esse dinheiro está comigo; eu o tomei\" (Jz 17:2). É a mesma soma que cada príncipe filisteu prometeu a Dalila por Sansão (Jz 16:5): o livro repete o preço para que se veja o que a prata compra em Israel. A mãe responde \"Bendito do Senhor seja meu filho\" e logo dedica o dinheiro \"da minha mão ao Senhor\" para fazer \"uma imagem de escultura e uma de fundição\" (Jz 17:3) — isto é, quebra o segundo mandamento (Êx 20:4) invocando o nome do primeiro. Roubo, maldição, bênção e idolatria no mesmo saco de moedas: a religião de quem faz \"o que parecia bem aos seus olhos\" (Jz 17:6).",
+    text: "Mica confessa à mãe: \"As mil e cem moedas de prata que te foram tiradas, por cuja causa lançaste maldições… eis que esse dinheiro está comigo; eu o tomei\" (Jz 17:2). É a mesma soma que cada príncipe filisteu prometeu a Dalila por Sansão (Jz 16:5): o livro repete o preço para que se veja o que a prata compra em Israel. A mãe responde \"Bendito do Senhor seja meu filho\" e logo dedica o dinheiro ao Senhor para fazer uma imagem de escultura (Jz 17:3) — quebra o segundo mandamento invocando o nome do primeiro.",
   },
   "forja-do-ourives": {
     title: "A forja do ourives",
@@ -86,22 +86,22 @@ export const TAGS: Record<string, StageInfo> = {
   "idolo-de-mica": {
     title: "O ídolo da casa de deuses de Mica",
     subtitle: "Jz 17:5 — o santuário particular de um homem de Efraim",
-    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo é imitação do culto verdadeiro — um santuário, uma veste sacerdotal, um sacerdote —, só que montado em casa, sem ordem de Deus e sem a tribo que ele escolheu. Quando um levita errante aparece, Mica conclui satisfeito: \"Agora sei que o SENHOR me fará bem; porquanto tenho um levita por sacerdote\" (Jz 17:13). É religião como seguro: usar o nome do Senhor para garantir prosperidade — a marca dos dias em que \"cada um fazia o que parecia bem aos seus olhos\" (Jz 17:6).",
+    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo é imitação do culto verdadeiro — um santuário, uma veste sacerdotal, um sacerdote —, só que montado em casa, sem ordem de Deus e sem a tribo que ele escolheu. Quando um levita errante aparece, Mica conclui satisfeito: \"Agora sei que o SENHOR me fará bem; porquanto tenho um levita por sacerdote\" (Jz 17:13). É religião como seguro.",
   },
   "casa-de-mica": {
     title: "A casa de Mica, na montanha de Efraim",
     subtitle: "Jz 17–18 — a casa que virou templo",
-    text: "\"Havia um homem da montanha de Efraim, cujo nome era Mica\" (Jz 17:1) — e o livro dedica dois capítulos inteiros à casa desse particular, porque nela cabe o retrato de Israel. Ali moram juntos o roubo confessado, a prata dedicada, o ídolo fundido, o éfode, os terafins e um levita alugado por \"dez moedas de prata, e vestuário, e o sustento\" por ano (Jz 17:10). Enquanto o tabernáculo estava em Siló (Jz 18:31), a devoção do povo se organizava no quintal de casa. E o desfecho é impiedoso: a mesma casa é saqueada pelos danitas, e Mica fica sem sacerdote e sem deuses, perguntando \"que é o que mais me resta?\" (Jz 18:24).",
+    text: "\"Havia um homem da montanha de Efraim, cujo nome era Mica\" (Jz 17:1) — e o livro dedica dois capítulos à casa desse particular, porque nela cabe o retrato de Israel. Ali moram juntos o roubo confessado, a prata dedicada, o ídolo fundido, o éfode, os terafins e um levita alugado por \"dez moedas de prata, e vestuário, e o sustento\" por ano (Jz 17:10). Enquanto o tabernáculo estava em Siló (Jz 18:31), a devoção do povo se organizava no quintal. E a mesma casa acaba saqueada pelos danitas (Jz 18:24).",
   },
   "lais-quieta-e-confiada": {
     title: "Laís, quieta e confiada",
     subtitle: "Jz 18:7 — a cidade sem muros e sem defensor",
-    text: "Os cinco espias de Dã \"chegaram a Laís; e viram que o povo que havia no meio dela estava seguro, conforme ao costume dos sidônios, quieto e confiado; nem havia autoridade alguma do reino que por qualquer coisa envergonhasse a alguém naquela terra; também estavam longe dos sidônios, e não tinham relação com ninguém\" (Jz 18:7). A descrição é de paz e fartura — e é justamente por isso que a marcam para a espada: \"a terra é muito boa… lugar em que não há falta de coisa alguma\" (Jz 18:9-10). Os espias ainda usam linguagem piedosa, \"Deus a entregou na vossa mão\", para justificar o assalto. A tribo que não tomou a herança que Deus lhe dera junto ao mar escolhe a presa mais fácil.",
+    text: "Os cinco espias de Dã \"chegaram a Laís; e viram que o povo que havia no meio dela estava seguro, conforme ao costume dos sidônios, quieto e confiado; nem havia autoridade alguma do reino\" (Jz 18:7). A descrição é de paz e fartura — e é justamente por isso que a marcam para a espada: \"a terra é muito boa… lugar em que não há falta de coisa alguma\" (Jz 18:9-10). Os espias ainda usam linguagem piedosa para justificar o assalto. A tribo que não tomou a herança que Deus lhe dera escolhe a presa mais fácil.",
   },
   "maane-da": {
     title: "Maané-Dã, o arraial dos seiscentos",
     subtitle: "Jz 18:11-12 — o acampamento por detrás de Quiriate-Jearim",
-    text: "\"Partiram dali, da tribo dos danitas, de Zorá e de Estaol, seiscentos homens munidos de armas de guerra\" e \"acamparam-se em Quiriate-Jearim, em Judá; então chamaram a este lugar Maané-Dã\" — o arraial de Dã — \"até ao dia de hoje\" (Jz 18:11-12). O nome ficou fincado no mapa como lembrança de uma marcha que não foi guerra santa, mas migração armada em busca de herança mais cômoda. É o mesmo lugar onde o Espírito do Senhor começara a mover Sansão (Jz 13:25): a tribo que teve um juiz levantado por Deus agora se põe a caminho por conta própria. Deste acampamento sairá o roubo da casa de Mica e a destruição de Laís.",
+    text: "\"Partiram dali... seiscentos homens munidos de armas de guerra\" e \"acamparam-se em Quiriate-Jearim, em Judá; então chamaram a este lugar Maané-Dã\" — o arraial de Dã — \"até ao dia de hoje\" (Jz 18:11-12). O nome ficou fincado no mapa como lembrança de uma marcha que não foi guerra santa, mas migração armada em busca de herança mais cômoda. É o mesmo lugar onde o Espírito começara a mover Sansão (Jz 13:25). Deste acampamento sairá o roubo da casa de Mica e a destruição de Laís.",
   },
   "lais-queimada-a-fogo": {
     title: "Laís ferida e queimada a fogo",
@@ -116,12 +116,12 @@ export const TAGS: Record<string, StageInfo> = {
   "imagem-de-escultura-em-da": {
     title: "A imagem de escultura levantada em Dã",
     subtitle: "Jz 18:30-31 — o ídolo roubado vira culto de uma tribo",
-    text: "\"E os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). O sacerdócio deste santuário é hereditário e — segundo o próprio texto — descende de Gérson, filho de Moisés: a apostasia chegou à família do maior mediador de Israel. O que começou como devoção caseira de um homem terminou como religião oficial de uma tribo inteira, durando gerações. \"Assim, pois, estabeleceram para si a imagem de escultura, que fizera Mica, por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31).",
+    text: "\"E os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). O sacerdócio deste santuário é hereditário e, segundo o próprio texto, descende de Gérson, filho de Moisés: a apostasia chegou à família do maior mediador de Israel. O que começou como devoção caseira de um homem terminou como religião oficial de uma tribo inteira.",
   },
   "casa-de-deus-em-silo": {
     title: "A casa de Deus em Siló",
     subtitle: "Jz 18:31 — o tabernáculo verdadeiro, a poucas jornadas dali",
-    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa. Séculos depois, o profeta mandaria olhar para as ruínas: \"ide agora ao meu lugar, que estava em Siló, onde, ao princípio, fiz habitar o meu nome, e vede o que lhe fiz\" (Jr 7:12).",
+    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa (cf. Jr 7:12).",
   },
   "casa-do-pai-da-moca": {
     title: "A casa do pai da moça, em Belém de Judá",
@@ -131,27 +131,27 @@ export const TAGS: Record<string, StageInfo> = {
   "jebus-que-e-jerusalem": {
     title: "Jebus, que é Jerusalém",
     subtitle: "Jz 19:10-12 — a cidade estranha que foi evitada",
-    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade da tribo de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21); um dia seria a cidade de Davi e o lugar do templo, mas naquela noite era apenas o lugar que um israelita julgou perigoso demais.",
+    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21).",
   },
   "gibea-de-benjamim": {
     title: "Gibeá de Benjamim",
     subtitle: "Jz 19:14-15 — a cidade onde o sol se pôs",
-    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34; Dt 10:19); o que aconteceria depois faria de Gibeá sinônimo de corrupção — \"pecaram desde os dias de Gibeá\" (Os 9:9; 10:9). Desta cidade sairia também o primeiro rei de Israel (1Sm 10:26), e a noite descrita aqui custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
+    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34). O que aconteceria depois faria de Gibeá sinônimo de corrupção (Os 9:9), e custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
   },
   "praca-de-gibea": {
     title: "A praça de Gibeá",
     subtitle: "Jz 19:15-21 — o viajante assentado ao relento",
-    text: "\"Entrando ele, assentou-se na praça da cidade, porque não houve quem os recolhesse em casa\" (Jz 19:15). A praça junto à porta era o lugar público onde o forasteiro esperava ser convidado; ficar ali ao anoitecer era um atestado de que a cidade fechara o coração — como em Sodoma, onde Ló insistiu para que os hóspedes não passassem a noite na rua (Gn 19:2-3). Só um velho de passagem, ele mesmo peregrino vindo da montanha de Efraim, levanta os olhos e pergunta: \"Para onde vais, e donde vens?\" (Jz 19:17). E lhe diz: \"Paz seja contigo… tão-somente não passes a noite na praça\" (Jz 19:20) — em Gibeá, a hospitalidade sobrevive apenas num estrangeiro.",
+    text: "\"Entrando ele, assentou-se na praça da cidade, porque não houve quem os recolhesse em casa\" (Jz 19:15). A praça junto à porta era o lugar público onde o forasteiro esperava ser convidado; ficar ali ao anoitecer era um atestado de que a cidade fechara o coração — como em Sodoma, onde Ló insistiu para que os hóspedes não dormissem na rua (Gn 19:2-3). Só um velho de passagem, ele mesmo peregrino vindo de Efraim, levanta os olhos: \"Para onde vais, e donde vens?\" (Jz 19:17). Em Gibeá, a hospitalidade só sobrevive num estrangeiro.",
   },
   "casa-do-velho-de-gibea": {
     title: "A casa do velho de Efraim",
     subtitle: "Jz 19:16-24 — o único abrigo de Gibeá",
-    text: "\"Eis que um velho homem vinha à tarde do seu trabalho do campo; e era este homem da montanha de Efraim, mas peregrinava em Gibeá; eram porém os homens deste lugar filhos de Benjamim\" (Jz 19:16). O texto sublinha que o único hospitaleiro da cidade não é dali: leva o levita para casa, dá pasto aos jumentos, lava-lhes os pés, dá-lhes de comer e beber (Jz 19:21). Naquela mesma noite a casa é cercada, e o velho sai a suplicar: \"não façais tal loucura\" (Jz 19:23) — e então oferece a própria filha, mostrando que nem o justo daquele lugar tem mais um padrão íntegro. A casa que devia ser refúgio termina como palco do horror que dividiria Israel.",
+    text: "\"Eis que um velho homem vinha à tarde do seu trabalho do campo; e era este homem da montanha de Efraim, mas peregrinava em Gibeá; eram porém os homens deste lugar filhos de Benjamim\" (Jz 19:16). O texto sublinha que o único hospitaleiro da cidade não é dali: leva o levita para casa, dá pasto aos jumentos, lava-lhes os pés (Jz 19:21). Naquela mesma noite a casa é cercada, e o velho sai a suplicar \"não façais tal loucura\" (Jz 19:23) — e então oferece a própria filha. Nem o justo daquele lugar tem mais um padrão íntegro.",
   },
   "porta-da-casa-em-gibea": {
     title: "A porta da casa, ao romper da manhã",
     subtitle: "Jz 19:22-27 — o limiar onde a mulher caiu",
-    text: "A porta atravessa a cena inteira: os filhos de Belial \"cercaram a casa, batendo à porta\" (Jz 19:22); por ela a concubina é lançada para fora; e \"ao romper da manhã veio a mulher, e caiu à porta da casa daquele homem, onde estava seu senhor\" (Jz 19:26). Quando o levita abre \"as portas da casa\" para seguir viagem, \"eis que a mulher, sua concubina, jazia à porta da casa, com as mãos sobre o limiar\" (Jz 19:27). O limiar é a fronteira entre o abrigo e a violência, e as mãos estendidas sobre ele acusam a covardia do homem que a entregou. Nenhuma outra imagem do livro diz com tanta força onde chegou Israel quando \"cada um fazia o que parecia bem aos seus olhos\" (Jz 21:25).",
+    text: "A porta atravessa a cena inteira: os filhos de Belial \"cercaram a casa, batendo à porta\" (Jz 19:22); por ela a concubina é lançada para fora; e \"ao romper da manhã veio a mulher, e caiu à porta da casa daquele homem, onde estava seu senhor\" (Jz 19:26). Quando o levita abre as portas para seguir viagem, \"eis que a mulher, sua concubina, jazia à porta da casa, com as mãos sobre o limiar\" (Jz 19:27). As mãos estendidas sobre o limiar acusam a covardia do homem que a entregou.",
   },
   "casa-do-levita-em-efraim": {
     title: "A casa do levita em Efraim",
@@ -201,7 +201,7 @@ export const TAGS: Record<string, StageInfo> = {
   "estaca-de-jael": {
     title: "A estaca da tenda de Jael",
     subtitle: "Jz 4:21; 5:26 — o ferro doméstico que derrubou um general",
-    text: "\"Então Jael, mulher de Héber, tomou uma estaca da tenda, e lançou mão de um martelo, e foi-se a ele mansamente, e lhe cravou a estaca na fonte\" (Jz 4:21). Não era espada de guerreiro: era a ferramenta com que a mulher nômade fincava a tenda no chão. Nas mãos de Jael derrubou o capitão dos novecentos carros de ferro, e o cântico repete o gesto em câmera lenta: \"À estaca estendeu a sua mão esquerda, e ao martelo dos trabalhadores a sua direita\" (Jz 5:26). Cumpre-se ao pé da letra o que Débora anunciara a Baraque — \"à mão de uma mulher o Senhor venderá a Sísera\" (Jz 4:9) —, e por isso Jael é chamada \"bendita sobre as mulheres\" (Jz 5:24). Deus escolhe o fraco do mundo para envergonhar o forte (1Co 1:27).",
+    text: "\"Então Jael, mulher de Héber, tomou uma estaca da tenda, e lançou mão de um martelo, e foi-se a ele mansamente, e lhe cravou a estaca na fonte\" (Jz 4:21). Não era espada de guerreiro: era a ferramenta com que a mulher nômade fincava a tenda no chão. Nas mãos de Jael derrubou o capitão dos novecentos carros, e o cântico repete o gesto em câmera lenta (Jz 5:26). Cumpre-se o que Débora anunciara — \"à mão de uma mulher o Senhor venderá a Sísera\" (Jz 4:9) — e por isso ela é \"bendita sobre as mulheres\" (Jz 5:24).",
   },
   "imagens-de-gilgal": {
     title: "As imagens de escultura ao pé de Gilgal",
@@ -216,11 +216,11 @@ export const TAGS: Record<string, StageInfo> = {
   "aguilhada-de-sangar": {
     title: "A aguilhada de bois de Sangar",
     subtitle: "Jz 3:31 — a ferramenta do lavrador que libertou Israel",
-    text: "\"Depois dele foi Sangar, filho de Anate, que feriu a seiscentos homens dos filisteus com uma aguilhada de bois; e também ele libertou a Israel\" (Jz 3:31). A aguilhada era a vara longa e ferrada com que o lavrador tocava a junta de bois — instrumento de trabalho, não de guerra. Num tempo em que \"não se via escudo nem lança entre quarenta mil em Israel\" (Jz 5:8), Deus salvou com o que havia na mão de um lavrador, como fizera com o cajado de Moisés (Êx 4:2) e faria com a queixada de Sansão (Jz 15:15). O cântico de Débora lembra os seus dias como o tempo em que \"cessaram os caminhos\" (Jz 5:6): um só versículo, um só homem, e o Senhor livrando o seu povo.",
+    text: "\"Depois dele foi Sangar, filho de Anate, que feriu a seiscentos homens dos filisteus com uma aguilhada de bois; e também ele libertou a Israel\" (Jz 3:31). A aguilhada era a vara longa e ferrada com que o lavrador tocava a junta de bois — instrumento de trabalho, não de guerra. Num tempo em que \"não se via escudo nem lança entre quarenta mil em Israel\" (Jz 5:8), Deus salvou com o que havia na mão de um lavrador, como fizera com o cajado de Moisés e faria com a queixada de Sansão (Jz 15:15).",
   },
   "altar-de-boquim": {
     title: "O altar de Boquim",
     subtitle: "Jz 2:5 — o altar dos que choram",
-    text: "Subindo de Gilgal, o Anjo do Senhor repreendeu Israel — \"não fareis concerto com os moradores desta terra; derrubareis os seus altares; porém não obedecestes à minha voz\" —, e \"o povo levantou a sua voz e chorou. Por isso chamaram àquele lugar Boquim; e ali sacrificaram ao Senhor\" (Jz 2:1-5). Boquim quer dizer \"os que choram\". O altar guarda um pranto verdadeiro e, ainda assim, sem fruto: choraram, sacrificaram — e logo adiante já serviam aos baalins (Jz 2:11). Fica como aviso da diferença entre a tristeza segundo Deus, que gera arrependimento para a salvação, e a tristeza do mundo, que só produz morte (2Co 7:10).",
+    text: "Subindo de Gilgal, o Anjo do Senhor repreendeu Israel — \"derrubareis os seus altares; porém não obedecestes à minha voz\" —, e \"o povo levantou a sua voz e chorou. Por isso chamaram àquele lugar Boquim; e ali sacrificaram ao Senhor\" (Jz 2:1-5). Boquim quer dizer \"os que choram\". O altar guarda um pranto verdadeiro e, ainda assim, sem fruto: choraram, sacrificaram — e logo adiante já serviam aos baalins (Jz 2:11). Fica como aviso da diferença entre as duas tristezas (2Co 7:10).",
   },
 };

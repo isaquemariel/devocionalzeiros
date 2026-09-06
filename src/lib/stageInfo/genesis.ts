@@ -858,7 +858,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     mulherComum: {
       title: "As egípcias diante do celeiro de José",
       subtitle: "Gênesis 47 • as mulheres do Egito nos anos em que a fome era gravíssima",
-      text: "A fome de sete anos não escolheu classe nem sexo: \"não havia pão em toda a terra, e a terra desfalecia de fome\" (Gn 47:13). Estas são as mulheres das casas egípcias que vêm ao celeiro depois de acabado o dinheiro, e dizem com os seus: \"Dá-nos pão; por que morreremos em tua presença?\" (Gn 47:15). Entregam primeiro a prata, depois o gado, depois a terra e o próprio corpo — \"compra-nos a nós e a nossa terra por pão\" (Gn 47:19) —, e chamam a isso salvação: \"a vida nos tens dado\" (Gn 47:25). É a fome que faz um povo livre pedir para ser servo, e é sob esse mesmo sistema que Israel, séculos depois, acordaria escravo (Êx 1:11).",
+      text: "A fome de sete anos não escolheu classe nem sexo: \"não havia pão em toda a terra, e a terra desfalecia de fome\" (Gn 47:13). São as mulheres das casas egípcias que vêm ao celeiro depois de acabado o dinheiro e dizem com os seus: \"Dá-nos pão; por que morreremos em tua presença?\" (Gn 47:15). Entregam a prata, depois o gado, depois a terra e o próprio corpo — \"compra-nos a nós e a nossa terra por pão\" (Gn 47:19) — e chamam a isso salvação: \"a vida nos tens dado\" (Gn 47:25). É a fome fazendo um povo livre pedir para ser servo.",
     },
     homem: {
       title: "Jacó, que abençoou a Faraó",
