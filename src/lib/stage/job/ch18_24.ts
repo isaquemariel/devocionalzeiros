@@ -817,7 +817,7 @@ const ALTAR_EM_QUE_JO_PAGARIA_OS_SEUS_VOTOS: StagePropSpec[] = [
 // não o encontrar), as duas colunas do vão e o rolo da causa posto no chão,
 // pronto e sem quem o leia.
 const TRIBUNAL_A_QUE_JO_SE_CHEGARIA: StagePropSpec[] = [
-  { ...P("throne", 20, 1.6, undefined, 0.42), tag: "tribunal-a-que-jo-se-chegaria-se-soubesse-onde-o-achar" },
+  { ...P("throneOfGod", 20, 1.6, undefined, 0.42), tag: "tribunal-a-que-jo-se-chegaria-se-soubesse-onde-o-achar" },
   P("column", -170, 1.4, undefined, 0.26),
   P("column", 200, 1.35, undefined, 0.28),
   P("scroll", -70, 1.3, undefined, 0.6),

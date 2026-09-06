@@ -49,7 +49,7 @@ const TAIL_STARS: StagePropSpec[] = [
 ];
 
 // o trono de Deus, para onde o filho é arrebatado (12:5) — vaga dos extras
-const GOD_THRONE = P("throne", -140, 1.05, undefined, 0.08);
+const GOD_THRONE = P("throneOfGod", -140, 1.05, undefined, 0.08);
 
 // O DESERTO da mulher (12:6, 13-17): lugar árido com a TENDA preparada por
 // Deus ("onde já tinha lugar preparado") no corredor de extras.

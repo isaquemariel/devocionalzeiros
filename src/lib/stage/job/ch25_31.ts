@@ -348,7 +348,7 @@ const AGUAS_PRESAS_NAS_SUAS_NUVENS: StagePropSpec[] = [
 // dele estendida por cima até apagar-lhe o rosto. Deus não é desenhado: o que
 // se vê é o trono e o que o esconde.
 const FACE_DO_TRONO_ENCOBERTA: StagePropSpec[] = [
-  { ...P("throne", 0, 1.5, undefined, 0.34), tag: "face-do-trono-que-ele-encobre" },
+  { ...P("throneOfGod", 0, 1.5, undefined, 0.34), tag: "face-do-trono-que-ele-encobre" },
   { ...P("clouds", 10, 1.9, undefined, 0.52), sky: true },
   P("rock", -230, 1.3, undefined, 0.42),
   P("rock", 240, 1.25, undefined, 0.44),

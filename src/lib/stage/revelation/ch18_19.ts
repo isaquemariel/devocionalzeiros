@@ -78,7 +78,7 @@ const PORTO_MILLSTONE: StagePropSpec[] = [
 // O CÉU (Ap 19): sala do trono em festa — trono ao centro, castiçais acesos,
 // altar e incensário, estrelas. Corredor -100..-190 livre.
 const CEU: StagePropSpec[] = [
-  P("throne", 0, 1.3, undefined, 0.05),
+  P("throneOfGod", 0, 1.3, undefined, 0.05),
   P("lampstand", -230, 0.95, 1, 0.25),
   P("lampstand", 230, 0.95, 1, 0.25),
   P("altar", 120, 1.0, undefined, 0.12),

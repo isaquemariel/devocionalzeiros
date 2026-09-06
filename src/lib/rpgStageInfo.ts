@@ -375,9 +375,14 @@ export const PROP_INFO: Record<string, StageInfo> = {
     text: "As cidades antigas se erguiam em pedra e tijolo — casas, templos e torres agrupados dentro das muralhas. Desde Enoque, a primeira cidade (Gn 4:17), e Babel (Gn 11), a Escritura observa com cuidado o que o homem constrói: pode ser abrigo e ordem, ou monumento à própria glória. Por isso Abraão preferiu a tenda, \"esperando a cidade que tem fundamentos, da qual o artífice e construtor é Deus\" (Hb 11:10).",
   },
   throne: {
-    title: "O trono",
-    subtitle: "Assento de quem governa",
-    text: "O trono era o lugar do poder: dele se julgava e se reinava. Faraó disse a José: \"somente no trono eu serei maior do que tu\" (Gn 41:40). Mas a Bíblia insiste que há um trono acima de todos — \"o Senhor estabeleceu o seu trono nos céus, e o seu reino domina sobre tudo\" (Sl 103:19) —, o mesmo que João veria posto no céu, com Alguém assentado sobre ele (Ap 4:2).",
+    title: "O trono real",
+    subtitle: "A cadeira de estado de um rei",
+    text: "O trono era o lugar do poder: dele se julgava e se reinava. Faraó disse a José: \"somente no trono eu serei maior do que tu\" (Gn 41:40). O mais descrito de todos é o de Salomão: \"fez o rei um grande trono de marfim, e o cobriu de ouro puríssimo. Este trono tinha seis degraus, e era o encosto dele por detrás redondo, e de ambos os lados tinha encostos até ao assento, e dois leões junto aos encostos\" (1Rs 10:18-19) — e mais doze leões nos seis degraus, \"nunca se fez obra semelhante em nenhum dos reinos\". Mas a Bíblia insiste que há um trono acima de todos: \"o Senhor estabeleceu o seu trono nos céus, e o seu reino domina sobre tudo\" (Sl 103:19).",
+  },
+  throneOfGod: {
+    title: "O trono de Deus",
+    subtitle: "O assento de quem governa tudo",
+    text: "Não é a cadeira de um rei, e por isso não se desenha como uma: dele sai luz, e ninguém é desenhado assentado. \"Eis que um trono estava posto no céu, e um assentado sobre o trono\" (Ap 4:2) — e João descreve não um rosto, mas o brilho do jaspe e do sardônio e, ao redor, \"um arco celeste semelhante à esmeralda\" (Ap 4:3), o arco da aliança de Gn 9. É diante deste trono que se apresentam os filhos de Deus em Jó 1:6, é este que Micaías vê com todo o exército do céu à direita e à esquerda (1Rs 22:19), e é a ele que Jó queria chegar: \"Ah, se eu soubesse onde o poderia achar! Então me chegaria ao seu tribunal\" (Jó 23:3).",
   },
   bowl: {
     title: "Taça",
@@ -655,7 +660,7 @@ export const PROP_INFO_BY_BOOK: Record<string, Record<string, StageInfo>> = {
       subtitle: "Comunidade cristã do séc. I",
       text: "As primeiras igrejas se reuniam em casas ampliadas e salões — comunidades pequenas em cidades grandes e hostis. Às sete delas Cristo dita cartas com o mesmo esqueleto: \"Conheço as tuas obras… quem tem ouvidos, ouça… ao que vencer\". Elogio, correção e promessa — o cuidado do Pastor por cada rebanho local.",
     },
-    throne: {
+    throneOfGod: {
       title: "O trono de Deus",
       subtitle: "Ap 4:2-3 — o centro do céu",
       text: "\"Eis que um trono estava posto no céu, e um assentado sobre o trono.\" João não descreve o rosto de quem está assentado — apenas o brilho de pedras preciosas (jaspe e sardônio) e, ao redor, \"um arco celeste semelhante à esmeralda\": glória demais para palavras, aliança demais para medo (o arco lembra Gn 9). A palavra \"trono\" aparece mais de 40 vezes no Apocalipse: enquanto César parecia mandar na história, o livro insiste que o governo do universo tem dono.",

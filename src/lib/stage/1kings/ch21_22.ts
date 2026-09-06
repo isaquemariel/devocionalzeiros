@@ -314,7 +314,7 @@ const MONTES_SEM_PASTOR: StagePropSpec[] = [
 // e o estrelado alto ao fundo; o exército do céu entra como `anjo` em `flyIdle`,
 // à direita e à esquerda, e o balão sai sempre de Micaías, que está contando.
 const TRONO_DO_CEU: StagePropSpec[] = [
-  { ...P("throne", 0, 1.3, undefined, 0.3), tag: "trono-do-senhor-na-visao" },
+  { ...P("throneOfGod", 0, 1.3, undefined, 0.3), tag: "trono-do-senhor-na-visao" },
   P("column", -250, 1.2, undefined, 0.26),
   P("column", 250, 1.2, undefined, 0.26),
   P("lampstand", -130, 0.9, undefined, 0.5),

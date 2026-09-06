@@ -160,7 +160,7 @@ const ALTAR_DA_MADRUGADA_DE_JO: StagePropSpec[] = [
 // cada lado, os candelabros da presença e o céu de estrelas por cima. Deus
 // fala daqui e não é figura: é a voz do céu.
 const CORTE_CELESTIAL_PERANTE_O_SENHOR: StagePropSpec[] = [
-  { ...P("throne", 0, 1.45, undefined, 0.3), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
+  { ...P("throneOfGod", 0, 1.45, undefined, 0.3), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
   P("cherub", -215, 1.1, undefined, 0.34),
   P("cherub", 215, 1.1, undefined, 0.34),
   P("menorah", -110, 0.95, undefined, 0.52),
@@ -695,7 +695,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ouvindo.
       b(8, { by: "deus", q: "E disse o Senhor a Satanás:",
         props: [
-          { ...P("throne", 0, 1.6, undefined, 0.34), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
+          { ...P("throneOfGod", 0, 1.6, undefined, 0.34), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
           P("cherub", -230, 1.15, undefined, 0.3),
           P("cherub", 230, 1.15, undefined, 0.3),
           P("menorah", -120, 1.0, undefined, 0.56),
@@ -940,7 +940,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pequeno na borda.
       b(3, { by: "deus", q: "E disse o Senhor a Satanás:",
         props: [
-          { ...P("throne", 0, 1.62, undefined, 0.34), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
+          { ...P("throneOfGod", 0, 1.62, undefined, 0.34), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
           P("cherub", -240, 1.15, undefined, 0.3),
           P("cherub", 240, 1.15, undefined, 0.3),
           P("menorah", -130, 1.0, undefined, 0.58),
@@ -966,7 +966,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // vez; só os candelabros e o trono continuam acesos.
       b(5, { by: "satanas-o-adversario", q: "Porém estende a tua mão, e toca-lhe nos ossos, e na carne",
         props: [
-          { ...P("throne", 0, 1.5, undefined, 0.32), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
+          { ...P("throneOfGod", 0, 1.5, undefined, 0.32), tag: "trono-perante-o-qual-vieram-os-filhos-de-deus" },
           P("menorah", -150, 1.0, undefined, 0.56),
           P("menorah", 150, 1.0, undefined, 0.56),
           P("cherub", -260, 1.05, undefined, 0.3),

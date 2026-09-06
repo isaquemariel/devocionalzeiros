@@ -24,7 +24,7 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // O TRONO no centro-fundo, estrelas do firmamento nas bordas.
 // (corredor de extras dx -100..-190 fica LIVRE na decoração fixa)
 const THRONE_CORE: StagePropSpec[] = [
-  P("throne", 0, 1.35, undefined, 0.1),      // o trono posto no céu (centro)
+  P("throneOfGod", 0, 1.35, undefined, 0.1),      // o trono posto no céu (centro)
   P("star", -285, 0.7, undefined, 0.05),     // firmamento à esquerda
   P("star", 285, 0.75, undefined, 0.07),     // firmamento à direita
 ];

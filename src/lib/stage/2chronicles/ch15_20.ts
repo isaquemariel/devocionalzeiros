@@ -783,7 +783,7 @@ const MONTES_SEM_PASTOR: StagePropSpec[] = [
 // à sua esquerda". O TRONO É DESENHADO VAZIO E EM GLÓRIA — Deus não é figura em
 // cena nenhuma; o que se vê é a luz, o assento e a corte de pé dos dois lados.
 const TRONO_DO_SENHOR_NA_VISAO: StagePropSpec[] = [
-  { ...P("throne", 0, 1.35, undefined, 0.3), tag: "trono-do-senhor-na-visao-de-micaias" },
+  { ...P("throneOfGod", 0, 1.35, undefined, 0.3), tag: "trono-do-senhor-na-visao-de-micaias" },
   { ...P("starfield", -180, 1.2, undefined, 0.84), sky: true },
   { ...P("clouds", 165, 1.2, undefined, 0.7), sky: true },
   P("column", -300, 1.25, undefined, 0.28),

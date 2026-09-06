@@ -31,7 +31,7 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // O TEMPLO DO CÉU (16:1): de onde sai a ordem — trono, castiçais, altar e as
 // taças da ira enfileiradas (a da vaga dos extras é a que o verso destaca).
 const TEMPLE: StagePropSpec[] = [
-  P("throne", 0, 1.2, undefined, 0.05),
+  P("throneOfGod", 0, 1.2, undefined, 0.05),
   P("lampstand", -70, 1, 1, 0.25),
   P("lampstand", 70, 1, 1, 0.25),
   P("censer", 150, 0.9, 1, 0.4),
@@ -92,7 +92,7 @@ const SUN_FIELD: StagePropSpec[] = [
 
 // O TRONO DA BESTA (16:10-11): cidade do reino tenebroso.
 const BEAST_THRONE: StagePropSpec[] = [
-  P("throne", 60, 1.15, undefined, 0.08),
+  { ...P("throne", 60, 1.15, undefined, 0.08), tag: "trono-da-besta" },
   P("tower", -260, 1.2, undefined, 0.1),
   P("tower", 280, 1.1, undefined, 0.12),
   P("crate", 180, 0.9, undefined, 0.6),

@@ -3694,6 +3694,100 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       return;
     }
     case "throne": {
+      // TRONO REAL — a cadeira de estado de um rei na terra. NÃO é o trono de
+      // Deus: o arco-íris de esmeralda, os raios e a luz sobre o assento vazio
+      // são de Ap 4:2-3 e ficaram no prop `throneOfGod`. Durante muito tempo os
+      // dois eram o mesmo desenho, e por isso o trono de Salomão, o de Assuero,
+      // o de Davi e até a cadeira que Jó mandava preparar na rua (Jó 29:7)
+      // saíam todos com a glória do Apocalipse em volta — e a cena dizia o
+      // contrário do versículo.
+      //
+      // O modelo é o trono de Salomão, que a Escritura descreve por inteiro:
+      // "fez o rei um grande trono de marfim, e o cobriu de ouro puríssimo. Este
+      // trono tinha seis degraus, e era o encosto dele por detrás REDONDO, e de
+      // ambos os lados tinha ENCOSTOS ATÉ AO ASSENTO, e DOIS LEÕES junto aos
+      // encostos" (1Rs 10:18-19).
+      //
+      // E, ao contrário do trono de Deus, este ESCURECE com a noite como
+      // qualquer objeto de madeira e metal — é isso que faz o portão de Uz de
+      // Jó 30 ler como a ruína de Jó 29, e não como a mesma cena com um filtro.
+      const nt = clamp01(o.night ?? 0);
+      const NOITE_T = "#191324";
+      const es = (hex: string) => mixHex(hex, NOITE_T, nt * 0.72);
+      softShadow(g, x, fy, 30 * S, 0.36);
+      g.save();
+      // ---- estrado de SEIS degraus (1Rs 10:19) ----
+      const degrau = (w: number, h: number, y0: number, tom: number) => {
+        const gd = g.createLinearGradient(x, y0 - h, x, y0);
+        gd.addColorStop(0, es(mixHex("#e8d3a2", "#000000", tom)));
+        gd.addColorStop(1, es(mixHex("#9d8451", "#000000", tom)));
+        g.fillStyle = gd;
+        rr(g, x - w / 2, y0 - h, w, h, 1.2 * S); g.fill();
+        g.strokeStyle = es("#6d5a30"); g.lineWidth = 0.7 * S;
+        rr(g, x - w / 2, y0 - h, w, h, 1.2 * S); g.stroke();
+      };
+      for (let i2 = 0; i2 < 6; i2++) degrau((50 - i2 * 3.6) * S, 3.4 * S, fy - i2 * 3.4 * S, i2 * 0.035);
+      const baseY = fy - 20.4 * S;   // topo do estrado
+      // ---- encosto REDONDO por detrás ----
+      const enc = g.createLinearGradient(x, baseY - 40 * S, x, baseY - 8 * S);
+      enc.addColorStop(0, es("#f0dcae")); enc.addColorStop(0.45, es("#cfad6a")); enc.addColorStop(1, es("#9c7a34"));
+      g.fillStyle = enc;
+      g.beginPath();
+      g.moveTo(x - 11 * S, baseY);            // assenta NO topo do estrado
+      g.lineTo(x - 11 * S, baseY - 27 * S);
+      g.arc(x, baseY - 27 * S, 11 * S, Math.PI, 0);
+      g.lineTo(x + 11 * S, baseY);
+      g.closePath(); g.fill();
+      g.strokeStyle = es("#6d5a30"); g.lineWidth = 1 * S;
+      g.stroke();
+      // marfim: painel claro embutido no encosto
+      g.fillStyle = es("#f6efdc");
+      g.beginPath();
+      g.moveTo(x - 7 * S, baseY - 11 * S);
+      g.lineTo(x - 7 * S, baseY - 27 * S);
+      g.arc(x, baseY - 27 * S, 7 * S, Math.PI, 0);
+      g.lineTo(x + 7 * S, baseY - 11 * S);
+      g.closePath(); g.fill();
+      // ---- assento ----
+      const as2 = g.createLinearGradient(x, baseY - 11 * S, x, baseY - 6 * S);
+      as2.addColorStop(0, es("#e8cf95")); as2.addColorStop(1, es("#a8802f"));
+      g.fillStyle = as2;
+      rr(g, x - 14 * S, baseY - 11 * S, 28 * S, 5.5 * S, 1.8 * S); g.fill();
+      g.strokeStyle = es("#6d5a30"); g.lineWidth = 0.8 * S;
+      rr(g, x - 14 * S, baseY - 11 * S, 28 * S, 5.5 * S, 1.8 * S); g.stroke();
+      const alm = g.createLinearGradient(x, baseY - 14 * S, x, baseY - 10.4 * S);
+      alm.addColorStop(0, es("#8d3a6a")); alm.addColorStop(1, es("#5b2145"));
+      g.fillStyle = alm;
+      rr(g, x - 10.5 * S, baseY - 14 * S, 21 * S, 3.8 * S, 1.6 * S); g.fill();
+      // ---- encostos laterais ATÉ AO ASSENTO, e DOIS LEÕES junto deles ----
+      for (const sd of [-1, 1]) {
+        const ax = x + sd * 13 * S;
+        g.fillStyle = es("#c8a858");
+        rr(g, ax - 2 * S, baseY - 18 * S, 4 * S, 8 * S, 1.4 * S); g.fill();
+        g.strokeStyle = es("#6d5a30"); g.lineWidth = 0.7 * S;
+        rr(g, ax - 2 * S, baseY - 18 * S, 4 * S, 8 * S, 1.4 * S); g.stroke();
+        // Os "dois leões junto aos encostos" (1Rs 10:19) NÃO são desenhados. Em
+        // cena o trono tem uns 40 px de altura, e um leão ali sai com uns 10:
+        // tentei-o couchant e em silhueta, e nos dois casos leu-se como asa ou
+        // como caracol dourado colado no braço da cadeira. É a mesma regra das
+        // tags: uma forma que afirma outra coisa é pior do que forma nenhuma.
+        // O que faz este trono ler como trono são os SEIS DEGRAUS e o ENCOSTO
+        // REDONDO de marfim, que estão lá e são igualmente do texto.
+        // remate esférico no alto de cada braço
+        const kg2 = g.createRadialGradient(ax - 0.8 * S, baseY - 19.4 * S, 0.3, ax, baseY - 18.8 * S, 2.4 * S);
+        kg2.addColorStop(0, es("#f4e2b0")); kg2.addColorStop(1, es("#9c7a34"));
+        g.fillStyle = kg2;
+        g.beginPath(); g.arc(ax, baseY - 18.8 * S, 2.2 * S, 0, TAU); g.fill();
+      }
+      // um lustro discreto de ouro no encosto — some com a noite
+      g.globalAlpha = (1 - nt) * 0.5;
+      g.fillStyle = "#fff6dd";
+      rr(g, x - 6 * S, baseY - 34 * S, 12 * S, 1.6 * S, 0.8 * S); g.fill();
+      g.globalAlpha = 1;
+      g.restore();
+      return;
+    }
+    case "throneOfGod": {
       // TRONO CELESTIAL (Ap 4:2-3): "eis que um trono estava posto no céu".
       // Estrado de degraus dourados, assento alto com encosto radiante e o
       // arco-íris "semelhante à esmeralda" ao redor. Ninguém é desenhado

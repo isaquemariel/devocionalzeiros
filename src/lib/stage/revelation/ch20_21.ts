@@ -56,9 +56,9 @@ const ABYSS_FIELD: StagePropSpec[] = [
 
 // O REINADO DE MIL ANOS (20:4-6): tronos menores em fila para os que reinam.
 const MILLENNIUM: StagePropSpec[] = [
-  P("throne", -60, 0.9, undefined, 0.26),
-  P("throne", 0, 0.95, undefined, 0.32),
-  P("throne", 60, 0.9, undefined, 0.26),
+  { ...P("throne", -60, 0.9, undefined, 0.26), tag: "tronos-dos-que-reinam-com-cristo" },
+  { ...P("throne", 0, 0.95, undefined, 0.32), tag: "tronos-dos-que-reinam-com-cristo" },
+  { ...P("throne", 60, 0.9, undefined, 0.26), tag: "tronos-dos-que-reinam-com-cristo" },
   ...FIELD_GREEN,
 ];
 
@@ -80,7 +80,7 @@ const SAINTS_CAMP: StagePropSpec[] = [
 // O GRANDE TRONO BRANCO (20:11): céu e terra fugiram — só o trono, imenso,
 // e a luz. Palco despojado de propósito (não se achou lugar para eles).
 const WHITE_THRONE: StagePropSpec[] = [
-  P("throne", 0, 1.7, undefined, 0.08),        // o grande trono branco
+  P("throneOfGod", 0, 1.7, undefined, 0.08),        // o grande trono branco
   P("star", -70, 0.5, undefined, 0.02),
   P("star", 80, 0.55, undefined, 0.04),
 ];

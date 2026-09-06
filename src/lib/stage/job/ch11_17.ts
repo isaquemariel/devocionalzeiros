@@ -279,7 +279,7 @@ const MAR_MAIS_LARGO_DO_QUE_A_MEDIDA: StagePropSpec[] = [
 // cadeira do juízo posta e vazia, a coluna do pórtico, a porta grande por onde
 // entra quem é chamado, e o céu carregado de um dia em que não há apelação.
 const JUIZO_A_QUE_NINGUEM_PODE_IMPEDIR: StagePropSpec[] = [
-  { ...P("throne", -46, 1.35, undefined, 0.42), tag: "assento-do-juizo-a-que-ninguem-pode-impedir" },
+  { ...P("throneOfGod", -46, 1.35, undefined, 0.42), tag: "assento-do-juizo-a-que-ninguem-pode-impedir" },
   P("column", 96, 1.25, undefined, 0.28),
   P("door", 214, 1.2, undefined, 0.36),
   P("crate", -250, 0.9, undefined, 0.6),
@@ -639,7 +639,7 @@ const MONTURO_NA_ALTA_NOITE: StagePropSpec[] = [
 // colunas do salão, o rolo da causa já ordenada sobre o cesto — e ninguém
 // sentado. O quadro é o pedido, não a resposta.
 const TRIBUNAL_VAZIO_PERANTE_DEUS: StagePropSpec[] = [
-  { ...P("throne", 0, 1.5, undefined, 0.4), tag: "tribunal-vazio-perante-quem-jo-quer-defender-se" },
+  { ...P("throneOfGod", 0, 1.5, undefined, 0.4), tag: "tribunal-vazio-perante-quem-jo-quer-defender-se" },
   P("column", -160, 1.35, undefined, 0.24),
   P("column", 168, 1.3, undefined, 0.26),
   { ...P("scroll", 258, 1.25, undefined, 0.54), tag: "causa-que-jo-ja-tem-ordenada" },
@@ -816,7 +816,7 @@ const FLOR_QUE_MURCHA_E_A_SOMBRA_QUE_FOGE: StagePropSpec[] = [
 // dentro: a cadeira do juízo, a coluna, a porta pela qual se entra e não se
 // sai, e o céu fechado. É o mesmo tribunal de 13, visto de dentro.
 const JUIZO_A_QUE_ME_FAZES_ENTRAR: StagePropSpec[] = [
-  { ...P("throne", 60, 1.4, undefined, 0.4), tag: "juizo-a-que-o-homem-de-poucos-dias-e-feito-entrar" },
+  { ...P("throneOfGod", 60, 1.4, undefined, 0.4), tag: "juizo-a-que-o-homem-de-poucos-dias-e-feito-entrar" },
   P("column", -80, 1.3, undefined, 0.26),
   P("door", -230, 1.2, undefined, 0.36),
   P("crate", 216, 0.9, undefined, 0.6),

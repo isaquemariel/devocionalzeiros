@@ -17,7 +17,7 @@ const PROP_H: Record<string, number> = {
   palm: 56, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 59, star: 60, door: 50,
   well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
   altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21, river: 14,
-  throne: 66, trumpet: 26, bowl: 16, censer: 30, ark: 34,
+  throne: 52, throneOfGod: 66, trumpet: 26, bowl: 16, censer: 30, ark: 34,
   arkship: 88, ladder: 84, rainbow: 70, sheaf: 18, ziggurat: 92,
   // Éden (Gn 2–3)
   treeOfLife: 78, treeOfKnowledge: 70, edenRiver: 26, riverFork: 20, flamingSword: 44, cherub: 56,

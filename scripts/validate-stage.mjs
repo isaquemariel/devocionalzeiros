@@ -25,7 +25,7 @@ const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","
   // voz do céu (nunca desenhada, sempre balão de voz off)
   "deus"]);
 const POSES = new Set(["stand","walk","kneel","bow","raise","write","point","lie","flyIdle"]);
-const PROPS = new Set(["palm","rock","lampstand","menorah","calf","serpent","manna","hail","pillar","frogs","locusts","grapes","bronzeSerpent","rod","tablets","church","tower","tree","star","door","doorBlood","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark",
+const PROPS = new Set(["palm","rock","lampstand","menorah","calf","serpent","manna","hail","pillar","frogs","locusts","grapes","bronzeSerpent","rod","tablets","church","tower","tree","star","door","doorBlood","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","throneOfGod","trumpet","bowl","censer","ark",
   // Gênesis / AT
   "arkship","ladder","rainbow","sheaf","ziggurat",
   // Éden (Gn 2-3)
@@ -116,7 +116,7 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
         // sobreposição de MARCOS (props grandes que disputam a mesma vaga e o
         // badge "?"). Cenografia miúda (grass/bush/rock/amphora/crate) e
         // conjuntos intencionais (arco de castiçais) não geram ruído.
-        const LANDMARK = new Set(["church","tower","ziggurat","tree","door","star","throne","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer","treeOfLife","treeOfKnowledge","edenRiver","riverFork","arkship","ladder","rainbow","cherub","bed","pool","chariot","horse","donkey","column","table"]);
+        const LANDMARK = new Set(["church","tower","ziggurat","tree","door","star","throne","throneOfGod","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer","treeOfLife","treeOfKnowledge","edenRiver","riverFork","arkship","ladder","rainbow","cherub","bed","pool","chariot","horse","donkey","column","table"]);
         const marks = bt.props.filter((p) => LANDMARK.has(p.kind) && !p.sky);
         for (let i = 0; i < marks.length; i++) for (let j = i + 1; j < marks.length; j++) {
           const a = marks[i], b2 = marks[j];

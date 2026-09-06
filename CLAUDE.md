@@ -139,6 +139,8 @@ flechas desenhadas com o prop `rod`, que é a VARA DE ARÃO QUE FLORESCEU (Nm
 | lança | `spear` | `rod` |
 | arco / flechas | `bow` | `rod` |
 | coroa | `crown` | `bowl`, `censer` |
+| trono de um REI (Salomão, Assuero, Davi, a cadeira de Jó em Uz) | `throne` | `throneOfGod` |
+| o trono de DEUS (Ap 4, Jó 1:6, a visão de Micaías) | `throneOfGod` | `throne` |
 | harpa, lira | `harp` | `scroll` |
 | leito, divã | `bed` | `crate`, `stall` |
 | tanque, açude | `pool` | `river`, `well` |
@@ -164,6 +166,15 @@ versículo em que "a sua lâmpada sobre ele se apagará" (Jó 18:6), declare os
 props do beat SEM ela e deixe a tenda no escuro; com o candeeiro em cena, a
 luz do ímpio continua acesa no versículo que diz que ela se apaga. É a mesma
 classe do muro de Jericó intacto — e desta vez em miniatura.
+
+`throne` é a cadeira de estado de um rei da TERRA — seis degraus, encosto
+redondo de marfim, almofada de púrpura, e escurece com a noite como qualquer
+móvel. `throneOfGod` é o de Ap 4:2-3, com o arco de esmeralda e a luz sobre o
+assento vazio, e NÃO escurece. Eram o mesmo desenho, e por isso 425 tronos —
+o de Salomão, o de Assuero, o de Faraó e até a cadeira que Jó mandava preparar
+na rua (Jó 29:7) — saíam com a glória do Apocalipse em volta. Quando o trono é
+do rei, a noite tem de o apagar: é isso que faz Jó 30 ler como a ruína de Jó
+29, e não como a mesma cena com um filtro por cima.
 
 `rod` é só a vara de Arão. `calf` é só um ídolo fundido (o bezerro de ouro, os
 terafins, Dagom) — nunca um animal vivo, que é `rebanho` ou `horse`/`donkey`.

@@ -22,7 +22,7 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // Sala do trono celestial: o trono ao fundo, o ALTAR DE OURO diante dele
 // (Ap 8:3), castiçais nas laterais e estrelas altas. Corredor -100..-190 livre.
 const THRONE_HALL: StagePropSpec[] = [
-  P("throne", 0, 1.35, undefined, 0.05),
+  P("throneOfGod", 0, 1.35, undefined, 0.05),
   P("altar", 90, 1.05, 0.4, 0.3),
   P("lampstand", -230, 0.95, 1, 0.25),
   P("lampstand", 230, 0.95, 1, 0.25),

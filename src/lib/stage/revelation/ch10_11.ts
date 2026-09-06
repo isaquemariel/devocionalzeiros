@@ -74,7 +74,7 @@ const OLIVES_AND_LAMPS: StagePropSpec[] = [
 
 // O céu aberto na 7ª trombeta (Ap 11:15+): o trono, a trombeta que soou.
 const HEAVEN: StagePropSpec[] = [
-  P("throne", 0, 1.25, undefined, 0.08),
+  P("throneOfGod", 0, 1.25, undefined, 0.08),
   P("trumpet", -130, 0.9, undefined, 0.2),
   P("star", 230, 0.6, undefined, 0.06),
   P("star", -270, 0.6, undefined, 0.1),
@@ -82,7 +82,7 @@ const HEAVEN: StagePropSpec[] = [
 
 // v.19: o templo celestial se abre — a ARCA da aliança na vaga dos extras
 const HEAVEN_ARK: StagePropSpec[] = [
-  P("throne", 0, 1.25, undefined, 0.08),
+  P("throneOfGod", 0, 1.25, undefined, 0.08),
   P("ark", -140, 1.1, undefined, 0.18),
   P("star", 230, 0.6, undefined, 0.06),
   P("star", -270, 0.6, undefined, 0.1),

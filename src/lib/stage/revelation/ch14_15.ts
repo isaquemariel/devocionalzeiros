@@ -74,7 +74,7 @@ const TEMPLO_AO_LONGE = P("tent", 205, 1.0, undefined, 0.04); // o templo, no c√
 
 // A SALA DO TRONO (Ap 15): trono ao fundo, luzes e incenso.
 const TRONO: StagePropSpec[] = [
-  P("throne", 0, 1.35, undefined, 0.08),
+  P("throneOfGod", 0, 1.35, undefined, 0.08),
   P("star", -250, 0.7, undefined, 0.05),
   P("star", 248, 0.65, undefined, 0.06),
   P("lampstand", -215, 0.95, 1, 0.3),
@@ -113,7 +113,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 92, "raise", { dy: 0.5 }),
         C("multidao", -46, "raise", { dy: 0.56, id: "multidao2" }),
       ] }),                                                                          // voz de muitas √°guas e de harpistas
-      b(3, { props: [...SIAO, P("throne", -145, 1.05, undefined, 0.12)], cast: [
+      b(3, { props: [...SIAO, P("throneOfGod", -145, 1.05, undefined, 0.12)], cast: [
         C("joao", -84, "stand", { dy: 0.58 }),
         C("cordeiro", 4, "stand", { glow: 1, dy: 0.3 }),
         C("multidao", 92, "raise", { dy: 0.5 }),
