@@ -100,6 +100,14 @@ export default defineConfig(({ mode }) => ({
         // de dezenas de MB que travam em rede móvel e atrasam as atualizações, e reduz
         // muito o despejo de armazenamento pelo SO (que apagava a sessão do usuário).
         globPatterns: ["**/*.{js,css,woff2,ico}"],
+        // O pacote da CENA VIVA (assets/RPG-*.js) é CONTEÚDO, não esqueleto: são
+        // os 500 capítulos de roteiro, as fichas e os jogos, e já passou dos
+        // 11 MB. Pré-cacheá-lo faria exatamente o que o comentário acima diz
+        // que não se quer — instalação de dezenas de MB, que trava em rede
+        // móvel e faz o SO despejar o armazenamento. Fica de fora do pré-cache
+        // e entra em cache sob demanda (runtimeCaching abaixo), como os JSONs
+        // da Bíblia: quem nunca abre o modo RPG não paga por ele.
+        globIgnores: ["**/assets/RPG-*.js"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // A casca (index.html) é servida do pré-cache — sempre um conjunto consistente
         // de HTML + chunks, então nunca sobra um index.html velho apontando para um JS
@@ -136,6 +144,17 @@ export default defineConfig(({ mode }) => ({
             options: {
               cacheName: "gstatic-fonts-cache",
               expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // o pacote da cena viva: baixa na primeira vez que se abre o modo
+            // RPG e fica guardado; as versões velhas saem pelo maxEntries.
+            urlPattern: /\/assets\/RPG-[\w-]+\.js$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "rpg-stage-cache",
+              expiration: { maxEntries: 3, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },
