@@ -60,7 +60,7 @@ const POSES_IGNORED_BY_MULHER = new Set(["lie", "kneel", "bow", "walk", "point",
 const tmp = mkdtempSync(join(tmpdir(), "stage-checkup-"));
 const entry = join(tmp, "entry.mjs");
 writeFileSync(entry, `
-export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageRegistry.ts")}";
+export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";
 export { actorInfo, ACTOR_INFO, PROP_TAG_INFO } from "${join(ROOT, "src/lib/rpgStageInfo.ts")}";
 `);
 await build({

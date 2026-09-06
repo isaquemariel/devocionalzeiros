@@ -33,7 +33,7 @@ const tmp=mkdtempSync(join(tmpdir(),"sc-"));
 writeFileSync(join(tmp,"e.ts"),`
 import { drawBackdropHD, drawPropHD, drawHumanHD } from "${ROOT}/src/lib/rpgStageHD";
 import { drawBeingHD, BEING_ROLES } from "${ROOT}/src/lib/rpgStageBeings";
-import { STAGE_BOOKS } from "${ROOT}/src/lib/rpgStageRegistry";
+import { STAGE_BOOKS } from "${ROOT}/src/lib/rpgStageAll";
 import { stagedAt, makeDrawState, envAt, depthToFeetY, depthScale, SET_W, balloonText } from "${ROOT}/src/lib/rpgStage";
 ${EXTRA.map((e,i)=>`import { CHAPTERS as X${i} } from "${e.arquivo}";`).join("\n")}
 const LIVROS: any = { ...STAGE_BOOKS };

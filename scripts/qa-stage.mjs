@@ -25,7 +25,7 @@ const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const ONLY = process.argv[2];
 
 const tmp = mkdtempSync(join(tmpdir(), "qa-stage-"));
-writeFileSync(join(tmp, "entry.mjs"), `export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageRegistry.ts")}";\n`);
+writeFileSync(join(tmp, "entry.mjs"), `export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";\n`);
 await build({ entryPoints: [join(tmp, "entry.mjs")], bundle: true, format: "esm",
   outfile: join(tmp, "out.mjs"), alias: { "@": join(ROOT, "src") }, logLevel: "silent" });
 const { STAGE_BOOKS } = await import(pathToFileURL(join(tmp, "out.mjs")).href);

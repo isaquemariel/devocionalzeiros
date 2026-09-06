@@ -107,7 +107,7 @@ export default defineConfig(({ mode }) => ({
         // móvel e faz o SO despejar o armazenamento. Fica de fora do pré-cache
         // e entra em cache sob demanda (runtimeCaching abaixo), como os JSONs
         // da Bíblia: quem nunca abre o modo RPG não paga por ele.
-        globIgnores: ["**/assets/RPG-*.js"],
+        globIgnores: ["**/assets/RPG-*.js", "**/assets/rpg*Stage-*.js", "**/assets/stageInfo*.js"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // A casca (index.html) é servida do pré-cache — sempre um conjunto consistente
         // de HTML + chunks, então nunca sobra um index.html velho apontando para um JS
@@ -148,13 +148,15 @@ export default defineConfig(({ mode }) => ({
             },
           },
           {
-            // o pacote da cena viva: baixa na primeira vez que se abre o modo
-            // RPG e fica guardado; as versões velhas saem pelo maxEntries.
-            urlPattern: /\/assets\/RPG-[\w-]+\.js$/,
+            // Os pedaços da cena viva — o núcleo do RPG e um por livro. Cada um
+            // baixa na primeira vez que se abre AQUELE livro e fica guardado;
+            // as versões velhas saem pelo maxEntries. Nada disto é pré-cache:
+            // quem lê Rute não paga por Jó.
+            urlPattern: /\/assets\/(RPG-|rpg[\w]*Stage-|stageInfo)[\w-]*\.js$/,
             handler: "CacheFirst",
             options: {
               cacheName: "rpg-stage-cache",
-              expiration: { maxEntries: 3, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

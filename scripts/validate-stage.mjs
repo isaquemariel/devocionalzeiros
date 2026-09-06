@@ -43,7 +43,7 @@ const TERRAINS = new Set(["patmos","glory","city","field","throne","garden","des
 // bundle only the registry (type-only imports elsewhere keep this light)
 const tmp = mkdtempSync(join(tmpdir(), "stage-val-"));
 const entry = join(tmp, "entry.mjs");
-writeFileSync(entry, `export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageRegistry.ts")}";\n`);
+writeFileSync(entry, `export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";\n`);
 await build({
   entryPoints: [entry],
   bundle: true,

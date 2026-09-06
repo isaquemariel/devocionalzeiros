@@ -24,7 +24,7 @@ const wanted = versesArg.split(",").map(Number);
 // bundle do motor (mesmo código do app)
 const tmp = mkdtempSync(join(tmpdir(), "shot-"));
 writeFileSync(join(tmp, "e.mjs"), `
-export { getStageScript } from "${join(ROOT, "src/lib/rpgStageRegistry.ts")}";
+export { getStageScript } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";
 export { stagedAt, envAt, makeDrawState, SET_W, depthToFeetY, depthScale } from "${join(ROOT, "src/lib/rpgStage.ts")}";
 export { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD } from "${join(ROOT, "src/lib/rpgStageHD.ts")}";
 export { BEING_ROLES, drawBeingHD } from "${join(ROOT, "src/lib/rpgStageBeings.ts")}";

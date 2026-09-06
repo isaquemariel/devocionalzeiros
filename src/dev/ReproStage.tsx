@@ -10,7 +10,8 @@ import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { LandscapeShell } from "@/components/rpg/LandscapeShell";
 import RPGStageScene from "@/components/rpg/RPGStageScene";
-import { getStageScript } from "@/lib/rpgStageRegistry";
+import { loadStageScript } from "@/lib/rpgStageRegistry";
+import type { StageScript } from "@/lib/rpgStage";
 
 function Repro() {
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
@@ -26,7 +27,9 @@ function Repro() {
       });
   }, []);
 
-  const script = getStageScript("ruth", 4);
+  const [script, setScript] = useState<StageScript | null>(null);
+  useEffect(() => { loadStageScript("ruth", 4).then((s) => setScript(s ?? null)); }, []);
+  if (!script) return null;
   // réplica do fluxo REAL do RPGChapterModal: o shell abre na fase INTRO
   // (resumo + botão "Iniciar Leitura"); a cena monta depois, num crossfade
   // do AnimatePresence — é exatamente assim que a 1ª entrada acontece no app.

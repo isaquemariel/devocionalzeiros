@@ -16,7 +16,8 @@ import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGStageScene from "./RPGStageScene";
-import { hasStageScript, getStageScript } from "@/lib/rpgStageRegistry";
+import { hasStageScript, loadStageScript } from "@/lib/rpgStageRegistry";
+import type { StageScript } from "@/lib/rpgStage";
 import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder from "./RPGChallengeOrder";
 import RPGBossBattle from "./RPGBossBattle";
@@ -87,6 +88,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const customChallenge = challengeType !== "quiz"; // desafio próprio (não usa quiz por IA)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
+  // O roteiro da cena viva vem por import() do LIVRO (ver rpgStageRegistry):
+  // `hasStageScript` já respondeu pelo índice, aqui só se busca o capítulo.
+  const [stageScript, setStageScript] = useState<StageScript | null>(null);
 
   // Chapter intro
   const [chapterSummary, setChapterSummary] = useState<ChapterSummary | null>(null);
@@ -200,6 +204,17 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
+
+  // Carrega o roteiro do capítulo assim que se sabe que ele existe. O pedaço do
+  // livro fica em cache no registro, então trocar de capítulo dentro do mesmo
+  // livro não volta à rede.
+  useEffect(() => {
+    if (!isOpen || !hasStageScript(bookId, chapter)) { setStageScript(null); return; }
+    let vivo = true;
+    setStageScript(null);
+    loadStageScript(bookId, chapter).then((s) => { if (vivo) setStageScript(s ?? null); });
+    return () => { vivo = false; };
+  }, [isOpen, bookId, chapter]);
 
   // Start timer when reading phase begins (non-review only)
   useEffect(() => {
@@ -758,13 +773,13 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 RPGStageScene; os demais seguem no RPGReadingScene clássico. */}
             {phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                {hasStageScript(bookId, chapter) ? (
+                {stageScript ? (
                   <RPGStageScene
                     bookName={bookName}
                     bookId={bookId}
                     chapter={chapter}
                     verses={verses}
-                    script={getStageScript(bookId, chapter)!}
+                    script={stageScript}
                     isLoading={isLoadingVerses}
                     error={error}
                     onRetry={loadVerses}
