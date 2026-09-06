@@ -111,7 +111,7 @@ export const JEREMIAH_A: BookChallenges = {
   },
   complete: {
     4: { ref: "Jeremias 4:14", before: "Lava o teu", answer: "coração", after: "da malícia, ó Jerusalém, para que sejas salva.", options: ["coração", "caminho", "rosto", "altar"] },
-    10: { ref: "Jeremias 10:10", before: "Mas o SENHOR é o", answer: "verdadeiro", after: "Deus; ele é o Deus vivo e o Rei eterno.", options: ["verdadeiro", "único", "eterno", "santo"] },
+    10: { ref: "Jeremias 10:10", before: "Mas o Senhor Deus é a", answer: "verdade", after: "ele mesmo é o Deus vivo e o Rei eterno;", options: ["verdade", "justiça", "luz", "rocha"] },
     16: { ref: "Jeremias 16:19", before: "SENHOR, fortaleza minha e força minha, e", answer: "refúgio", after: "meu no dia da angústia.", options: ["refúgio", "escudo", "abrigo", "socorro"] },
     22: { ref: "Jeremias 22:3", before: "Exercei o juízo e a", answer: "justiça", after: "e livrai o oprimido da mão do opressor.", options: ["justiça", "paz", "verdade", "misericórdia"] },
   },

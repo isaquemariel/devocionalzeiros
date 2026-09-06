@@ -40,6 +40,7 @@ export function mergeBC(...parts: BookChallenges[]): BookChallenges {
 }
 
 // ---- livros com conteúdo curado (além de Gênesis/Êxodo, que ficam nos componentes) ----
+import { EXODUS_CH } from "@/lib/challenges/exodus";
 import { RUTH_CH } from "@/lib/challenges/ruth";
 import { NUMBERS_CH } from "@/lib/challenges/numbers";
 import { JOSHUA_CH } from "@/lib/challenges/joshua";
@@ -106,6 +107,7 @@ import { EZEKIEL_CH } from "@/lib/challenges/ezekiel";
 import { PSALMS_CH } from "@/lib/challenges/psalms";
 
 const REGISTRY: Record<string, BookChallenges> = {
+  exodus: EXODUS_CH,
   ruth: RUTH_CH,
   numbers: NUMBERS_CH,
   joshua: JOSHUA_CH,

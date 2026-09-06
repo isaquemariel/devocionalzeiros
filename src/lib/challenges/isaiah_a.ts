@@ -166,10 +166,10 @@ export const ISAIAH_A: BookChallenges = {
     },
     28: {
       ref: "Isaías 28:16",
-      before: "Eis que assento em Sião uma pedra, uma pedra",
-      answer: "angular",
-      after: ", preciosa, de firme fundamento",
-      options: ["angular", "escarlata", "redonda", "quebrada"],
+      before: "Eis que eu assentei em Sião uma pedra, uma pedra já provada, pedra preciosa de",
+      answer: "esquina",
+      after: "que está bem firme e fundada;",
+      options: ["esquina", "angular", "tropeço", "escândalo"],
     },
   },
   connect: {

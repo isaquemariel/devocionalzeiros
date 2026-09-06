@@ -188,10 +188,10 @@ export const PSALMS_C: BookChallenges = {
     },
     112: {
       ref: "Salmo 112:1",
-      before: "Bem-aventurado o homem que teme ao Senhor e que muito se",
-      answer: "deleita",
-      after: "nos seus mandamentos.",
-      options: ["deleita", "esforça", "alegra", "confia"],
+      before: "Bem-aventurado o homem que teme ao SENHOR, que em seus mandamentos tem grande",
+      answer: "prazer",
+      after: ".",
+      options: ["prazer", "deleite", "cuidado", "temor"],
     },
     118: {
       ref: "Salmo 118:22",

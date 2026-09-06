@@ -61,10 +61,10 @@ export const CORINTHIANS2_CH: BookChallenges = {
     },
     10: {
       ref: "2 Coríntios 10:5",
-      before: "levando cativo todo ",
-      answer: "pensamento",
-      after: " à obediência de Cristo.",
-      options: ["pensamento", "desejo", "coração", "caminho"],
+      before: "e levando cativo todo o",
+      answer: "entendimento",
+      after: "à obediência de Cristo;",
+      options: ["entendimento", "pensamento", "desejo", "coração"],
     },
   },
   connect: {
