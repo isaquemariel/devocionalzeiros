@@ -107,7 +107,12 @@ export default defineConfig(({ mode }) => ({
         // móvel e faz o SO despejar o armazenamento. Fica de fora do pré-cache
         // e entra em cache sob demanda (runtimeCaching abaixo), como os JSONs
         // da Bíblia: quem nunca abre o modo RPG não paga por ele.
-        globIgnores: ["**/assets/RPG-*.js", "**/assets/rpg*Stage-*.js", "**/assets/stageInfo*.js"],
+        // Fora do pré-cache: o núcleo do RPG (RPG-*), o roteiro de cada livro
+        // (rpg<Livro>Stage-*) e o pacote de fichas de cada livro (stageinfo-*).
+        // Separados, cada um cabe folgado no limite de tamanho — e é justamente
+        // por caberem que precisam ser excluídos À MÃO, senão voltam todos para
+        // dentro do install do service worker e o primeiro acesso baixa 10 MB.
+        globIgnores: ["**/assets/RPG-*.js", "**/assets/rpg*Stage-*.js", "**/assets/stageinfo-*.js"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // A casca (index.html) é servida do pré-cache — sempre um conjunto consistente
         // de HTML + chunks, então nunca sobra um index.html velho apontando para um JS
@@ -152,11 +157,13 @@ export default defineConfig(({ mode }) => ({
             // baixa na primeira vez que se abre AQUELE livro e fica guardado;
             // as versões velhas saem pelo maxEntries. Nada disto é pré-cache:
             // quem lê Rute não paga por Jó.
-            urlPattern: /\/assets\/(RPG-|rpg[\w]*Stage-|stageInfo)[\w-]*\.js$/,
+            urlPattern: /\/assets\/(RPG-|rpg[\w]*Stage-|stageinfo-)[\w-]*\.js$/,
             handler: "CacheFirst",
             options: {
               cacheName: "rpg-stage-cache",
-              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              // 19 roteiros + 19 pacotes de ficha + o núcleo = 39 por versão;
+              // o teto guarda algumas publicações antes de o mais velho sair.
+              expiration: { maxEntries: 120, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

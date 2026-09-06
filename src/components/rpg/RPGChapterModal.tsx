@@ -17,6 +17,7 @@ import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGStageScene from "./RPGStageScene";
 import { hasStageScript, loadStageScript } from "@/lib/rpgStageRegistry";
+import { ensureStageInfo } from "@/lib/rpgStageInfo";
 import type { StageScript } from "@/lib/rpgStage";
 import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder from "./RPGChallengeOrder";
@@ -205,14 +206,22 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
 
-  // Carrega o roteiro do capítulo assim que se sabe que ele existe. O pedaço do
-  // livro fica em cache no registro, então trocar de capítulo dentro do mesmo
-  // livro não volta à rede.
+  // Carrega o roteiro do capítulo assim que se sabe que ele existe, JUNTO com
+  // as fichas "?" do livro. Os dois pedaços ficam em cache, então trocar de
+  // capítulo dentro do mesmo livro não volta à rede.
+  //
+  // As fichas entram na mesma espera de propósito: `actorInfo`/`propTagInfo`
+  // são síncronas (o desenho as chama a cada quadro) e responderiam null antes
+  // de o pacote chegar — a cena abriria sem nenhum badge "?" e eles apareceriam
+  // de repente, ou nem apareceriam, já que o desenho só recalcula ao mudar de
+  // beat. Esperar as duas coisas custa um instante e entrega a cena inteira.
   useEffect(() => {
     if (!isOpen || !hasStageScript(bookId, chapter)) { setStageScript(null); return; }
     let vivo = true;
     setStageScript(null);
-    loadStageScript(bookId, chapter).then((s) => { if (vivo) setStageScript(s ?? null); });
+    Promise.all([loadStageScript(bookId, chapter), ensureStageInfo(bookId)])
+      .then(([s]) => { if (vivo) setStageScript(s ?? null); })
+      .catch(() => { if (vivo) setStageScript(null); });
     return () => { vivo = false; };
   }, [isOpen, bookId, chapter]);
 

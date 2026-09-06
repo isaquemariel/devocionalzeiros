@@ -61,13 +61,13 @@ const tmp = mkdtempSync(join(tmpdir(), "stage-checkup-"));
 const entry = join(tmp, "entry.mjs");
 writeFileSync(entry, `
 export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageAll.ts")}";
-export { actorInfo, ACTOR_INFO, PROP_TAG_INFO } from "${join(ROOT, "src/lib/rpgStageInfo.ts")}";
+export { actorInfo, ACTOR_INFO, PROP_TAG_INFO, PACKS } from "${join(ROOT, "src/lib/rpgStageInfoAll.ts")}";
 `);
 await build({
   entryPoints: [entry], bundle: true, format: "esm",
   outfile: join(tmp, "out.mjs"), alias: { "@": join(ROOT, "src") }, logLevel: "silent",
 });
-const { STAGE_BOOKS, actorInfo, ACTOR_INFO, PROP_TAG_INFO } =
+const { STAGE_BOOKS, actorInfo, ACTOR_INFO, PROP_TAG_INFO, PACKS } =
   await import(pathToFileURL(join(tmp, "out.mjs")).href);
 
 let errors = 0, warnings = 0;
@@ -157,6 +157,22 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       for (const p of bt.props ?? []) {
         if (!p.tag) continue;
         if (!PROP_TAG_INFO[p.tag]) hit("warn", "tag-sem-ficha", `tag "${p.tag}" sem verbete próprio em PROP_TAG_INFO (o badge cai na ficha genérica de "${p.kind}")`);
+        // 9. FICHA ARQUIVADA NO LIVRO ERRADO. As fichas descem POR LIVRO: no app,
+        // abrir 2Crônicas carrega src/lib/stageInfo/{chars,tags}/2chronicles.ts e
+        // mais nada. Um verbete que existe, mas está no arquivo de outro livro,
+        // passa por aqui (o agregador junta tudo) e some no app — badge mudo.
+        else if (!PACKS[bookId]?.tags?.[p.tag]) {
+          const onde = Object.keys(PACKS).filter((b) => PACKS[b].tags?.[p.tag]).join(", ");
+          hit("err", "ficha-noutro-livro", `tag "${p.tag}" tem verbete em ${onde}, não em stageInfo/tags/${bookId}.ts — no app o badge fica sem ficha`);
+        }
+      }
+      // O mesmo para a ficha de PERSONAGEM por `id`.
+      for (const c of bt.cast ?? []) {
+        if (!c.id) continue;
+        const dono = Object.keys(PACKS).filter((b) => PACKS[b].chars?.[c.id]);
+        if (dono.length && !PACKS[bookId]?.chars?.[c.id]) {
+          hit("err", "ficha-noutro-livro", `id "${c.id}" tem ficha em ${dono.join(", ")}, não em stageInfo/chars/${bookId}.ts — no app o personagem perde o nome`);
+        }
       }
     }
   }

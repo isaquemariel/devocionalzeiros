@@ -15,7 +15,7 @@
 // Sai com código 1 se houver erro.
 // ============================================================================
 import { build } from "esbuild";
-import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdtempSync, readdirSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -47,7 +47,15 @@ const M = await import(pathToFileURL(join(tmp, "o.mjs")).href);
 const bible = JSON.parse(readFileSync(join(ROOT, "public/bible/arc.json"), "utf8"));
 const book = bible[livro]?.chapters;
 if (!book) { console.error(`livro "${livro}" não existe em arc.json`); process.exit(2); }
-const info = readFileSync(join(ROOT, "src/lib/rpgStageInfo.ts"), "utf8");
+// As fichas de objeto-marco vivem agora em src/lib/stageInfo/tags/<livro>.ts
+// (uma por livro, para virem sob demanda). Varre todos, mais o que ainda estiver
+// solto em rpgStageInfo.ts, para saber que `tag` já tem verbete.
+const fontesDeFicha = [join(ROOT, "src/lib/rpgStageInfo.ts")];
+{
+  const dir = join(ROOT, "src/lib/stageInfo/tags");
+  if (existsSync(dir)) for (const f of readdirSync(dir)) fontesDeFicha.push(join(dir, f));
+}
+const info = fontesDeFicha.map((f) => readFileSync(f, "utf8")).join("\n");
 const temFicha = new Set([...info.matchAll(/^\s{2}"?([a-z0-9-]+)"?:\s*\{/gm)].map((m) => m[1]));
 
 let erros = 0, avisos = 0;

@@ -173,9 +173,35 @@ pelo enquadramento** em vez de etiquetar um prop que mente. Uma tag num prop
 errado é pior do que nenhuma tag: o balão do "?" passa a afirmar uma coisa que
 o desenho contradiz.
 
-## Fichas "?" — nada de genérico
+## Fichas "?" — nada de genérico, e sempre no arquivo DO LIVRO
 
 Se uma figura está na cena, é **alguém do contexto bíblico daquele capítulo**. A
-resolução é: `id` em `CHAR_INFO` → (livro→capítulo→papel) em `src/lib/stageInfo/<livro>.ts`
-→ (livro→papel) → papel genérico. **Cair no genérico é defeito** e o checkup acusa.
-Objetos-marco com `tag` precisam de verbete em `PROP_TAG_INFO`.
+resolução é: `id` → (livro→capítulo→papel) → (livro→papel) → papel genérico.
+**Cair no genérico é defeito** e o checkup acusa.
+
+As fichas descem **por livro** (`ensureStageInfo` em `rpgStageInfo.ts` traz
+`src/lib/stageInfo/pack/stageinfo-<livro>.ts`). Então cada verbete tem de estar
+no arquivo do livro que o usa:
+
+| ficha de | escreva em |
+|---|---|
+| personagem, por `id` | `src/lib/stageInfo/chars/<livro>.ts` (`CHARS`) |
+| objeto-marco, por `tag` | `src/lib/stageInfo/tags/<livro>.ts` (`TAGS`) |
+| (livro→capítulo→papel) | `src/lib/stageInfo/<livro>.ts` (`CHAPTER_ACTORS`) |
+| papel ou tipo de objeto, valendo em qualquer livro | `src/lib/rpgStageInfo.ts` |
+
+Um personagem que aparece em dois livros precisa do verbete **nos dois** — são
+cópias, e o leitor só baixa a do livro que abriu. Escrever a ficha no arquivo
+errado passa por todos os validadores (o agregador de ferramenta junta tudo) e
+**some no app**: o checkup cobra isto como `ficha-noutro-livro`, que é ERRO.
+Cuidado com `id` montado por ajudante (`GER("naor", "tera")`): o nome não
+aparece como literal no roteiro, e foi assim que Terá ficou só em Josué.
+
+Depois de mexer em ficha ou em carregamento, rode também:
+- `npx vite build && node scripts/smoke-lazy.mjs` — prova que a ficha resolve
+  depois do `ensureStageInfo` do livro, que cada livro tem o seu pedaço e que
+  nenhum deles voltou para o pré-cache do service worker.
+
+`src/lib/rpgStageAll.ts` e `src/lib/rpgStageInfoAll.ts` são **só para
+ferramenta** — importar qualquer um deles no app traz os 19 livros de volta
+para o primeiro carregamento.
