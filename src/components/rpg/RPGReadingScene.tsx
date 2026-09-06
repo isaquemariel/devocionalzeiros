@@ -701,7 +701,7 @@ const RPGReadingScene = ({
             (sm:) volta ao tamanho original, que já estava bom. */}
         <div
           className="absolute left-0 right-0 bottom-0 px-2 pt-2 sm:p-2"
-          style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
+          style={{ paddingBottom: "max(0.6rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
         >
           <div className="rpg-dialogue px-4 py-3.5 sm:px-3 sm:py-2.5">
             <p className="text-[17px] leading-relaxed sm:text-[14px] sm:leading-snug text-blue-50 min-h-[3.4em] sm:min-h-[3em]">

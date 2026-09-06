@@ -636,8 +636,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} dim={0.72} />
           </div>
         )}
-        <RPGAudioControls className="absolute right-14 z-[80] top-[max(0.5rem,env(safe-area-inset-top))]" />
-        <button onClick={handleClose} aria-label="Sair" className="absolute right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25" style={{ top: "max(0.5rem, env(safe-area-inset-top))" }}>
+        <RPGAudioControls className="absolute right-14 z-[80] top-[max(0.5rem,var(--safe-area-inset-top,env(safe-area-inset-top,0px)))]" />
+        <button onClick={handleClose} aria-label="Sair" className="absolute right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25" style={{ top: "max(0.5rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}>
           <X className="w-5 h-5 text-white" />
         </button>
         {bossBattle ? (
@@ -690,7 +690,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         {/* Header — escondido só na leitura (tela cheia). */}
         {phase !== "reading" && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]"
-             style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}>
+             style={{ paddingTop: "max(1rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}>
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
             <div>

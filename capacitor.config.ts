@@ -22,6 +22,13 @@ const config: CapacitorConfig = {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
+    // Barras do sistema (Android): mantém a injeção oficial de
+    // --safe-area-inset-* no WebView (insetsHandling 'css', o padrão) e usa
+    // ícones CLAROS nas barras (style DARK = barras sobre fundo escuro),
+    // combinando com o tema escuro do app.
+    SystemBars: {
+      style: 'DARK',
+    },
   },
 };
 
