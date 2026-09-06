@@ -272,6 +272,72 @@ export const JOB_CH: BookChallenges = {
       ],
     },
   },
+  // O SÉTIMO JOGO. O ciclo de 6 repete-se sete vezes num livro de 42 capítulos,
+  // e os slots (c-1)%6===5 caíam todos no quiz genérico por IA. A memória entra
+  // exatamente neles: quebra o ciclo e troca seis quizzes genéricos por seis
+  // jogos do capítulo. `resolveChallenge` consulta `hasMemory` ANTES do ciclo.
+  memory: {
+    6: {
+      title: "Memória — a resposta de Jó a Elifaz",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "⚖️", l: "A mágoa pesada na balança" },
+        { em: "🏹", l: "As flechas do Todo-Poderoso" },
+        { em: "🏜️", l: "O ribeiro que seca no calor" },
+        { em: "🐫", l: "As caravanas de Temá envergonhadas" },
+      ],
+    },
+    12: {
+      title: "Memória — pergunta às criaturas",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "🐂", l: "Pergunta às alimárias" },
+        { em: "🕊️", l: "E às aves dos céus" },
+        { em: "🌍", l: "Fala com a terra" },
+        { em: "🐟", l: "Até os peixes do mar te contarão" },
+      ],
+    },
+    18: {
+      title: "Memória — as armadilhas de Bildade",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "🕯️", l: "A lâmpada que sobre ele se apaga" },
+        { em: "🕸️", l: "A rede em que os seus pés o lançam" },
+        { em: "🪢", l: "A corda escondida debaixo da terra" },
+        { em: "🌋", l: "O enxofre sobre a sua habitação" },
+      ],
+    },
+    24: {
+      title: "Memória — o que fazem aos pobres",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "🪧", l: "Removem os limites do campo" },
+        { em: "🫏", l: "Levam o jumento do órfão" },
+        { em: "🪨", l: "Sem refúgio, abraçam-se com as rochas" },
+        { em: "🌾", l: "Aos famintos tiram as espigas" },
+      ],
+    },
+    30: {
+      title: "Memória — o desprezo que veio depois",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "🐕", l: "Filhos de quem não poria com os cães do rebanho" },
+        { em: "🌿", l: "Apanhavam malvas junto aos arbustos" },
+        { em: "🎭", l: "\"Sou a sua canção, e lhes sirvo de provérbio\"" },
+        { em: "🎻", l: "A harpa que se tornou em luto" },
+      ],
+    },
+    36: {
+      title: "Memória — Eliú e a chuva que ensina",
+      sub: "Vire as cartas e case cada símbolo ao seu nome.",
+      pairs: [
+        { em: "⛓️", l: "Presos com cordas de aflição" },
+        { em: "🍽️", l: "O lugar espaçoso, sem aperto" },
+        { em: "💧", l: "As gotas miúdas que se tornam chuva" },
+        { em: "🐄", l: "O gado que pressente o temporal que sobe" },
+      ],
+    },
+  },
   boss: {
     questions: [
       { question: "Como a Bíblia descreve Jó no início do livro?", options: ["Íntegro, reto e temente a Deus", "Um rei poderoso", "Um sacerdote de Israel", "Um profeta errante"], correct: "Íntegro, reto e temente a Deus" },
