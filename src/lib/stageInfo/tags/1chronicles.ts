@@ -480,7 +480,7 @@ export const TAGS: Record<string, StageInfo> = {
   "cama-profanada-de-israel": {
     title: "A cama profanada de Israel",
     subtitle: "1Cr 5:1 — o leito que custou a primogenitura a Rúben",
-    text: "O livro abre a genealogia de Rúben com a ferida: ele era o primogênito, \"mas porque profanara a cama de seu pai, deu-se a sua primogenitura aos filhos de José, filho de Israel\" (1Cr 5:1). O crime está guardado em uma linha de Gênesis — \"foi Rúben e deitou-se com Bila, concubina de seu pai; e Israel o soube\" (Gn 35:22) — e a sentença veio no leito de morte de Jacó: \"não serás o mais excelente, porquanto subiste ao leito de teu pai\" (Gn 49:4). Séculos depois, o Cronista ainda precisa explicar por que o primeiro nome da lista não encabeça a herança: um pecado de uma noite reorganizou as tribos de Israel." },
+    text: "O livro abre a genealogia de Rúben com a ferida: ele era o primogênito, \"mas porque profanara a cama de seu pai, deu-se a sua primogenitura aos filhos de José\" (1Cr 5:1). O crime está guardado em uma linha de Gênesis — \"foi Rúben e deitou-se com Bila, concubina de seu pai; e Israel o soube\" (Gn 35:22) — e a sentença veio no leito de morte de Jacó: \"não serás o mais excelente, porquanto subiste ao leito de teu pai\" (Gn 49:4). Séculos depois, o Cronista ainda precisa explicar por que o primeiro nome da lista não encabeça a herança." },
   "deuses-dos-povos-da-terra": {
     title: "Os deuses dos povos da terra",
     subtitle: "1Cr 5:25 — os ídolos que Deus já havia destruído",
@@ -752,7 +752,7 @@ export const TAGS: Record<string, StageInfo> = {
   "madeira-de-cedro-mandada-por-hirao": {
     title: "A madeira de cedro mandada por Hirão",
     subtitle: "1Cr 14:1 — o presente de Tiro para a casa de Davi",
-    text: "\"Então Hirão, rei de Tiro, mandou mensageiros a Davi, e madeira de cedro, e pedreiros, e carpinteiros, para lhe edificarem uma casa\" (1Cr 14:1). As vigas empilhadas no canteiro vêm do Líbano, e com elas vêm os operários que sabem trabalhá-las: o palácio de Sião é obra de mão estrangeira, e um rei entende o seu reinado olhando para uma obra que não foi ele quem começou — \"E entendeu Davi que o Senhor o tinha confirmado rei sobre Israel\" (1Cr 14:2). Deste mesmo cedro nasceria a inquietação do capítulo 17: \"moro em casa de cedro, mas a arca da aliança do SENHOR está debaixo de cortinas\" (1Cr 17:1)." },
+    text: "\"Então Hirão, rei de Tiro, mandou mensageiros a Davi, e madeira de cedro, e pedreiros, e carpinteiros, para lhe edificarem uma casa\" (1Cr 14:1). As vigas empilhadas no canteiro vêm do Líbano, e com elas vêm os operários que sabem trabalhá-las: o palácio de Sião é obra de mão estrangeira, e um rei entende o seu reinado olhando para uma obra que não foi ele quem começou (14:2). Deste mesmo cedro nasceria a inquietação do capítulo 17: \"moro em casa de cedro, mas a arca da aliança do SENHOR está debaixo de cortinas\" (17:1)." },
   "poco-do-patio-da-casa-de-davi": {
     title: "O poço do pátio da casa de Davi",
     subtitle: "1Cr 14:4 — o quintal dos filhos nascidos em Jerusalém",
@@ -760,7 +760,7 @@ export const TAGS: Record<string, StageInfo> = {
   "rocha-da-consulta-de-davi": {
     title: "A rocha da consulta, sobre o vale de Refaim",
     subtitle: "1Cr 14:10 — o alto onde Davi perguntou antes de descer",
-    text: "\"Então consultou Davi a Deus, dizendo: Subirei contra os filisteus, e nas minhas mãos os entregarás? E o Senhor lhe disse: Sobe, porque os entregarei nas tuas mãos\" (1Cr 14:10). O rei ungido não desce ao vale sem perguntar; e quando o inimigo torna a se estender pela planície, ele pergunta outra vez e recebe ordem diferente: \"Não subirás atrás deles; mas rodeia-os por detrás\" (1Cr 14:14). Vitória de ontem não é instrução para hoje. É o contrário exato do fim de Saul, de quem o Cronista escrevera quatro capítulos antes: \"E não buscou ao Senhor, que por isso o matou, e transferiu o reino a Davi\" (1Cr 10:14)." },
+    text: "\"Então consultou Davi a Deus, dizendo: Subirei contra os filisteus...? E o Senhor lhe disse: Sobe, porque os entregarei nas tuas mãos\" (1Cr 14:10). O rei ungido não desce ao vale sem perguntar; e quando o inimigo torna a se estender pela planície, ele pergunta outra vez e recebe ordem diferente: \"Não subirás atrás deles; mas rodeia-os por detrás\" (14:14). Vitória de ontem não é instrução para hoje. É o contrário exato do fim de Saul: \"E não buscou ao Senhor, que por isso o matou, e transferiu o reino a Davi\" (10:14)." },
   "rocha-fendida-de-baal-perazim": {
     title: "A rocha fendida de Baal-Perazim",
     subtitle: "1Cr 14:11 — o lugar que recebeu o nome da frase do rei",
@@ -772,7 +772,7 @@ export const TAGS: Record<string, StageInfo> = {
   "alaudes-e-harpas-dos-cantores-levitas": {
     title: "Os alaúdes e as harpas dos cantores levitas",
     subtitle: "1Cr 15:16 — a orquestra que Davi mandou constituir",
-    text: "\"E disse Davi aos chefes dos levitas que constituíssem, de seus irmãos, cantores, para que com instrumentos musicais, com alaúdes, harpas e címbalos, se fizessem ouvir, levantando a voz com alegria\" (1Cr 15:16). Nenhum outro livro para o relato para escalar a música; o Cronista para, e escreve nome por nome e instrumento por instrumento — os alaúdes \"sobre Alamote\" e as harpas \"sobre Seminite, para sobressaírem\" (1Cr 15:20-21). Este ofício ficou em Israel: Davi separou os filhos de Asafe, de Hemã e de Jedutum \"para profetizarem com harpas, com címbalos, e com saltérios\" (1Cr 25:1). O louvor tem escala, ensaio e mestre — \"porque era entendido\" (1Cr 15:22)." },
+    text: "\"E disse Davi aos chefes dos levitas que constituíssem, de seus irmãos, cantores, para que com instrumentos musicais, com alaúdes, harpas e címbalos, se fizessem ouvir, levantando a voz com alegria\" (1Cr 15:16). Nenhum outro livro para o relato para escalar a música; o Cronista para, e escreve nome por nome e instrumento por instrumento (15:20-21). Este ofício ficou em Israel: Davi separou os filhos de Asafe, de Hemã e de Jedutum \"para profetizarem com harpas\" (25:1). O louvor tem escala, ensaio e mestre — \"porque era entendido\" (15:22)." },
   "altar-dos-sete-novilhos-e-sete-carneiros": {
     title: "O altar dos sete novilhos e dos sete carneiros",
     subtitle: "1Cr 15:26 — o sacrifício da ajuda de Deus no caminho",
@@ -824,7 +824,7 @@ export const TAGS: Record<string, StageInfo> = {
   "altar-dos-holocaustos-em-gibeom": {
     title: "O altar dos holocaustos, no alto de Gibeom",
     subtitle: "1Cr 16:40 — o sacrifício contínuo, pela manhã e à tarde",
-    text: "Davi deixou Zadoque e os seus irmãos \"diante do tabernáculo do Senhor, no alto que está em Gibeom\" (1Cr 16:39), \"Para oferecerem holocaustos ao Senhor continuamente, pela manhã e à tarde, sobre o altar dos holocaustos\" (1Cr 16:40). É o altar de bronze do deserto, ainda em serviço: enquanto a arca está numa tenda em Sião, o tabernáculo de Moisés está a meio dia de caminho dali, e Israel adora em dois lugares ao mesmo tempo — e o Cronista não esconde isso. Salomão iria àquele mesmo alto sacrificar mil holocaustos antes de haver templo (2Cr 1:3-6); a divisão só termina quando a casa do SENHOR reúne as duas metades." },
+    text: "Davi deixou Zadoque e os seus irmãos \"diante do tabernáculo do Senhor, no alto que está em Gibeom\" (1Cr 16:39), \"Para oferecerem holocaustos ao Senhor continuamente, pela manhã e à tarde, sobre o altar dos holocaustos\" (16:40). É o altar de bronze do deserto, ainda em serviço: enquanto a arca está numa tenda em Sião, o tabernáculo de Moisés está a meio dia de caminho dali, e Israel adora em dois lugares ao mesmo tempo. Salomão iria àquele alto sacrificar mil holocaustos antes de haver templo (2Cr 1:3-6)." },
   "carvalhal-de-manre": {
     title: "O carvalhal de Manre",
     subtitle: "1Cr 16:16 — o bosque de Hebrom onde Abraão habitou",
@@ -1856,5 +1856,5 @@ export const TAGS: Record<string, StageInfo> = {
   "inventario-das-casas-dos-depositos": {
     title: "O rol das casas dos depósitos",
     subtitle: "1Cr 26:15,17 — a guarda de dois em dois sobre o que ficava guardado",
-    text: "A porta do sul coube a Obede-Edom, e \"para seus filhos a casa dos depósitos\" (1Cr 26:15). Nas quatro bandas a guarda era pesada — seis levitas ao oriente, quatro por dia ao norte, quatro por dia ao sul —, \"porém para as casas dos depósitos de dois em dois\" (1Cr 26:17): onde ninguém entra em multidão, dois guardam um ao outro, e o rol diz o que entrou e o que saiu. É a mesma prudência que fez os que tinham cargo dos vasos os contarem \"por conta os traziam e por conta os tiravam\" (1Cr 9:28). O Cronista guarda o nome de cada porteiro com o mesmo cuidado com que guarda o dos príncipes: no serviço da casa, a fidelidade do que ninguém vê é contada como ofício." },
+    text: "A porta do sul coube a Obede-Edom, e \"para seus filhos a casa dos depósitos\" (1Cr 26:15). Nas quatro bandas a guarda era pesada — seis levitas ao oriente, quatro por dia ao norte, quatro por dia ao sul —, \"porém para as casas dos depósitos de dois em dois\" (26:17): onde ninguém entra em multidão, dois guardam um ao outro. É a mesma prudência dos que tinham cargo dos vasos e \"por conta os traziam e por conta os tiravam\" (9:28). No serviço da casa, a fidelidade do que ninguém vê é contada como ofício." },
 };

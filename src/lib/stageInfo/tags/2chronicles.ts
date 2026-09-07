@@ -335,7 +335,7 @@ export const TAGS: Record<string, StageInfo> = {
   "alaudes-e-harpas-dos-cantores-levitas": {
     title: "Os alaúdes e as harpas dos cantores levitas",
     subtitle: "1Cr 15:16 — a orquestra que Davi mandou constituir",
-    text: "\"E disse Davi aos chefes dos levitas que constituíssem, de seus irmãos, cantores, para que com instrumentos musicais, com alaúdes, harpas e címbalos, se fizessem ouvir, levantando a voz com alegria\" (1Cr 15:16). Nenhum outro livro para o relato para escalar a música; o Cronista para, e escreve nome por nome e instrumento por instrumento — os alaúdes \"sobre Alamote\" e as harpas \"sobre Seminite, para sobressaírem\" (1Cr 15:20-21). Este ofício ficou em Israel: Davi separou os filhos de Asafe, de Hemã e de Jedutum \"para profetizarem com harpas, com címbalos, e com saltérios\" (1Cr 25:1). O louvor tem escala, ensaio e mestre — \"porque era entendido\" (1Cr 15:22)." },
+    text: "\"E disse Davi aos chefes dos levitas que constituíssem, de seus irmãos, cantores, para que com instrumentos musicais, com alaúdes, harpas e címbalos, se fizessem ouvir, levantando a voz com alegria\" (1Cr 15:16). Nenhum outro livro para o relato para escalar a música; o Cronista para, e escreve nome por nome e instrumento por instrumento (15:20-21). Este ofício ficou em Israel: Davi separou os filhos de Asafe, de Hemã e de Jedutum \"para profetizarem com harpas\" (25:1). O louvor tem escala, ensaio e mestre — \"porque era entendido\" (15:22)." },
   "altar-dos-holocaustos-diante-da-arca": {
     title: "O altar dos holocaustos diante da arca, em Sião",
     subtitle: "1Cr 16:1 — o fogo aceso ao lado da tenda de Davi",
