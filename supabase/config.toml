@@ -17,6 +17,8 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.rpg-quiz]
     verify_jwt = false
+  [functions.push-public-key]
+    verify_jwt = false
   [functions.save-push-subscription]
     verify_jwt = false
   [functions.send-push-notification]

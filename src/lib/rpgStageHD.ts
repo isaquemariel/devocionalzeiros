@@ -15,6 +15,7 @@
 // ============================================================================
 
 import type { MascotLook, MascotColor } from "@/lib/rpgMascot";
+import { lerpEnv } from "@/lib/rpgStage";
 import type { StageDims, StageEnv, StageDrawState, StageTerrain } from "@/lib/rpgStage";
 
 type G = CanvasRenderingContext2D;
@@ -635,14 +636,8 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
   const { dims, t, reduce, state, ownSkyProp } = o;
   const { W, H, GROUND } = dims;
   const k = reduce ? 1 : 0.05;
-  state.env.night = lerp(state.env.night, state.envTarget.night, k);
-  state.env.glory = lerp(state.env.glory, state.envTarget.glory, k);
-  state.env.storm = lerp(state.env.storm, state.envTarget.storm, k);
-  state.env.fire = lerp(state.env.fire, state.envTarget.fire, k);
-  state.env.water = lerp(state.env.water, state.envTarget.water, k);
-  state.env.verdure = lerp(state.env.verdure, state.envTarget.verdure, k);
-  state.env.terrain = state.envTarget.terrain;
-  const env = state.env;
+  // uma função só, partilhada com o desenhador clássico — ver lerpEnv
+  const env = lerpEnv(state, k);
   const night = clamp01(env.night);
   const water = clamp01(env.water);
   const verd = clamp01(env.verdure);

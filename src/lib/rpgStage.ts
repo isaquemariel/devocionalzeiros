@@ -191,6 +191,27 @@ export function makeDrawState(script: StageScript): StageDrawState {
 
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
+/** As chaves NUMÉRICAS de StageEnv, numa lista só. Quem acrescentar uma chave
+ *  nova ao ambiente tem de a pôr AQUI e mais em lado nenhum. */
+const ENV_NUMS = ["night", "glory", "storm", "fire", "water", "verdure", "blood"] as const;
+
+/** Aproxima `state.env` de `state.envTarget` — é o que faz o ambiente TRANSITAR
+ *  entre um beat e o seguinte em vez de saltar.
+ *
+ *  Isto existe como função porque a mesma interpolação estava escrita à mão em
+ *  dois desenhadores (o clássico daqui e o `drawBackdropHD`), e acrescentar
+ *  `blood` num só deles bastou para a primeira praga do Egito continuar azul no
+ *  app inteiro: o roteiro pedia sangue, o alvo tinha sangue, e o valor desenhado
+ *  nunca saía de zero porque ninguém o movia. Pior, o `scene-shot` mostrava a
+ *  cena CERTA, porque desenha a partir de `envAt` e não passa por aqui — um
+ *  verificador que confirma o que o app não faz. Com uma função só, a chave
+ *  nova ou vale nos dois ou não vale em nenhum. */
+export function lerpEnv(state: StageDrawState, k: number): StageEnv {
+  for (const key of ENV_NUMS) state.env[key] = lerp(state.env[key], state.envTarget[key], k);
+  state.env.terrain = state.envTarget.terrain;
+  return state.env;
+}
+
 interface SkyBand { top: string[]; night: string[]; glory: string[] }
 const SKIES: Record<StageTerrain, SkyBand> = {
   // — placeholders funcionais (a arte final por terreno vem do motor v2) —
@@ -271,16 +292,7 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
   const { W, H, GROUND } = dims;
   const R = pixel(g);
   const k = reduce ? 1 : 0.05;
-  state.env.night = lerp(state.env.night, state.envTarget.night, k);
-  state.env.glory = lerp(state.env.glory, state.envTarget.glory, k);
-  state.env.storm = lerp(state.env.storm, state.envTarget.storm, k);
-  state.env.fire = lerp(state.env.fire, state.envTarget.fire, k);
-  state.env.water = lerp(state.env.water, state.envTarget.water, k);
-  state.env.verdure = lerp(state.env.verdure, state.envTarget.verdure, k);
-  state.env.blood = lerp(state.env.blood, state.envTarget.blood, k);
-  state.env.terrain = state.envTarget.terrain;
-
-  const env = state.env;
+  const env = lerpEnv(state, k);
   const sky = SKIES[env.terrain];
 
   // céu em 4 bandas com DITHERING entre elas (transição pixel-art de qualidade)

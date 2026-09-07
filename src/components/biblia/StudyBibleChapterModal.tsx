@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -80,6 +81,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   isCompleted: initialCompleted = false,
   canAccessStudyFeatures = false,
 }) => {
+  const navigate = useNavigate();
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -164,7 +166,12 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
       toast.info("O estudo de versículos e devocional está disponível a partir do plano Gold", {
         action: {
           label: "Ver planos",
-          onClick: () => window.location.href = "/#planos"
+          // `window.location.href` recarregava o app inteiro, e "/" é a tela de
+          // Auth: quem tocasse em "Ver planos" caía no login em vez de ver os
+          // planos. O `#planos` também só existe na landing (/site). O caminho
+          // certo é o mesmo dos outros dois modais de upgrade — navegação de
+          // rota, sem recarregar, para a página de escolha de plano.
+          onClick: () => navigate("/escolher-plano"),
         }
       });
       return;

@@ -41,15 +41,54 @@ Deno.serve(async (req) => {
     // a função retornar 500 ANTES do fan-out nativo, então o app nunca
     // recebia o push no broadcast.
     // ---------------------------------------------------------------------
-    const web: { sent: number; failed: number; skipped?: string } = { sent: 0, failed: 0 };
+    const web: {
+      sent: number; failed: number; skipped?: string;
+      rejected?: Record<string, number>; purged?: number; parDeChaves?: string;
+    } = { sent: 0, failed: 0 };
     // Strip surrounding quotes and "=" padding — web-push requires clean Base64url
     const sanitize = (k: string) => k.replace(/^"/, "").replace(/"$/, "").replace(/=+$/, "");
     const vapidPublicKey = sanitize(Deno.env.get("VAPID_PUBLIC_KEY") ?? "");
     const vapidPrivateKey = sanitize(Deno.env.get("VAPID_PRIVATE_KEY") ?? "");
     const vapidEmail = Deno.env.get("VAPID_EMAIL") ?? "mailto:devocionalzeiros@gmail.com";
 
+    // -------------------------------------------------------------------
+    // AS DUAS CHAVES SÃO MESMO DO MESMO PAR?
+    //
+    // Se não forem, o Google recusa TODOS os envios com 403 e a Apple com
+    // 400 — e o único sinal disso, antes, era uma coluna de zeros no log.
+    // A verificação é matemática e não precisa de rede: uma chave P-256 só
+    // pode ser importada com `d` (a privada) e `x`/`y` (a pública) se os
+    // três forem consistentes; o WebCrypto recusa a importação se não forem.
+    // -------------------------------------------------------------------
+    const b64u = (s: string) => s.replace(/-/g, "+").replace(/_/g, "/");
+    const parOk = async (pub: string, priv: string): Promise<boolean> => {
+      try {
+        const raw = Uint8Array.from(atob(b64u(pub) + "==".slice(0, (4 - pub.length % 4) % 4)), (c) => c.charCodeAt(0));
+        if (raw.length !== 65 || raw[0] !== 0x04) return false;
+        const enc = (b: Uint8Array) => btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+        await crypto.subtle.importKey(
+          "jwk",
+          { kty: "EC", crv: "P-256", x: enc(raw.slice(1, 33)), y: enc(raw.slice(33, 65)), d: priv, ext: true },
+          { name: "ECDSA", namedCurve: "P-256" },
+          false,
+          ["sign"],
+        );
+        return true;
+      } catch { return false; }
+    };
+
     if (vapidPublicKey && vapidPrivateKey) {
       try {
+        // O `sub` do JWT tem de ser mailto: ou https: — o Google devolve 403
+        // se não for, e o sintoma é idêntico ao do par trocado. Vale dizer
+        // qual das duas coisas está errada, em vez de deixar adivinhar.
+        const assuntoOk = /^(mailto:\S+@\S+|https:\/\/\S+)$/.test(vapidEmail);
+        web.parDeChaves = !assuntoOk
+          ? `VAPID_EMAIL inválido ("${vapidEmail}") — tem de ser mailto:alguem@dominio ou https://…; sem isso o Google recusa com 403`
+          : (await parOk(vapidPublicKey, vapidPrivateKey))
+            ? "ok"
+            : "INCOMPATÍVEL — VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY não são do mesmo par; todo envio será recusado (403/400)";
+        if (web.parDeChaves !== "ok") console.error("VAPID:", web.parDeChaves);
         webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
 
         let query = serviceClient.from("push_subscriptions").select("*");
@@ -66,7 +105,17 @@ Deno.serve(async (req) => {
         });
 
         const toDelete: string[] = [];
+        const rejected: Record<string, number> = {};
         for (const sub of subscriptions ?? []) {
+          // Inscrição criada com OUTRA chave pública nunca vai passar: o
+          // servidor de push compara-a com a assinatura e recusa. Não vale a
+          // pena gastar a chamada — apaga-se, e o aparelho refaz a inscrição
+          // sozinho na próxima vez que abrir o app (ver usePushNotifications).
+          if (sub.vapid_key && sub.vapid_key !== vapidPublicKey) {
+            toDelete.push(sub.id);
+            rejected["chave-antiga"] = (rejected["chave-antiga"] ?? 0) + 1;
+            continue;
+          }
           try {
             await webpush.sendNotification(
               { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
@@ -74,13 +123,32 @@ Deno.serve(async (req) => {
             );
             web.sent++;
           } catch (err: any) {
-            if (err?.statusCode === 410 || err?.statusCode === 404) toDelete.push(sub.id);
+            const code = Number(err?.statusCode ?? 0);
+            rejected[String(code || "erro")] = (rejected[String(code || "erro")] ?? 0) + 1;
+            // 404/410: o servidor de push diz que a inscrição já não existe.
+            // 403: a assinatura VAPID não corresponde à chave com que ela foi
+            //      criada — nunca mais vai funcionar com as chaves atuais.
+            // 400 (Apple): JWT recusado, mesma classe de problema.
+            // Nos quatro casos a linha é lixo: guardá-la só faz o envio
+            // seguinte demorar mais e o relatório mentir. Apagada, o aparelho
+            // volta a inscrever-se sozinho ao abrir o app.
+            // ...MAS só quando a nossa própria configuração está sã. Se o par
+            // de chaves ou o VAPID_EMAIL estiverem errados, a culpa é nossa e
+            // TODAS as inscrições recebem 403/400 — apagá-las apagaria a base
+            // inteira por causa de um segredo mal colado. Nesse caso guarda-se
+            // tudo e corrige-se o segredo. 404/410 são sempre do outro lado.
+            const nossaCulpa = web.parDeChaves !== "ok";
+            const morta = code === 410 || code === 404 ||
+              (!nossaCulpa && (code === 403 || code === 400));
+            if (morta) toDelete.push(sub.id);
             web.failed++;
-            console.error("Push send error:", err?.statusCode, sub.endpoint);
+            console.error("Push send error:", code, sub.endpoint);
           }
         }
+        if (Object.keys(rejected).length > 0) web.rejected = rejected;
         if (toDelete.length > 0) {
           await serviceClient.from("push_subscriptions").delete().in("id", toDelete);
+          web.purged = toDelete.length;
         }
       } catch (e) {
         console.error("web push failed (continuing to native):", e);

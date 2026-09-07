@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
 
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
     const body = await req.json();
-    const { endpoint, p256dh, auth, unsubscribe } = body;
+    const { endpoint, p256dh, auth, unsubscribe, vapid_key } = body;
 
     if (!endpoint) {
       return new Response(JSON.stringify({ error: "endpoint required" }), {
@@ -55,11 +55,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Upsert subscription
+    // Upsert subscription. Guardamos também a chave pública VAPID com que o
+    // navegador criou esta inscrição: é ela que decide se o envio vai passar.
+    // Quando a chave do servidor muda, as inscrições feitas com a anterior
+    // passam a receber 403 do Google e 400 da Apple para sempre, e sem esta
+    // coluna não havia como as distinguir das boas.
+    const chave = typeof vapid_key === "string" ? vapid_key.replace(/=+$/, "") : null;
     const { error } = await serviceClient
       .from("push_subscriptions")
       .upsert(
-        { user_id: user.id, endpoint, p256dh, auth },
+        { user_id: user.id, endpoint, p256dh, auth, vapid_key: chave },
         { onConflict: "user_id,endpoint" }
       );
 

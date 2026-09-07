@@ -32,13 +32,14 @@ const OUT=argv[1]??"/tmp/scenes.png";
 const tmp=mkdtempSync(join(tmpdir(),"sc-"));
 writeFileSync(join(tmp,"e.ts"),`
 import { drawBackdropHD, drawPropHD, drawHumanHD } from "${ROOT}/src/lib/rpgStageHD";
+import { lerpEnv } from "${ROOT}/src/lib/rpgStage";
 import { drawBeingHD, BEING_ROLES } from "${ROOT}/src/lib/rpgStageBeings";
 import { STAGE_BOOKS } from "${ROOT}/src/lib/rpgStageAll";
 import { stagedAt, makeDrawState, envAt, depthToFeetY, depthScale, SET_W, balloonText } from "${ROOT}/src/lib/rpgStage";
 ${EXTRA.map((e,i)=>`import { CHAPTERS as X${i} } from "${e.arquivo}";`).join("\n")}
 const LIVROS: any = { ...STAGE_BOOKS };
 ${EXTRA.map((e,i)=>`LIVROS[${JSON.stringify(e.livro)}] = { ...(LIVROS[${JSON.stringify(e.livro)}] ?? {}), ...X${i} };`).join("\n")}
-Object.assign(window as any,{drawBackdropHD,drawPropHD,drawHumanHD,drawBeingHD,BEING_ROLES,STAGE_BOOKS:LIVROS,stagedAt,makeDrawState,envAt,depthToFeetY,depthScale,SET_W,balloonText});`);
+Object.assign(window as any,{drawBackdropHD,drawPropHD,drawHumanHD,lerpEnv,drawBeingHD,BEING_ROLES,STAGE_BOOKS:LIVROS,stagedAt,makeDrawState,envAt,depthToFeetY,depthScale,SET_W,balloonText});`);
 await build({entryPoints:[join(tmp,"e.ts")],bundle:true,format:"iife",outfile:join(tmp,"b.js"),alias:{"@":join(ROOT,"src")},logLevel:"silent"});
 const js=readFileSync(join(tmp,"b.js"),"utf8");
 const bible=JSON.parse(readFileSync(join(ROOT,"public/bible/arc.json"),"utf8"));
@@ -58,11 +59,16 @@ A.forEach(([book,chS,vS],i)=>{
   const cx=(i%COLS)*CW, cy=Math.floor(i/COLS)*(CH+30);
   g.save(); g.translate(cx,cy);
   g.beginPath(); g.rect(0,0,CW,CH); g.clip();
-  // o app faz: state.envTarget = envAt(script, idx) e o fundo interpola ate la.
-  // Aqui ja entramos com o ambiente DO BEAT nos dois lados, senao o fundo sai
-  // com o env do beat 0 do capitulo (foi o bug da primeira versao deste script).
-  const e=window.envAt(script,idx);
-  const st={env:{...e},envTarget:{...e}};
+  // O app NAO entra com o ambiente do beat: entra com o do beat 0 e INTERPOLA
+  // ate ao alvo, quadro a quadro, dentro do proprio drawBackdropHD. Entrar aqui
+  // com os dois lados iguais tornava a interpolacao um no-op, e por isso este
+  // harness desenhava o Nilo em sangue enquanto o app o desenhava azul: faltava
+  // a chave blood na lista de chaves interpoladas, e so o app passava por ela.
+  // Agora repetimos a convergencia como ela e feita la, para que uma chave
+  // esquecida apareca AQUI tambem.
+  const e0=window.envAt(script,0), e=window.envAt(script,idx);
+  const st={env:{...e0},envTarget:{...e}};
+  for(let n=0;n<400;n++) window.lerpEnv(st,0.05);
   const S=window.stagedAt(script,idx);
   // o app passa ownSkyProp: quando a cena traz o seu proprio sol/lua, o terreno
   // desert nao desenha o astro dele (senao ficam DOIS no ceu). Este harness
