@@ -23,12 +23,12 @@ export const TAGS: Record<string, StageInfo> = {
   "pedras-de-gilgal": {
     title: "As pedras de Gilgal",
     subtitle: "2Sm 19:15,40 — o memorial da primeira entrada, e a discórdia da segunda",
-    text: "Gilgal, na planície ao pé de Jericó, é o primeiro acampamento de Israel na terra prometida: ali Josué mandou levantar as doze pedras tiradas do leito seco do Jordão, \"Para que todos os povos da terra conheçam a mão do Senhor, que é forte\" (Js 4:20-24), e ali Israel foi circuncidado e comeu do fruto da terra. Era também o lugar onde Saul fora feito rei diante do povo (1Sm 11:15). Por isso a comitiva escolhe justamente este chão para reconduzir Davi: \"e Judá veio a Gilgal, para ir encontrar-se com o rei\" (2Sm 19:15). Mas a cena não termina em festa. É ali mesmo que estoura a briga entre Judá e Israel sobre quem tinha mais direito ao rei — \"a palavra dos homens de Judá foi mais forte do que a palavra dos homens de Israel\" (2Sm 19:43) —, e dessa fagulha nasce, no versículo seguinte, a revolta de Seba. O memorial da unidade vira o palco da divisão.",
+    text: "Gilgal, na planície ao pé de Jericó, é o primeiro acampamento de Israel na terra prometida: ali Josué mandou levantar as doze pedras tiradas do leito seco do Jordão (Js 4:20-24), e ali Saul fora feito rei diante do povo (1Sm 11:15). Por isso a comitiva escolhe justamente este chão para reconduzir Davi (2Sm 19:15). Mas a cena não termina em festa: é ali mesmo que estoura a briga entre Judá e Israel sobre quem tinha mais direito ao rei (v. 43), e dessa fagulha nasce a revolta de Seba. O memorial da unidade vira o palco da divisão.",
   },
   "porta-de-jerusalem": {
     title: "A porta de Jerusalém, ao anoitecer",
     subtitle: "2Sm 23:39 — \"Urias, heteu; trinta e sete ao todo\"",
-    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39). Heteu — hitita, estrangeiro, um dos povos que Israel deveria ter expulsado da terra — e ainda assim inscrito, com nome próprio, entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca e o exército estavam em barracas no campo (2Sm 11:11), e foi ele quem levou, sem saber, a carta que mandava matá-lo. Colocar este nome no fecho da lista de honra, sem uma palavra de explicação, é a maneira que o narrador achou de não deixar o leitor sair do capítulo dos valentes achando que estava tudo bem. A porta ao anoitecer, com o rol ainda aberto e um candeeiro aceso, é o lugar certo para essa lembrança.",
+    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39) — estrangeiro, de um dos povos que Israel deveria ter expulsado, e ainda assim inscrito entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca estava em barracas (2Sm 11:11), e quem levou sem saber a carta que mandava matá-lo. Pôr este nome no fecho da lista de honra é não deixar o leitor sair do capítulo achando que estava tudo bem.",
   },
   "cedro-do-libano": {
     title: "O cedro que está no Líbano",
@@ -89,7 +89,7 @@ export const TAGS: Record<string, StageInfo> = {
   "baal-zebube-deus-de-ecrom": {
     title: "Baal-Zebube, deus de Ecrom",
     subtitle: "2Rs 1:2 — o ídolo que um rei de Israel mandou consultar",
-    text: "Caído pelas grades do quarto alto, Acazias despachou mensageiros: \"Ide, e perguntai a Baal-Zebube, deus de Ecrom, se sararei desta doença\" (2Rs 1:2). Baal-Zebube quer dizer senhor das moscas, e o oráculo filisteu ficava a dias de marcha de Samaria — por isso o anjo mandou Elias cortar o caminho da comitiva com a pergunta que julga o reinado inteiro: \"Porventura não há Deus em Israel, para irdes consultar a Baal-Zebube, deus de Ecrom?\" (2Rs 1:3). No Novo Testamento o nome reaparece na boca dos fariseus como \"Belzebu, príncipe dos demônios\" (Mt 12:24): o deus a que um rei de Israel recorreu virou apelido do inimigo." },
+    text: "Caído pelas grades do quarto alto, Acazias despachou mensageiros: \"Ide, e perguntai a Baal-Zebube, deus de Ecrom, se sararei desta doença\" (2Rs 1:2). Baal-Zebube quer dizer senhor das moscas, e o oráculo filisteu ficava a dias de marcha de Samaria — por isso o anjo mandou Elias cortar o caminho da comitiva com a pergunta que julga o reinado inteiro (v. 3). No Novo Testamento o nome reaparece na boca dos fariseus como \"Belzebu, príncipe dos demônios\" (Mt 12:24): o deus a que um rei de Israel recorreu virou apelido do inimigo." },
   "cama-do-quarto-alto-de-samaria": {
     title: "A cama do quarto alto de Samaria",
     subtitle: "2Rs 1:4 — \"Da cama, a que subiste, não descerás\"",
@@ -457,7 +457,7 @@ export const TAGS: Record<string, StageInfo> = {
   "neusta": {
     title: "Neustã, a serpente de metal",
     subtitle: "2Rs 18:4 — a relíquia que virou ídolo",
-    text: "\"fez em pedaços a serpente de metal que Moisés fizera; porquanto até àquele dia os filhos de Israel lhe queimavam incenso, e lhe chamaram Neustã\" (2Rs 18:4). Era a serpente levantada na haste no deserto, para que o mordido olhasse e vivesse (Nm 21:8-9): remédio dado por Deus, guardado setecentos anos e transformado em deus de bronze. Ezequias a quebra sem hesitar — o que Deus usou uma vez não é para ser adorado depois; e o próprio Senhor Jesus tomaria aquela serpente por figura de si mesmo: \"como Moisés levantou a serpente no deserto, assim importa que o Filho do homem seja levantado\" (Jo 3:14)." },
+    text: "\"fez em pedaços a serpente de metal que Moisés fizera; porquanto até àquele dia os filhos de Israel lhe queimavam incenso, e lhe chamaram Neustã\" (2Rs 18:4). Era a serpente levantada na haste no deserto, para que o mordido olhasse e vivesse (Nm 21:8-9): remédio dado por Deus, guardado setecentos anos e transformado em deus de bronze. Ezequias a quebra sem hesitar — o que Deus usou uma vez não é para ser adorado depois; e o próprio Senhor Jesus tomaria aquela serpente por figura de si mesmo (Jo 3:14)." },
   "portas-de-ouro-do-templo": {
     title: "As portas de ouro do templo",
     subtitle: "2Rs 18:16 — o ouro cortado para pagar a Assíria",

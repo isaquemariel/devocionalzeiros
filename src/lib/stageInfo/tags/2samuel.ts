@@ -95,7 +95,7 @@ export const TAGS: Record<string, StageInfo> = {
   "pedras-de-gilgal": {
     title: "As pedras de Gilgal",
     subtitle: "2Sm 19:15,40 — o memorial da primeira entrada, e a discórdia da segunda",
-    text: "Gilgal, na planície ao pé de Jericó, é o primeiro acampamento de Israel na terra prometida: ali Josué mandou levantar as doze pedras tiradas do leito seco do Jordão, \"Para que todos os povos da terra conheçam a mão do Senhor, que é forte\" (Js 4:20-24), e ali Israel foi circuncidado e comeu do fruto da terra. Era também o lugar onde Saul fora feito rei diante do povo (1Sm 11:15). Por isso a comitiva escolhe justamente este chão para reconduzir Davi: \"e Judá veio a Gilgal, para ir encontrar-se com o rei\" (2Sm 19:15). Mas a cena não termina em festa. É ali mesmo que estoura a briga entre Judá e Israel sobre quem tinha mais direito ao rei — \"a palavra dos homens de Judá foi mais forte do que a palavra dos homens de Israel\" (2Sm 19:43) —, e dessa fagulha nasce, no versículo seguinte, a revolta de Seba. O memorial da unidade vira o palco da divisão.",
+    text: "Gilgal, na planície ao pé de Jericó, é o primeiro acampamento de Israel na terra prometida: ali Josué mandou levantar as doze pedras tiradas do leito seco do Jordão (Js 4:20-24), e ali Saul fora feito rei diante do povo (1Sm 11:15). Por isso a comitiva escolhe justamente este chão para reconduzir Davi (2Sm 19:15). Mas a cena não termina em festa: é ali mesmo que estoura a briga entre Judá e Israel sobre quem tinha mais direito ao rei (v. 43), e dessa fagulha nasce a revolta de Seba. O memorial da unidade vira o palco da divisão.",
   },
   "buzina-de-seba": {
     title: "A buzina de Seba, filho de Bicri",
@@ -335,7 +335,7 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-de-jerusalem": {
     title: "A porta de Jerusalém, ao anoitecer",
     subtitle: "2Sm 23:39 — \"Urias, heteu; trinta e sete ao todo\"",
-    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39). Heteu — hitita, estrangeiro, um dos povos que Israel deveria ter expulsado da terra — e ainda assim inscrito, com nome próprio, entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca e o exército estavam em barracas no campo (2Sm 11:11), e foi ele quem levou, sem saber, a carta que mandava matá-lo. Colocar este nome no fecho da lista de honra, sem uma palavra de explicação, é a maneira que o narrador achou de não deixar o leitor sair do capítulo dos valentes achando que estava tudo bem. A porta ao anoitecer, com o rol ainda aberto e um candeeiro aceso, é o lugar certo para essa lembrança.",
+    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39) — estrangeiro, de um dos povos que Israel deveria ter expulsado, e ainda assim inscrito entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca estava em barracas (2Sm 11:11), e quem levou sem saber a carta que mandava matá-lo. Pôr este nome no fecho da lista de honra é não deixar o leitor sair do capítulo achando que estava tudo bem.",
   },
   "rol-do-recenseamento": {
     title: "O rol do recenseamento",

@@ -45,7 +45,7 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-de-jerusalem": {
     title: "A porta de Jerusalém, ao anoitecer",
     subtitle: "2Sm 23:39 — \"Urias, heteu; trinta e sete ao todo\"",
-    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39). Heteu — hitita, estrangeiro, um dos povos que Israel deveria ter expulsado da terra — e ainda assim inscrito, com nome próprio, entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca e o exército estavam em barracas no campo (2Sm 11:11), e foi ele quem levou, sem saber, a carta que mandava matá-lo. Colocar este nome no fecho da lista de honra, sem uma palavra de explicação, é a maneira que o narrador achou de não deixar o leitor sair do capítulo dos valentes achando que estava tudo bem. A porta ao anoitecer, com o rol ainda aberto e um candeeiro aceso, é o lugar certo para essa lembrança.",
+    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39) — estrangeiro, de um dos povos que Israel deveria ter expulsado, e ainda assim inscrito entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca estava em barracas (2Sm 11:11), e quem levou sem saber a carta que mandava matá-lo. Pôr este nome no fecho da lista de honra é não deixar o leitor sair do capítulo achando que estava tudo bem.",
   },
   "tenda-que-davi-armou-para-a-arca": {
     title: "A tenda que Davi armou para a arca",
