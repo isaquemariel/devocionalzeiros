@@ -302,7 +302,7 @@ export const TAGS: Record<string, StageInfo> = {
   "trombetas-da-subida-da-arca": {
     title: "As trombetas da subida da arca",
     subtitle: "2Sm 6:15 — o júbilo com que a arca entrou na cidade",
-    text: "\"Assim subindo, levavam Davi e todo o Israel a arca do Senhor, com júbilo, e ao som das trombetas\" (2Sm 6:15). As trombetas da lei eram de prata, \"de obra batida\", feitas por ordem de Deus \"para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2) — e havia prescrição exata para um dia como este: \"no dia da vossa alegria e nas vossas solenidades\" havia de se tocar \"as trombetas sobre os vossos holocaustos\" (Nm 10:10). Depois de três meses de silêncio, com a arca guardada em casa de Obede-Edom, o som que a anuncia é finalmente o som que a lei mandava. Agora tudo está no lugar: homens carregam, o sacrifício arde de seis em seis passos, as trombetas soam, o rei salta cingido de um éfode de linho. Da janela da torre, uma única pessoa em Israel não ouve música — ouve ridículo, e despreza o marido no seu coração.",
+    text: "\"Assim subindo, levavam Davi e todo o Israel a arca do Senhor, com júbilo, e ao som das trombetas\" (2Sm 6:15). As trombetas da lei eram de prata, de obra batida, feitas por ordem de Deus (Nm 10:2), e havia prescrição exata para um dia como este: \"no dia da vossa alegria e nas vossas solenidades\" (Nm 10:10). Depois de três meses de silêncio, o som que anuncia a arca é finalmente o som que a lei mandava. Agora tudo está no lugar. Da janela da torre, uma única pessoa em Israel não ouve música — ouve ridículo, e despreza o marido no seu coração.",
   },
   "altar-do-patio-da-arca": {
     title: "O altar do pátio da arca",
@@ -332,7 +332,7 @@ export const TAGS: Record<string, StageInfo> = {
   "harpa-de-davi": {
     title: "A harpa de Davi",
     subtitle: "2Sm 7 — o instrumento do pastor que virou rei",
-    text: "A harpa de Israel era uma lira de madeira com cordas de tripa, tocada com os dedos ou com plectro, pequena o bastante para se levar ao campo atrás do rebanho — e foi por ela que Davi entrou na história pública: \"quando o espírito mau da parte de Deus vinha sobre Saul, Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). Encostada a um canto da casa de cedro, ela é o único objeto do palácio que veio da malhada com ele. É deste homem que o livro dirá, no fim, \"o suave em salmos de Israel\" (2Sm 23:1). No capítulo 7 a harpa não toca: o rei está calado, ouvindo o profeta, e depois assentado perante o SENHOR, orando. Mas é ela que explica a oração — quem sabe falar assim com Deus é quem passou a vida a cantar para Ele.",
+    text: "A harpa de Israel era uma lira de madeira com cordas de tripa, tocada com os dedos ou com plectro, pequena o bastante para se levar ao campo atrás do rebanho — e foi por ela que Davi entrou na história pública: \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). Encostada a um canto da casa de cedro, é o único objeto do palácio que veio da malhada com ele. No capítulo 7 ela não toca: o rei está calado. Mas é ela que explica a oração — quem sabe falar assim com Deus é quem passou a vida a cantar para Ele (2Sm 23:1).",
   },
   "tabernaculo-do-deserto": {
     title: "O tabernáculo do deserto",
@@ -357,7 +357,7 @@ export const TAGS: Record<string, StageInfo> = {
   "leito-do-rei": {
     title: "O leito do rei",
     subtitle: "2Sm 11:2 — a cama de que ele se levantou à tarde",
-    text: "A frase que abre a queda de Davi não é um pecado, é um horário: \"E aconteceu que numa tarde Davi se levantou do seu leito, e andava passeando no terraço da casa real\" (11:2). Era \"o tempo em que os reis saem à guerra\" (11:1), e este ficou em Jerusalém, dormindo até a tarde. O mesmo leito reaparece na câmara para onde os mensageiros a trouxeram — \"e ela veio, e ele se deitou com ela\" (11:4) —, e o capítulo inteiro é construído sobre o contraste entre essa cama e o chão que Urias escolhe: \"Porém Urias se deitou à porta da casa real, com todos os servos do seu senhor; e não desceu à sua casa\" (11:9). O soldado dorme no umbral porque, como ele mesmo diz, \"A arca, e Israel, e Judá ficaram em tendas\" (11:11). Um homem não desce à sua cama por respeito à arca; o outro não sai dela por preguiça de rei. Todo o resto nasce daí.",
+    text: "A frase que abre a queda de Davi não é um pecado, é um horário: \"numa tarde Davi se levantou do seu leito, e andava passeando no terraço da casa real\" (11:2). Era \"o tempo em que os reis saem à guerra\" (11:1), e este ficou em Jerusalém, dormindo até a tarde. O capítulo inteiro é construído sobre o contraste entre essa cama e o chão que Urias escolhe: \"Porém Urias se deitou à porta da casa real\" (11:9), porque \"a arca, e Israel, e Judá ficaram em tendas\" (11:11). Um não desce à sua cama por respeito à arca; o outro não sai dela por preguiça de rei.",
   },
   "trombetas-de-hebrom": {
     title: "As trombetas de Hebrom",
@@ -367,7 +367,7 @@ export const TAGS: Record<string, StageInfo> = {
   "ribeiro-de-cedrom": {
     title: "O ribeiro de Cedrom",
     subtitle: "2Sm 15:23 — a torrente que se atravessa para perder o trono",
-    text: "O Cedrom corre no vale estreito entre a cidade de Davi e o monte das Oliveiras, seco quase o ano inteiro e cheio na estação das chuvas: é a fronteira natural de Jerusalém a leste, e passá-lo é sair de casa. \"E toda a terra chorava a grandes vozes, passando todo o povo; também o rei passou o ribeiro de Cedrom, e passou todo o povo na direção do caminho do deserto\" (15:23). Davi atravessa sem arca, sem guarda de honra e sem sandálias, com seiscentos estrangeiros de Gate abrindo o caminho. O mesmo leito de água guarda outra travessia noturna: \"Tendo Jesus dito isto, saiu com os seus discípulos para além do ribeiro de Cedrom, onde havia um horto, no qual ele entrou e seus discípulos\" (Jo 18:1). Dois filhos de Davi saíram da cidade por aquele vale, de noite, traídos por um amigo de mesa — e ambos subiram dali para o Olival.",
+    text: "O Cedrom corre no vale estreito entre a cidade de Davi e o monte das Oliveiras, seco quase o ano inteiro: é a fronteira natural de Jerusalém a leste, e passá-lo é sair de casa. \"também o rei passou o ribeiro de Cedrom, e passou todo o povo na direção do caminho do deserto\" (15:23) — sem arca, sem guarda de honra e sem sandálias. O mesmo leito de água guarda outra travessia noturna (Jo 18:1). Dois filhos de Davi saíram da cidade por aquele vale, de noite, traídos por um amigo de mesa — e ambos subiram dali para o Olival.",
   },
   "trombeta-da-uncao-de-salomao": {
     title: "A trombeta da unção de Salomão",
@@ -408,7 +408,7 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-do-senhor": {
     title: "A casa do Senhor em Jerusalém",
     subtitle: "1Rs 8:13 — \"assento para a tua eterna habitação\"",
-    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"Eis que os céus, e até o céu dos céus, não te poderiam conter, quanto menos esta casa que eu tenho edificado\" (1Rs 8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (1Rs 8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe da sua presença se o povo se apartar (1Rs 9:3,7)." },
+    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"os céus, e até o céu dos céus, não te poderiam conter\" (8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe se o povo se apartar (9:3,7)." },
   "coroa-de-salomao": {
     title: "A coroa de Salomão",
     subtitle: "1Rs 8:20 — o trono confirmado pela palavra",

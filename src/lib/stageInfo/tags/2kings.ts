@@ -49,7 +49,7 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-do-senhor": {
     title: "A casa do Senhor em Jerusalém",
     subtitle: "1Rs 8:13 — \"assento para a tua eterna habitação\"",
-    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"Eis que os céus, e até o céu dos céus, não te poderiam conter, quanto menos esta casa que eu tenho edificado\" (1Rs 8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (1Rs 8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe da sua presença se o povo se apartar (1Rs 9:3,7)." },
+    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"os céus, e até o céu dos céus, não te poderiam conter\" (8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe se o povo se apartar (9:3,7)." },
   "rio-do-egito": {
     title: "O rio do Egito",
     subtitle: "1Rs 8:65 — o limite sul da grande congregação",

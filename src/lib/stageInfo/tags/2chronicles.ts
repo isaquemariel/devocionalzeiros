@@ -55,12 +55,12 @@ export const TAGS: Record<string, StageInfo> = {
   "trombetas-da-subida-da-arca": {
     title: "As trombetas da subida da arca",
     subtitle: "2Sm 6:15 — o júbilo com que a arca entrou na cidade",
-    text: "\"Assim subindo, levavam Davi e todo o Israel a arca do Senhor, com júbilo, e ao som das trombetas\" (2Sm 6:15). As trombetas da lei eram de prata, \"de obra batida\", feitas por ordem de Deus \"para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2) — e havia prescrição exata para um dia como este: \"no dia da vossa alegria e nas vossas solenidades\" havia de se tocar \"as trombetas sobre os vossos holocaustos\" (Nm 10:10). Depois de três meses de silêncio, com a arca guardada em casa de Obede-Edom, o som que a anuncia é finalmente o som que a lei mandava. Agora tudo está no lugar: homens carregam, o sacrifício arde de seis em seis passos, as trombetas soam, o rei salta cingido de um éfode de linho. Da janela da torre, uma única pessoa em Israel não ouve música — ouve ridículo, e despreza o marido no seu coração.",
+    text: "\"Assim subindo, levavam Davi e todo o Israel a arca do Senhor, com júbilo, e ao som das trombetas\" (2Sm 6:15). As trombetas da lei eram de prata, de obra batida, feitas por ordem de Deus (Nm 10:2), e havia prescrição exata para um dia como este: \"no dia da vossa alegria e nas vossas solenidades\" (Nm 10:10). Depois de três meses de silêncio, o som que anuncia a arca é finalmente o som que a lei mandava. Agora tudo está no lugar. Da janela da torre, uma única pessoa em Israel não ouve música — ouve ridículo, e despreza o marido no seu coração.",
   },
   "harpa-de-davi": {
     title: "A harpa de Davi",
     subtitle: "2Sm 7 — o instrumento do pastor que virou rei",
-    text: "A harpa de Israel era uma lira de madeira com cordas de tripa, tocada com os dedos ou com plectro, pequena o bastante para se levar ao campo atrás do rebanho — e foi por ela que Davi entrou na história pública: \"quando o espírito mau da parte de Deus vinha sobre Saul, Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). Encostada a um canto da casa de cedro, ela é o único objeto do palácio que veio da malhada com ele. É deste homem que o livro dirá, no fim, \"o suave em salmos de Israel\" (2Sm 23:1). No capítulo 7 a harpa não toca: o rei está calado, ouvindo o profeta, e depois assentado perante o SENHOR, orando. Mas é ela que explica a oração — quem sabe falar assim com Deus é quem passou a vida a cantar para Ele.",
+    text: "A harpa de Israel era uma lira de madeira com cordas de tripa, tocada com os dedos ou com plectro, pequena o bastante para se levar ao campo atrás do rebanho — e foi por ela que Davi entrou na história pública: \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). Encostada a um canto da casa de cedro, é o único objeto do palácio que veio da malhada com ele. No capítulo 7 ela não toca: o rei está calado. Mas é ela que explica a oração — quem sabe falar assim com Deus é quem passou a vida a cantar para Ele (2Sm 23:1).",
   },
   "trono-de-davi": {
     title: "O trono de Davi",
@@ -70,7 +70,7 @@ export const TAGS: Record<string, StageInfo> = {
   "ribeiro-de-cedrom": {
     title: "O ribeiro de Cedrom",
     subtitle: "2Sm 15:23 — a torrente que se atravessa para perder o trono",
-    text: "O Cedrom corre no vale estreito entre a cidade de Davi e o monte das Oliveiras, seco quase o ano inteiro e cheio na estação das chuvas: é a fronteira natural de Jerusalém a leste, e passá-lo é sair de casa. \"E toda a terra chorava a grandes vozes, passando todo o povo; também o rei passou o ribeiro de Cedrom, e passou todo o povo na direção do caminho do deserto\" (15:23). Davi atravessa sem arca, sem guarda de honra e sem sandálias, com seiscentos estrangeiros de Gate abrindo o caminho. O mesmo leito de água guarda outra travessia noturna: \"Tendo Jesus dito isto, saiu com os seus discípulos para além do ribeiro de Cedrom, onde havia um horto, no qual ele entrou e seus discípulos\" (Jo 18:1). Dois filhos de Davi saíram da cidade por aquele vale, de noite, traídos por um amigo de mesa — e ambos subiram dali para o Olival.",
+    text: "O Cedrom corre no vale estreito entre a cidade de Davi e o monte das Oliveiras, seco quase o ano inteiro: é a fronteira natural de Jerusalém a leste, e passá-lo é sair de casa. \"também o rei passou o ribeiro de Cedrom, e passou todo o povo na direção do caminho do deserto\" (15:23) — sem arca, sem guarda de honra e sem sandálias. O mesmo leito de água guarda outra travessia noturna (Jo 18:1). Dois filhos de Davi saíram da cidade por aquele vale, de noite, traídos por um amigo de mesa — e ambos subiram dali para o Olival.",
   },
   "fonte-de-giom": {
     title: "A fonte de Giom",
@@ -95,7 +95,7 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-do-senhor-de-salomao": {
     title: "A casa do SENHOR edificada por Salomão",
     subtitle: "1Rs 6:1,38 — o templo levantado em sete anos",
-    text: "\"no ano quarto do reinado de Salomão sobre Israel, no mês de Zive (este é o mês segundo), começou a edificar a casa do SENHOR\" (1Rs 6:1) — quatrocentos e oitenta anos depois da saída do Egito. Media \"sessenta côvados de comprimento, e de vinte côvados de largura, e de trinta côvados de altura\" (1Rs 6:2), e no mês de Bul do ano undécimo ficou pronta: \"e a edificou em sete anos\" (1Rs 6:38). No meio da obra veio a palavra que vale mais do que toda a cantaria: \"se andares nos meus estatutos, e fizeres os meus juízos, e guardares todos os meus mandamentos\" (1Rs 6:12), a casa serviria — o templo não segura Deus, a obediência é que o retém." },
+    text: "\"no ano quarto do reinado de Salomão sobre Israel, no mês de Zive... começou a edificar a casa do SENHOR\" (1Rs 6:1) — quatrocentos e oitenta anos depois da saída do Egito. Media sessenta côvados por vinte, e trinta de altura (6:2), e no mês de Bul do ano undécimo ficou pronta: \"e a edificou em sete anos\" (6:38). No meio da obra veio a palavra que vale mais do que toda a cantaria: \"se andares nos meus estatutos, e fizeres os meus juízos\" (6:12) — o templo não segura Deus; a obediência é que o retém." },
   "pedras-preparadas-na-pedreira": {
     title: "As pedras preparadas na pedreira",
     subtitle: "1Rs 6:7 — a casa que subiu sem barulho de ferro",
@@ -135,7 +135,7 @@ export const TAGS: Record<string, StageInfo> = {
   "casa-do-senhor": {
     title: "A casa do Senhor em Jerusalém",
     subtitle: "1Rs 8:13 — \"assento para a tua eterna habitação\"",
-    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"Eis que os céus, e até o céu dos céus, não te poderiam conter, quanto menos esta casa que eu tenho edificado\" (1Rs 8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (1Rs 8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe da sua presença se o povo se apartar (1Rs 9:3,7)." },
+    text: "É a casa que Davi propôs no coração e o filho edificou: \"Certamente te edifiquei uma casa para morada, assento para a tua eterna habitação\" (1Rs 8:13). Salomão sabe que o prédio não contém a Deus — \"os céus, e até o céu dos céus, não te poderiam conter\" (8:27) — e por isso não pede que Deus caiba ali, mas que ali ouça: \"Para que os teus olhos noite e dia estejam abertos sobre esta casa\" (8:29). O Senhor responde pondo ali o seu nome para sempre, e adverte no mesmo fôlego que a casa será lançada longe se o povo se apartar (9:3,7)." },
   "nuvem-da-gloria": {
     title: "A nuvem que encheu a casa",
     subtitle: "1Rs 8:10-11 — a glória que interrompeu o serviço",
