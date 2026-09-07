@@ -40,7 +40,7 @@ export const TAGS: Record<string, StageInfo> = {
   "porta-da-casa-do-rei": {
     title: "A porta da casa do rei",
     subtitle: "2Sm 23:23 — o posto que Benaia recebeu",
-    text: "A guarda pessoal de Davi eram os quereteus e os peleteus, mercenários estrangeiros escolhidos justamente por não terem laços de tribo em Israel — a tropa que ficou com ele quando o próprio povo o abandonou na fuga de Absalão (2Sm 15:18). Quem os comandava dormia à porta do rei. O rol dos valentes registra a nomeação em meia linha: \"Dentre os trinta ele era o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre os seus guardas\" (2Sm 23:23). A porta guardada por dentro é o cargo mais íntimo do reino: quem passa e quem não passa, quem chega de noite, quem entra armado. Foi por confiar essa porta a Benaia que Davi pôde morrer em paz — e foi Benaia quem executou as últimas ordens do velho rei e garantiu o trono a Salomão (1Rs 2).",
+    text: "A guarda pessoal de Davi eram os quereteus e os peleteus, mercenários estrangeiros escolhidos justamente por não terem laços de tribo em Israel — a tropa que ficou com ele quando o próprio povo o abandonou na fuga de Absalão (15:18). Quem os comandava dormia à porta do rei, e o rol registra a nomeação em meia linha: \"e Davi o pôs sobre os seus guardas\" (23:23). A porta guardada por dentro é o cargo mais íntimo do reino. Foi por confiar essa porta a Benaia que Davi pôde morrer em paz, e foi ele quem garantiu o trono a Salomão (1Rs 2).",
   },
   "porta-de-jerusalem": {
     title: "A porta de Jerusalém, ao anoitecer",
@@ -50,7 +50,7 @@ export const TAGS: Record<string, StageInfo> = {
   "tenda-que-davi-armou-para-a-arca": {
     title: "A tenda que Davi armou para a arca",
     subtitle: "2Sm 6:17 — a nova morada da arca em Jerusalém",
-    text: "\"E introduzindo a arca do Senhor, a puseram no seu lugar, na tenda que Davi lhe armara\" (2Sm 6:17). Não é o tabernáculo de Moisés — esse permanecia em Gibeom, com o altar de bronze e o serviço sacerdotal —, mas uma tenda nova, levantada em Sião apenas para a arca. Por décadas o culto de Israel esteve assim, partido em dois lugares, até que Salomão trouxesse tudo para o templo (1Rs 8:4). É desta tenda que Davi fala no capítulo seguinte: \"eu moro em casa de cedro, e a arca de Deus mora dentro de cortinas\" (2Sm 7:2); e é a ela que ele volta, no v.18, para se assentar perante o SENHOR e orar. Os profetas guardaram a memória deste abrigo simples — \"tornarei a levantar o tabernáculo caído de Davi\" (Am 9:11) —, palavra que Tiago citaria em Jerusalém para explicar a entrada dos gentios: \"reedificarei o tabernáculo de Davi, que está caído\" (At 15:16). Uma tenda de pano abrigou o trono de Deus enquanto o rei morava em cedro, e foi essa desproporção que gerou a maior promessa do Antigo Testamento.",
+    text: "\"a puseram no seu lugar, na tenda que Davi lhe armara\" (6:17). Não é o tabernáculo de Moisés — esse permanecia em Gibeom, com o altar de bronze —, mas uma tenda nova, levantada em Sião apenas para a arca. Por décadas o culto de Israel esteve partido em dois lugares, até Salomão trazer tudo para o templo (1Rs 8:4). É desta tenda que Davi fala no capítulo seguinte (7:2). Os profetas guardaram a memória deste abrigo simples — \"tornarei a levantar o tabernáculo caído de Davi\" (Am 9:11) —, palavra que Tiago citaria para explicar a entrada dos gentios (At 15:16).",
   },
   "trombetas-da-subida-da-arca": {
     title: "As trombetas da subida da arca",
@@ -65,7 +65,7 @@ export const TAGS: Record<string, StageInfo> = {
   "trono-de-davi": {
     title: "O trono de Davi",
     subtitle: "2Sm 7–8 — o assento de onde se faz direito e justiça",
-    text: "O trono do rei em Israel era, antes de mobília, uma função: dali se ouviam causas, se recebiam embaixadas e se despachava o governo. O capítulo 8 resume o reinado inteiro numa linha que não fala de conquista: \"Reinou, pois, Davi sobre todo o Israel; e Davi fazia direito e justiça a todo o seu povo\" (2Sm 8:15). Esse é o teste bíblico de um trono — não a extensão das fronteiras, mas o tratamento dado ao mais fraco —, e é por não passarem nele que os profetas depois demolem os reis de Judá. Deste mesmo assento sairá a pergunta que abre o capítulo 9: \"Há ainda alguém que tenha ficado da casa de Saul, para que lhe faça benevolência por amor de Jônatas?\" (2Sm 9:1) — um governo que procura um sobrevivente para o abençoar. E é deste trono que Isaías falará, ao anunciar o principado que se firma \"com juízo e com justiça, desde agora e para sempre\" (Is 9:7).",
+    text: "O trono do rei em Israel era, antes de mobília, uma função: dali se ouviam causas, se recebiam embaixadas e se despachava o governo. O capítulo 8 resume o reinado numa linha que não fala de conquista: \"e Davi fazia direito e justiça a todo o seu povo\" (8:15). Esse é o teste bíblico de um trono — não a extensão das fronteiras, mas o tratamento dado ao mais fraco. Deste mesmo assento sairá a pergunta que abre o capítulo 9 (9:1): um governo que procura um sobrevivente para o abençoar. E é dele que Isaías falará (Is 9:7).",
   },
   "ribeiro-de-cedrom": {
     title: "O ribeiro de Cedrom",
