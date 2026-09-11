@@ -471,9 +471,12 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Fala do herói — balão saindo do mascote (~28% da largura em qualquer tela) */}
+      {/* Fala do herói — balão saindo do mascote (~28% da largura em qualquer tela).
+          Na VITÓRIA o balão não aparece: a frase de comemoração passou a viver
+          dentro do cartão da cerimônia, e os dois juntos ficavam sobrepostos e
+          repetidos. */}
       <AnimatePresence>
-        {heroLine && (
+        {heroLine && phase !== "won" && (
           <div className="absolute z-20 pointer-events-none" style={{ left: "max(8px, calc(28% - 18px))", bottom: "48%" }}>
             <motion.div
               key={`hero-${heroLine}`}
@@ -591,53 +594,79 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Vitória — cerimônia de CONQUISTA */}
+      {/* Vitória — cerimônia de CONQUISTA.
+          z-30: o banner da voz e o balão do herói são z-20 e ficavam POR CIMA
+          do título, tapando "<livro> conquistado!". A cerimônia é o assunto da
+          tela, então vem na frente — num cartão próprio, para ler limpo sobre
+          qualquer coisa que esteja atrás. E em tamanho de tela deitada: antes
+          o troféu e os números ficavam miúdos no meio de um vazio enorme. */}
       <AnimatePresence>
         {phase === "won" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
-            className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/45">
-            <motion.span
-              className="text-6xl drop-shadow-[0_0_24px_rgba(255,210,74,0.8)]"
-              initial={{ scale: 0, rotate: -20 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 1, type: "spring", stiffness: 220, damping: 12 }}
-            >
-              🏆
-            </motion.span>
-            <motion.p
-              className="rpg-title text-xl text-center px-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-            >
-              {book?.name} conquistado!
-            </motion.p>
+            className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/60">
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4 }}
-              className="flex items-center gap-2"
+              initial={{ scale: 0.9, y: 12 }} animate={{ scale: 1, y: 0 }}
+              transition={{ delay: 0.95, type: "spring", stiffness: 240, damping: 20 }}
+              className="flex max-h-full w-full max-w-[620px] items-center gap-6 overflow-y-auto rounded-2xl border-2 border-[#e8b04b] px-7 py-4"
+              style={{ background: "linear-gradient(180deg,#1c1710f2,#0c0a06f7)" }}
             >
-              <span className="px-2 py-0.5 rounded-lg bg-black/60 border border-[#e8b04b88] text-[11px] font-black text-[#ffd889]">
-                ⚔️ {correct}/{total} acertos
-              </span>
-              <span className="px-2 py-0.5 rounded-lg bg-black/60 border border-[#e0466b88] text-[11px] font-black text-[#ff9aae]">
-                {boss.emoji} {boss.name} vencido
-              </span>
-            </motion.div>
+              <motion.span
+                className="shrink-0 text-7xl drop-shadow-[0_0_24px_rgba(255,210,74,0.8)]"
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 1.05, type: "spring", stiffness: 220, damping: 12 }}
+              >
+                🏆
+              </motion.span>
 
-            {/* A vitória NÃO sai mais sozinha. Antes fechava em 2,6 s e cortava
-                o narrador no meio da fala de encerramento; agora quem decide a
-                hora de sair é o jogador — e quem quiser ouvir tudo, ouve. */}
-            <motion.button
-              onClick={() => onFinish(acertosRef.current)}
-              className="mt-3 rpg-btn px-7 py-3 text-base"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.7 }}
-            >
-              Continuar ➜
-            </motion.button>
+              <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+                <motion.p
+                  className="rpg-title text-2xl leading-tight"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 }}
+                >
+                  {book?.name} conquistado!
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.4 }}
+                  className="flex flex-wrap items-center gap-2"
+                >
+                  <span className="px-3 py-1 rounded-lg bg-black/60 border border-[#e8b04b88] text-sm font-black text-[#ffd889]">
+                    ⚔️ {correct}/{total} acertos
+                  </span>
+                  <span className="px-3 py-1 rounded-lg bg-black/60 border border-[#e0466b88] text-sm font-black text-[#ff9aae]">
+                    {boss.emoji} {boss.name} vencido
+                  </span>
+                </motion.div>
+
+                {/* a fala de comemoração do herói mora AQUI: o balão dele fica
+                    atrás do cartão, e a frase não podia se perder. */}
+                {story.winHero && (
+                  <motion.p
+                    className="text-sm italic text-blue-200/80"
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.55 }}
+                  >
+                    💬 {story.winHero}
+                  </motion.p>
+                )}
+
+                {/* A vitória NÃO sai mais sozinha. Antes fechava em 2,6 s e
+                    cortava o narrador no meio da fala de encerramento; agora
+                    quem decide a hora de sair é o jogador. */}
+                <motion.button
+                  onClick={() => onFinish(acertosRef.current)}
+                  className="mt-1 w-full rpg-btn px-7 py-3 text-lg"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.7 }}
+                >
+                  Continuar ➜
+                </motion.button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
