@@ -72,6 +72,11 @@ const HERO_H = 54;         // altura visual do herói HD (para a tag)
 // e todos os acessórios escalam junto, proporcionais a ele
 const HERO_SCALE = 0.85;
 const ACTOR_H = 46;        // altura visual dos humanos HD (para balões)
+// faixa do topo reservada à barra de referência (livro/versículo e fechar):
+// o balão pode subir até aqui, mas não por cima dela.
+const TOPO_LIVRE = 34;
+// altura de uma linha do balão (text-[12px] + leading-snug = 1.375)
+const LINHA_BALAO = 16.5;
 
 const SPEAKER_NAME: Record<string, string> = {
   cristo: "Jesus", anjo: "Anjo", joao: "João", anciao: "Ancião", hero: "Você",
@@ -775,6 +780,11 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const scaleY = (cr.dh || cs.h) / dims.H || 1;
           // x do PERSONAGEM na tela — é para cá que o rabicho tem de apontar.
           const ax = cr.ox + a.fx * dims.W * scaleX;
+          // largura pela CENA, não por `vw`: no celular a cena roda 90°, e um
+          // `84vw` media a largura FÍSICA do aparelho (~282px) dentro de um
+          // palco de 727px — balão estreito e texto em muitas linhas.
+          const larg = `${Math.round(Math.max(200, Math.min(430, cs.w * 0.58)))}px`;
+          if (el.style.width !== larg) el.style.width = larg;
           // A margem lateral é METADE DA LARGURA REAL do balão (medida), não um
           // palpite: com o palpite antigo (224px fixos) o balão era empurrado
           // para o meio da tela mesmo sendo bem mais estreito, e descolava de
@@ -783,10 +793,28 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const halfBal = Math.min(bw / 2 + 6, cs.w / 2);
           const bx = Math.max(halfBal, Math.min(cs.w - halfBal, ax));
           const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
+          // base do balão = LOGO ACIMA da cabeça (o rabicho de 7px encosta no
+          // cocuruto). Havia aqui um teto fixo de 56% da altura da cena: ele
+          // disparava em 100% dos beats e derrubava o balão sobre o ROSTO de
+          // quem falava. Quem se ajusta agora é a ALTURA do balão, não a base.
           const byRaw = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
-          // fica em cima do personagem, mas nunca sobe tanto a ponto de a tampa
-          // (max-height) cruzar a borda superior no mobile.
-          const by = Math.min(cs.h * 0.56, byRaw);
+          // céu disponível entre a cabeça e a barra de referência do topo.
+          const livre = Math.max(56, cs.h - TOPO_LIVRE - byRaw);
+          const sc = balloonScrollRef.current;
+          if (sc) {
+            // o que o texto NÃO ocupa: as duas bordas e a linha do nome de quem
+            // fala (que fica fora da rolagem, para nunca sumir junto com ela).
+            const fora = Math.max(4, el.offsetHeight - sc.offsetHeight);
+            // a tampa cai num MÚLTIPLO da linha: assim a janela mostra linhas
+            // inteiras, nunca meia linha decepada no alto.
+            const linhas = Math.max(1, Math.floor((livre - fora - 8) / LINHA_BALAO));
+            const teto = `${Math.round(8 + linhas * LINHA_BALAO)}px`;
+            if (sc.style.maxHeight !== teto) sc.style.maxHeight = teto;
+          }
+          // só se nem o mínimo couber (ator lá no fundo, cena baixinha) o balão
+          // desce — e ainda assim o mínimo possível.
+          const bh = el.offsetHeight || 0;
+          const by = Math.max(8, Math.min(byRaw, cs.h - 6 - bh));
           el.style.left = `${bx}px`;
           el.style.bottom = `${by}px`;
           // Quando o balão foi empurrado para dentro (canto da tela) ele deixa
@@ -903,11 +931,13 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, scale: 0.9, x: "-50%" }}
             className="absolute pointer-events-none"
-            style={{ left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(84vw, 380px)" }}
+            style={{ left: cssSize.w / 2, bottom: cssSize.h * 0.5 }}
           >
             <div className="relative rounded-xl border-2 shadow-[0_4px_18px_rgba(0,0,0,0.5)] bg-[#101a2ef2] border-[#5b9bff] text-blue-50">
-              <div ref={balloonScrollRef} className="px-3 py-2 text-[12px] leading-snug overflow-y-auto overscroll-contain" style={{ maxHeight: "min(34vh, 240px)" }}>
-                <span className="block text-[9px] font-black tracking-wider uppercase mb-0.5 text-[#8ab8ff]">{balloon.name}</span>
+              {/* o nome fica FORA da rolagem: com o balão baixinho, a rolagem
+                  automática o empurrava para cima e ninguém via quem falava. */}
+              <span className="block px-3 pt-1.5 text-[9px] font-black tracking-wider uppercase text-[#8ab8ff]">{balloon.name}</span>
+              <div ref={balloonScrollRef} className="px-3 pb-2 text-[12px] leading-snug overflow-y-auto overscroll-contain">
                 {shown}
                 {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
               </div>
@@ -973,7 +1003,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           <p
             ref={narratorScrollRef}
             className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5 overflow-y-auto overscroll-contain`}
-            style={{ maxHeight: compact ? "22vh" : "26vh" }}
+            // teto pela altura da CENA, não por `vh`: com o palco deitado no
+            // celular, `22vh` media a tela em pé (~160px) dentro de uma cena de
+            // 336px — a barra de narração podia comer metade do desenho.
+            style={{ maxHeight: Math.round(cssSize.h * (compact ? 0.24 : 0.26)) }}
           >
             {done && typeDone ? (
               <span className="text-[#ffd889]">✨ Uma porta se abriu — entre nela para o desafio!</span>

@@ -862,16 +862,14 @@ button[data-dismiss] {
    PERFORMANCE OPTIMIZATIONS
    ============================================================ */
 
-/* Promote animated elements to GPU layers */
-.animate-spin,
-[class*="animate-"] {
+/* Promote animated elements to GPU layers.
+   Só o giro contínuo: o coringa [class*="animate-"] pegava TODO elemento com
+   qualquer classe de animação (inclusive as de entrada, que duram 200 ms) e
+   deixava `will-change` ligado para sempre neles — dezenas de camadas de
+   composição vivas ao mesmo tempo, que é justamente o que engasga o toque no
+   celular. */
+.animate-spin {
   will-change: transform;
-}
-
-/* Framer Motion animated elements - hint the browser */
-[style*="transform"] {
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 /* Improve scrolling performance on main containers */
@@ -891,10 +889,10 @@ button[data-dismiss] {
   display: none; /* Chrome/Safari/Webkit */
 }
 
-/* Reduce paint on fixed position overlays */
-.fixed {
-  transform: translateZ(0);
-}
+/* NÃO devolva `transform` para TODO `.fixed`: essa regra (fora de camada)
+   ganhava de qualquer utilitário de transformação e apagava, por exemplo, um
+   `-translate-y-1/2` de painel centralizado — além de tornar cada overlay fixo
+   um bloco-contêiner para os `fixed` de dentro dele. */
 
 /* Hide mascots when VSL modal is open */
 body.vsl-open .fixed.z-\[30\],

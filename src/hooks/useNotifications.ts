@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface UserNotification {
@@ -11,36 +11,63 @@ export interface UserNotification {
   created_at: string;
 }
 
+/** Quantas notificações ficam guardadas. O que passar disso é apagado — as
+ *  mais ANTIGAS primeiro — para a caixa nunca virar um depósito de milhares. */
+export const MAX_NOTIFICACOES = 10;
+
 export function useNotifications(userId?: string) {
   const [items, setItems] = useState<UserNotification[]>([]);
   const [loading, setLoading] = useState(false);
+  const podando = useRef(false);
 
   const load = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
+    // busca bem mais do que cabe: o excedente é a faxina desta rodada.
     const { data } = await supabase
       .from("user_notifications" as any)
       .select("id, type, title, body, link, is_read, created_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
-      .limit(50);
-    setItems(((data as any) ?? []) as UserNotification[]);
+      .limit(200);
+    const linhas = ((data as any) ?? []) as UserNotification[];
+    setItems(linhas.slice(0, MAX_NOTIFICACOES));
     setLoading(false);
+    // limpeza automática: some com as velhas de vez, no banco.
+    const velhas = linhas.slice(MAX_NOTIFICACOES).map((n) => n.id);
+    if (velhas.length && !podando.current) {
+      podando.current = true;
+      try {
+        await supabase.from("user_notifications" as any).delete().in("id", velhas);
+      } finally {
+        podando.current = false;
+      }
+    }
   }, [userId]);
 
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
     if (!userId) return;
+    // um respiro entre o aviso e a releitura: a faxina apaga muitas linhas de
+    // uma vez, e cada uma volta como um evento — sem isto seriam dezenas de
+    // consultas seguidas para chegar ao mesmo resultado.
+    let aviso: number | undefined;
     const ch = supabase
       .channel(`notifications-${userId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "user_notifications", filter: `user_id=eq.${userId}` },
-        () => load()
+        () => {
+          if (aviso !== undefined) window.clearTimeout(aviso);
+          aviso = window.setTimeout(() => { aviso = undefined; load(); }, 400);
+        }
       )
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => {
+      if (aviso !== undefined) window.clearTimeout(aviso);
+      supabase.removeChannel(ch);
+    };
   }, [userId, load]);
 
   const unreadCount = items.filter((i) => !i.is_read).length;

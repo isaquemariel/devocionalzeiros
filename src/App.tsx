@@ -11,6 +11,7 @@ import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
 import { useCartSync } from "@/hooks/useCartSync";
+import { DialogLockGuard, cleanupDialogLocks } from "@/components/shared/DialogLockGuard";
 
 // Auto-retry dynamic imports: on chunk failure, busts SW caches and reloads.
 // Prevents the dreaded "404 page" caused by stale PWA precache pointing to
@@ -109,18 +110,53 @@ const CartSyncWrapper = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const cleanupDialogLocks = () => {
-  document.body.style.pointerEvents = "";
-  document.body.style.overflow = "";
-  document.body.removeAttribute("data-scroll-locked");
-};
-
 const RouteDialogLockCleanup = () => {
   const location = useLocation();
 
   useEffect(() => {
     cleanupDialogLocks();
   }, [location.pathname, location.search, location.hash]);
+
+  return null;
+};
+
+/** Telas que o usuário abre com mais frequência a partir do menu. Os pedaços
+ *  são buscados quando o app fica ocioso, para o toque no menu já encontrar o
+ *  código em cache em vez de esperar o download. Ficam de fora os gigantes
+ *  (RPG, gerador de sermão), que não valem o tráfego de quem não vai lá. */
+const TELAS_QUENTES = [
+  () => import("./pages/Home"),
+  () => import("./pages/Biblia"),
+  () => import("./pages/Devocional"),
+  () => import("./pages/Conquistas"),
+  () => import("./pages/Ranking"),
+  () => import("./pages/Quiz"),
+  () => import("./pages/Comunidade"),
+  () => import("./pages/Loja"),
+  () => import("./pages/AdminHD"),
+];
+
+const PrecarregaTelas = () => {
+  useEffect(() => {
+    const rede = (navigator as any).connection;
+    if (rede?.saveData) return;
+    if (typeof rede?.effectiveType === "string" && /2g/.test(rede.effectiveType)) return;
+
+    let parou = false;
+    let i = 0;
+    const ocioso: (cb: () => void) => number =
+      (window as any).requestIdleCallback
+        ? (cb) => (window as any).requestIdleCallback(cb, { timeout: 4000 })
+        : (cb) => window.setTimeout(cb, 400);
+
+    const proxima = () => {
+      if (parou || i >= TELAS_QUENTES.length) return;
+      const carregar = TELAS_QUENTES[i++];
+      carregar().catch(() => {}).finally(() => { if (!parou) ocioso(proxima); });
+    };
+    ocioso(proxima);
+    return () => { parou = true; };
+  }, []);
 
   return null;
 };
@@ -134,6 +170,8 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <RouteDialogLockCleanup />
+            <DialogLockGuard />
+            <PrecarregaTelas />
             <Suspense fallback={<MascotLoader />}>
               <AppPresenceWrapper>
               <NativePushBootstrap />

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { User, Session } from "@supabase/supabase-js";
+import { invalidateAdminCache } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Profile {
@@ -126,6 +127,8 @@ export const useAuth = () => {
   };
 
   const signOut = async () => {
+    // a resposta guardada de "é admin?" é de QUEM saiu — some com ela
+    invalidateAdminCache();
     // Always clear local state, regardless of API response
     // This handles cases where the session is already expired/invalid
     setUser(null);

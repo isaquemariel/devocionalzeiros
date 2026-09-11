@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useDeferredValue, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -145,6 +145,16 @@ const PERIOD_OPTIONS = [
   { value: "90", label: "Últimos 90 dias" },
 ];
 
+// Busca tolerante: ignora acentos e espaços sobrando, para "Jose" achar "José"
+// e um espaço colado no fim não zerar o resultado. Fica FORA do componente para
+// não nascer de novo a cada render (e invalidar os memos que dependem dela).
+const normalizar = (s: string | null | undefined) =>
+  (s ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
 const AdminHD = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -233,7 +243,12 @@ const AdminHD = () => {
     return todos;
   }, []);
 
+  const buscando = useRef(false);
   const fetchAllData = useCallback(async (showLoading = true) => {
+    // uma rodada de cada vez: a atualização automática batia por cima da que
+    // ainda estava correndo e o painel recarregava a lista inteira em dobro.
+    if (buscando.current) return;
+    buscando.current = true;
     if (showLoading) setLoadingData(true);
     try {
       const days = parseInt(periodDays);
@@ -260,6 +275,7 @@ const AdminHD = () => {
       console.error("Error fetching admin data:", error);
       if (showLoading) toast.error("Erro ao carregar dados");
     } finally {
+      buscando.current = false;
       if (showLoading) setLoadingData(false);
     }
   }, [periodDays]);
@@ -274,6 +290,9 @@ const AdminHD = () => {
   useEffect(() => {
     if (hasAdminAccess) {
       intervalRef.current = setInterval(() => {
+        // com a aba escondida não adianta baixar a base inteira: o trabalho
+        // fica todo represado e desaba de uma vez quando o app volta à frente.
+        if (document.visibilityState !== "visible") return;
         fetchAllData(false);
       }, 30000);
 
@@ -624,23 +643,23 @@ const AdminHD = () => {
     }
   };
 
-  // Busca tolerante: ignora acentos e espaços sobrando, para "Jose" achar "José"
-  // e um espaço colado no fim não zerar o resultado.
-  const normalizar = (s: string | null | undefined) =>
-    (s ?? "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
+  // Índice de busca calculado UMA vez por lista de usuários. Antes, `normalizar`
+  // (NFD + regex de acentos) rodava duas vezes por usuário a CADA render — e o
+  // filtro inteiro corria de novo a cada tecla digitada e a cada clique em
+  // qualquer canto da página. Com milhares de cadastros era esse laço que
+  // travava o toque no painel.
+  const usuariosIndexados = useMemo(
+    () => users.map((u) => ({ u, busca: `${normalizar(u.email)} ${normalizar(u.full_name)}` })),
+    [users]
+  );
 
-  const buscaNormalizada = normalizar(searchTerm);
+  // A digitação aparece na hora; a lista pesada recalcula logo atrás, sem
+  // segurar a tecla.
+  const buscaAdiada = useDeferredValue(searchTerm);
+  const buscaNormalizada = useMemo(() => normalizar(buscaAdiada), [buscaAdiada]);
 
-  const filteredUsers = users.filter((u) => {
-    const matchesSearch =
-      buscaNormalizada === "" ||
-      normalizar(u.email).includes(buscaNormalizada) ||
-      normalizar(u.full_name).includes(buscaNormalizada);
-
+  const filteredUsers = useMemo(() => usuariosIndexados.filter(({ u, busca }) => {
+    const matchesSearch = buscaNormalizada === "" || busca.includes(buscaNormalizada);
 
     // Handle plan filter - START includes both free users and paid start
     let matchesPlan = false;
@@ -655,12 +674,12 @@ const AdminHD = () => {
     } else {
       matchesPlan = u.plan_type === filterPlan;
     }
-    
+
     const matchesStatus = filterStatus === "all" || u.plan_status === filterStatus;
     const matchesReferral = filterReferral === "all" || 
       (filterReferral === "none" ? !u.referral_source : u.referral_source === filterReferral);
     return matchesSearch && matchesPlan && matchesStatus && matchesReferral;
-  });
+  }).map(({ u }) => u), [usuariosIndexados, buscaNormalizada, filterPlan, filterStatus, filterReferral]);
 
   // Bulk selection handlers
   const handleSelectAll = (checked: boolean) => {
@@ -745,9 +764,9 @@ const AdminHD = () => {
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * usersPerPage,
-    currentPage * usersPerPage
+  const paginatedUsers = useMemo(
+    () => filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage),
+    [filteredUsers, currentPage, usersPerPage]
   );
 
   // Reset page when filters change
