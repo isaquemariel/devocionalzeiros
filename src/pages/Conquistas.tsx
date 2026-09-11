@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/shared/AppHeader";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 
 const Conquistas = () => {
@@ -20,14 +20,7 @@ const Conquistas = () => {
   }, [user, authLoading, navigate]);
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando conquistas...</p>
-        </div>
-      </div>
-    );
+    return <MascotLoader label="Carregando conquistas..." />;
   }
 
   return (

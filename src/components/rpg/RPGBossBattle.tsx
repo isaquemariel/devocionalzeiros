@@ -366,6 +366,17 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   }, [bookId, region, boss.color]);
 
   const beginPhase = (p: Phase) => { t0.current = tRef.current; setPhase(p); };
+
+  // ---------------------------------------------------------------------------
+  // RITMO DA BATALHA — antes o jogo trocava de fase num tempo FIXO (1,2 s) e a
+  // vitória saía sozinha em 2,6 s. Quem acertava rápido cortava a narração no
+  // meio e nunca ouvia o fim. Agora a troca espera a narração TERMINAR, com um
+  // piso (a animação de dano precisa acontecer) e um teto (se a voz falhar ou
+  // estiver desligada, o jogo não pode travar).
+  // ---------------------------------------------------------------------------
+  const aoFimDaFalaRef = useRef<null | (() => void)>(null);
+  const acertosRef = useRef(0);
+
   const answer = (opt: string) => {
     if (phase !== "question" || picked) return;
     setPicked(opt);
@@ -373,16 +384,33 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
     if (ok) {
       setCorrect((c) => c + 1); setHp((h) => Math.max(0, h - dmg)); flash.current = 1;
       floatsRef.current.push({ txt: `-${dmg}`, color: "#ffd889", born: performance.now() + 420, atBoss: true });
-      beginPhase("attacking");
     } else {
       floatsRef.current.push({ txt: "✗", color: "#ff8a7a", born: performance.now() + 380, atBoss: false });
-      beginPhase("bosshit");
     }
-    setTimeout(() => {
-      const last = qi + 1 >= total;
-      if (last) { beginPhase("won"); setTimeout(() => onFinish(correct + (ok ? 1 : 0)), 2600); }
+    acertosRef.current = correct + (ok ? 1 : 0);
+    const last = qi + 1 >= total;
+
+    let feito = false;
+    const seguir = () => {
+      if (feito) return;
+      feito = true;
+      aoFimDaFalaRef.current = null;
+      if (last) beginPhase("won");
       else { setQi((i) => i + 1); setPicked(null); beginPhase("question"); }
-    }, ok ? 1200 : 1100);
+    };
+    // se esta reação não tem fala nenhuma, não há o que esperar — senão
+    // ficaríamos parados até o teto de segurança.
+    const reacao = ok ? story.turns[Math.min(qi, story.turns.length - 1)]?.hit
+                      : story.turns[Math.min(qi, story.turns.length - 1)]?.miss;
+    let pisoOk = false, falaOk = !reacao;
+    const talvez = () => { if (pisoOk && falaOk) seguir(); };
+    window.setTimeout(() => { pisoOk = true; talvez(); }, ok ? 1200 : 1100);
+    if (reacao) aoFimDaFalaRef.current = () => { falaOk = true; talvez(); };
+    window.setTimeout(seguir, 9000);   // teto de segurança
+
+    // a fase muda AGORA; o efeito de voz abaixo dispara a fala desta reação e,
+    // ao terminar, chama o `aoFimDaFalaRef` que acabamos de pendurar.
+    beginPhase(ok ? "attacking" : "bosshit");
   };
 
   // voz de Deus (do alto) e fala do herói (balão), por fase — a "conversação"
@@ -409,7 +437,14 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   useEffect(() => {
     const key = `${godLine || ""}|${heroLine || ""}`;
     if (key === "|") return;
-    if (key !== spokenRef.current) { spokenRef.current = key; speakBeat(godLine || undefined, heroLine || undefined); }
+    if (key !== spokenRef.current) {
+      spokenRef.current = key;
+      speakBeat(godLine || undefined, heroLine || undefined, () => {
+        const cb = aoFimDaFalaRef.current;
+        aoFimDaFalaRef.current = null;
+        cb?.();
+      });
+    }
   }, [godLine, heroLine]);
 
   return (
@@ -560,7 +595,7 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
       <AnimatePresence>
         {phase === "won" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
-            className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 pointer-events-none">
+            className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/45">
             <motion.span
               className="text-6xl drop-shadow-[0_0_24px_rgba(255,210,74,0.8)]"
               initial={{ scale: 0, rotate: -20 }}
@@ -590,6 +625,19 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
                 {boss.emoji} {boss.name} vencido
               </span>
             </motion.div>
+
+            {/* A vitória NÃO sai mais sozinha. Antes fechava em 2,6 s e cortava
+                o narrador no meio da fala de encerramento; agora quem decide a
+                hora de sair é o jogador — e quem quiser ouvir tudo, ouve. */}
+            <motion.button
+              onClick={() => onFinish(acertosRef.current)}
+              className="mt-3 rpg-btn px-7 py-3 text-base"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.7 }}
+            >
+              Continuar ➜
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

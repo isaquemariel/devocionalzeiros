@@ -25,6 +25,7 @@ import { ptBR } from "date-fns/locale";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 import { Devotional } from "@/data/devotionals";
 import { toPng } from "html-to-image";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 const VerseDevotional = () => {
   const navigate = useNavigate();
@@ -235,28 +236,11 @@ const VerseDevotional = () => {
   };
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            <Wand2 className="w-10 h-10 text-primary animate-pulse" />
-            <Loader2 className="w-6 h-6 animate-spin text-primary absolute -bottom-1 -right-1" />
-          </div>
-          <p className="text-muted-foreground font-medium">Preparando seu devocional...</p>
-          <p className="text-xs text-muted-foreground/60 text-center max-w-xs">
-            Estamos criando uma reflexão personalizada para você
-          </p>
-        </div>
-      </div>
-    );
+    return <MascotLoader label="Preparando seu devocional..." />;
   }
 
   if (error || !devotional) {

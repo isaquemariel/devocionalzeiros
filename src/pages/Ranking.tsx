@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star, Calendar, History } from "lucide-react";
+import { Trophy, Crown, Medal, RefreshCw, User, Star, Calendar, History } from "lucide-react";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -12,6 +12,7 @@ import { RankingHistoryModal } from "@/components/ranking/RankingHistoryModal";
 import { UserDetailsModal } from "@/components/ranking/UserDetailsModal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 
 interface RankingUser {
@@ -224,14 +225,7 @@ const Ranking = () => {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando ranking...</p>
-        </div>
-      </div>
-    );
+    return <MascotLoader label="Carregando ranking..." />;
   }
 
   const topThree = rankings.slice(0, 3);

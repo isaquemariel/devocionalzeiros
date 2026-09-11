@@ -22,6 +22,7 @@ import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -359,11 +360,7 @@ const DevocionalzeiroChat = () => {
   };
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   return (

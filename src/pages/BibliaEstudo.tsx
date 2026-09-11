@@ -59,6 +59,7 @@ import {
 "@/lib/studyBibleData";
 import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName, getBibleTranslation, setBibleTranslation, BibleTranslation, BIBLE_TRANSLATIONS, clearBibleCache } from "@/lib/bibleService";
 import { preloadOfflineBible } from "@/lib/bibleOfflineBundle";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 // Pré-carrega o bundle offline da Bíblia assim que o módulo é importado.
 preloadOfflineBible();
@@ -474,10 +475,7 @@ const BibliaEstudo = () => {
   };
 
   if (authLoading || planLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>);
+    return <MascotLoader />;
 
   }
 

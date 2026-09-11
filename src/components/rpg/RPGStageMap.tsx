@@ -126,6 +126,35 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
   const chapters = book ? Array.from({ length: book.chapters }, (_, i) => i + 1) : [];
   const region = book?.region || "creation";
 
+  // ---------------------------------------------------------------------------
+  // LIVRO CONQUISTADO — antes era um cartão no PÉ da página rolável: quem
+  // terminava o livro tinha de rolar até lá embaixo para descobrir a conquista.
+  // Agora é um POP-UP centralizado (mesmo formato do resgate de Talentos), que
+  // abre sozinho na primeira vez que o livro chega a 100% e depois fica
+  // guardado atrás de uma faixa discreta — o livro segue marcado como
+  // concluído e nada impede de refazer qualquer capítulo.
+  // ---------------------------------------------------------------------------
+  const conquistado = progress.percent === 100 && progress.total > 0;
+  const chaveFesta = book ? `rpg_livro_festejado:${book.id}` : "";
+  const [festa, setFesta] = useState(false);
+  const [saindo, setSaindo] = useState(false);
+  useEffect(() => {
+    if (!conquistado || !chaveFesta) return;
+    let jaViu = false;
+    try { jaViu = localStorage.getItem(chaveFesta) === "1"; } catch { /* sem storage: mostra */ }
+    if (jaViu) return;
+    try { localStorage.setItem(chaveFesta, "1"); } catch { /* noop */ }
+    const id = window.setTimeout(() => setFesta(true), 450); // deixa o mapa pintar
+    return () => window.clearTimeout(id);
+  }, [conquistado, chaveFesta]);
+
+  // avançar: brilho tomando a tela e só então troca de livro
+  const avancarLivro = () => {
+    if (saindo) return;
+    setSaindo(true);
+    window.setTimeout(() => { setFesta(false); setSaindo(false); onNextBook?.(); }, 620);
+  };
+
   const nextChapter = chapters.find((ch) => {
     const unlocked = isStageUnlocked(selectedLevel, ch);
     const completed = progress.completed >= ch && unlocked;
@@ -470,36 +499,112 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             )}
           </svg>
 
-          {/* Book completed — CONQUISTA + avanço para o próximo livro */}
-          {progress.percent === 100 && (
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
-              <div className="absolute inset-0 bg-black/40" />
-              {/* raios de glória girando atrás do troféu */}
-              <motion.div
-                className="absolute inset-0 opacity-25"
-                style={{ background: "conic-gradient(from 0deg at 50% 38%, transparent 0deg, rgba(255,220,130,0.85) 12deg, transparent 26deg, transparent 60deg, rgba(255,220,130,0.85) 72deg, transparent 86deg, transparent 120deg, rgba(255,220,130,0.85) 132deg, transparent 146deg, transparent 180deg, rgba(255,220,130,0.85) 192deg, transparent 206deg, transparent 240deg, rgba(255,220,130,0.85) 252deg, transparent 266deg, transparent 300deg, rgba(255,220,130,0.85) 312deg, transparent 326deg, transparent 360deg)" }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-              />
-              <div className="relative z-10 flex flex-col items-center gap-2">
-                <RPGHeroCanvasHD look={look} mood="happy" size={110} />
-                <Trophy className="w-8 h-8 text-[#ffd889] drop-shadow-[0_0_12px_rgba(255,216,137,0.8)]" />
-                <p className="font-black text-white text-lg">LIVRO CONQUISTADO!</p>
-                <p className="text-xs text-white/70">Boss derrotado — {book.name} vencido do início ao fim</p>
-                {onNextBook && (
-                  <button
-                    onClick={onNextBook}
-                    className="mt-1 rpg-btn px-5 py-2.5 text-sm inline-flex items-center gap-2"
-                  >
-                    Avançar para o próximo livro ➜
-                  </button>
-                )}
-              </div>
+          {/* Livro concluído — faixa discreta. A cerimônia em si é o pop-up
+              (abaixo); aqui fica só a marca permanente de que o livro está
+              vencido, com o caminho de volta para a conquista. */}
+          {conquistado && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              className="mt-4 mx-auto max-w-[420px] flex items-center justify-center gap-3 rounded-xl border border-[#e8b04b55] bg-[#1c17100f] px-4 py-2.5"
+            >
+              <Trophy className="w-4 h-4 shrink-0 text-[#ffd889]" />
+              <span className="text-xs font-bold text-[#ffd889]">{book.name} concluído</span>
+              <button
+                onClick={() => setFesta(true)}
+                className="ml-auto shrink-0 rounded-lg border border-[#e8b04b66] px-3 py-1 text-[11px] font-bold text-[#ffd889] active:scale-95 transition"
+              >
+                ver conquista
+              </button>
             </motion.div>
           )}
           <div className="h-8" />
         </div>
       </div>
+
+      {/* ── POP-UP DA CONQUISTA ─────────────────────────────────────────────
+          Mesmo formato do resgate de Talentos: chega por cima, centralizado,
+          com um botão só. `fixed` cobre a tela inteira — dentro do shell de
+          paisagem ele acompanha a rotação, porque o shell tem transform e vira
+          o bloco de contenção. Fechar não desfaz nada: o livro continua
+          concluído e todo capítulo segue refazível. */}
+      <AnimatePresence>
+        {festa && book && (
+          <motion.div
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => !saindo && setFesta(false)}
+          >
+            {/* clarão que toma a tela ao avançar de livro */}
+            <AnimatePresence>
+              {saindo && (
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 50% 50%, #ffe9a8 0%, #ffd54a 35%, transparent 72%)" }}
+                  initial={{ opacity: 0, scale: 0.2 }}
+                  animate={{ opacity: [0, 0.95, 0.9], scale: [0.2, 1.6, 2.4] }}
+                  transition={{ duration: 0.62, ease: "easeIn" }}
+                />
+              )}
+            </AnimatePresence>
+
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              className="relative flex w-full max-w-[330px] max-h-[96%] flex-col overflow-hidden rounded-2xl border-2 border-[#e8b04b] px-5 py-4 text-center"
+              style={{ background: "linear-gradient(180deg,#1c1710,#0c0a06)" }}
+              initial={{ scale: 0.7, y: 26 }}
+              animate={saindo ? { scale: 1.18, opacity: 0 } : { scale: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0 }}
+              transition={saindo ? { duration: 0.45, ease: "easeIn" } : { type: "spring", stiffness: 260, damping: 18 }}
+            >
+              {/* raios de glória girando atrás do herói */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none opacity-25"
+                style={{ background: "conic-gradient(from 0deg at 50% 34%, transparent 0deg, rgba(255,220,130,0.85) 12deg, transparent 26deg, transparent 60deg, rgba(255,220,130,0.85) 72deg, transparent 86deg, transparent 120deg, rgba(255,220,130,0.85) 132deg, transparent 146deg, transparent 180deg, rgba(255,220,130,0.85) 192deg, transparent 206deg, transparent 240deg, rgba(255,220,130,0.85) 252deg, transparent 266deg, transparent 300deg, rgba(255,220,130,0.85) 312deg, transparent 326deg, transparent 360deg)" }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+              />
+
+              <div className="relative flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain">
+                {/* troféu SOBRE o herói, não empilhado embaixo: a tela deitada
+                    é baixa e cada linha empilhada empurrava o botão para fora. */}
+                <div className="relative shrink-0">
+                  <RPGHeroCanvasHD look={look} mood="happy" size={68} />
+                  <motion.div
+                    className="absolute -bottom-1 -right-1"
+                    initial={{ scale: 0, rotate: -18 }} animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.18, type: "spring", stiffness: 240, damping: 12 }}
+                  >
+                    <Trophy className="w-7 h-7 text-[#ffd889] drop-shadow-[0_0_14px_rgba(255,216,137,0.85)]" />
+                  </motion.div>
+                </div>
+                <p className="mt-1 text-lg font-black tracking-wide text-white">LIVRO CONQUISTADO!</p>
+                <p className="mt-0.5 text-xs text-white/65 leading-snug">
+                  Boss derrotado — {book.name} vencido do início ao fim
+                </p>
+
+                {onNextBook ? (
+                  <button
+                    onClick={avancarLivro}
+                    disabled={saindo}
+                    className="mt-3 w-full shrink-0 rounded-xl py-2.5 font-black text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b] active:scale-95 transition disabled:opacity-70"
+                  >
+                    Avançar para o próximo livro ➜
+                  </button>
+                ) : (
+                  <p className="mt-3 text-xs font-bold text-[#ffd889]">Você chegou ao último livro. 🎉</p>
+                )}
+                <button
+                  onClick={() => setFesta(false)}
+                  disabled={saindo}
+                  className="mt-2 shrink-0 pb-0.5 text-[11px] text-white/45 underline underline-offset-2 disabled:opacity-40"
+                >
+                  ficar neste livro
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

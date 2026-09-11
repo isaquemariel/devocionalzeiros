@@ -35,6 +35,7 @@ import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { extractTextFromFile, ACCEPTED_TYPES } from "@/lib/sermonFileExtract";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 type SermonType = "expositivo" | "textual" | "tematico";
 type Mode = "generate" | "refine";
@@ -372,11 +373,7 @@ const SermonGenerator = () => {
   };
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   return (

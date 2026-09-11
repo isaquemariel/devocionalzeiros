@@ -33,6 +33,7 @@ import { ShareableDevotionalCard } from "@/components/devocional/ShareableDevoti
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 import { useShareDevotional } from "@/hooks/useShareDevotional";
 import { getBrasiliaDate, getBrasiliaDateString } from "@/lib/brasiliaDate";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 
 const Devocional = () => {
@@ -253,14 +254,7 @@ const Devocional = () => {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando devocional...</p>
-        </div>
-      </div>
-    );
+    return <MascotLoader label="Carregando devocional..." />;
   }
 
   return (

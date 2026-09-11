@@ -880,48 +880,67 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 o botão "Continuar" NUNCA ficar cortado na tela deitada (baixa). */}
             {phase === "result" && (
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full">
-                <FitBox designW={760} designH={460}>
-                <div className="w-full h-full flex flex-col items-center justify-center px-6 gap-2.5 text-center">
-                  <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={92} />
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
-                    <p className="text-white/70 text-sm">{bookName} {chapter}</p>
-                    {alreadyCompleted && <p className="text-[11px] text-white/50">Você refez a fase — o progresso foi mantido, sem pontos extras.</p>}
+                {/* A tela deitada é MUITO mais larga que alta (~2,6:1). Com o
+                    palco antigo (760x460 ≈ 1,65:1) o FitBox tinha de encolher
+                    tudo para caber na ALTURA e sobrava tela vazia dos dois
+                    lados — era o "está tudo pequeno". Agora o palco tem a
+                    proporção da tela (960x360 ≈ 2,67:1) e o conteúdo está
+                    disposto em DUAS COLUNAS, então ocupa a largura inteira e
+                    cada elemento sai grande. */}
+                <FitBox designW={960} designH={360}>
+                <div className="w-full h-full flex items-center justify-center gap-8 px-10">
+                  {/* coluna esquerda: herói + título */}
+                  <div className="flex flex-col items-center text-center shrink-0 w-[300px]">
+                    <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={150} />
+                    <h2 className="mt-2 text-3xl font-black leading-tight text-amber-400">
+                      {alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}
+                    </h2>
+                    <p className="text-white/70 text-lg">{bookName} {chapter}</p>
                   </div>
-                  <div className="flex items-center gap-6 my-1">
-                    <div className="text-center">
-                      <div className="flex items-center gap-1 text-amber-400">
-                        <Zap className="w-5 h-5" />
-                        <span className="text-2xl font-black">+{xpEarned}</span>
+
+                  {/* coluna direita: números, detalhe e ação */}
+                  <div className="flex-1 min-w-0 flex flex-col items-center gap-4">
+                    <div className="flex items-stretch justify-center gap-3 w-full">
+                      <div className="flex-1 rounded-2xl border-2 border-amber-500/30 bg-amber-500/10 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-amber-400">
+                          <Zap className="w-7 h-7" />
+                          <span className="text-4xl font-black leading-none">+{xpEarned}</span>
+                        </div>
+                        <p className="mt-1 text-[13px] tracking-wide text-white/45 uppercase">XP Ganho</p>
                       </div>
-                      <p className="text-[10px] text-white/40 uppercase">XP Ganho</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="flex items-center gap-1 text-green-400">
-                        <CheckCircle2 className="w-5 h-5" />
-                        <span className="text-2xl font-black">{correctCount}/{questions.length || 2}</span>
+                      <div className="flex-1 rounded-2xl border-2 border-green-500/30 bg-green-500/10 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-green-400">
+                          <CheckCircle2 className="w-7 h-7" />
+                          <span className="text-4xl font-black leading-none">{correctCount}/{questions.length || 2}</span>
+                        </div>
+                        <p className="mt-1 text-[13px] tracking-wide text-white/45 uppercase">Quiz</p>
                       </div>
-                      <p className="text-[10px] text-white/40 uppercase">Quiz</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="flex items-center gap-1 text-blue-400">
-                        <Clock className="w-5 h-5" />
-                        <span className="text-2xl font-black">{formatTime(elapsedSeconds)}</span>
+                      <div className="flex-1 rounded-2xl border-2 border-blue-500/30 bg-blue-500/10 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-blue-400">
+                          <Clock className="w-7 h-7" />
+                          <span className="text-4xl font-black leading-none">{formatTime(elapsedSeconds)}</span>
+                        </div>
+                        <p className="mt-1 text-[13px] tracking-wide text-white/45 uppercase">Tempo</p>
                       </div>
-                      <p className="text-[10px] text-white/40 uppercase">Tempo</p>
                     </div>
+
+                    {alreadyCompleted ? (
+                      <p className="text-[15px] text-white/50 text-center">
+                        Você refez a fase — o progresso foi mantido, sem pontos extras.
+                      </p>
+                    ) : (
+                      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[15px] text-white/50">
+                        <span>📖 Leitura: +{XP_BASE}</span>
+                        {correctCount > 0 && <span>✅ Quiz: +{correctCount * XP_QUIZ_BONUS}</span>}
+                        <span>🙏 Devocional concluído</span>
+                      </div>
+                    )}
+
+                    <Button onClick={handleClose} className="w-full max-w-md py-6 text-xl rpg-btn">
+                      <Trophy className="w-6 h-6 mr-2" />
+                      Continuar Jornada
+                    </Button>
                   </div>
-                  {!alreadyCompleted && (
-                    <div className="text-xs text-white/40 space-y-0.5">
-                      <p>📖 Leitura: +{XP_BASE} pontos</p>
-                      {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
-                      <p>🙏 Devocional concluído</p>
-                    </div>
-                  )}
-                  <Button onClick={handleClose} className="w-full max-w-xs py-3 mt-1 rpg-btn">
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Continuar Jornada
-                  </Button>
                 </div>
                 </FitBox>
               </motion.div>

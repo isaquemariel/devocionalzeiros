@@ -13,6 +13,7 @@ import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
 import cardEmbaixador from "@/assets/card-embaixador.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 const homeImages = [
   cardLeituraBiblica, cardDevocional, cardRanking, cardChat,
@@ -61,11 +62,7 @@ const Index = () => {
   }, []);
 
   if (!checked) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   return <RPGSiteLanding />;

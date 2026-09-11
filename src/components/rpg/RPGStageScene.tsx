@@ -292,6 +292,22 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
 
   // ---------- estudo do versículo (✏️) ----------
   const [study, setStudy] = useState<{ open: boolean; loading: boolean; text?: string; words?: { term: string; meaning: string }[]; blocked?: boolean }>({ open: false, loading: false });
+  // "há mais texto abaixo?" — troca a dica no rodapé do modal de estudo. Sem
+  // esse aviso o leitor achava que a explicação acabava no corte da rolagem.
+  const studyScrollRef = useRef<HTMLDivElement>(null);
+  const [studyMore, setStudyMore] = useState(false);
+  const medirStudy = useCallback(() => {
+    const el = studyScrollRef.current;
+    if (!el) return;
+    setStudyMore(el.scrollHeight - el.clientHeight - el.scrollTop > 8);
+  }, []);
+  const onStudyScroll = medirStudy;
+  useEffect(() => {
+    if (!study.open || study.loading) { setStudyMore(false); return; }
+    const id = window.setTimeout(medirStudy, 60);   // depois de o texto pintar
+    window.addEventListener("resize", medirStudy);
+    return () => { window.clearTimeout(id); window.removeEventListener("resize", medirStudy); };
+  }, [study.open, study.loading, study.text, medirStudy]);
   const openStudy = useCallback(async () => {
     if (!verse) return;
     setStudy({ open: true, loading: true });
@@ -752,20 +768,33 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (balloonElRef.current && balloonKeyRef.current) {
         const a = live.get(balloonKeyRef.current);
         if (a) {
+          const el = balloonElRef.current;
           const cs = cssSizeRef.current;
           const cr = canvasRectRef.current;
           const scaleX = (cr.dw || cs.w) / dims.W || 1;
           const scaleY = (cr.dh || cs.h) / dims.H || 1;
-          // margem = ~metade da largura do balão, p/ ele nunca sair pela lateral
-          const halfBal = Math.min(cs.w * 0.46, 224);
-          const bx = Math.max(halfBal, Math.min(cs.w - halfBal, cr.ox + a.fx * dims.W * scaleX));
+          // x do PERSONAGEM na tela — é para cá que o rabicho tem de apontar.
+          const ax = cr.ox + a.fx * dims.W * scaleX;
+          // A margem lateral é METADE DA LARGURA REAL do balão (medida), não um
+          // palpite: com o palpite antigo (224px fixos) o balão era empurrado
+          // para o meio da tela mesmo sendo bem mais estreito, e descolava de
+          // quem estava perto da borda — era o "balão solto".
+          const bw = el.offsetWidth || 280;
+          const halfBal = Math.min(bw / 2 + 6, cs.w / 2);
+          const bx = Math.max(halfBal, Math.min(cs.w - halfBal, ax));
           const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
           const byRaw = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
           // fica em cima do personagem, mas nunca sobe tanto a ponto de a tampa
           // (max-height) cruzar a borda superior no mobile.
           const by = Math.min(cs.h * 0.56, byRaw);
-          balloonElRef.current.style.left = `${bx}px`;
-          balloonElRef.current.style.bottom = `${by}px`;
+          el.style.left = `${bx}px`;
+          el.style.bottom = `${by}px`;
+          // Quando o balão foi empurrado para dentro (canto da tela) ele deixa
+          // de estar centrado no ator: o rabicho desliza para continuar preso à
+          // figura, em vez de ficar apontando para o chão vazio.
+          const folga = Math.max(0, bw / 2 - 16);
+          const tail = Math.max(-folga, Math.min(folga, ax - bx));
+          el.style.setProperty("--tail", `${tail}px`);
         }
       }
 
@@ -882,7 +911,11 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
                 {shown}
                 {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
               </div>
-              <span className="absolute left-1/2 -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]" />
+              {/* rabicho: segue o ator (--tail é escrito no rAF acima) */}
+              <span
+                className="absolute -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]"
+                style={{ left: "calc(50% + var(--tail, 0px))" }}
+              />
             </div>
           </motion.div>
         )}
@@ -1004,35 +1037,59 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             onPointerUp={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); if (!study.loading) setStudy({ open: false, loading: false }); }}
           >
+            {/* MESMA regra da ficha "?": a cena roda DEITADA e sobra pouca
+                altura. Antes o cartão INTEIRO rolava (overflow no cartão), então
+                ao descer para ler o fim, o cabeçalho e o botão de fechar subiam
+                junto e sumiam — a explicação parecia cortada e sem saída. Agora
+                cabeçalho e rodapé são fixos (shrink-0) e SÓ o corpo rola. */}
             <motion.div
               initial={{ scale: 0.9, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.92, opacity: 0 }}
-              className="rpg-dialogue w-full max-w-md px-4 py-3 max-h-[70%] overflow-y-auto"
+              className="rpg-dialogue flex w-full max-w-md flex-col px-4 py-3"
+              style={{ maxHeight: "88%" }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between">
+              <div className="shrink-0 flex items-center justify-between gap-2">
                 <span className="who">✏️ Estudo • {bookName} {chapter}:{beat?.v}</span>
                 {!study.loading && (
-                  <button onClick={() => setStudy({ open: false, loading: false })} className="p-1 rounded-md bg-black/40 border border-[#3a4258] text-[#cdd6f0]">
+                  <button onClick={() => setStudy({ open: false, loading: false })} className="shrink-0 p-1 rounded-md bg-black/40 border border-[#3a4258] text-[#cdd6f0]">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
               </div>
+
               {study.loading ? (
-                <p className="text-[12px] mt-2 animate-pulse text-[#cdd6f0]">Carregando explicação do versículo…</p>
+                <p className="shrink-0 text-[12px] mt-2 animate-pulse text-[#cdd6f0]">Carregando explicação do versículo…</p>
               ) : study.blocked ? (
-                <p className="text-[12px] mt-2 text-[#ffd889]">Você atingiu o limite diário de explicações. Faça upgrade do plano para estudar sem limites. ✨</p>
+                <p className="shrink-0 text-[12px] mt-2 text-[#ffd889]">Você atingiu o limite diário de explicações. Faça upgrade do plano para estudar sem limites. ✨</p>
               ) : (
                 <>
-                  <p className="text-[12px] leading-relaxed mt-2 whitespace-pre-line">{study.text}</p>
-                  {!!study.words?.length && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {study.words.map((w2) => (
-                        <span key={w2.term} className="px-2 py-0.5 rounded-full bg-[#e8b04b22] border border-[#e8b04b66] text-[10px] text-[#ffd889]">
-                          <b>{w2.term}</b>: {w2.meaning}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {/* A ROLAGEM VAI NO PRÓPRIO ITEM FLEX — igual à ficha "?".
+                      Tentar uma caixa interna com `h-full` não funciona (altura
+                      percentual contra pai de altura automática vira `auto`: o
+                      texto crescia e vazava por baixo do cartão); e com o filho
+                      em `absolute` o item flex colapsava para altura zero,
+                      porque `flex-1` só reparte sobra e aqui não há sobra.
+                      Deixando o overflow no item que o flex já dimensiona, o
+                      cartão cresce até o teto de 88% e só o texto rola. */}
+                  <div
+                    ref={studyScrollRef}
+                    onScroll={onStudyScroll}
+                    className="min-h-0 mt-2 overflow-y-auto overscroll-contain pr-1"
+                  >
+                    <p className="text-[12px] leading-relaxed whitespace-pre-line">{study.text}</p>
+                    {!!study.words?.length && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {study.words.map((w2) => (
+                          <span key={w2.term} className="px-2 py-0.5 rounded-full bg-[#e8b04b22] border border-[#e8b04b66] text-[10px] text-[#ffd889]">
+                            <b>{w2.term}</b>: {w2.meaning}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <p className="shrink-0 mt-1.5 text-[9px] text-[#6d7b9c]">
+                    {studyMore ? "role para ler o restante · toque fora para fechar" : "toque fora para fechar"}
+                  </p>
                 </>
               )}
             </motion.div>

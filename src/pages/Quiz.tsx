@@ -32,6 +32,7 @@ import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySele
 import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 // Timer duration based on difficulty
 const getTimerSeconds = (difficulty: QuizDifficulty): number => {
@@ -426,12 +427,7 @@ const Quiz = () => {
   const theme = getModeThemeClasses();
 
   if (authLoading || scheduleLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <QuizBackground />
-        <Loader2 className="w-8 h-8 animate-spin text-primary relative z-10" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   if (!user) {

@@ -292,8 +292,14 @@ export const FloatingMascot = () => {
   return null;
 };
 
-/** Loading mascot - replaces spinner during page loads */
-export const MascotLoader = () => (
+/** Loading mascot — a ÚNICA tela de carregamento do app.
+ *
+ *  Toda espera de página inteira passa por aqui: antes havia meia dúzia de
+ *  variações soltas (um spinner genérico numa página, um livro girando no
+ *  login) e o leitor via um carregamento diferente a cada tela. `label` só
+ *  troca a frase; a figura é sempre o personagem principal.
+ */
+export const MascotLoader = ({ label = "Carregando..." }: { label?: string }) => (
   <div className="min-h-screen bg-black flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
       <motion.div
@@ -307,7 +313,7 @@ export const MascotLoader = () => (
         animate={{ opacity: [0.3, 1, 0.3] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >
-        Carregando...
+        {label}
       </motion.p>
     </div>
   </div>

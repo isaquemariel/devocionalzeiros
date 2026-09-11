@@ -25,6 +25,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@/hooks/useCommunity";
 import { getBrasiliaDateString } from "@/lib/brasiliaDate";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a";
 type TabKey = PostType | "rules";
@@ -83,11 +84,7 @@ const Comunidade = () => {
   const gated = needsOnboarding || needsRulesAcceptance;
 
   if (authLoading || !user) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   return (

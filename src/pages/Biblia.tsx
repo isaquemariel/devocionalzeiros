@@ -42,6 +42,7 @@ import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR, generateCustomR
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
@@ -468,14 +469,7 @@ const Biblia = () => {
 
 
   if (authLoading || (user && scheduleLoading)) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando sua jornada...</p>
-        </div>
-      </div>
-    );
+    return <MascotLoader label="Carregando sua jornada..." />;
   }
 
   if (showPlanSelection) {

@@ -12,6 +12,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
@@ -615,18 +616,7 @@ const Auth = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="h-screen bg-[#040810] flex items-center justify-center">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3">
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}>
-            <BookOpen className="w-9 h-9 text-amber-400" />
-          </motion.div>
-          <p className="text-amber-200/50 text-sm">Carregando...</p>
-        </motion.div>
-      </div>
-    );
-  }
+  if (loading) return <MascotLoader />;
 
   const referralOptions = [
     { value: "instagram", label: "Instagram" },
