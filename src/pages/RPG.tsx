@@ -130,8 +130,11 @@ const RPG = () => {
     }
   }, [user, rpgLoading, stats, initializeStats]);
 
-  // espera stats carregarem (evita piscar o onboarding antes de saber o nome)
-  if (authLoading || planLoading || rpgLoading || (!!user && !stats)) return <MascotLoader />;
+  // espera stats carregarem (evita piscar o onboarding antes de saber o nome).
+  // O `!user` é o que faltava: sem sessão, o efeito acima manda para /auth, mas
+  // efeito só corre DEPOIS do render — e este render chega a `userId={user.id}`
+  // no RPGHome e estoura com tela branca. Quem não tem sessão nem chega lá.
+  if (authLoading || !user || planLoading || rpgLoading || !stats) return <MascotLoader />;
 
   // Onboarding de primeiro acesso (nomear o personagem + tutorial)
   if (needsOnboarding && user) {

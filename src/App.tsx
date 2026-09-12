@@ -12,6 +12,7 @@ import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
 import { useCartSync } from "@/hooks/useCartSync";
 import { DialogLockGuard, cleanupDialogLocks } from "@/components/shared/DialogLockGuard";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 // Auto-retry dynamic imports: on chunk failure, busts SW caches and reloads.
 // Prevents the dreaded "404 page" caused by stale PWA precache pointing to
@@ -136,6 +137,13 @@ const TELAS_QUENTES = [
   () => import("./pages/AdminHD"),
 ];
 
+/** Envolve as rotas e se REFAZ a cada rota: sem a `key`, uma tela quebrada
+ *  continuaria quebrada mesmo depois de o usuário navegar para outra. */
+const RedeDeSeguranca = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  return <ErrorBoundary key={location.pathname} area={location.pathname}>{children}</ErrorBoundary>;
+};
+
 const PrecarregaTelas = () => {
   useEffect(() => {
     const rede = (navigator as any).connection;
@@ -176,6 +184,10 @@ const App = () => (
               <AppPresenceWrapper>
               <NativePushBootstrap />
               <CartSyncWrapper>
+              {/* A rede de segurança envolve só as ROTAS, e é remontada a cada
+                  troca de rota (key): assim um erro numa tela não derruba o app
+                  inteiro nem gruda no lugar depois de sair dela. */}
+              <RedeDeSeguranca>
               <Routes>
                 {/* Raiz (devocionalzeiros.com.br) vai direto pro login; usuário
                     logado é redirecionado pra /home pelo próprio Auth. O site
@@ -207,6 +219,7 @@ const App = () => (
                 <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </RedeDeSeguranca>
               {/* Global floating mascot - appears on all app pages */}
               <FloatingMascot />
               {/* Global achievement unlock popup - works on any page */}
