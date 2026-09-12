@@ -110,11 +110,14 @@ export type Database = {
           created_by: string | null
           id: string
           is_active: boolean
+          last_error: string | null
+          last_error_at: string | null
           last_sent_at: string | null
           message: string
           next_run_at: string | null
           recurrence_days: number[] | null
           recurrence_time_brt: string | null
+          retry_count: number
           schedule_type: string
           scheduled_at: string | null
           send_count: number
@@ -127,11 +130,14 @@ export type Database = {
           created_by?: string | null
           id?: string
           is_active?: boolean
+          last_error?: string | null
+          last_error_at?: string | null
           last_sent_at?: string | null
           message: string
           next_run_at?: string | null
           recurrence_days?: number[] | null
           recurrence_time_brt?: string | null
+          retry_count?: number
           schedule_type?: string
           scheduled_at?: string | null
           send_count?: number
@@ -144,11 +150,14 @@ export type Database = {
           created_by?: string | null
           id?: string
           is_active?: boolean
+          last_error?: string | null
+          last_error_at?: string | null
           last_sent_at?: string | null
           message?: string
           next_run_at?: string | null
           recurrence_days?: number[] | null
           recurrence_time_brt?: string | null
+          retry_count?: number
           schedule_type?: string
           scheduled_at?: string | null
           send_count?: number

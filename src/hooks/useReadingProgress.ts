@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans, bibleBooks } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { toast } from "sonner";
 
 // Create a map of book names to their canonical order index
 const bookOrderMap = new Map<string, number>();
@@ -12,6 +13,100 @@ bibleBooks.forEach((book, index) => {
 // Helper function to get book order (returns high number for unknown books)
 const getBookOrder = (bookName: string): number => {
   return bookOrderMap.get(bookName) ?? 999;
+};
+
+/** O erro veio de SESSÃO morta (token expirado, conta que já não existe, RLS
+ *  negando a escrita) e não de rede ou de dado? Só nesse caso adianta pedir
+ *  para entrar de novo. */
+const ehErroDeSessao = (erro: { code?: string; message?: string } | null | undefined): boolean => {
+  if (!erro) return false;
+  const codigo = erro.code ?? "";
+  const msg = (erro.message ?? "").toLowerCase();
+  return (
+    codigo === "42501" ||   // violação de row-level security
+    codigo === "23503" ||   // chave estrangeira: o usuário do token não existe mais
+    codigo === "PGRST301" || // JWT recusado pelo PostgREST
+    msg.includes("jwt") ||
+    msg.includes("row-level security") ||
+    msg.includes("violates foreign key")
+  );
+};
+
+/** Ainda há sessão válida? Renova se estiver no fim. Devolve false quando o
+ *  usuário precisa mesmo entrar de novo — e aí não se apaga nem se grava nada. */
+const garantirSessao = async (): Promise<boolean> => {
+  const { data } = await supabase.auth.getSession();
+  const sessao = data.session;
+  if (!sessao) return false;
+  const expiraEm = (sessao.expires_at ?? 0) * 1000;
+  if (expiraEm && expiraEm - Date.now() > 60_000) return true;
+  const { data: renovada, error } = await supabase.auth.refreshSession();
+  return !error && !!renovada.session;
+};
+
+/** Avisa que NÃO salvou. Antes isto era um `console.error` e mais nada: a tela
+ *  mostrava um plano que nunca chegou ao banco, e o usuário só descobria ao
+ *  recarregar, já sem o progresso que tinha marcado. */
+const avisarQueNaoSalvou = (deSessao: boolean) => {
+  if (deSessao) {
+    toast.error("Sua sessão expirou — o plano de leitura não foi salvo.", {
+      description: "Entre de novo para o plano e o seu progresso ficarem guardados.",
+      duration: 12000,
+      action: {
+        label: "Entrar",
+        onClick: async () => {
+          await supabase.auth.signOut();
+          window.location.assign("/auth");
+        },
+      },
+    });
+  } else {
+    toast.error("Não consegui salvar o seu plano de leitura.", {
+      description: "O que está na tela ainda não foi guardado. Tente escolher o plano de novo em instantes.",
+      duration: 10000,
+    });
+  }
+};
+
+/** Grava o plano em lotes. Se travar no meio, APAGA o que já entrou: meio
+ *  plano guardado é pior do que nenhum — na abertura seguinte o app o trataria
+ *  como o plano do usuário e ele leria um cronograma truncado sem saber. */
+type LinhaDoPlano = {
+  user_id: string;
+  scheduled_date: string;
+  book_name: string;
+  chapter_number: number;
+  is_completed: boolean;
+};
+
+const salvarPlano = async (
+  itens: LinhaDoPlano[],
+): Promise<{ ok: boolean; sessao: boolean }> => {
+  const gravados: string[] = [];
+  const TAMANHO_LOTE = 500;
+
+  const desfazer = async () => {
+    // em pedaços: o filtro `in` vai na URL, e mil UUIDs de uma vez não cabem
+    for (let i = 0; i < gravados.length; i += 200) {
+      await supabase.from("reading_schedule").delete().in("id", gravados.slice(i, i + 200));
+    }
+  };
+
+  for (let i = 0; i < itens.length; i += TAMANHO_LOTE) {
+    const lote = itens.slice(i, i + TAMANHO_LOTE);
+    let { data, error } = await supabase.from("reading_schedule").insert(lote).select("id");
+    // uma segunda chance: token vencido se renova sozinho e o lote passa
+    if (error && ehErroDeSessao(error) && (await garantirSessao())) {
+      ({ data, error } = await supabase.from("reading_schedule").insert(lote).select("id"));
+    }
+    if (error) {
+      console.error("Falha ao gravar o plano de leitura:", error);
+      await desfazer();
+      return { ok: false, sessao: ehErroDeSessao(error) };
+    }
+    for (const linha of data ?? []) gravados.push((linha as { id: string }).id);
+  }
+  return { ok: true, sessao: false };
 };
 
 interface ReadingScheduleItem {
@@ -37,6 +132,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const [loading, setLoading] = useState(true);
   const [currentDay, setCurrentDay] = useState(1);
   const [streak, setStreak] = useState(0);
+  /** true quando o que está na tela NÃO chegou ao banco. */
+  const [planoNaoSalvo, setPlanoNaoSalvo] = useState(false);
   const { playSound } = useGameSounds();
 
   // Format date to YYYY-MM-DD string using Brasília timezone
@@ -184,19 +281,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       });
     });
 
-    // Insert in batches
-    const batchSize = 500;
-    for (let i = 0; i < scheduleItems.length; i += batchSize) {
-      const batch = scheduleItems.slice(i, i + batchSize).map((item) => ({
-        ...item,
-        user_id: userId,
-      }));
-
-      const { error } = await supabase.from("reading_schedule").insert(batch);
-      if (error) {
-        console.error("Error inserting schedule batch:", error);
-      }
-    }
+    const salvo = await salvarPlano(scheduleItems.map((item) => ({ ...item, user_id: userId })));
+    setPlanoNaoSalvo(!salvo.ok);
+    if (!salvo.ok) avisarQueNaoSalvou(salvo.sessao);
 
     // Convert to DaySchedule format
     const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
@@ -235,7 +322,10 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       .eq("chapter_number", chapter);
 
     if (error) {
+      // silêncio aqui era um toque que simplesmente não acontecia: o capítulo
+      // continuava por ler e ninguém dizia por quê.
       console.error("Error marking chapter complete:", error);
+      avisarQueNaoSalvou(ehErroDeSessao(error));
       return;
     }
 
@@ -283,6 +373,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     if (error) {
       console.error("Error marking day complete:", error);
+      avisarQueNaoSalvou(ehErroDeSessao(error));
       return;
     }
 
@@ -314,6 +405,18 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     setLoading(true);
 
     try {
+      // PASSO 0: a sessão ainda está viva? Isto vem ANTES de tudo porque o
+      // passo 2 APAGA o cronograma inteiro do usuário. Com o token morto, o
+      // apagar passava (ou não) e a gravação seguinte falhava em silêncio: a
+      // pessoa ficava sem o plano velho e sem o novo. Sem sessão, não se
+      // encosta em nada.
+      if (!(await garantirSessao())) {
+        avisarQueNaoSalvou(true);
+        setPlanoNaoSalvo(true);
+        setLoading(false);
+        return;
+      }
+
       // STEP 1: Move completed chapters to reading_progress (historical points table)
       // This preserves the user's earned points from previous readings
       const { data: completedChapters } = await supabase
@@ -347,6 +450,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
       if (deleteError) {
         console.error("Error deleting schedule items:", deleteError);
+        avisarQueNaoSalvou(ehErroDeSessao(deleteError));
+        setPlanoNaoSalvo(true);
         setLoading(false);
         return;
       }
@@ -373,14 +478,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       );
 
       // STEP 5: Insert in batches
-      const batchSize = 500;
-      for (let i = 0; i < scheduleItems.length; i += batchSize) {
-        const batch = scheduleItems.slice(i, i + batchSize);
-        const { error } = await supabase.from("reading_schedule").insert(batch);
-        if (error) {
-          console.error("Error inserting schedule batch:", error);
-        }
-      }
+      const salvo = await salvarPlano(scheduleItems);
+      setPlanoNaoSalvo(!salvo.ok);
+      if (!salvo.ok) avisarQueNaoSalvou(salvo.sessao);
 
       // STEP 6: Reset local state for new plan - Day 1 starts now
       setCurrentDay(1);
@@ -457,6 +557,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     loading,
     currentDay,
     streak,
+    planoNaoSalvo,
     markChapterComplete,
     markDayComplete,
     regenerateSchedule,

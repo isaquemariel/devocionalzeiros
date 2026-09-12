@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Bell, Plus, Send, Trash2, Loader2, Clock, Repeat, Zap } from "lucide-react";
+import { Bell, Plus, Send, Trash2, Loader2, Clock, Repeat, Zap, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -38,6 +38,9 @@ interface Announcement {
   next_run_at: string | null;
   last_sent_at: string | null;
   send_count: number;
+  last_error: string | null;
+  last_error_at: string | null;
+  retry_count: number;
   created_at: string;
 }
 
@@ -51,6 +54,12 @@ function pushSummary(data: any): string {
   const total = web + native;
   if (total > 0) {
     return `Enviado! 📲 ${native} no app + ${web} no navegador (${total} no total).`;
+  }
+  const recusados = (data?.web?.failed ?? 0) + (data?.native?.failed ?? 0);
+  if (recusados > 0) {
+    // 0 entregues COM recusas não é "sem inscritos": é envio rejeitado — o
+    // caso da chave VAPID trocada, que dizia "enviado" para ninguém.
+    return `Nenhum aparelho recebeu: ${recusados} envio(s) recusado(s). Confira as chaves de push.`;
   }
   return "Aviso registrado, mas nenhum aparelho recebeu o push (0 inscritos ativos).";
 }
@@ -252,7 +261,21 @@ export const AdminAnnouncementsCard = () => {
           p_link: item.url || "/home",
         });
       }
-      toast.success(pushSummary(fnData));
+      const entregues = (fnData?.web?.sent ?? 0) + (fnData?.native?.sent ?? 0);
+      const recusados = (fnData?.web?.failed ?? 0) + (fnData?.native?.failed ?? 0);
+      if (entregues > 0) {
+        // envio manual que deu certo limpa a marca de falha da linha, senão o
+        // aviso vermelho ficaria para sempre depois de o problema resolvido.
+        await supabase
+          .from("admin_push_announcements")
+          .update({ last_error: null, last_error_at: null, retry_count: 0 })
+          .eq("id", id);
+        toast.success(pushSummary(fnData));
+      } else if (recusados > 0) {
+        toast.error(pushSummary(fnData));
+      } else {
+        toast.info(pushSummary(fnData));
+      }
       load();
     } catch (e) {
       toast.error("Erro ao enviar");
@@ -429,6 +452,15 @@ export const AdminAnnouncementsCard = () => {
                           {it.send_count}× enviado
                         </Badge>
                       )}
+                      {/* `send_count` agora só conta entrega de verdade. Se a
+                          última tentativa não saiu, o aviso diz isso em vez de
+                          deixar o admin achar que o push foi. */}
+                      {it.last_error && (
+                        <Badge variant="destructive" className="gap-1 text-[10px]">
+                          <AlertTriangle className="w-3 h-3" />
+                          {it.retry_count >= 3 ? "não entregue" : `falhou (tentativa ${it.retry_count})`}
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{it.message}</p>
                     <div className="flex flex-wrap gap-3 mt-1.5 text-[11px] text-muted-foreground">
@@ -444,6 +476,13 @@ export const AdminAnnouncementsCard = () => {
                         <span>Último: {format(new Date(it.last_sent_at), "dd/MM HH:mm", { locale: ptBR })}</span>
                       )}
                     </div>
+                    {it.last_error && (
+                      <p className="mt-1.5 text-[11px] text-destructive break-words">
+                        {it.last_error_at && `${format(new Date(it.last_error_at), "dd/MM HH:mm", { locale: ptBR })} · `}
+                        {it.last_error}
+                        {it.retry_count >= 3 && " — desisti de reenviar; corrija e use \"Enviar agora\"."}
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Switch
