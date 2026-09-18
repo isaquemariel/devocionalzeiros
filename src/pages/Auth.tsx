@@ -528,7 +528,7 @@ const Auth = () => {
               if (resendError) {
                 const resendMessage = resendError.message ?? "";
                 const waitSeconds = getRateLimitWaitSeconds(resendMessage);
-                if ((resendError as any)?.status === 429 || resendMessage.toLowerCase().includes("rate limit") || resendMessage.toLowerCase().includes("over_email_send_rate_limit")) {
+                if (resendError.status === 429 || resendMessage.toLowerCase().includes("rate limit") || resendMessage.toLowerCase().includes("over_email_send_rate_limit")) {
                   toast.error(waitSeconds
                     ? `Confirme seu email antes de entrar. Aguarde ${waitSeconds}s para solicitar outro link.`
                     : "Confirme seu email antes de entrar. Aguarde um minuto para solicitar outro link.", { duration: 10000 });
