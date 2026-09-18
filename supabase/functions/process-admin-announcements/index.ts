@@ -168,12 +168,22 @@ Deno.serve(async (req) => {
         if (!claimed) continue;
 
         const tentativasGastas = Number(ann.retry_count ?? 0);
+        const isRetry = tentativasGastas > 0 && ann.last_error_at != null;
+        // Um recorrente já reivindicado para a cadência normal iniciou uma nova
+        // ocorrência. Retentativas pertencem à ocorrência anterior e ficam
+        // marcadas por last_error_at + contador; ao sair dessa janela, o contador
+        // antigo não pode impedir o sino nem consumir tentativas do novo dia.
+        const retryAgeMs = ann.last_error_at
+          ? Date.now() - new Date(ann.last_error_at).getTime()
+          : Number.POSITIVE_INFINITY;
+        const sameOccurrenceRetry = isRetry && retryAgeMs <= ESPERA_RETENTATIVA_MS * MAX_TENTATIVAS;
+        const occurrenceAttempts = sameOccurrenceRetry ? tentativasGastas : 0;
 
         // Sino do app (todos os usuários) — INDEPENDENTE do push, para o aviso
         // ficar sempre no ícone de notificações mesmo se o push falhar. Só na
         // PRIMEIRA tentativa: numa retentativa o sino já tem o aviso, e repetir
         // encheria a caixa de cópias da mesma mensagem.
-        if (tentativasGastas === 0) {
+        if (occurrenceAttempts === 0) {
           try {
             await serviceClient.rpc("broadcast_admin_notification_internal", {
               p_title: ann.title,
@@ -187,7 +197,7 @@ Deno.serve(async (req) => {
 
         // PUSH (nativo FCM + web) — MESMA função do envio imediato.
         const base = isRecurring ? "sched:recurring" : "sched:once";
-        const entrega = await enviarPush(ann, tentativasGastas > 0 ? `${base}:retry` : base);
+        const entrega = await enviarPush(ann, occurrenceAttempts > 0 ? `${base}:retry` : base);
 
         if (entrega.ok) {
           await gravarResultado(ann.id, {
@@ -202,7 +212,7 @@ Deno.serve(async (req) => {
           // Não entregou: fica escrito o porquê, e a ocorrência volta para a
           // fila daqui a pouco — sem atropelar a cadência normal, porque quando
           // a retentativa disparar o próximo horário é recalculado do zero.
-          const podeTentar = tentativasGastas + 1 < MAX_TENTATIVAS;
+          const podeTentar = occurrenceAttempts + 1 < MAX_TENTATIVAS;
           const retryAt = new Date(Date.now() + ESPERA_RETENTATIVA_MS).toISOString();
           const remarcar = podeTentar
             ? { next_run_at: nextRun && nextRun < retryAt ? nextRun : retryAt, is_active: true }
@@ -210,7 +220,7 @@ Deno.serve(async (req) => {
           await gravarResultado(ann.id, {
             last_error: (entrega.erro ?? "").slice(0, 400),
             last_error_at: nowIso,
-            retry_count: tentativasGastas + 1,
+            retry_count: occurrenceAttempts + 1,
             ...remarcar,
           });
           console.error("push não entregue para", ann.id, entrega.erro, podeTentar ? "(retentativa marcada)" : "(desistindo)");

@@ -31,6 +31,14 @@ const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").ma
 // Min 5 digits (some countries), max 15 (ITU-T E.164 limit minus country code)
 const phoneSchema = z.string().min(5, "Número inválido").max(15, "Número inválido");
 
+const CONFIRMATION_RESEND_COOLDOWN_MS = 60_000;
+const CONFIRMATION_RESEND_STORAGE_KEY = "confirmation_resend_attempted_at";
+
+const getRateLimitWaitSeconds = (message: string): number | null => {
+  const match = message.match(/after\s+(\d+)\s+seconds?/i);
+  return match ? Number(match[1]) : null;
+};
+
 // Per-country phone config: { maxDigits, placeholder }
 const countryPhoneConfig: Record<string, { maxDigits: number; placeholder: string }> = {
   "+55": { maxDigits: 11, placeholder: "(11) 99999-9999" },
@@ -505,12 +513,34 @@ const Auth = () => {
           if (msg.includes("invalid login credentials")) {
             toast.error("Não conseguimos entrar. Confira o email e a senha. Se você acabou de se cadastrar, confirme seu email pelo link que enviamos (veja também o spam). Esqueceu a senha? Use 'Esqueci minha senha'.", { duration: 9000 });
           } else if (msg.includes("email not confirmed") || msg.includes("email_not_confirmed")) {
-            // Reenvia automaticamente o e-mail de confirmação
+            const now = Date.now();
+            const previousAttempt = Number(sessionStorage.getItem(CONFIRMATION_RESEND_STORAGE_KEY) ?? 0);
+            const cooldownRemaining = Math.ceil((CONFIRMATION_RESEND_COOLDOWN_MS - (now - previousAttempt)) / 1000);
+
+            if (previousAttempt > 0 && cooldownRemaining > 0) {
+              toast.error(`Confirme seu email antes de entrar. Aguarde ${cooldownRemaining}s para solicitar outro link e verifique a caixa de entrada e o spam.`, { duration: 10000 });
+              return;
+            }
+
+            sessionStorage.setItem(CONFIRMATION_RESEND_STORAGE_KEY, String(now));
             try {
-              await supabase.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
+              const { error: resendError } = await supabase.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
+              if (resendError) {
+                const resendMessage = resendError.message ?? "";
+                const waitSeconds = getRateLimitWaitSeconds(resendMessage);
+                if (resendError.status === 429 || resendMessage.toLowerCase().includes("rate limit") || resendMessage.toLowerCase().includes("over_email_send_rate_limit")) {
+                  toast.error(waitSeconds
+                    ? `Confirme seu email antes de entrar. Aguarde ${waitSeconds}s para solicitar outro link.`
+                    : "Confirme seu email antes de entrar. Aguarde um minuto para solicitar outro link.", { duration: 10000 });
+                } else {
+                  console.error("[confirmation resend] error", resendError);
+                  toast.error("Confirme seu email antes de entrar. Não foi possível reenviar o link agora; tente novamente em instantes.");
+                }
+                return;
+              }
               toast.error(`Confirme seu email antes de entrar. Reenviamos o link para ${email}. Verifique a caixa de entrada e o spam.`, { duration: 10000 });
             } catch {
-              toast.error("Confirme seu email antes de entrar. Verifique sua caixa de entrada e o spam.");
+              toast.error("Confirme seu email antes de entrar. Não foi possível reenviar o link agora; tente novamente em instantes.");
             }
           } else if (msg.includes("rate limit") || status === 429) {
             toast.error("Muitas tentativas de login. Aguarde alguns minutos e tente novamente.");
