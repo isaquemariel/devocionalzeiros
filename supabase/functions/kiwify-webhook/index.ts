@@ -1,7 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { redactEmail } from '../_shared/pii.ts'
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
-import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -286,47 +285,9 @@ Deno.serve(async (req) => {
       if (rawTs) { const d = new Date(rawTs); if (!isNaN(d.getTime())) eventCreatedAt = d.toISOString() }
     }
 
-    // Product identifiers (top-level in the real Kiwify payload). Used to scope
-    // aulas course access on both grant and revoke.
-    const productObj = payload.Product || payload.product || {}
-    const eventProductId = sanitizeString(payload.product_id || productObj.product_id || productObj.id, 100)
-    const eventCheckoutLink = sanitizeString(payload.checkout_link || payload.checkoutLink || payload.checkout_id, 100)
-
-    // Revoke aulas course access matching a refunded/canceled product (P2).
-    async function revokeMatchingAulasAccess() {
-      try {
-        const ids = [eventProductId, eventCheckoutLink].map(v => v.trim().toLowerCase()).filter(Boolean)
-        if (ids.length === 0) return
-        const { data: cursos } = await supabase
-          .from('aulas_cursos')
-          .select('id, kiwify_product_id, purchase_url')
-        const matched = (cursos ?? []).filter((c) => {
-          const kid = String(c.kiwify_product_id ?? '').trim().toLowerCase()
-          const purl = String(c.purchase_url ?? '').trim().toLowerCase()
-          return ids.some((id) => kid === id || (!!purl && purl.includes(id)))
-        })
-        for (const c of matched) {
-          await supabase.from('aulas_product_access')
-            .delete()
-            .eq('email', normalizedEmail)
-            .eq('curso_id', c.id)
-            .eq('source', 'kiwify')
-        }
-        if (matched.length > 0) {
-          console.log(`Revoked aulas access for ${redactEmail(normalizedEmail)} on ${matched.length} curso(s).`)
-        }
-      } catch (e) {
-        console.error('revoke aulas access error', e)
-      }
-    }
-
     // Handle deactivation
     if (isDeactivation) {
       console.log(`Deactivating access for: ${redactEmail(normalizedEmail)} due to: ${eventType}`)
-
-      // Always revoke matching aulas access on a refund/cancel, even if there is
-      // no authorized_purchases row (aulas access is a separate table).
-      await revokeMatchingAulasAccess()
 
       const { data: existing, error: fetchError } = await supabase
         .from('authorized_purchases')
@@ -343,7 +304,7 @@ Deno.serve(async (req) => {
       }
 
       if (!existing) {
-        return new Response(JSON.stringify({ message: 'No purchase to deactivate (aulas access revoked if any)' }), {
+        return new Response(JSON.stringify({ message: 'No purchase to deactivate' }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
@@ -511,100 +472,6 @@ Deno.serve(async (req) => {
     }
 
     console.log(`Successfully authorized: ${redactEmail(normalizedEmail)} for plan: ${planType}`)
-
-    // Also grant access to any matching /aulas course by kiwify_product_id or checkout link
-    try {
-      const matchingIdentifiers = [productId, checkoutLink]
-        .map((value) => value.trim().toLowerCase())
-        .filter(Boolean)
-
-      if (matchingIdentifiers.length > 0) {
-        const { data: cursos } = await supabase
-          .from('aulas_cursos')
-          .select('id, kiwify_product_id, title, purchase_url')
-
-        const matchedCursos = (cursos ?? []).filter((curso) => {
-          const cursoKiwifyId = String(curso.kiwify_product_id ?? '').trim().toLowerCase()
-          const purchaseUrl = String(curso.purchase_url ?? '').trim().toLowerCase()
-
-          return matchingIdentifiers.some((identifier) =>
-            cursoKiwifyId === identifier || (!!purchaseUrl && purchaseUrl.includes(identifier))
-          )
-        })
-
-        if (matchedCursos && matchedCursos.length > 0) {
-          for (const c of matchedCursos) {
-            await supabase.from('aulas_product_access').upsert(
-              {
-                email: normalizedEmail,
-                curso_id: c.id,
-                kiwify_product_id: productId || checkoutLink || null,
-                source: 'kiwify',
-              },
-              { onConflict: 'email,curso_id' },
-            )
-          }
-          console.log(`Granted aulas access for ${redactEmail(normalizedEmail)} on ${matchedCursos.length} curso(s).`)
-
-          // Send welcome email (only once per email — idempotent via welcome_sent_at)
-          try {
-            const { data: accessRow } = await supabase
-              .from('aulas_product_access')
-              .select('id, welcome_sent_at')
-              .eq('email', normalizedEmail)
-              .eq('curso_id', matchedCursos[0].id)
-              .maybeSingle()
-
-            if (accessRow && !accessRow.welcome_sent_at) {
-              const courseTitle = matchedCursos[0].title || productName || 'seu curso'
-
-              try {
-                const result = await sendTemplateEmail('aulas-welcome', normalizedEmail, {
-                  templateData: {
-                    customerName: customerName || undefined,
-                    productName: courseTitle,
-                    recipient: normalizedEmail,
-                  },
-                  idempotencyKey: `aulas-welcome-${normalizedEmail}-${matchedCursos[0].id}`,
-                })
-
-                const { error: logError } = await supabase.from('email_send_log').insert({
-                  message_id: null,
-                  template_name: 'aulas-welcome',
-                  recipient_email: normalizedEmail,
-                  status: result.sent ? 'sent' : 'suppressed',
-                })
-                if (logError) console.error('email_send_log insert failed', logError)
-
-                if (result.sent) {
-                  await supabase
-                    .from('aulas_product_access')
-                    .update({ welcome_sent_at: new Date().toISOString() })
-                    .eq('id', accessRow.id)
-                  console.log(`Welcome email sent for ${redactEmail(normalizedEmail)}`)
-                } else {
-                  console.log(`Welcome email skipped (suppressed) for ${redactEmail(normalizedEmail)}`)
-                }
-              } catch (sendErr) {
-                const { error: logError } = await supabase.from('email_send_log').insert({
-                  message_id: null,
-                  template_name: 'aulas-welcome',
-                  recipient_email: normalizedEmail,
-                  status: 'failed',
-                  error_message: sendErr instanceof Error ? sendErr.message : String(sendErr),
-                })
-                if (logError) console.error('email_send_log insert failed', logError)
-                console.error('aulas welcome email send failed', sendErr)
-              }
-            }
-          } catch (emailErr) {
-            console.error('welcome email error', emailErr)
-          }
-        }
-      }
-    } catch (e) {
-      console.error('aulas_product_access upsert error', e)
-    }
 
     return new Response(JSON.stringify({ success: true, email: normalizedEmail, plan: planType }), {
       status: 200,
