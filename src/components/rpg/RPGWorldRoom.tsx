@@ -35,6 +35,23 @@ const groundPara = (aspecto: number) => {
 const bandTopPara = (fracaoChao: number) => fracaoChao + 0.05;
 let BAND_TOP = 0.54;
 
+/**
+ * O MUNDO É MAIOR QUE A TELA.
+ *
+ * Antes o mapa inteiro cabia no quadro: dava três passos e acabava o mundo —
+ * não havia para onde ir, e a sala parecia um palco, não um lugar. Agora o
+ * mundo tem 2,6 janelas de largura e a CÂMERA SEGUE o personagem, como num
+ * jogo de celular. Quem fica fora do quadro não se perde: vira uma seta na
+ * borda com o nome, para a sala continuar sendo uma sala.
+ */
+const MUNDO_LARGURA = 2.6;
+/** Suavidade da câmera. 1 = cola no personagem (sem inércia). */
+const CAM_LERP = 0.11;
+/** Margem em unidades lógicas antes de parar de desenhar o que saiu do quadro. */
+const CULL = 140;
+/** Velocidade do fundo em relação ao chão (0 = parado, 1 = junto). */
+const PARALAXE = 0.35;
+
 interface Props {
   roomId: string;         // id do canal (ex.: book:genesis | global)
   region: RPGRegion;      // cenário base (região do livro / fixo da global)
@@ -76,7 +93,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const namesRef = useRef<HTMLCanvasElement>(null);
   const hitBoxesRef = useRef<HitBox[]>([]); // caixas clicáveis dos outros (menu de moderação)
 
-  const { playersRef, bubblesRef, sendPos, sendChat, sendModeration, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me, onKicked);
+  const { playersRef, bubblesRef, typingRef, sendPos, sendChat, sendTyping, sendModeration, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me, onKicked);
+
+  // Estado da câmera, exposto ao resto do componente: o clique precisa saber
+  // que pedaço do mundo está em quadro para converter pixel → posição.
+  const camRef = useRef({ camX: 0, VW: 1, W: 1, cssW: 1 });
 
   // menu de ação sobre um jogador (denunciar / admin bloquear)
   const [menu, setMenu] = useState<{ userId: string; name: string; isAdmin: boolean } | null>(null);
@@ -169,9 +190,15 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const pointTo = (clientX: number, clientY: number) => {
     const cv = canvasRef.current; if (!cv) return;
     const pt = localPt(clientX, clientY);
-    const px = pt.x / pt.w;
+    // o dedo toca a JANELA; o destino é no MUNDO — soma o quanto a câmera já
+    // rolou, senão andar depois de caminhar um pouco leva para o lugar errado.
+    const { camX, VW, W } = camRef.current;
+    const fxMundo = camX + (pt.x / pt.w) * VW;
     const py = pt.y / pt.h;
-    targetRef.current = { x: clamp01((px - 0.06) / 0.88), y: clamp01((py - BAND_TOP) / (BAND_BOT - BAND_TOP)) };
+    targetRef.current = {
+      x: clamp01((fxMundo / W - 0.06) / 0.88),
+      y: clamp01((py - BAND_TOP) / (BAND_BOT - BAND_TOP)),
+    };
   };
 
   // Toque: se acertou um personagem → menu de moderação; senão → anda até lá.
@@ -232,7 +259,9 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const g = cv.getContext("2d"); if (!g) return;
     const ng = names.getContext("2d"); if (!ng) return;
 
-    let W = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1, k = 1;
+    let W = 0, VW = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1, k = 1;
+    let camX = 0;                       // canto esquerdo da janela, no mundo
+    let decorAtual: RoomProp[] = [];    // cenografia já replicada p/ a largura do mundo
     const mood = moodFor(variantKey);
     const isHeaven = variantKey === "global";
     // cenografia do LIVRO: objetos bíblicos próprios desta sala
@@ -251,14 +280,34 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       const aspect = Math.min(3.6, Math.max(0.4, rw / rh));
       const fracaoChao = groundPara(aspect);
       BAND_TOP = bandTopPara(fracaoChao);
-      // unidades lógicas fixas + SUPERSAMPLE por DPR = cena vetorial nítida
-      H = 300; W = Math.round(H * aspect); GROUND = Math.round(H * fracaoChao);
+      // unidades lógicas fixas + SUPERSAMPLE por DPR = cena vetorial nítida.
+      // VW = o que CABE na tela; W = o mundo inteiro, que é bem maior.
+      H = 300; VW = Math.round(H * aspect); W = Math.round(VW * MUNDO_LARGURA);
+      GROUND = Math.round(H * fracaoChao);
       dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
       cssW = rw; cssH = rh;
       k = Math.min(3, (cssH * dpr) / H || 1);
-      cv.width = Math.round(W * k); cv.height = Math.round(H * k);
-      g.setTransform(k, 0, 0, k, 0, 0);
+      cv.width = Math.round(VW * k); cv.height = Math.round(H * k);
       g.imageSmoothingEnabled = true;
+      // A cenografia do livro é posicionada por FRAÇÃO da largura: num mundo
+      // 2,6x mais largo os mesmos props ficariam 2,6x mais espalhados e o
+      // cenário viraria um descampado. Repete-se o conjunto em fatias, com
+      // jitter para não se ler como repetição.
+      const copias = Math.max(1, Math.round((W / VW) * 1.7));
+      decorAtual = [];
+      for (let c = 0; c < copias; c++) {
+        for (const pr of decor) {
+          const h = hashStr(`${pr.kind}|${c}|${pr.fx}`);
+          const jx = ((h % 1000) / 1000 - 0.5) * 0.06;
+          const jd = (((h >> 10) % 1000) / 1000 - 0.5) * 0.10;
+          decorAtual.push({
+            ...pr,
+            fx: (c + Math.min(0.97, Math.max(0.03, pr.fx + jx))) / copias,
+            d: Math.max(0.01, pr.d + jd),
+            scale: (pr.scale ?? 1) * (0.9 + ((h >> 20) % 100) / 500),
+          });
+        }
+      }
       // camada de NOMES em alta resolução (DPR) → texto sempre nítido
       names.width = Math.round(cssW * dpr); names.height = Math.round(cssH * dpr);
       names.style.width = cssW + "px"; names.style.height = cssH + "px";
@@ -277,7 +326,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       // ---- move jogador local ----
       const pos = posRef.current;
       let moving = false;
-      const SPx = 0.34, SPy = 0.26;
+      // A velocidade é em unidades do MUNDO; como o mundo ficou 2,6x mais
+      // largo, manter 0,34 faria o personagem atravessar a tela em pouco mais
+      // de um segundo. Dividido pela largura do mundo, o passo na tela
+      // continua o mesmo de antes.
+      const SPx = 0.34 / MUNDO_LARGURA, SPy = 0.26;
       const keys = keysRef.current;
       const kx = (keys["arrowright"] || keys["d"] ? 1 : 0) - (keys["arrowleft"] || keys["a"] ? 1 : 0);
       const ky = (keys["arrowdown"] || keys["s"] ? 1 : 0) - (keys["arrowup"] || keys["w"] ? 1 : 0);
@@ -304,15 +357,38 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       sendPos(pos.x, pos.y, dirRef.current, moving);
       stepRemotes();
 
+      // ---- CÂMERA: persegue o personagem e para nas bordas do mundo ----
+      // Sem o clamp a câmera passaria do fim do mapa e mostraria vazio; com
+      // ele, andar para a ponta simplesmente encosta e a pessoa continua
+      // visível deslocada do centro, como em qualquer jogo de plataforma.
+      const alvoCam = Math.max(0, Math.min(W - VW, feetXAt(pos.x, W) - VW / 2));
+      camX += (alvoCam - camX) * (reduce ? 1 : CAM_LERP);
+      if (Math.abs(alvoCam - camX) < 0.5) camX = alvoCam;
+      camRef.current = { camX, VW, W, cssW };
+
       // ---- cena (paisagem vetorial HD; sala global = o Céu) ----
-      g.clearRect(0, 0, W, H);
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      g.clearRect(0, 0, cv.width, cv.height);
+      // PARALAXE: a paisagem de fundo (céu, lua, serra) corre a 35% da
+      // velocidade do chão. Sem isto a lua desliza no mesmo passo das árvores
+      // e o mundo parece um pano de fundo puxado por uma corda.
+      g.setTransform(k, 0, 0, k, -camX * PARALAXE * k, 0);
+      g.save();
+      // recorta na janela: o mundo é 2,6x mais largo e rasterizar o que está
+      // fora do quadro seria pagar três telas por quadro.
+      g.beginPath(); g.rect(camX * PARALAXE, 0, VW, H); g.clip();
       drawScenicHD(g, isHeaven ? "heaven" : region, { W, H, GROUND }, t, reduce);
       if (!isHeaven) {
         // grade de cor por livro (identidade da sala)
         const grad = g.createLinearGradient(0, 0, 0, H);
         grad.addColorStop(0, mood.top); grad.addColorStop(1, mood.bot);
-        g.save(); g.globalAlpha = mood.a * 0.7; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
+        g.save(); g.globalAlpha = mood.a * 0.7; g.fillStyle = grad; g.fillRect(camX * PARALAXE, 0, VW, H); g.restore();
       }
+      // fim da camada de fundo; daqui em diante é o CHÃO, que anda 1:1
+      g.restore();
+      g.setTransform(k, 0, 0, k, -camX * k, 0);
+      g.save();
+      g.beginPath(); g.rect(camX, 0, VW, H); g.clip();
 
       // ---- avatares + CENOGRAFIA no MESMO z-sort (profundidade real:
       //      a pessoa anda na frente E atrás dos objetos do livro) ----
@@ -321,11 +397,15 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       const meNow = meRef.current;
       if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin, level: (meNow as { level?: number }).level ?? 0 });
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
-        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin, level: p.level ?? 0 });
+        // Parado, o boneco virava estátua: uma sala com cinco estátuas parece
+        // uma sala vazia. Quem não anda olha de um lado para o outro a cada
+        // ~8s, com a fase presa ao id — todo mundo junto seria pior que nada.
+        const dir = p.moving ? p.dir : (Math.sin((t + (hashStr(p.userId) % 16000)) / 2600) > 0 ? 1 : -1) as 1 | -1;
+        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir, moving: p.moving, me: false, isAdmin: p.isAdmin, level: p.level ?? 0 });
       }
 
       type Item = { fy: number; player?: Draw; prop?: RoomProp };
-      const items: Item[] = decor.map((p) => ({ fy: roomPropFy(p, { H, GROUND }), prop: p }));
+      const items: Item[] = decorAtual.map((p) => ({ fy: roomPropFy(p, { H, GROUND }), prop: p }));
       for (const d of list) items.push({ fy: feetYAt(d.ny, H), player: d });
       items.sort((a, b) => a.fy - b.fy);
 
@@ -335,10 +415,23 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
 
       const boxes: HitBox[] = [];
       const tagsDoQuadro: TagRect[] = []; // plaquinhas já colocadas neste quadro
+      // Quem a câmera deixou para trás. A margem de 6% evita o pisca-pisca de
+      // quem está exatamente na borda entrando e saindo da lista.
+      const foraDoQuadro = list.filter((d) => {
+        if (d.me) return false;
+        const fx = feetXAt(d.nx, W);
+        return fx < camX + VW * 0.06 || fx > camX + VW * 0.94;
+      });
       for (const it of items) {
-        if (it.prop) { drawRoomProp(g, it.prop, { W, H, GROUND }, t, reduce); continue; }
+        if (it.prop) {
+          const pfx = it.prop.fx * W;
+          if (pfx < camX - CULL || pfx > camX + VW + CULL) continue;
+          drawRoomProp(g, it.prop, { W, H, GROUND }, t, reduce);
+          continue;
+        }
         const d = it.player!;
         const fx = feetXAt(d.nx, W), fy = feetYAt(d.ny, H);
+        if (fx < camX - CULL || fx > camX + VW + CULL) continue;
         // altura-alvo do boneco na cena (frente maior que fundo) → profundidade.
         // Padrão MENOR (pensando em salas cheias): montaria/mascote escalam junto.
         const lift = heroMountLift(d.look.mount);
@@ -347,7 +440,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // Deitado os dois davam no mesmo (a altura era o lado menor); em pé a
         // altura dobrou e a largura não, então a mesma fração transformava
         // cada personagem num gigante ocupando um terço da tela.
-        const targetH = Math.min(W, H) * (0.128 + d.ny * 0.178);
+        const targetH = Math.min(VW, H) * (0.128 + d.ny * 0.178);
         const k2 = targetH / HERO_VIS;
         // herói HD desenhado DIRETO na cena, escalado pela profundidade
         g.save();
@@ -363,20 +456,38 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // (trás→frente), então o clique prefere o da frente.
         if (!d.me) boxes.push({
           userId: d.userId, name: d.name, isAdmin: d.isAdmin,
-          left: (dx / W) * cssW, top: (dy / H) * cssH, width: (dw / W) * cssW, height: (dh / H) * cssH,
+          left: ((dx - camX) / VW) * cssW, top: (dy / H) * cssH, width: (dw / VW) * cssW, height: (dh / H) * cssH,
         });
 
         // nome (padrão do app) ancorado no TOPO DA CABEÇA do herói HD — com
         // montaria a cabeça sobe (lift), a tag acompanha colada.
-        const sx = (fx / W) * cssW;
+        const sx = ((fx - camX) / VW) * cssW;
+        // Fora da janela quem responde é a seta da borda. Sem isto a plaquinha
+        // e o balão de quem saiu de quadro grudavam na lateral da tela (o
+        // balão tem clamp para não vazar), e "Bom dia, gente!" ficava pendurado
+        // na borda com ninguém embaixo.
+        if (sx < -12 || sx > cssW + 12) continue;
         const headTopCss = ((fy - (HERO_VIS + 12 + lift) * k2) / H) * cssH; // +12 = acessório de cabeça
         const refPx = Math.min(cssW, cssH); // mesma régua das figuras
         const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, refPx, d.ny, d.level, tagsDoQuadro);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
         if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, refPx, d.ny, bub.isAdmin);
+        else if ((typingRef.current.get(d.userId) ?? 0) > now) drawTyping(ng, sx, nameTop - 4, refPx, d.ny, t);
       }
       hitBoxesRef.current = boxes;
+      g.restore(); // solta o recorte da janela
+
+      // ---- quem ficou fora do quadro vira uma seta na borda -------------
+      // A câmera que segue é o que dá sensação de mundo, mas uma SALA em que
+      // você não sabe quem está nela deixou de ser sala. As setas devolvem
+      // isso: nome, nível e para que lado a pessoa está.
+      let naEsquerda = 0, naDireita = 0;
+      for (const d of foraDoQuadro) {
+        const paraDireita = feetXAt(d.nx, W) > camX + VW / 2;
+        const fila = paraDireita ? naDireita++ : naEsquerda++;
+        drawSetaBorda(ng, d.name, paraDireita, cssW, cssH, fila, d.isAdmin);
+      }
 
       raf = requestAnimationFrame(frame);
     };
@@ -402,6 +513,18 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
         <canvas ref={namesRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+        {/* Âncora do joystick: o controle é flutuante (nasce onde o dedo
+            encosta), mas sem nenhuma marca ninguém descobre que ele existe.
+            Este círculo fraco no canto é só o lembrete — some enquanto se
+            joga. */}
+        {!joy && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-4 left-4 h-14 w-14 rounded-full border-2 border-white/15"
+          >
+            <span className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15" />
+          </span>
+        )}
         {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
       </div>
 
@@ -409,6 +532,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       <RPGRoomChat
         messages={messages}
         onSend={sendChat}
+        onTyping={sendTyping}
         alturaSala={alturaSala}
         snap={snap}
         onSnap={setSnap}
@@ -575,6 +699,101 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
 
 // Balão de fala (chat) desenhado na camada de alta resolução, acima do nome.
 // Quebra o texto em até 3 linhas; centralizado no personagem, com "rabinho".
+/**
+ * "…" pulsante sobre a cabeça de quem está escrevendo.
+ *
+ * Numa sala em que a fala dura seis segundos e some, o silêncio entre duas
+ * frases é ambíguo: a pessoa está respondendo ou já foi embora? O balão de
+ * reticências responde isso sem ocupar o feed.
+ */
+function drawTyping(g: CanvasRenderingContext2D, cx: number, bottomY: number, refPx: number, ny: number, t: number) {
+  const fs = Math.max(10, Math.min(14, Math.round(refPx * 0.026 * (0.92 + ny * 0.14))));
+  const r = Math.round(fs * 0.22);
+  const gap = Math.round(fs * 0.62);
+  const w = gap * 2 + r * 2 + Math.round(fs * 1.1);
+  const h = Math.round(fs * 1.5);
+  const tail = Math.round(fs * 0.42);
+  const x = Math.round(cx - w / 2);
+  const y = Math.round(bottomY - tail - h);
+  const rr = Math.round(h / 2);
+  g.beginPath();
+  g.moveTo(x + rr, y);
+  g.arcTo(x + w, y, x + w, y + h, rr);
+  g.arcTo(x + w, y + h, x, y + h, rr);
+  g.arcTo(x, y + h, x, y, rr);
+  g.arcTo(x, y, x + w, y, rr);
+  g.closePath();
+  g.moveTo(cx - tail, y + h);
+  g.lineTo(cx, y + h + tail);
+  g.lineTo(cx + tail, y + h);
+  g.closePath();
+  g.fillStyle = "rgba(250,250,252,0.92)";
+  g.shadowColor = "rgba(0,0,0,0.35)"; g.shadowBlur = 5; g.shadowOffsetY = 1;
+  g.fill();
+  g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+  // três pontos subindo em onda — é o gesto que todo mensageiro já ensinou
+  for (let i = 0; i < 3; i++) {
+    const sobe = Math.sin(t / 220 + i * 0.7) * (fs * 0.13);
+    g.beginPath();
+    g.arc(x + w / 2 + (i - 1) * gap, y + h / 2 - sobe, r, 0, Math.PI * 2);
+    g.fillStyle = `rgba(30,32,44,${0.45 + 0.35 * (0.5 + 0.5 * Math.sin(t / 220 + i * 0.7))})`;
+    g.fill();
+  }
+}
+
+/**
+ * Seta na borda com o nome de quem a câmera deixou fora do quadro.
+ *
+ * É o preço de ter um mundo maior que a tela — e a resposta a ele: a sala
+ * continua legível como sala, porque você vê quem está nela e para que lado
+ * andar para encontrar a pessoa.
+ */
+function drawSetaBorda(
+  g: CanvasRenderingContext2D, name: string, paraDireita: boolean,
+  cssW: number, cssH: number, fila: number, isAdmin: boolean,
+) {
+  const fs = Math.max(9, Math.min(12, Math.round(Math.min(cssW, cssH) * 0.024)));
+  const nome = (name || "Viajante").split(" ")[0].slice(0, 10);
+  g.font = `800 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+  g.textBaseline = "middle";
+  const seta = Math.round(fs * 0.62);
+  const padX = Math.round(fs * 0.6);
+  const w = Math.ceil(g.measureText(nome).width) + padX * 2 + seta + 4;
+  const h = Math.round(fs * 1.9);
+  // empilha na vertical quando há mais de uma pessoa do mesmo lado
+  const y = Math.round(cssH * 0.34 + fila * (h + 5));
+  if (y + h > cssH - 6) return; // sem espaço: não polui a borda
+  const x = paraDireita ? Math.round(cssW - w - 4) : 4;
+  const r = Math.round(h / 2);
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+  g.fillStyle = "rgba(10,9,16,0.72)";
+  g.fill();
+  g.lineWidth = 1.5;
+  g.strokeStyle = isAdmin ? ADMIN_COLOR : "rgba(232,176,75,0.55)";
+  g.stroke();
+  const cy = y + h / 2;
+  // ponta apontando para fora — é para lá que a pessoa está
+  const sx = paraDireita ? x + w - padX - seta * 0.2 : x + padX + seta * 0.2;
+  const sg = paraDireita ? 1 : -1;
+  g.beginPath();
+  g.moveTo(sx + sg * seta * 0.5, cy);
+  g.lineTo(sx - sg * seta * 0.35, cy - seta * 0.52);
+  g.lineTo(sx - sg * seta * 0.35, cy + seta * 0.52);
+  g.closePath();
+  g.fillStyle = isAdmin ? ADMIN_COLOR : "#e8b04b";
+  g.fill();
+  g.fillStyle = "rgba(255,255,255,0.92)";
+  g.textAlign = paraDireita ? "left" : "right";
+  g.fillText(nome, paraDireita ? x + padX : x + w - padX, cy + 0.5);
+  g.textAlign = "left";
+}
+
 function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, refPx: number, ny: number, isAdmin = false) {
   const fs = Math.max(11, Math.min(15, Math.round(refPx * 0.028 * (0.92 + ny * 0.14))));
   g.font = `500 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;

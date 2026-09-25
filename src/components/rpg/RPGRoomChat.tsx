@@ -30,6 +30,8 @@ const GAVETA_FIXA = 88;
 interface Props {
   messages: ChatMessage[];
   onSend: (texto: string) => void;
+  /** avisa a sala que estou escrevendo (balão de "…" sobre a minha cabeça) */
+  onTyping?: (on: boolean) => void;
   /** altura útil da sala (px) — base das frações */
   alturaSala: number;
   snap: SnapChat;
@@ -48,7 +50,7 @@ const hora = (ts: number) =>
  * pela alça ou toca nela para alternar — é o gesto que todo app de mensagem já
  * ensinou, e é o que devolve espaço ao mundo quando a conversa não é o assunto.
  */
-export function RPGRoomChat({ messages, onSend, alturaSala, snap, onSnap }: Props) {
+export function RPGRoomChat({ messages, onSend, onTyping, alturaSala, snap, onSnap }: Props) {
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
@@ -134,11 +136,23 @@ export function RPGRoomChat({ messages, onSend, alturaSala, snap, onSnap }: Prop
   // abrir a gaveta já mostra o fim da conversa
   useEffect(() => { if (snap !== "espiada") irAoFim(false); }, [snap, irAoFim]);
 
+  // "Está digitando": anuncia ao escrever e cancela depois de ~2,2s parado.
+  // O timer é reiniciado a cada tecla, então quem escreve devagar não pisca.
+  const paradaRef = useRef<number | null>(null);
+  const marcarDigitando = useCallback(() => {
+    onTyping?.(true);
+    if (paradaRef.current) window.clearTimeout(paradaRef.current);
+    paradaRef.current = window.setTimeout(() => onTyping?.(false), 2200);
+  }, [onTyping]);
+  useEffect(() => () => { if (paradaRef.current) window.clearTimeout(paradaRef.current); }, []);
+
   const enviar = () => {
     const t = draft.trim();
     if (!t) return;
     onSend(t);
     setDraft("");
+    if (paradaRef.current) window.clearTimeout(paradaRef.current);
+    onTyping?.(false);
     irAoFim();
     inputRef.current?.focus();
   };
@@ -269,7 +283,8 @@ export function RPGRoomChat({ messages, onSend, alturaSala, snap, onSnap }: Prop
         <input
           ref={inputRef}
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={(e) => { setDraft(e.target.value); if (e.target.value.trim()) marcarDigitando(); }}
+          onBlur={() => { if (paradaRef.current) window.clearTimeout(paradaRef.current); onTyping?.(false); }}
           onFocus={() => { if (snap === "espiada") onSnap("meio"); }}
           maxLength={160}
           enterKeyHint="send"
