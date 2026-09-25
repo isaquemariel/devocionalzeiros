@@ -35,7 +35,7 @@ export interface ChatMessage {
   level?: number;   // nível/patente do autor (emblema no feed)
 }
 
-// Balão de fala ativo de cada jogador (some sozinho depois de BUBBLE_MS)
+// Balão de fala ativo de cada jogador (some sozinho no fim do tempo de leitura)
 export interface Bubble { text: string; until: number; isAdmin: boolean } // until = performance.now()
 
 export interface RemotePlayer {
@@ -81,7 +81,12 @@ const LOOK_EVERY_MS = 1000;     // inclui o look em pacotes de movimento no máx
 const GHOST_MS = 8000;          // some quem não dá sinal há ~8s (só online na sala)
 const JOIN_GRACE_MS = 2500;     // não anuncia "entrou" p/ quem já estava (1ª descoberta)
 const BLOCK_CHECK_MS = 25000;   // auto-checagem de bloqueio (garante expulsão até 25s)
-const BUBBLE_MS = 6000;         // balão de fala fica ~6s sobre a cabeça
+/** Quanto o balão fica sobre a cabeça. A conversa da sala acontece NOS
+ *  BALÕES — o painel de chat é só o histórico —, então o tempo é de LEITURA,
+ *  não fixo: seis segundos bastavam para "oi" e cortavam uma frase inteira ao
+ *  meio. Uma nova fala da mesma pessoa substitui a anterior na hora. */
+const bubbleMs = (texto: string) =>
+  Math.max(5200, Math.min(14000, 3200 + texto.length * 72));
 const TYPING_MS = 4000;         // "…" sobre a cabeça expira sozinho (pacote perdido não trava o balão)
 const TYPING_SEND_MS = 1800;    // re-anuncia enquanto se digita, no máx a cada 1,8s
 const CHAT_MAX = 160;           // limite de caracteres por mensagem
@@ -205,7 +210,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       if (!text.trim()) return;
       const isAdmin = !!c.isAdmin;
       const level = typeof c.level === "number" ? c.level : (playersRef.current.get(c.userId)?.level ?? 0);
-      bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
+      bubblesRef.current.set(c.userId, { text, until: performance.now() + bubbleMs(text), isAdmin });
       seqRef.current += 1;
       const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false, isAdmin, level };
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
@@ -324,7 +329,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     // balão da frase já no ar.
     typingSentRef.current = 0;
     ch.send({ type: "broadcast", event: "typing", payload: { userId: meNow.userId, on: false } });
-    bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
+    bubblesRef.current.set(meNow.userId, { text, until: performance.now() + bubbleMs(text), isAdmin });
     seqRef.current += 1;
     const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true, isAdmin, level };
     setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
