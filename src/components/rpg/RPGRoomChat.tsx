@@ -35,6 +35,22 @@ const hora = (ts: number) =>
 export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
   const [draft, setDraft] = useState("");
   const [painel, setPainel] = useState(false);
+  // `entrou` liga um quadro DEPOIS de montar: é o que dá o salto do botão
+  // para o centro. Ao fechar, desliga primeiro e desmonta no fim da volta —
+  // senão o cartão sumiria seco, sem devolver o gesto.
+  const [entrou, setEntrou] = useState(false);
+  const saidaRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!painel) return;
+    const r = requestAnimationFrame(() => setEntrou(true));
+    return () => cancelAnimationFrame(r);
+  }, [painel]);
+  const fechar = useCallback(() => {
+    setEntrou(false);
+    if (saidaRef.current) window.clearTimeout(saidaRef.current);
+    saidaRef.current = window.setTimeout(() => setPainel(false), 200);
+  }, []);
+  useEffect(() => () => { if (saidaRef.current) window.clearTimeout(saidaRef.current); }, []);
   const inputRef = useRef<HTMLInputElement>(null);
   const painelInputRef = useRef<HTMLInputElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
@@ -118,10 +134,14 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
           // área segura do aparelho, senão o desconto entraria duas vezes.
           paddingBottom: teclado ? 8 : "max(0.625rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))",
           background: "linear-gradient(to top, rgba(7,6,12,0.82), rgba(7,6,12,0))",
+          // com o cartão aberto a barra atrás vira ruído: o cartão já tem o
+          // seu próprio campo de escrever.
+          opacity: painel ? 0 : 1,
+          transition: "opacity 160ms ease",
         }}
         onPointerDown={(e) => e.stopPropagation()}
       >
-        <div className="pointer-events-auto flex min-w-0 flex-1 items-center gap-2">
+        <div className={`flex min-w-0 flex-1 items-center gap-2 ${painel ? "pointer-events-none" : "pointer-events-auto"}`}>
           <button
             type="button"
             onClick={() => setPainel(true)}
@@ -139,29 +159,46 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
         </div>
       </div>
 
-      {/* ---- PAINEL LATERAL: o histórico, sob demanda -------------------- */}
+      {/* ---- O CARTÃO DA CONVERSA ---------------------------------------
+          Ele SAI DO BOTÃO: a origem da transformação é o canto de baixo à
+          esquerda, onde o botão está, e o cartão cresce de lá para o centro.
+          Fica translúcido de propósito — a cena e os balões continuam legíveis
+          atrás —, mas num tom que ainda deixa ler o texto por cima. */}
       {painel && (
         <div
-          className="absolute inset-0 z-30 flex justify-end bg-black/45"
-          onPointerDown={(e) => { e.stopPropagation(); if (e.target === e.currentTarget) setPainel(false); }}
+          className="absolute inset-0 z-30 flex items-center justify-center px-4"
+          style={{
+            background: entrou ? "rgba(0,0,0,0.34)" : "rgba(0,0,0,0)",
+            transition: "background 200ms ease",
+          }}
+          onPointerDown={(e) => { e.stopPropagation(); if (e.target === e.currentTarget) fechar(); }}
         >
-          <aside
-            className="flex h-full w-[min(88%,420px)] flex-col border-l border-[#e8b04b33]"
-            /* opacidade e sombra por estilo: as classes de valor arbitrário
-               saíram translúcidas no build e a conversa ficava ilegível por
-               cima do mundo. */
-            style={{ background: "rgba(11,10,18,0.97)", boxShadow: "-14px 0 34px rgba(0,0,0,0.6)" }}
+          <div
+            className="flex w-[min(92%,440px)] flex-col overflow-hidden rounded-3xl border border-[#e8b04b44]"
+            style={{
+              maxHeight: "min(62%, 440px)",
+              /* 0,80 deixa a cena aparecer; o desfoque é o que salva a leitura
+                 quando um balão branco passa por trás do texto. */
+              background: "rgba(10,9,16,0.80)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              boxShadow: "0 26px 64px rgba(0,0,0,0.6)",
+              transformOrigin: "left bottom",
+              transform: entrou ? "scale(1) translate(0,0)" : "scale(0.28) translate(-14%, 52%)",
+              opacity: entrou ? 1 : 0,
+              transition: "transform 280ms cubic-bezier(.2,.9,.3,1.25), opacity 180ms ease",
+            }}
           >
-            <header className="flex shrink-0 items-center justify-between border-b border-white/10 px-3 py-2.5">
-              <h2 className="text-[13px] font-black uppercase tracking-wide text-white/60">Conversa da sala</h2>
-              <button onClick={() => setPainel(false)} className="rounded-lg p-1.5 transition hover:bg-white/10" aria-label="Fechar a conversa">
+            <header className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-2.5">
+              <h2 className="text-[13px] font-black uppercase tracking-wide text-white/65">Conversa da sala</h2>
+              <button onClick={fechar} className="rounded-lg p-1.5 transition hover:bg-white/10" aria-label="Fechar a conversa">
                 <X className="h-4 w-4 text-white/60" />
               </button>
             </header>
 
             <div ref={feedRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3">
               {messages.length === 0 ? (
-                <p className="py-8 text-center text-[13px] text-white/40">
+                <p className="py-8 text-center text-[13px] text-white/45">
                   Ninguém falou ainda. Diga um oi 👋
                 </p>
               ) : (
@@ -173,7 +210,7 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
 
                     if (m.system) {
                       return (
-                        <p key={m.id} className="py-0.5 text-center text-[11px] italic text-white/40">
+                        <p key={m.id} className="py-0.5 text-center text-[11px] italic text-white/45">
                           {m.text}
                         </p>
                       );
@@ -187,7 +224,7 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
                         {!emenda && (
                           <span
                             className="mt-[2px] inline-flex h-[22px] w-[34px] shrink-0 items-center justify-center gap-0.5 rounded-md border text-[10px] font-black leading-none"
-                            style={{ color: tier.color, borderColor: `${tier.color}66`, background: `${tier.color}14` }}
+                            style={{ color: tier.color, borderColor: `${tier.color}66`, background: `${tier.color}1f` }}
                             title={`Nível ${m.level ?? 0} — ${tier.title}`}
                           >
                             <span aria-hidden="true">{tier.emoji}</span>
@@ -208,10 +245,14 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
                                   DEV
                                 </span>
                               )}
-                              <span className="ml-auto shrink-0 text-[10px] tabular-nums text-white/30">{hora(m.ts)}</span>
+                              <span className="ml-auto shrink-0 text-[10px] tabular-nums text-white/35">{hora(m.ts)}</span>
                             </div>
                           )}
-                          <p className="break-words text-[14px] leading-[1.45] text-white/90">{m.text}</p>
+                          {/* sombra no texto: é o que mantém a frase legível
+                              quando a cena clara passa por trás do cartão */}
+                          <p className="break-words text-[14px] leading-[1.45] text-white" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.85)" }}>
+                            {m.text}
+                          </p>
                         </div>
                       </div>
                     );
@@ -220,14 +261,11 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
               )}
             </div>
 
-            {/* dá para responder sem fechar o painel */}
-            <div
-              className="flex shrink-0 items-center gap-2 border-t border-white/10 px-3 pt-2"
-              style={{ paddingBottom: teclado ? 8 : "max(0.5rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
-            >
+            {/* dá para responder sem fechar o cartão */}
+            <div className="flex shrink-0 items-center gap-2 border-t border-white/10 px-3 py-2">
               {campo(painelInputRef, true)}
             </div>
-          </aside>
+          </div>
         </div>
       )}
     </>

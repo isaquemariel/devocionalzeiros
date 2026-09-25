@@ -2,18 +2,21 @@
 
 ## Fluxo de publicação (padrão — não precisa perguntar)
 
-Terminou uma mudança e ela passou nas validações? **Atualize e publique**, sem
+Terminou uma mudança e ela passou nas validações? **Suba para a `main`**, sem
 esperar novo aval:
 
 1. commit na branch de trabalho e `git push -u origin <branch>`;
-2. `git checkout main`, `git pull origin main`, merge da branch e push da `main`;
-3. deploy pelo Lovable (`deploy_project`, projeto `devocionalzeiros` —
-   `47f659eb-c9de-44fc-a5b8-a2b28fcc8773`) e confira que o
-   `latest_commit_sha` do projeto bate com o commit publicado.
+2. `git checkout main`, `git pull origin main`, merge da branch e push da `main`.
+
+**NÃO publique a cada mudança.** O deploy é em lote, quando o usuário pedir —
+séries longas de ajustes são testadas juntas antes de ir ao ar. Quando ele
+pedir: `deploy_project` (projeto `devocionalzeiros` —
+`47f659eb-c9de-44fc-a5b8-a2b28fcc8773`) e confira que o `latest_commit_sha` do
+projeto bate com o commit publicado.
 
 "Terminou" quer dizer: `validate-stage`, `checkup-stage` e `tsc` com **0 erro**,
 e — quando mexeu em ficha ou em carregamento — `vite build` + `smoke-lazy`. Se
-algo ficou vermelho, NÃO publique: conserte ou avise.
+algo ficou vermelho, NÃO suba: conserte ou avise.
 
 ## A VOZ DE DEUS na cena viva (regra fixa)
 
