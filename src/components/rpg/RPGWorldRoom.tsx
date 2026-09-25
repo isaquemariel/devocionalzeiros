@@ -10,7 +10,8 @@ import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWor
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
 import { getLevelTier } from "@/lib/rpgLevel";
-import { RPGRoomChat, type SnapChat } from "@/components/rpg/RPGRoomChat";
+import { RPGRoomChat } from "@/components/rpg/RPGRoomChat";
+import { useKeyboardInset } from "@/hooks/useKeyboardInset";
 
 // Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
 // do "eu" e do azul dos demais, pra deixar claro quem é da equipe.
@@ -134,20 +135,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   useEffect(() => { onCount?.(count); }, [count, onCount]);
   useEffect(() => { onConnected?.(connected); }, [connected, onConnected]);
 
-  // Altura da gaveta de conversa. Começa RECOLHIDA: quem entra quer primeiro
-  // ver a sala e as pessoas; a conversa sobe quando a pessoa pede.
-  const [snap, setSnap] = useState<SnapChat>("espiada");
-  // altura útil da sala (px) — a gaveta calcula as frações em cima dela
-  const [alturaSala, setAlturaSala] = useState(0);
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const medir = () => setAlturaSala(el.clientHeight);
-    medir();
-    const ro = new ResizeObserver(medir);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+  // O teclado não pode engolir a sala: ele encolhe o MUNDO por baixo (um
+  // espaçador no fim da coluna), e a cena reenquadra sozinha. Antes o campo
+  // abria uma gaveta e os personagens desapareciam atrás de uma parede preta —
+  // que é o contrário do que a sala serve.
+  const teclado = useKeyboardInset();
 
   const posRef = useRef({ x: 0.5, y: 0.5 });
   const targetRef = useRef<{ x: number; y: number } | null>(null);
@@ -472,7 +464,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, refPx, d.ny, d.level, tagsDoQuadro);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
-        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, refPx, d.ny, bub.isAdmin);
+        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, refPx, d.ny, bub.isAdmin, tagsDoQuadro);
         else if ((typingRef.current.get(d.userId) ?? 0) > now) drawTyping(ng, sx, nameTop - 4, refPx, d.ny, t);
       }
       hitBoxesRef.current = boxes;
@@ -502,9 +494,10 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           Em pé o mundo é a parte de cima: é ele que encolhe quando a gaveta de
           conversa sobe, e é só ele que a cena mede para desenhar. Os gestos de
           andar ficam aqui dentro — no chat, o dedo rola a conversa. */}
+      <div className="relative min-h-0 flex-1">
       <div
         ref={palcoRef}
-        className="relative min-h-0 flex-1"
+        className="absolute inset-0"
         style={{ touchAction: "none", cursor: "pointer" }}
         onPointerDown={onStagePointerDown}
         onPointerMove={onStagePointerMove}
@@ -520,7 +513,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         {!joy && (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-4 left-4 h-14 w-14 rounded-full border-2 border-white/15"
+            className="pointer-events-none absolute bottom-[86px] left-4 h-14 w-14 rounded-full border-2 border-white/15"
           >
             <span className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15" />
           </span>
@@ -528,15 +521,17 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
       </div>
 
-      {/* ---- A CONVERSA -------------------------------------------------- */}
-      <RPGRoomChat
-        messages={messages}
-        onSend={sendChat}
-        onTyping={sendTyping}
-        alturaSala={alturaSala}
-        snap={snap}
-        onSnap={setSnap}
-      />
+      {/* ---- A CONVERSA ---------------------------------------------------
+          Irmã do palco, não filha: o palco tem `touch-action: none` para o
+          joystick, e isso impediria a rolagem do histórico se o chat vivesse
+          dentro dele. A barra flutua sobre o mundo; o painel desliza da
+          direita quando a pessoa pede. */}
+      <RPGRoomChat messages={messages} onSend={sendChat} onTyping={sendTyping} />
+      </div>
+
+      {/* O teclado tira altura do MUNDO, e só. A cena reenquadra e continua
+          inteira acima dele — nada de parede preta. */}
+      {teclado > 0 && <div aria-hidden="true" style={{ height: teclado }} className="shrink-0" />}
 
 
       {/* ---- Menu de moderação (ao tocar num personagem) ---- */}
@@ -760,8 +755,11 @@ function drawSetaBorda(
   const padX = Math.round(fs * 0.6);
   const w = Math.ceil(g.measureText(nome).width) + padX * 2 + seta + 4;
   const h = Math.round(fs * 1.9);
-  // empilha na vertical quando há mais de uma pessoa do mesmo lado
-  const y = Math.round(cssH * 0.34 + fila * (h + 5));
+  // Alto, na faixa do céu: a 34% da altura as setas caíam em cima das
+  // plaquinhas de quem está em cena, e com o teclado aberto (mundo curto)
+  // sobrepunham os próprios personagens. Empilha para baixo quando há mais
+  // de uma pessoa do mesmo lado.
+  const y = Math.round(cssH * 0.15 + fila * (h + 5));
   if (y + h > cssH - 6) return; // sem espaço: não polui a borda
   const x = paraDireita ? Math.round(cssW - w - 4) : 4;
   const r = Math.round(h / 2);
@@ -794,13 +792,16 @@ function drawSetaBorda(
   g.textAlign = "left";
 }
 
-function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, refPx: number, ny: number, isAdmin = false) {
-  const fs = Math.max(11, Math.min(15, Math.round(refPx * 0.028 * (0.92 + ny * 0.14))));
+function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, refPx: number, ny: number, isAdmin = false, ocupados?: TagRect[]) {
+  // O balão É a conversa da sala, não um enfeite: fonte com piso maior e
+  // caixa mais larga, para uma mensagem de 160 caracteres caber inteira em
+  // vez de terminar em "…" no meio da frase.
+  const fs = Math.max(12, Math.min(16, Math.round(refPx * 0.030 * (0.92 + ny * 0.14))));
   g.font = `500 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
   g.textAlign = "left"; g.textBaseline = "alphabetic";
-  const maxW = Math.max(120, Math.min(cssW * 0.6, 260));
+  const maxW = Math.max(140, Math.min(cssW * 0.74, 320));
   const innerW = maxW - fs; // largura útil do texto
-  const MAX_LINES = 3;
+  const MAX_LINES = 4;
   // quebra por palavras (até MAX_LINES; sobra vira "…")
   const words = text.split(" ");
   const lines: string[] = [];
@@ -829,7 +830,18 @@ function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, botto
   const tail = Math.round(fs * 0.5);
   let x = Math.round(cx - w / 2);
   x = Math.max(4, Math.min(cssW - w - 4, x)); // não vaza da tela
-  const y = Math.round(bottomY - tail - h);
+  let y = Math.round(bottomY - tail - h);
+  // A conversa da sala acontece AQUI, nos balões: dois deles um por cima do
+  // outro não é um detalhe estético, é a fala de alguém que se perdeu. Sobe
+  // até achar lugar livre, como as plaquinhas.
+  if (ocupados) {
+    for (let tent = 0; tent < 4; tent++) {
+      const bate = ocupados.some((o) => x < o.x + o.w && x + w > o.x && y < o.y + o.h && y + h > o.y);
+      if (!bate) break;
+      y -= h + 4;
+    }
+    ocupados.push({ x, y, w, h });
+  }
   const r = Math.round(fs * 0.55);
   // corpo
   g.beginPath();
