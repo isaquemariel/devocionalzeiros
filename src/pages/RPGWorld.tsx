@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Users, Globe, MapPin, Wifi, WifiOff, Crown, Lock } from "lucide-react";
+import { ArrowLeft, Users, Globe, MapPin, Wifi, WifiOff, Crown, Lock, Check, ChevronsUpDown, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -10,21 +10,25 @@ import { MascotLoader } from "@/components/shared/FloatingMascot";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 import { fetchMyBlockStatus, SUPPORT_WHATSAPP, type BlockStatus } from "@/lib/roomModeration";
 import RPGWorldRoom from "@/components/rpg/RPGWorldRoom";
-import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 // Cenário fixo da Sala Global (céu estrelado — praça central/universal)
 const GLOBAL_REGION = "creation" as const;
 
 /**
- * Fase 0 (protótipo) das SALAS SOCIAIS. Rota fechada de teste (/mundo): quem
- * está logado entra, anda, e vê os outros (nome + traje/pet/montaria) em tempo
- * real. Sem chat ainda, sem gravar nada no banco — só Presence + Broadcast.
- * Cada livro tem seu cenário; a global é fixa.
+ * SALAS SOCIAIS — em RETRATO.
+ *
+ * Elas nasceram deitadas (a página inteira girava 90° por CSS, como a cena
+ * viva). Em pé o celular é a forma natural de conversar: o polegar alcança o
+ * teclado, o texto lê-se em coluna e o mundo fica acima da conversa em vez de
+ * brigar com ela. A rotação saiu; a sala é mundo em cima + gaveta de conversa
+ * embaixo, e é a gaveta que decide quanto cada um ocupa.
+ *
+ * Quem está logado entra, anda, conversa e vê os outros (nome + nível +
+ * traje/pet/montaria) em tempo real por Presence + Broadcast. Cada livro tem o
+ * seu cenário; a Sala Global é fixa (o Céu) e é do Premium.
  */
 const RPGWorld = () => {
   const navigate = useNavigate();
-  // salas em TELA CHEIA PAISAGEM no celular (mesmo mecanismo da cena viva)
-  const { cssRotate, rotateStyle } = useLandscapeStage(true);
   const { user, profile, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { planType, hasAccessTo, loading: planLoading } = useUserPlan(user?.email);
@@ -37,6 +41,14 @@ const RPGWorld = () => {
   const [, setCosmeticsReady] = useState(0);
   const [count, setCount] = useState(1);
   const [connected, setConnected] = useState(false);
+  // folha de troca de sala (substitui o <select> apertado do cabeçalho)
+  const [picker, setPicker] = useState(false);
+  // dica de controle: some sozinha depois do primeiro passeio
+  const [dica, setDica] = useState(true);
+  useEffect(() => {
+    const t = window.setTimeout(() => setDica(false), 7000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   // Bloqueio de moderação: quem está bloqueado não entra na sala (vê suporte).
   const [block, setBlock] = useState<BlockStatus | null>(null);
@@ -173,60 +185,48 @@ const RPGWorld = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white" style={cssRotate ? rotateStyle : undefined}>
-      {/* Top bar */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
-           style={{ paddingTop: "max(0.5rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}>
-        <button onClick={() => navigate("/rpg")} className="p-2 rounded-lg hover:bg-white/10" aria-label="Sair">
-          <ArrowLeft className="w-5 h-5 text-white/80" />
+    <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white">
+      {/* ---- Cabeçalho ---------------------------------------------------
+          Em pé sobra largura: o nome da sala respira, e trocar de sala deixa
+          de ser um <select> apertado para virar uma folha com os livros,
+          os cadeados e o "seu livro" bem visíveis. */}
+      <header
+        className="flex items-center gap-2 border-b border-[#241a10] bg-[#0b0a12]/95 px-2 py-2"
+        style={{ paddingTop: "max(0.5rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}
+      >
+        <button onClick={() => navigate("/rpg")} className="rounded-xl p-2 transition hover:bg-white/10" aria-label="Sair da sala">
+          <ArrowLeft className="h-5 w-5 text-white/80" />
         </button>
+
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            {sel.type === "global" ? <Globe className="w-3.5 h-3.5 text-[#8fd3ff]" /> : <MapPin className="w-3.5 h-3.5 text-[#e8b04b]" />}
-            <span className="text-[13px] font-black truncate">{roomLabel}</span>
+            {sel.type === "global"
+              ? <Globe className="h-4 w-4 shrink-0 text-[#8fd3ff]" />
+              : <MapPin className="h-4 w-4 shrink-0 text-[#e8b04b]" />}
+            <span className="truncate text-[15px] font-black">{roomLabel}</span>
           </div>
-          <div className="flex items-center gap-2 text-[10px] text-white/50">
+          <div className="mt-0.5 flex items-center gap-2.5 text-[11px] text-white/45">
             <span className="inline-flex items-center gap-1">
-              <Users className="w-3 h-3" /> {count} online
+              <Users className="h-3 w-3" /> {count} online
             </span>
             <span className="inline-flex items-center gap-1">
-              {connected ? <Wifi className="w-3 h-3 text-emerald-400" /> : <WifiOff className="w-3 h-3 text-amber-400" />}
-              {connected ? "conectado" : "conectando…"}
+              {connected
+                ? <><Wifi className="h-3 w-3 text-emerald-400" /> conectado</>
+                : <><WifiOff className="h-3 w-3 text-amber-400" /> conectando…</>}
             </span>
           </div>
         </div>
 
-        {/* Seletor de sala (teste): livro + Global */}
-        <select
-          value={sel.type === "global" ? "global" : String(sel.bookIndex)}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (v === "global") { if (canGlobal) setSel((s) => ({ ...s, type: "global" })); } // só Premium+
-            else setSel({ type: "book", bookIndex: parseInt(v, 10) });
-          }}
-          className="max-w-[44%] text-[12px] bg-[#141020] border border-[#e8b04b55] rounded-lg px-2 py-1.5 text-white outline-none"
-          aria-label="Escolher sala"
+        <button
+          onClick={() => setPicker(true)}
+          className="flex shrink-0 items-center gap-1.5 rounded-xl border border-[#e8b04b55] bg-[#141020] px-3 py-2 text-[12px] font-bold text-white/85 transition active:scale-95"
         >
-          <optgroup label="Livros">
-            {RPG_BIBLE_BOOKS.map((b, i) => {
-              const locked = !isAdmin && i > currentBookIndex; // desbloqueia conforme avança
-              return (
-                <option key={b.id} value={i} disabled={locked}>
-                  {locked ? "🔒 " : ""}{b.name}{i === currentBookIndex ? " • seu livro" : ""}
-                </option>
-              );
-            })}
-          </optgroup>
-          <optgroup label="Todos">
-            <option value="global" disabled={!canGlobal}>
-              {canGlobal ? "🌍 Sala Global" : "🔒 Sala Global (Premium)"}
-            </option>
-          </optgroup>
-        </select>
-      </div>
+          Trocar <ChevronsUpDown className="h-3.5 w-3.5 text-[#e8b04b]" />
+        </button>
+      </header>
 
-      {/* Sala */}
-      <div className="relative flex-1 min-h-0">
+      {/* ---- Sala --------------------------------------------------------- */}
+      <main className="relative min-h-0 flex-1">
         <RPGWorldRoom
           key={roomId}
           roomId={roomId}
@@ -236,20 +236,90 @@ const RPGWorld = () => {
           onCount={setCount}
           onConnected={setConnected}
           onKicked={handleKicked}
-          rotated={cssRotate}
         />
-        {/* Dica de controle + selo de protótipo (topo, p/ não cobrir o chat) */}
-        <div className="absolute top-2 left-2 right-2 pointer-events-none flex items-center justify-between gap-2">
-          <span className="text-[9px] font-black uppercase tracking-wide text-[#ffd889] bg-black/55 border border-[#e8b04b55] rounded px-1.5 py-0.5">
-            Protótipo · teste
-          </span>
-          <span className="text-[10px] text-white/70 bg-black/55 border border-white/15 rounded-full px-2.5 py-1">
-            Toque p/ andar · segure e arraste = joystick 🕹️ · WASD no PC
-          </span>
+
+        {/* Dica de controle: aparece na chegada e SAI sozinha. Instrução que
+            fica para sempre na tela vira sujeira — depois do primeiro passeio
+            ninguém mais lê. */}
+        {dica && (
+          <div className="pointer-events-none absolute left-2 right-2 top-2 flex items-start justify-between gap-2">
+            <span className="rounded bg-black/55 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-[#ffd889] ring-1 ring-[#e8b04b55]">
+              Protótipo
+            </span>
+            <span className="rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white/75 ring-1 ring-white/15">
+              Toque para andar · segure e arraste = joystick
+            </span>
+          </div>
+        )}
+      </main>
+
+      {/* ---- Folha de troca de sala --------------------------------------- */}
+      {picker && (
+        <div
+          className="fixed inset-0 z-50 flex items-end bg-black/65 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) setPicker(false); }}
+        >
+          <div
+            className="flex max-h-[78dvh] w-full flex-col rounded-t-3xl border-t border-[#e8b04b55] bg-[#0b0a12]"
+            style={{ paddingBottom: "max(0.75rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
+          >
+            <div className="flex items-center justify-between px-4 pb-2 pt-3">
+              <h2 className="text-[15px] font-black">Escolher sala</h2>
+              <button onClick={() => setPicker(false)} className="rounded-lg p-1.5 hover:bg-white/10" aria-label="Fechar">
+                <X className="h-4 w-4 text-white/60" />
+              </button>
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-2">
+              <p className="px-1 pb-1.5 pt-1 text-[11px] font-black uppercase tracking-wide text-white/35">Todos os viajantes</p>
+              <button
+                disabled={!canGlobal}
+                onClick={() => { setSel((s) => ({ ...s, type: "global" })); setPicker(false); }}
+                className="mb-3 flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-left transition active:scale-[0.99] disabled:opacity-45"
+              >
+                <Globe className="h-5 w-5 shrink-0 text-[#8fd3ff]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-black">Sala Global</span>
+                  <span className="block text-[11px] text-white/45">
+                    {canGlobal ? "A praça do Céu — todos os livros juntos" : "Exclusiva do plano Premium"}
+                  </span>
+                </span>
+                {!canGlobal ? <Lock className="h-4 w-4 shrink-0 text-white/35" />
+                  : sel.type === "global" ? <Check className="h-4 w-4 shrink-0 text-emerald-400" /> : null}
+              </button>
+
+              <p className="px-1 pb-1.5 text-[11px] font-black uppercase tracking-wide text-white/35">Livros</p>
+              <div className="space-y-1.5">
+                {RPG_BIBLE_BOOKS.map((b, i) => {
+                  const locked = !isAdmin && i > currentBookIndex;
+                  const atual = sel.type === "book" && sel.bookIndex === i;
+                  return (
+                    <button
+                      key={b.id}
+                      disabled={locked}
+                      onClick={() => { setSel({ type: "book", bookIndex: i }); setPicker(false); }}
+                      className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 text-left transition active:scale-[0.99] disabled:opacity-40"
+                    >
+                      <MapPin className="h-4 w-4 shrink-0 text-[#e8b04b]" />
+                      <span className="min-w-0 flex-1 truncate text-[14px] font-bold">{b.name}</span>
+                      {i === currentBookIndex && !locked && (
+                        <span className="shrink-0 rounded-full bg-[#e8b04b] px-2 py-[2px] text-[10px] font-black text-[#1a1206]">
+                          seu livro
+                        </span>
+                      )}
+                      {locked && <Lock className="h-4 w-4 shrink-0 text-white/35" />}
+                      {atual && <Check className="h-4 w-4 shrink-0 text-emerald-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
+
 
 export default RPGWorld;
