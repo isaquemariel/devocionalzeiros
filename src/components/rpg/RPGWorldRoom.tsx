@@ -5,6 +5,7 @@ import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
 import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { getRoomDecor, drawRoomProp, roomPropFy, type RoomProp } from "@/lib/rpgRoomDecor";
+import { drawRoomFloor, drawRoomForeground } from "@/lib/rpgRoomFloor";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
@@ -52,6 +53,8 @@ const CAM_LERP = 0.11;
 const CULL = 140;
 /** Velocidade do fundo em relação ao chão (0 = parado, 1 = junto). */
 const PARALAXE = 0.35;
+/** O primeiro plano corre MAIS que o chão — é o que faz sentir o passo. */
+const PARALAXE_FRENTE = 1.55;
 
 interface Props {
   roomId: string;         // id do canal (ex.: book:genesis | global)
@@ -381,6 +384,8 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       g.setTransform(k, 0, 0, k, -camX * k, 0);
       g.save();
       g.beginPath(); g.rect(camX, 0, VW, H); g.clip();
+      // o plano do chão vem ANTES de tudo que pisa nele
+      drawRoomFloor(g, { W, H, GROUND, camX, VW }, isHeaven);
 
       // ---- avatares + CENOGRAFIA no MESMO z-sort (profundidade real:
       //      a pessoa anda na frente E atrás dos objetos do livro) ----
@@ -469,6 +474,16 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       }
       hitBoxesRef.current = boxes;
       g.restore(); // solta o recorte da janela
+
+      // ---- PRIMEIRO PLANO: corre mais rápido que o chão ------------------
+      // Desenhado por último e com a sua própria parallaxe. É a pista de
+      // profundidade mais forte que existe: o mato perto passa voando
+      // enquanto a serra ao longe quase não se mexe.
+      g.save();
+      g.setTransform(k, 0, 0, k, -camX * PARALAXE_FRENTE * k, 0);
+      g.beginPath(); g.rect(camX * PARALAXE_FRENTE, 0, VW, H); g.clip();
+      drawRoomForeground(g, W, H, camX * PARALAXE_FRENTE, VW);
+      g.restore();
 
       // ---- quem ficou fora do quadro vira uma seta na borda -------------
       // A câmera que segue é o que dá sensação de mundo, mas uma SALA em que
