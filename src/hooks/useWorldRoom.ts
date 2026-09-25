@@ -82,6 +82,8 @@ const GHOST_MS = 8000;          // some quem não dá sinal há ~8s (só online 
 const JOIN_GRACE_MS = 2500;     // não anuncia "entrou" p/ quem já estava (1ª descoberta)
 const BLOCK_CHECK_MS = 25000;   // auto-checagem de bloqueio (garante expulsão até 25s)
 const BUBBLE_MS = 6000;         // balão de fala fica ~6s sobre a cabeça
+const TYPING_MS = 4000;         // "…" sobre a cabeça expira sozinho (pacote perdido não trava o balão)
+const TYPING_SEND_MS = 1800;    // re-anuncia enquanto se digita, no máx a cada 1,8s
 const CHAT_MAX = 160;           // limite de caracteres por mensagem
 const FEED_MAX = 40;            // guarda só as últimas N no feed (memória)
 const MESSAGE_TTL_MS = 5 * 60 * 1000; // conversa é do momento: some do feed em ~5min
@@ -98,6 +100,8 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
   const sidRef = useRef<string>("");
   const caRef = useRef<number>(0);
   const playersRef = useRef<Map<string, RemotePlayer>>(new Map());
+  /** userId → instante (performance.now) em que o "…" dele expira */
+  const typingRef = useRef<Map<string, number>>(new Map());
   const bubblesRef = useRef<Map<string, Bubble>>(new Map()); // balão por userId (inclui o meu)
   const [connected, setConnected] = useState(false);
   const [count, setCount] = useState(1); // total incluindo eu
@@ -207,6 +211,16 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
     });
 
+    // ---- Broadcast: "está digitando" (balão de reticências sobre a cabeça) ----
+    // Sem isto a sala fica muda entre uma fala e outra: você não sabe se
+    // alguém está respondendo ou se simplesmente foi embora.
+    channel.on("broadcast", { event: "typing" }, ({ payload }) => {
+      const tp = payload as { userId?: string; on?: boolean };
+      if (!tp?.userId || tp.userId === me.userId) return;
+      if (tp.on) typingRef.current.set(tp.userId, performance.now() + TYPING_MS);
+      else typingRef.current.delete(tp.userId);
+    });
+
     graceUntilRef.current = performance.now() + JOIN_GRACE_MS;
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED") {
@@ -306,10 +320,27 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     const isAdmin = !!meNow.isAdmin;
     const level = meNow.level ?? 0;
     ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text, isAdmin, level } });
+    // falei: o "…" tem de sair na mesma hora, senão fico "digitando" com o
+    // balão da frase já no ar.
+    typingSentRef.current = 0;
+    ch.send({ type: "broadcast", event: "typing", payload: { userId: meNow.userId, on: false } });
     bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
     seqRef.current += 1;
     const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true, isAdmin, level };
     setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
+  }, []);
+
+  // Avisa a sala que estou escrevendo. Repetido enquanto se digita (o balão
+  // do outro lado expira sozinho), e cancelado ao enviar ou ao parar.
+  const typingSentRef = useRef(0);
+  const sendTyping = useCallback((on: boolean) => {
+    const ch = channelRef.current;
+    const meNow = meRef.current;
+    if (!ch || !meNow) return;
+    const now = performance.now();
+    if (on && now - typingSentRef.current < TYPING_SEND_MS) return;
+    typingSentRef.current = on ? now : 0;
+    ch.send({ type: "broadcast", event: "typing", payload: { userId: meNow.userId, on } });
   }, []);
 
   // Broadcast de moderação: expulsa ao vivo o alvo (bloqueado/denunciado).
@@ -326,7 +357,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     for (const [uid, p] of playersRef.current) {
       if (now - p.lastSeen > GHOST_MS) {
         const name = p.name;
-        playersRef.current.delete(uid); bubblesRef.current.delete(uid); removed = true;
+        playersRef.current.delete(uid); bubblesRef.current.delete(uid); typingRef.current.delete(uid); removed = true;
         pushSystem(`${name || "Alguém"} saiu da sala`);
         continue;
       }
@@ -336,8 +367,11 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     for (const [uid, b] of bubblesRef.current) {
       if (now > b.until) bubblesRef.current.delete(uid);
     }
+    for (const [uid, ate] of typingRef.current) {
+      if (now > ate) typingRef.current.delete(uid);
+    }
     if (removed) recount();
   }, [recount, pushSystem]);
 
-  return { playersRef, bubblesRef, sendPos, sendChat, sendModeration, stepRemotes, connected, count, messages };
+  return { playersRef, bubblesRef, typingRef, sendPos, sendChat, sendTyping, sendModeration, stepRemotes, connected, count, messages };
 }
