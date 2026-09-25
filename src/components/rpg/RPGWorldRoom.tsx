@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, MessageCircle, ChevronDown, Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
+import { Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
@@ -10,14 +10,30 @@ import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWor
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
 import { getLevelTier } from "@/lib/rpgLevel";
+import { RPGRoomChat, type SnapChat } from "@/components/rpg/RPGRoomChat";
 
 // Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
 // do "eu" e do azul dos demais, pra deixar claro quem é da equipe.
 const ADMIN_COLOR = "#c084fc"; // violeta
 
-// faixa "andável" (profundidade). Fundo mais alto = sala mais profunda → cabe
+// Faixa "andável" (profundidade). Fundo mais alto = sala mais profunda → cabe
 // mais gente (quem anda pra trás fica menor).
-const BAND_TOP = 0.54, BAND_BOT = 0.94;
+//
+// A sala deixou de ser deitada: agora é um painel EM PÉ, mais alto do que
+// largo. Com a faixa fixa em 0,54–0,94, metade da área virava céu e todo mundo
+// se amontoava num filete embaixo. A faixa passa a acompanhar o formato — área
+// alta abre o chão para cima, área larga mantém o enquadramento de antes.
+const BAND_BOT = 0.94;
+/** Linha do horizonte (fração da altura). Em pé sobe: metade da tela de céu
+ *  numa área alta é desperdício — o chão é onde as pessoas estão. */
+const groundPara = (aspecto: number) => {
+  const t = Math.max(0, Math.min(1, (aspecto - 0.7) / 0.9));
+  return 0.36 + t * 0.14; // em pé 0,36 · deitada 0,50 (como era)
+};
+/** O chão andável começa logo ABAIXO do horizonte — nunca acima, senão a
+ *  pessoa caminha no céu. Os dois têm de mudar juntos. */
+const bandTopPara = (fracaoChao: number) => fracaoChao + 0.05;
+let BAND_TOP = 0.54;
 
 interface Props {
   roomId: string;         // id do canal (ex.: book:genesis | global)
@@ -27,7 +43,6 @@ interface Props {
   onCount?: (n: number) => void;
   onConnected?: (b: boolean) => void;
   onKicked?: (reason: KickReason) => void; // bloqueado/expulso ou sessão duplicada → sair da sala
-  rotated?: boolean; // página sob rotação CSS (paisagem no celular)
 }
 
 // caixa clicável de um jogador (p/ abrir menu de denúncia/moderação)
@@ -54,8 +69,9 @@ const MOODS: { top: string; bot: string; a: number }[] = [
 const GLOBAL_MOOD = { top: "#cfe3ff", bot: "#f2e6ff", a: 0.20 }; // celestial (praça)
 const moodFor = (variantKey: string) => variantKey === "global" ? GLOBAL_MOOD : MOODS[hashStr(variantKey) % MOODS.length];
 
-export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected, onKicked, rotated }: Props) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected, onKicked }: Props) {
+  const wrapRef = useRef<HTMLDivElement>(null);   // raiz (mundo + gaveta)
+  const palcoRef = useRef<HTMLDivElement>(null);  // só o MUNDO — é ele que a cena mede
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const namesRef = useRef<HTMLCanvasElement>(null);
   const hitBoxesRef = useRef<HitBox[]>([]); // caixas clicáveis dos outros (menu de moderação)
@@ -97,30 +113,20 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   useEffect(() => { onCount?.(count); }, [count, onCount]);
   useEffect(() => { onConnected?.(connected); }, [connected, onConnected]);
 
-  const [draft, setDraft] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const feedRef = useRef<HTMLDivElement>(null);
-  // Chat começa MINIMIZADO (só os balões de fala aparecem). Abrir = ver o feed
-  // + digitar. Fechado = só um botão no canto.
-  const [chatOpen, setChatOpen] = useState(false);
-  const [unseen, setUnseen] = useState(0); // mensagens novas enquanto minimizado
-  const lastCountRef = useRef(messages.length);
+  // Altura da gaveta de conversa. Começa RECOLHIDA: quem entra quer primeiro
+  // ver a sala e as pessoas; a conversa sobe quando a pessoa pede.
+  const [snap, setSnap] = useState<SnapChat>("espiada");
+  // altura útil da sala (px) — a gaveta calcula as frações em cima dela
+  const [alturaSala, setAlturaSala] = useState(0);
   useEffect(() => {
-    const delta = messages.length - lastCountRef.current;
-    lastCountRef.current = messages.length;
-    if (delta > 0 && !chatOpen) setUnseen((n) => Math.min(99, n + delta));
-  }, [messages.length, chatOpen]);
-  useEffect(() => { if (chatOpen) setUnseen(0); }, [chatOpen]);
-  // auto-rola o feed para a última mensagem
-  useEffect(() => { const f = feedRef.current; if (chatOpen && f) f.scrollTop = f.scrollHeight; }, [messages, chatOpen]);
-
-  const submitChat = () => {
-    const text = draft.trim();
-    if (!text) return;
-    sendChat(text);
-    setDraft("");
-    inputRef.current?.focus();
-  };
+    const el = wrapRef.current;
+    if (!el) return;
+    const medir = () => setAlturaSala(el.clientHeight);
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const posRef = useRef({ x: 0.5, y: 0.5 });
   const targetRef = useRef<{ x: number; y: number } | null>(null);
@@ -152,12 +158,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", ku); };
   }, []);
 
-  // coords locais do canvas — corretas também sob a rotação CSS (paisagem no
-  // celular): a caixa visual (getBoundingClientRect) resolve offset + rotação.
+  // Coordenadas locais do canvas. A sala não gira mais: é retrato de verdade,
+  // e a caixa do próprio canvas basta.
   const localPt = (clientX: number, clientY: number) => {
     const cv = canvasRef.current!;
     const r = cv.getBoundingClientRect();
-    if (rotated) return { x: clientY - r.top, y: r.right - clientX, w: cv.offsetWidth, h: cv.offsetHeight };
     return { x: clientX - r.left, y: clientY - r.top, w: r.width, h: r.height };
   };
 
@@ -222,7 +227,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   };
 
   useEffect(() => {
-    const cv = canvasRef.current, names = namesRef.current, wrap = wrapRef.current;
+    const cv = canvasRef.current, names = namesRef.current, wrap = palcoRef.current;
     if (!cv || !names || !wrap) return;
     const g = cv.getContext("2d"); if (!g) return;
     const ng = names.getContext("2d"); if (!ng) return;
@@ -236,9 +241,18 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const setup = () => {
       // offsetWidth/Height = dimensões LOCAIS (corretas mesmo sob rotação CSS)
       const rw = wrap.offsetWidth, rh = wrap.offsetHeight;
-      const aspect = Math.max(0.4, rw / Math.max(1, rh));
+      // A gaveta de conversa redimensiona o mundo a cada quadro do arraste: sem
+      // este atalho realocaríamos os dois buffers de canvas 60x por segundo.
+      if (rw === cssW && rh === cssH) return;
+      // caixa degenerada (gaveta cobrindo tudo, aba em segundo plano): sem isto
+      // a razão de aspecto explodia e o buffer do canvas ia a dezenas de
+      // milhares de pixels de largura.
+      if (rw < 2 || rh < 2) return;
+      const aspect = Math.min(3.6, Math.max(0.4, rw / rh));
+      const fracaoChao = groundPara(aspect);
+      BAND_TOP = bandTopPara(fracaoChao);
       // unidades lógicas fixas + SUPERSAMPLE por DPR = cena vetorial nítida
-      H = 300; W = Math.round(H * aspect); GROUND = Math.round(H * 0.5);
+      H = 300; W = Math.round(H * aspect); GROUND = Math.round(H * fracaoChao);
       dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
       cssW = rw; cssH = rh;
       k = Math.min(3, (cssH * dpr) / H || 1);
@@ -320,6 +334,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       ng.clearRect(0, 0, cssW, cssH);
 
       const boxes: HitBox[] = [];
+      const tagsDoQuadro: TagRect[] = []; // plaquinhas já colocadas neste quadro
       for (const it of items) {
         if (it.prop) { drawRoomProp(g, it.prop, { W, H, GROUND }, t, reduce); continue; }
         const d = it.player!;
@@ -328,7 +343,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // Padrão MENOR (pensando em salas cheias): montaria/mascote escalam junto.
         const lift = heroMountLift(d.look.mount);
         const HERO_VIS = 53;
-        const targetH = H * (0.128 + d.ny * 0.178);
+        // Tamanho da figura pelo LADO MENOR do palco, não pela altura.
+        // Deitado os dois davam no mesmo (a altura era o lado menor); em pé a
+        // altura dobrou e a largura não, então a mesma fração transformava
+        // cada personagem num gigante ocupando um terço da tela.
+        const targetH = Math.min(W, H) * (0.128 + d.ny * 0.178);
         const k2 = targetH / HERO_VIS;
         // herói HD desenhado DIRETO na cena, escalado pela profundidade
         g.save();
@@ -351,10 +370,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // montaria a cabeça sobe (lift), a tag acompanha colada.
         const sx = (fx / W) * cssW;
         const headTopCss = ((fy - (HERO_VIS + 12 + lift) * k2) / H) * cssH; // +12 = acessório de cabeça
-        const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, cssH, d.ny, d.level);
+        const refPx = Math.min(cssW, cssH); // mesma régua das figuras
+        const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, refPx, d.ny, d.level, tagsDoQuadro);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
-        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
+        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, refPx, d.ny, bub.isAdmin);
       }
       hitBoxesRef.current = boxes;
 
@@ -366,132 +386,39 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   }, [region, roomId, variantKey]);
 
   return (
-    <div
-      ref={wrapRef}
-      className="relative w-full h-full overflow-hidden select-none"
-      style={{ touchAction: "none", cursor: "pointer" }}
-      onPointerDown={onStagePointerDown}
-      onPointerMove={onStagePointerMove}
-      onPointerUp={onStagePointerUp}
-      onPointerCancel={onStagePointerUp}
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
-      <canvas ref={namesRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />
-      {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
+    <div ref={wrapRef} className="relative flex h-full w-full select-none flex-col overflow-hidden">
+      {/* ---- O MUNDO ----------------------------------------------------
+          Em pé o mundo é a parte de cima: é ele que encolhe quando a gaveta de
+          conversa sobe, e é só ele que a cena mede para desenhar. Os gestos de
+          andar ficam aqui dentro — no chat, o dedo rola a conversa. */}
+      <div
+        ref={palcoRef}
+        className="relative min-h-0 flex-1"
+        style={{ touchAction: "none", cursor: "pointer" }}
+        onPointerDown={onStagePointerDown}
+        onPointerMove={onStagePointerMove}
+        onPointerUp={onStagePointerUp}
+        onPointerCancel={onStagePointerUp}
+      >
+        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+        <canvas ref={namesRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+        {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
+      </div>
 
-      {/* ---- Chat (bate-papo) ---- */}
-      {chatOpen ? (
-        // No PC ocupa ~metade da largura (alinhado à esquerda); no celular, tudo.
-        <div
-          className="absolute left-0 right-0 bottom-0 z-10 flex flex-col sm:right-auto sm:w-1/2 sm:max-w-lg"
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          {/* barra do topo do chat: minimizar */}
-          <div className="flex justify-end px-2 pb-1">
-            <button
-              onClick={() => setChatOpen(false)}
-              className="flex items-center gap-1 text-[11px] font-semibold text-white/75 bg-black/55 border border-white/15 rounded-full px-2.5 py-1 hover:bg-black/75 transition"
-            >
-              <ChevronDown className="w-3.5 h-3.5" /> Minimizar
-            </button>
-          </div>
+      {/* ---- A CONVERSA -------------------------------------------------- */}
+      <RPGRoomChat
+        messages={messages}
+        onSend={sendChat}
+        alturaSala={alturaSala}
+        snap={snap}
+        onSnap={setSnap}
+      />
 
-          {/* feed das últimas mensagens */}
-          {messages.length > 0 && (
-            <div
-              ref={feedRef}
-              className="mx-2 mb-1 max-h-[26vh] sm:max-h-[34vh] overflow-y-auto space-y-1 px-2.5 py-2 rounded-xl bg-black/45 backdrop-blur-sm border border-white/10"
-              style={{ WebkitOverflowScrolling: "touch" }}
-            >
-              {messages.map((m) => (
-                m.system ? (
-                  <div key={m.id} className="text-[11px] italic text-white/45 text-center">{m.text}</div>
-                ) : (
-                  <div key={m.id} className="flex items-start gap-1.5 text-[12.5px] leading-snug">
-                    {/* distintivo de patente (emblema + nível) à esquerda do nome */}
-                    {(() => {
-                      const tier = getLevelTier(m.level ?? 0);
-                      return (
-                        <span
-                          className="shrink-0 inline-flex items-center justify-center gap-0.5 rounded px-1 py-[2px] min-w-[32px] text-[10px] font-black leading-none border"
-                          style={{ color: tier.color, borderColor: `${tier.color}88`, background: "rgba(255,255,255,0.04)" }}
-                          title={`Nível ${m.level ?? 0} — ${tier.title}`}
-                        >
-                          <span aria-hidden="true">{tier.emoji}</span>
-                          <span>{m.level ?? 0}</span>
-                        </span>
-                      );
-                    })()}
-                    <span className="min-w-0 break-words">
-                      <span
-                        className="font-black"
-                        style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
-                      >
-                        {m.name}
-                      </span>
-                      {m.isAdmin && (
-                        <span
-                          className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
-                          style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
-                        >
-                          DEV
-                        </span>
-                      )}
-                      <span className="text-white/85">: {m.text}</span>
-                    </span>
-                  </div>
-                )
-              ))}
-            </div>
-          )}
-
-          {/* barra de digitação */}
-          <form
-            onSubmit={(e) => { e.preventDefault(); submitChat(); }}
-            className="flex items-center gap-2 px-2.5 py-2 bg-gradient-to-t from-black/70 to-black/20"
-            style={{ paddingBottom: "max(0.5rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
-          >
-            <input
-              ref={inputRef}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              maxLength={160}
-              enterKeyHint="send"
-              placeholder="Conversar na sala…"
-              className="flex-1 min-w-0 text-[16px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
-            />
-            <button
-              type="submit"
-              disabled={!draft.trim()}
-              aria-label="Enviar"
-              className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] disabled:opacity-40 active:scale-95 transition"
-            >
-              <Send className="w-5 h-5" />
-            </button>
-          </form>
-        </div>
-      ) : (
-        // Minimizado: só um botão no canto. Os balões de fala continuam visíveis.
-        <button
-          onClick={() => setChatOpen(true)}
-          onPointerDown={(e) => e.stopPropagation()}
-          className="absolute z-10 left-3 flex items-center gap-1.5 rounded-full bg-black/60 border border-white/20 text-white px-3 py-2 backdrop-blur-sm hover:bg-black/75 transition"
-          style={{ bottom: "max(0.75rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
-        >
-          <MessageCircle className="w-4 h-4" />
-          <span className="text-[12px] font-bold">Chat</span>
-          {unseen > 0 && (
-            <span className="ml-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] text-[10px] font-black">
-              {unseen}
-            </span>
-          )}
-        </button>
-      )}
 
       {/* ---- Menu de moderação (ao tocar num personagem) ---- */}
       {menu && (
         <div
-          className="absolute inset-0 z-20 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="absolute inset-0 z-30 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm"
           onPointerDown={(e) => { e.stopPropagation(); if (e.target === e.currentTarget) { setMenu(null); setConfirmReport(false); } }}
         >
           <div className="w-full sm:max-w-xs bg-[#100e18] border border-white/10 rounded-t-2xl sm:rounded-2xl p-4 pb-[max(1rem,var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))] sm:pb-4">
@@ -566,8 +493,13 @@ function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number,
 // Nome desenhado na camada de alta resolução (CSS px) → nítido em qualquer tela.
 // Admin ganha cor própria (violeta) + tag "DEV" ao lado. Retorna o Y do topo da
 // plaquinha (para empilhar o balão de fala acima).
-function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, isAdmin: boolean, cssH: number, ny: number, level = 0): number {
-  const fs = Math.max(10, Math.min(14, Math.round(cssH * 0.026 * (0.9 + ny * 0.18))));
+// `refPx` = LADO MENOR do palco. A plaquinha precisa acompanhar o tamanho da
+// figura, e a figura agora é medida pelo lado menor; keyed na altura, em pé a
+// tag ficava maior que o personagem que ela nomeia.
+interface TagRect { x: number; y: number; w: number; h: number }
+
+function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, isAdmin: boolean, refPx: number, ny: number, level = 0, ocupados?: TagRect[]): number {
+  const fs = Math.max(9, Math.min(13, Math.round(refPx * 0.026 * (0.9 + ny * 0.18))));
   const label = name.length > 14 ? name.slice(0, 13) + "…" : name;
   const h = Math.round(fs * 1.5), padX = Math.round(fs * 0.5), r = Math.round(fs * 0.4);
   g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
@@ -590,7 +522,20 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
     gap = Math.round(fs * 0.3);
   }
   const totalW = badgeW + gapB + nameW + (isAdmin ? gap + tagW : 0);
-  const bx = Math.round(cx - totalW / 2), y = Math.round(bottomY - h);
+  const bx = Math.round(cx - totalW / 2);
+  let y = Math.round(bottomY - h);
+
+  // EMPILHAMENTO: duas pessoas lado a lado escondiam o nome uma da outra —
+  // numa sala em pé, onde o chão é mais estreito, isso passou a ser a regra e
+  // não a exceção. Quem chega depois sobe até achar espaço livre.
+  if (ocupados) {
+    for (let tent = 0; tent < 4; tent++) {
+      const bate = ocupados.some((o) => bx < o.x + o.w && bx + totalW > o.x && y < o.y + o.h && y + h > o.y);
+      if (!bate) break;
+      y -= h + 3;
+    }
+    ocupados.push({ x: bx, y, w: totalW, h });
+  }
   const x = bx + badgeW + gapB; // x = início da plaquinha do nome
 
   // distintivo: fundo escuro + borda na cor da patente + emblema/level
@@ -630,8 +575,8 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
 
 // Balão de fala (chat) desenhado na camada de alta resolução, acima do nome.
 // Quebra o texto em até 3 linhas; centralizado no personagem, com "rabinho".
-function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, cssH: number, ny: number, isAdmin = false) {
-  const fs = Math.max(11, Math.min(15, Math.round(cssH * 0.028 * (0.92 + ny * 0.14))));
+function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, refPx: number, ny: number, isAdmin = false) {
+  const fs = Math.max(11, Math.min(15, Math.round(refPx * 0.028 * (0.92 + ny * 0.14))));
   g.font = `500 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
   g.textAlign = "left"; g.textBaseline = "alphabetic";
   const maxW = Math.max(120, Math.min(cssW * 0.6, 260));
