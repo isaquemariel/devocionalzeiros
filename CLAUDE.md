@@ -18,6 +18,26 @@ projeto bate com o commit publicado.
 e — quando mexeu em ficha ou em carregamento — `vite build` + `smoke-lazy`. Se
 algo ficou vermelho, NÃO suba: conserte ou avise.
 
+## O Devocionalzeiro — um personagem só (regra fixa)
+
+- **Um desenho só.** A geometria dele mora em `src/lib/devocionalzeiro/`
+  (`geometria.ts`); o movimento, em `animacao.ts`. O rig em SVG
+  (`components/devocionalzeiro/Devocionalzeiro`) e o herói do RPG em canvas
+  (`lib/rpgHero.ts`, via `lib/devocionalzeiro/canvas.ts`) leem de lá. Não crie
+  outro boneco, PNG ou variação: use `<Devocionalzeiro/>` (ou `Mascot3D`, que o
+  embrulha) no app e `drawHeroHD` nas cenas de canvas.
+- **Acessório de cabeça APAGA a chama.** Chapéu, coroa, capacete, turbante,
+  auréola — qualquer coisa na cabeça toma o lugar da chama, que some. Só o
+  "foguinho" (`head: "fire"`) a mantém, e maior. Vale no RPG (`temChama` em
+  `rpgHero.ts`) e no app (`naCabeca`/`semChama` no rig).
+- **O que ele veste no RPG, ele veste no app todo.** `SincronizaVisual` (no
+  `App`) lê o equipamento do guarda-roupa e `useVisual()` o entrega ao
+  `<Devocionalzeiro/>`: sem nada equipado é o SVG; com algo, o mesmo boneco
+  vestido (canvas), com o mesmo movimento. Montaria e companheiro ficam só no
+  RPG. `look={null}` força o padrão.
+- **Nada de confete.** Comemoração é o personagem: `celebrar(motivo)` de
+  `lib/celebrar.ts`.
+
 ## A VOZ DE DEUS na cena viva (regra fixa)
 
 Deus **nunca é desenhado como figura**. Como a fala de Deus entra na cena depende de **haver ou não um mediador visível**:

@@ -2,8 +2,9 @@ import {
   BASE_CHAMA, BOCAS, BOCHECHA_D, BOCHECHA_E, CAMADAS, CHAO, CORES, CORPO_FRENTE, CORPO_LADO, EMBLEMA, EMBLEMA_CENTRO,
   LINGUA, N_BRASAS, OLHO_D, OLHO_E, OLHO_FECHADO_D, OLHO_FECHADO_E, OLHO_FELIZ_D, OLHO_FELIZ_E, OLHO_RAIO, OMBRO_D,
   OMBRO_E, PE_D, PE_E, SOBRANCELHA, SOBRANCELHA_D, SOBRANCELHA_E, SOMBRA, alvoBracos,
-  type Expressao, type Gesto,
+  type Boca, type Expressao, type Gesto,
 } from "./geometria";
+import type { Pose } from "./animacao";
 
 /**
  * O DEVOCIONALZEIRO EM CANVAS — o mesmo boneco do rig em SVG, para as cenas do
@@ -101,8 +102,19 @@ export interface Quadro {
   gesto: Gesto;
   chama: number;
   olharX: number;
+  olharY: number;
   piscando: boolean;
   paleta: PaletaCorpo;
+  /** o rosto, já resolvido (a piscada, a fala, os olhos de alegria) */
+  escalaOlho: number;
+  abertura: number;
+  olhosFelizes: boolean;
+  olhosFechados: boolean;
+  boca: Boca;
+  bochecha: number;
+  sombra: number;
+  /** a chama se inclina contra o movimento, -1..1 */
+  inclinacaoChama: number;
 }
 
 const TAU = Math.PI * 2;
@@ -132,14 +144,41 @@ export function calcularQuadro(p: PoseCanvas): Quadro {
 
   const b = alvoBracos(reduce ? "parado" : gesto, t);
   const piscando = !reduce && ((p.t + 830) % 3400) < 130;
+  const esc = expressao === "surpreso" ? 1.12 : expressao === "triste" ? 0.92 : 1;
+  const fechados = expressao === "dormindo";
   return {
     t, reduce, altura, sx, sy, inclinacao,
     bracoE: { ang: b.e, len: b.le }, bracoD: { ang: b.d, len: b.ld }, pe,
     expressao, gesto,
     chama: Math.max(0, Math.min(1, p.chama ?? 0.34)) + (gesto === "comemorar" ? 0.15 : 0),
     olharX: Math.max(-1, Math.min(1, p.olharX ?? 0)),
+    olharY: 0,
     piscando,
     paleta: p.paleta ?? PALETAS.blue,
+    escalaOlho: esc,
+    abertura: (piscando ? 0.08 : 1) * esc,
+    olhosFelizes: !fechados && (expressao === "radiante" || gesto === "comemorar" || gesto === "pirueta"),
+    olhosFechados: fechados,
+    boca: BOCAS[expressao],
+    bochecha: expressao === "radiante" || expressao === "feliz" ? 0.55 : expressao === "orgulhoso" ? 0.4 : 0.22,
+    sombra: Math.max(0.55, 1 - altura / 55),
+    inclinacaoChama: 0,
+  };
+}
+
+/**
+ * Um quadro a partir da POSE do simulador (`./animacao`): é assim que o
+ * boneco vestido, em canvas, se mexe igual ao rig em SVG — mesmo pulo, mesma
+ * piscada, mesma boca falando.
+ */
+export function quadroDaPose(p: Pose, tMs: number, reduce: boolean, paleta: PaletaCorpo = PALETAS.blue): Quadro {
+  return {
+    t: tMs / 1000, reduce, altura: p.altura, sx: p.sx, sy: p.sy, inclinacao: p.tilt,
+    bracoE: { ...p.bracoE }, bracoD: { ...p.bracoD }, pe: { ex: p.peE.x, ey: p.peE.y, dx: p.peD.x, dy: p.peD.y },
+    expressao: p.expressao, gesto: p.gesto, chama: p.chama,
+    olharX: p.gazeX, olharY: p.gazeY, piscando: false, paleta,
+    escalaOlho: p.escalaOlho, abertura: p.abertura, olhosFelizes: p.olhosFelizes, olhosFechados: p.olhosFechados,
+    boca: p.boca, bochecha: p.bochecha, sombra: p.sombra, inclinacaoChama: p.inclinacao,
   };
 }
 
@@ -185,7 +224,6 @@ function caminhos() {
       fechadoE: new Path2D(OLHO_FECHADO_E), fechadoD: new Path2D(OLHO_FECHADO_D),
       sobE: new Path2D(SOBRANCELHA_E), sobD: new Path2D(SOBRANCELHA_D),
     };
-    for (const [k, b] of Object.entries(BOCAS)) cache[`boca-${k}`] = new Path2D(b.d);
   }
   return cache;
 }
@@ -206,7 +244,7 @@ const elipse = (g: CanvasRenderingContext2D, e: { cx: number; cy: number; rx: nu
 
 // ─── partes ─────────────────────────────────────────────────────────────────
 export function desenharSombra(g: CanvasRenderingContext2D, q: Quadro) {
-  const hs = Math.max(0.55, 1 - q.altura / 55);
+  const hs = q.sombra;
   g.save();
   g.globalAlpha *= 0.28 * hs;
   g.translate(SOMBRA.cx, SOMBRA.cy); g.scale(hs, 1); g.translate(-SOMBRA.cx, -SOMBRA.cy);
@@ -232,7 +270,8 @@ export function desenharChama(g: CanvasRenderingContext2D, q: Quadro, base = BAS
     cam.linguas.forEach((l) => {
       const lento = 1 - l.h * 0.55;
       const fl = 1 + tremor * (0.12 * Math.sin(t * (4.2 + lento * 5) + l.f) + 0.07 * Math.sin(t * (12.7 + ci * 1.3) + l.f * 2.1));
-      const sway = tremor * ((2.2 + l.h * 4.2) * Math.sin(t * (1.9 + lento * 3.2) + l.f) + 1.3 * Math.sin(t * (8.9 + ci) + l.f));
+      const sway = tremor * ((2.2 + l.h * 4.2) * Math.sin(t * (1.9 + lento * 3.2) + l.f) + 1.3 * Math.sin(t * (8.9 + ci) + l.f))
+        - q.inclinacaoChama * 9 * (0.6 + l.h * 0.6);
       const cx = base.x + l.dx * (0.7 + q.chama * 0.4);
       const hw = l.hw * (0.62 + q.chama * 0.46);
       const ty = base.y - H * l.h * fl;
@@ -302,32 +341,28 @@ export function desenharRosto(g: CanvasRenderingContext2D, q: Quadro) {
   const pal = q.paleta;
   const exp = q.expressao;
   g.save();
-  g.translate(q.olharX * 1.6, 0);
-  const blush = exp === "radiante" || exp === "feliz" ? 0.55 : exp === "orgulhoso" ? 0.4 : 0.22;
-  g.globalAlpha = blush;
+  // o rosto acompanha um pouco o olhar (parallax de cabeça)
+  g.translate(q.olharX * 1.6, q.olharY * 1.1);
+  g.globalAlpha = q.bochecha;
   elipse(g, BOCHECHA_E, pal.bochecha);
   elipse(g, BOCHECHA_D, pal.bochecha);
   g.globalAlpha = 1;
 
-  const dorme = exp === "dormindo";
-  const felizes = !dorme && (exp === "radiante" || q.gesto === "comemorar" || q.gesto === "pirueta");
   g.lineCap = "round"; g.lineJoin = "round";
-  if (felizes || dorme) {
+  if (q.olhosFelizes || q.olhosFechados) {
     g.strokeStyle = pal.arco;
-    g.lineWidth = felizes ? 3 : 2.6;
-    g.stroke(felizes ? c.felizE : c.fechadoE);
-    g.stroke(felizes ? c.felizD : c.fechadoD);
+    g.lineWidth = q.olhosFelizes ? 3 : 2.6;
+    g.stroke(q.olhosFelizes ? c.felizE : c.fechadoE);
+    g.stroke(q.olhosFelizes ? c.felizD : c.fechadoD);
   } else {
-    const esc = exp === "surpreso" ? 1.12 : exp === "triste" ? 0.92 : 1;
-    const ab = (q.piscando ? 0.08 : 1) * esc;
     for (const o of [OLHO_E, OLHO_D]) {
       g.save();
-      g.translate(o.x, o.y); g.scale(esc, ab); g.translate(-o.x, -o.y);
+      g.translate(o.x, o.y); g.scale(q.escalaOlho, q.abertura); g.translate(-o.x, -o.y);
       g.fillStyle = CORES.esclera;
       g.beginPath(); g.ellipse(o.x, o.y, OLHO_RAIO.rx, OLHO_RAIO.ry, 0, 0, TAU); g.fill();
       g.save();
       g.beginPath(); g.ellipse(o.x, o.y, OLHO_RAIO.rx, OLHO_RAIO.ry, 0, 0, TAU); g.clip();
-      const ix = o.x + 0.5 + q.olharX * 3.3, iy = o.y + 1.2;
+      const ix = o.x + 0.5 + q.olharX * 3.3, iy = o.y + 1.2 + q.olharY * 2.8;
       const iris = g.createRadialGradient(ix - 1, iy - 3.1, 0, ix - 1, iy - 3.1, 14.6);
       iris.addColorStop(0, CORES.iris[0]); iris.addColorStop(0.45, CORES.iris[1]); iris.addColorStop(1, CORES.iris[2]);
       g.fillStyle = iris;
@@ -352,8 +387,8 @@ export function desenharRosto(g: CanvasRenderingContext2D, q: Quadro) {
   g.save(); g.translate(0, s.e[0]); g.translate(94, 79); g.rotate((s.e[1] * Math.PI) / 180); g.translate(-94, -79); g.stroke(c.sobE); g.restore();
   g.save(); g.translate(0, s.d[0]); g.translate(129, 79); g.rotate((s.d[1] * Math.PI) / 180); g.translate(-129, -79); g.stroke(c.sobD); g.restore();
 
-  const boca = BOCAS[exp];
-  const p = c[`boca-${exp}`];
+  const boca = q.boca;
+  const p = bocaPath(boca.d);
   if (boca.cheia) {
     g.fillStyle = CORES.bocaCheia; g.fill(p);
     if (boca.lingua) elipse(g, LINGUA, CORES.lingua);
@@ -363,6 +398,9 @@ export function desenharRosto(g: CanvasRenderingContext2D, q: Quadro) {
   }
   g.restore();
 }
+
+const bocas = new Map<string, Path2D>();
+const bocaPath = (d: string) => { let p = bocas.get(d); if (!p) { p = new Path2D(d); bocas.set(d, p); } return p; };
 
 export function desenharBraco(g: CanvasRenderingContext2D, q: Quadro, lado: "e" | "d") {
   const o = lado === "e" ? OMBRO_E : OMBRO_D;

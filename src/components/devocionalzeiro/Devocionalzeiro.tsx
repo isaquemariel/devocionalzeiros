@@ -1,9 +1,12 @@
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useId, useRef, type ReactNode } from "react";
+import type { MascotLook } from "@/lib/rpgMascot";
+import { paraOApp, useVisual } from "@/lib/devocionalzeiro/visual";
 import {
   BASE_CHAMA, BOCAS, BRACO_REPOUSO, CAMADAS, CORES, CORPO_FRENTE, CORPO_LADO, EMBLEMA, N_BRASAS,
-  N_LABAREDAS, OLHO_D, OLHO_E, OMBRO_D, OMBRO_E, REPOUSO_D, REPOUSO_E, SOBRANCELHA, alvoBracos, gota, lingua,
-  type Boca, type Expressao, type Gesto,
+  N_LABAREDAS, OLHO_D, OLHO_E, OMBRO_D, OMBRO_E, REPOUSO_D, REPOUSO_E, SOBRANCELHA, gota, lingua,
+  type Expressao, type Gesto,
 } from "@/lib/devocionalzeiro/geometria";
+import { avancar, criarEstado } from "@/lib/devocionalzeiro/animacao";
 
 /**
  * O DEVOCIONALZEIRO, como boneco de jogo — o personagem ÚNICO do app.
@@ -55,12 +58,18 @@ interface Props {
    * junto com ele.
    */
   naCabeca?: ReactNode;
+  /**
+   * Sem a chama da cabeça. REGRA do personagem: com um acessório na cabeça, a
+   * chama some (o acessório toma o lugar dela). Com `naCabeca`, já vale.
+   */
+  semChama?: boolean;
 }
 
-export function Devocionalzeiro({
+export function DevocionalzeiroSVG({
   expressao = "neutro", gesto = "parado", chama = 0.3, falando = false, olhar = null,
-  pulso = 0, toque = 0, tamanho = 180, className, naCabeca,
+  pulso = 0, toque = 0, tamanho = 180, className, naCabeca, semChama = false,
 }: Props) {
+  const apagada = semChama || !!naCabeca;
   const uid = useId().replace(/:/g, "");
   const ids = {
     corpo: `c-${uid}`, lado: `l-${uid}`, iris: `i-${uid}`, fogoExt: `fe-${uid}`, fogoMed: `fm-${uid}`,
@@ -68,8 +77,8 @@ export function Devocionalzeiro({
   };
 
   // alvos lidos pelo laço (props → ref, sem reiniciar o laço)
-  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque });
-  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque };
+  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, apagada });
+  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, apagada };
 
   const r = {
     raiz: useRef<SVGGElement>(null), corpo: useRef<SVGGElement>(null), rosto: useRef<SVGGElement>(null),
@@ -95,21 +104,18 @@ export function Devocionalzeiro({
     let raf = 0;
     const t0 = performance.now();
 
-    // estado das molas
+    // o corpo é o simulador partilhado (lib/devocionalzeiro/animacao); aqui só
+    // as partículas da chama têm estado próprio
+    const sim = criarEstado(alvo.current);
     const s = {
-      bracoE: REPOUSO_E, bracoD: REPOUSO_D, lenE: BRACO_REPOUSO, lenD: BRACO_REPOUSO,
-      gazeX: 0, gazeY: 0, chama: alvo.current.chama,
-      pulsoVisto: alvo.current.pulso, pulsoEm: -10,
-      toqueVisto: alvo.current.toque, toqueEm: -10,
-      proximaPiscada: 1.2 + Math.random() * 2, piscandoEm: -10, piscadaDupla: false,
-      vagarX: 0, vagarY: 0, proximoVagar: 2,
-      alturaAnt: 0, inclinacao: 0,
-      bocaAtual: "", sobAtual: "", expAtual: "" as string,
+      bocaAtual: "", sobAtual: "",
       brasas: Array.from({ length: N_BRASAS }, () => ({ x: 0, y: 0, vx: 0, vy: 0, vida: 0, dur: 1 })),
       labaredas: Array.from({ length: N_LABAREDAS }, () => ({ x: 0, y: 0, vx: 0, vy: 0, vida: 0, dur: 1, r: 2 })),
       pontas: [] as { x: number; y: number }[],
+      chama: alvo.current.chama,
+      // 1 = acesa, 0 = apagada: a chama some devagar quando algo pousa na cabeça
+      acesa: alvo.current.apagada ? 0 : 1,
     };
-    const mola = (atual: number, alvoV: number, k: number, dt: number) => atual + (alvoV - atual) * (1 - Math.exp(-k * dt));
     let ultimo = t0;
 
     const quadro = (agora: number) => {
@@ -117,125 +123,41 @@ export function Devocionalzeiro({
       const dt = Math.min(0.05, (agora - ultimo) / 1000);
       ultimo = agora;
       const a = alvo.current;
+      const p = avancar(sim, a, t, dt, !!reduzir);
+      s.chama = p.chama;
 
-      // ── pulo (reação) ────────────────────────────────────────────────────
-      if (a.pulso !== s.pulsoVisto) { s.pulsoVisto = a.pulso; s.pulsoEm = t; }
-      let altura = 0, sx = 1, sy = 1;
-      const pulando = (tt: number, alturaMax: number) => {
-        if (tt < 0.09) { const u = tt / 0.09; sy = 1 - 0.13 * u; sx = 1 + 0.09 * u; }            // antecipação
-        else if (tt < 0.49) { const u = (tt - 0.09) / 0.4; altura = alturaMax * 4 * u * (1 - u); // voo
-          sy = 1 + 0.11 * (1 - u); sx = 1 - 0.07 * (1 - u); }
-        else if (tt < 0.64) { const u = (tt - 0.49) / 0.15; const k = Math.sin(Math.PI * u);     // pouso
-          sy = 1 - 0.14 * k; sx = 1 + 0.1 * k; }
-      };
-      if (!reduzir) {
-        if (a.gesto === "comemorar" || a.gesto === "vitoria") pulando((t % 1.05), a.gesto === "vitoria" ? 14 : 22);
-        else if (a.gesto === "pirueta") pulando((t % 1.4) * 0.75, 34);
-        else if (t - s.pulsoEm < 0.64) pulando(t - s.pulsoEm, 18);
-      }
-      // andar: quique curto, alternando os pés
-      let peEy = 0, peDy = 0, peEx = 0, peDx = 0;
-      if (a.gesto === "andar" && !reduzir) {
-        const f = t * 9;
-        altura += Math.abs(Math.sin(f)) * 3.2;
-        peEy = -Math.max(0, Math.sin(f)) * 5; peDy = -Math.max(0, -Math.sin(f)) * 5;
-        peEx = Math.sin(f) * 3; peDx = -Math.sin(f) * 3;
-      }
-      // aceno curto: amassa e volta, em 0,22 s
-      if (a.toque !== s.toqueVisto) { s.toqueVisto = a.toque; s.toqueEm = t; }
-      const tq = t - s.toqueEm;
-      let aceno = 0;
-      if (!reduzir && tq < 0.22) { const k = Math.sin((Math.PI * tq) / 0.22); sy *= 1 - 0.05 * k; sx *= 1 + 0.03 * k; aceno = 4 * k; }
-      // respiração: dormindo é mais funda e mais lenta
-      const dorme = a.expressao === "dormindo";
-      const resp = reduzir ? 0 : dorme ? Math.sin(t * 1.25) * 0.028 : Math.sin(t * 2.1) * 0.012;
-      sy *= 1 + resp; sx *= 1 - resp * 0.5;
-      // espreguiçar estica o corpo inteiro
-      if (a.gesto === "espreguicar" && !reduzir) { const k = 0.5 + 0.5 * Math.sin(t * 2); sy *= 1 + 0.06 * k; sx *= 1 - 0.035 * k; }
-      // inclinação da chama contra o movimento (ação secundária)
-      const velY = (altura - s.alturaAnt) / Math.max(dt, 0.001);
-      s.alturaAnt = altura;
-      s.inclinacao = mola(s.inclinacao, Math.max(-1, Math.min(1, velY / 120)), 10, dt);
-
-      // cabeça inclinada ao pensar
-      // (dormindo, a cabeça pende devagar; andando, ele se inclina para a frente)
-      const tilt = (a.gesto === "pensar" ? -6
-        : dorme ? 5 + Math.sin(t * 0.6) * (reduzir ? 0 : 2.5)
-        : a.gesto === "andar" ? 4
-        : a.expressao === "surpreso" ? 0 : Math.sin(t * 0.9) * (reduzir ? 0 : 1.2)) + aceno;
-      // pirueta: no ar, ele dá uma volta inteira em torno de si — em 2D, a
-      // largura passa por zero e ele aparece de costas (espelhado) no meio
-      if (a.gesto === "pirueta" && !reduzir) {
-        const u = ((t % 1.4) * 0.75 - 0.09) / 0.4;
-        if (u > 0 && u < 1) sx *= Math.cos(u * Math.PI * 2);
-      }
       r.corpo.current?.setAttribute(
         "transform",
-        `translate(102 188) translate(0 ${-altura}) rotate(${tilt}) scale(${sx} ${sy}) translate(-102 -188)`,
+        `translate(102 188) translate(0 ${-p.altura}) rotate(${p.tilt}) scale(${p.sx} ${p.sy}) translate(-102 -188)`,
       );
-      const hs = Math.max(0.55, 1 - altura / 55);
-      r.sombra.current?.setAttribute("transform", `translate(106 196) scale(${hs} 1) translate(-106 -196)`);
-      r.sombra.current?.setAttribute("opacity", String(0.28 * hs));
-      r.peE.current?.setAttribute("transform", `translate(${peEx} ${peEy - altura * 0.85})`);
-      r.peD.current?.setAttribute("transform", `translate(${peDx} ${peDy - altura * 0.85})`);
+      r.sombra.current?.setAttribute("transform", `translate(106 196) scale(${p.sombra} 1) translate(-106 -196)`);
+      r.sombra.current?.setAttribute("opacity", String(0.28 * p.sombra));
+      r.peE.current?.setAttribute("transform", `translate(${p.peE.x} ${p.peE.y - p.altura * 0.85})`);
+      r.peD.current?.setAttribute("transform", `translate(${p.peD.x} ${p.peD.y - p.altura * 0.85})`);
 
-      // ── olhar ───────────────────────────────────────────────────────────
-      if (!a.olhar && t > s.proximoVagar) {
-        const olharPraGente = Math.random() < 0.45;
-        s.vagarX = olharPraGente ? 0 : (Math.random() - 0.5) * 1.6;
-        s.vagarY = olharPraGente ? 0 : (Math.random() - 0.5) * 0.9;
-        s.proximoVagar = t + 1.6 + Math.random() * 3.4;
-      }
-      const gx = a.olhar ? a.olhar.x : s.vagarX;
-      const gy = a.olhar ? a.olhar.y : s.vagarY;
-      s.gazeX = mola(s.gazeX, Math.max(-1, Math.min(1, gx)), a.olhar ? 14 : 7, dt);
-      s.gazeY = mola(s.gazeY, Math.max(-1, Math.min(1, gy)), a.olhar ? 14 : 7, dt);
-      const irisT = `translate(${s.gazeX * 3.3} ${s.gazeY * 2.8})`;
+      const irisT = `translate(${p.gazeX * 3.3} ${p.gazeY * 2.8})`;
       r.irisE.current?.setAttribute("transform", irisT);
       r.irisD.current?.setAttribute("transform", irisT);
       // o rosto inteiro acompanha um pouco o olhar (parallax de cabeça)
-      r.rosto.current?.setAttribute("transform", `translate(${s.gazeX * 1.6} ${s.gazeY * 1.1})`);
+      r.rosto.current?.setAttribute("transform", `translate(${p.gazeX * 1.6} ${p.gazeY * 1.1})`);
 
-      // ── piscar: intervalo irregular, às vezes duplo ─────────────────────
-      if (!reduzir && t > s.proximaPiscada) {
-        s.piscandoEm = t;
-        s.piscadaDupla = Math.random() < 0.18;
-        s.proximaPiscada = t + 2.2 + Math.random() * 3.8;
-      }
-      let fechar = 0;
-      const tp = t - s.piscandoEm;
-      if (tp < 0.15) fechar = Math.sin((Math.PI * tp) / 0.15);
-      else if (s.piscadaDupla && tp > 0.22 && tp < 0.37) fechar = Math.sin((Math.PI * (tp - 0.22)) / 0.15);
-      const exp = a.expressao;
-      const bocejo = a.gesto === "espreguicar";
-      const olhosFechados = dorme || bocejo;
-      const olhosFelizes = !olhosFechados && (exp === "radiante" || a.gesto === "comemorar" || a.gesto === "pirueta");
-      const surpreso = exp === "surpreso";
-      const escalaOlho = surpreso ? 1.12 : exp === "triste" ? 0.92 : 1;
-      const abertura = Math.max(0.06, 1 - fechar) * escalaOlho;
       for (const [el, c] of [[r.olhoE.current, OLHO_E], [r.olhoD.current, OLHO_D]] as const) {
-        el?.setAttribute("transform", `translate(${c.x} ${c.y}) scale(${escalaOlho} ${abertura}) translate(${-c.x} ${-c.y})`);
-        el?.setAttribute("opacity", olhosFelizes || olhosFechados ? "0" : "1");
+        el?.setAttribute("transform", `translate(${c.x} ${c.y}) scale(${p.escalaOlho} ${p.abertura}) translate(${-c.x} ${-c.y})`);
+        el?.setAttribute("opacity", p.olhosFelizes || p.olhosFechados ? "0" : "1");
       }
-      r.fechadoE.current?.setAttribute("opacity", olhosFechados ? "1" : "0");
-      r.fechadoD.current?.setAttribute("opacity", olhosFechados ? "1" : "0");
-      r.felizE.current?.setAttribute("opacity", olhosFelizes ? "1" : "0");
-      r.felizD.current?.setAttribute("opacity", olhosFelizes ? "1" : "0");
+      r.fechadoE.current?.setAttribute("opacity", p.olhosFechados ? "1" : "0");
+      r.fechadoD.current?.setAttribute("opacity", p.olhosFechados ? "1" : "0");
+      r.felizE.current?.setAttribute("opacity", p.olhosFelizes ? "1" : "0");
+      r.felizD.current?.setAttribute("opacity", p.olhosFelizes ? "1" : "0");
 
-      // ── sobrancelhas ────────────────────────────────────────────────────
-      if (s.sobAtual !== exp) {
-        s.sobAtual = exp;
-        const b = SOBRANCELHA[exp];
+      if (s.sobAtual !== p.expressao) {
+        s.sobAtual = p.expressao;
+        const b = SOBRANCELHA[p.expressao];
         r.sobE.current?.setAttribute("transform", `translate(0 ${b.e[0]}) rotate(${b.e[1]} 94 79)`);
         r.sobD.current?.setAttribute("transform", `translate(0 ${b.d[0]}) rotate(${b.d[1]} 129 79)`);
       }
 
-      // ── boca: expressão, ou fala ────────────────────────────────────────
-      let boca: Boca = bocejo ? BOCAS.surpreso : BOCAS[exp];
-      if (a.falando && !reduzir) {
-        const f = Math.sin(t * 17) + Math.sin(t * 11.3) * 0.6;
-        boca = f > 0.55 ? BOCAS.falaAberta : f > -0.2 ? BOCAS.falaMeia : BOCAS[exp === "triste" ? "triste" : "neutro"];
-      }
+      const boca = p.boca;
       if (s.bocaAtual !== boca.d) {
         s.bocaAtual = boca.d;
         const el = r.boca.current;
@@ -244,26 +166,21 @@ export function Devocionalzeiro({
         el?.setAttribute("stroke", boca.cheia ? "none" : "#0A0F24");
         r.lingua.current?.setAttribute("opacity", boca.lingua ? "1" : "0");
       }
-      const blush = exp === "radiante" || exp === "feliz" ? 0.55 : exp === "orgulhoso" ? 0.4 : 0.22;
-      r.bochE.current?.setAttribute("opacity", String(blush));
-      r.bochD.current?.setAttribute("opacity", String(blush));
+      r.bochE.current?.setAttribute("opacity", String(p.bochecha));
+      r.bochD.current?.setAttribute("opacity", String(p.bochecha));
 
-      // ── braços (mola) ───────────────────────────────────────────────────
-      const ab = alvoBracos(reduzir && a.gesto !== "tampar" && a.gesto !== "espiar" ? "parado" : a.gesto, t);
-      const kb = a.gesto === "acenar" || a.gesto === "comemorar" || a.gesto === "andar" || a.gesto === "pirueta" || a.gesto === "vitoria" ? 18 : 11;
-      s.bracoE = mola(s.bracoE, ab.e, kb, dt); s.bracoD = mola(s.bracoD, ab.d, kb, dt);
-      s.lenE = mola(s.lenE, ab.le, 12, dt); s.lenD = mola(s.lenD, ab.ld, 12, dt);
-      r.bracoE.current?.setAttribute("transform", `translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(${s.bracoE})`);
-      r.bracoD.current?.setAttribute("transform", `translate(${OMBRO_D.x} ${OMBRO_D.y}) rotate(${s.bracoD})`);
-      r.bracoEForma.current?.setAttribute("height", String(s.lenE));
-      r.bracoDForma.current?.setAttribute("height", String(s.lenD));
+      r.bracoE.current?.setAttribute("transform", `translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(${p.bracoE.ang})`);
+      r.bracoD.current?.setAttribute("transform", `translate(${OMBRO_D.x} ${OMBRO_D.y}) rotate(${p.bracoD.ang})`);
+      r.bracoEForma.current?.setAttribute("height", String(p.bracoE.len));
+      r.bracoDForma.current?.setAttribute("height", String(p.bracoD.len));
 
       // ── chama ───────────────────────────────────────────────────────────
-      const excit = a.gesto === "comemorar" || a.gesto === "pirueta" || a.gesto === "vitoria" ? 0.18 : t - s.pulsoEm < 0.9 ? 0.12 : 0;
-      s.chama = mola(s.chama, Math.max(0, Math.min(1, a.chama)) + excit, 2.6, dt);
+      s.acesa += ((a.apagada ? 0 : 1) - s.acesa) * (1 - Math.exp(-7 * dt));
+      r.chama.current?.setAttribute("opacity", s.acesa.toFixed(3));
+      r.chama.current?.setAttribute("transform", `translate(104 72) scale(${0.4 + 0.6 * s.acesa}) translate(-104 -72)`);
       const H = 17 + 58 * s.chama;
       const tremor = reduzir ? 0.25 : 1;
-      const lean = -s.inclinacao * 9;
+      const lean = -p.inclinacao * 9;
       CAMADAS.forEach((cam, ci) => {
         cam.linguas.forEach((l, li) => {
           const el = linguas.current[ci][li];
@@ -286,7 +203,7 @@ export function Devocionalzeiro({
         });
       });
       // brasas: nascem na chama, sobem, somem
-      const taxa = reduzir ? 0 : 0.6 + s.chama * 2.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 3 : 0);
+      const taxa = reduzir || a.apagada ? 0 : 0.6 + s.chama * 2.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 3 : 0);
       s.brasas.forEach((b, i) => {
         const el = brasas.current[i];
         if (!el) return;
@@ -309,7 +226,7 @@ export function Devocionalzeiro({
         el.setAttribute("opacity", (k * 0.95).toFixed(2));
       });
       // labaredas: nascem numa ponta da camada externa e sobem encolhendo
-      const taxaLab = reduzir ? 0 : 1.4 + s.chama * 3.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 4 : 0);
+      const taxaLab = reduzir || a.apagada ? 0 : 1.4 + s.chama * 3.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 4 : 0);
       s.labaredas.forEach((b, i) => {
         const el = labaredas.current[i];
         if (!el) return;
@@ -475,5 +392,28 @@ export function Devocionalzeiro({
         </g>
       </g>
     </svg>
+  );
+}
+
+// o vestido desenha com o herói do RPG (canvas): só baixa quando alguém
+// tem algo equipado — quem não tem continua no SVG, leve
+const DevocionalzeiroVestido = lazy(() => import("./DevocionalzeiroVestido"));
+
+/**
+ * O DEVOCIONALZEIRO do app — o que toda tela usa.
+ *
+ * Veste o que a pessoa equipou no guarda-roupa do RPG (`useVisual`): sem nada
+ * equipado, é o rig em SVG; com algo (cor, chapéu, traje, arma, asas…), é o
+ * mesmo boneco vestido, com o mesmo movimento. `look` troca o visual só aqui
+ * (`null` força o padrão — a jornada de quem ainda não tem conta, por exemplo).
+ */
+export function Devocionalzeiro({ look, ...props }: Props & { look?: Partial<MascotLook> | null }) {
+  const global = useVisual();
+  const vestido = paraOApp(look === undefined ? global : look);
+  if (!vestido) return <DevocionalzeiroSVG {...props} />;
+  return (
+    <Suspense fallback={<DevocionalzeiroSVG {...props} />}>
+      <DevocionalzeiroVestido look={vestido} {...props} />
+    </Suspense>
   );
 }

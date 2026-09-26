@@ -19,13 +19,15 @@ interface UpgradeCelebrationModalProps {
  * 1. ele sobe no palco, sob o céu de Jerusalém;
  * 2. a COROA do plano aparece lá no alto, brilhando — ele olha para cima,
  *    surpreso;
- * 3. ela desce e pousa na cabeça dele: a chama passa por dentro dela;
+ * 3. ela desce e pousa na cabeça dele — e a chama se apaga, que é a regra do
+ *    personagem: o que vai na cabeça toma o lugar dela;
  * 4. ele dá uma pirueta no ar com a chama no máximo e diz, na caixa de
  *    diálogo do RPG, o que o plano abriu;
  * 5. os itens liberados acendem um por um, como as lamparinas da jornada.
  *
  * A coroa, depois de pousar, é desenhada DENTRO do boneco (`naCabeca`): pula,
- * gira e inclina junto com ele.
+ * gira e inclina junto com ele. Se a pessoa usa algo na cabeça no RPG, a
+ * coroa toma o lugar — o resto do visual dela continua.
  */
 
 type Chave = "gold" | "premium" | "embaixador";
@@ -122,8 +124,9 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
             >
               <Estrelas />
               {/* a luz que se abre quando a coroa pousa */}
+              <div className="pointer-events-none absolute left-1/2 top-[58%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2">
               <motion.div
-                className="pointer-events-none absolute left-1/2 top-[58%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2"
+                className="h-full w-full"
                 style={{
                   background: `conic-gradient(from 0deg, transparent 0 7%, ${p.cor}30 9% 12%, transparent 14% 24%, ${p.cor}26 26% 29%, transparent 31% 41%, ${p.cor}30 43% 46%, transparent 48% 58%, ${p.cor}26 60% 63%, transparent 65% 75%, ${p.cor}30 77% 80%, transparent 82% 92%, ${p.cor}26 94% 97%, transparent 99%)`,
                   maskImage: "radial-gradient(circle, #000 14%, transparent 64%)",
@@ -132,6 +135,7 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
                 animate={{ opacity: naCabeca ? 1 : 0, rotate: reduzir ? 0 : 50 }}
                 transition={{ opacity: { duration: 0.5 }, rotate: { duration: 8, ease: "linear" } }}
               />
+              </div>
               <Cidade />
               {/* o chão de pedra */}
               <div className="absolute inset-x-0 bottom-0 h-[46px]" style={{ background: "linear-gradient(#6b5a52, #3e3230)", borderTop: "2px solid #8a7466" }} />
@@ -234,8 +238,8 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
 /**
  * As coroas, em unidades do rig (viewBox 0 -24 205 229). A cabeça dele é
  * redonda à direita (o bojo do D): o aro desce de 68 a 81 e se abre de 57 a
- * 141, que é a largura da cabeça nessa altura. A chama fica atrás do corpo, então
- * sobe por DENTRO da coroa.
+ * 141, que é a largura da cabeça nessa altura. Com ela na cabeça, a chama
+ * some (a regra vale para todo acessório de cabeça).
  */
 function Coroa({ tipo }: { tipo: "ouro" | "purpura" | "louro" }): ReactNode {
   if (tipo === "louro") {

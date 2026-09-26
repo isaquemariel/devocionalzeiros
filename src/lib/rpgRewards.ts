@@ -243,12 +243,16 @@ export function getEquip(userId: string): Partial<Record<Slot, string>> {
   }
 }
 
+/** avisa o app que o visual mudou — o Devocionalzeiro de fora do RPG se veste igual */
+const avisarVisual = () => { try { window.dispatchEvent(new Event("dz:visual")); } catch { /* sem janela */ } };
+
 export function setEquip(userId: string, equip: Partial<Record<Slot, string>>): void {
   try {
     localStorage.setItem(EQUIP_KEY(userId), JSON.stringify(equip));
   } catch {
     /* ignore */
   }
+  avisarVisual();
 }
 
 /** Converte o equipamento salvo num MascotLook pronto pro desenho. */
@@ -338,7 +342,7 @@ export async function syncCosmeticsFromDB(userId: string): Promise<void> {
     const blob = (data?.cosmetics || {}) as CosmeticsBlob;
     const hasDb = (blob.equip && Object.keys(blob.equip).length > 0) || (blob.owned && blob.owned.length > 0);
     if (hasDb) {
-      if (blob.equip) localStorage.setItem(EQUIP_KEY(userId), JSON.stringify(blob.equip));
+      if (blob.equip) { localStorage.setItem(EQUIP_KEY(userId), JSON.stringify(blob.equip)); avisarVisual(); }
       if (blob.owned?.length) { const cur = getOwned(userId); blob.owned.forEach((id) => cur.add(id)); localStorage.setItem(OWNED_KEY(userId), JSON.stringify([...cur])); }
     } else {
       // conta ainda sem cosméticos salvos → sobe o que houver localmente (migração)

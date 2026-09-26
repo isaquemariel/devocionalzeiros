@@ -155,8 +155,10 @@ function Palco({ motivo, fala, onFim }: { motivo: MotivoCelebracao; fala: string
       >
         <div className="relative flex w-full max-w-[340px] flex-col items-center">
           {/* a luz que abre atrás dele: raios dourados girando devagar */}
+          <div className="pointer-events-none absolute left-1/2 top-[62%] h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2">
+          {/* (o giro fica num filho: o framer-motion reescreve o transform e apagaria o translate) */}
           <motion.div
-            className="pointer-events-none absolute left-1/2 top-[46%] h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="h-full w-full rounded-full"
             style={{
               background: "conic-gradient(from 0deg, transparent 0 6%, #ffd88933 8% 11%, transparent 13% 22%, #ffd88926 24% 27%, transparent 29% 38%, #ffd88933 40% 43%, transparent 45% 55%, #ffd88926 57% 60%, transparent 62% 71%, #ffd88933 73% 76%, transparent 78% 88%, #ffd88926 90% 93%, transparent 95%)",
               maskImage: "radial-gradient(circle, #000 18%, transparent 68%)",
@@ -166,8 +168,9 @@ function Palco({ motivo, fala, onFim }: { motivo: MotivoCelebracao; fala: string
             animate={{ opacity: tempo === "festa" || tempo === "tchau" ? 1 : 0.4, scale: 1, rotate: reduzir ? 0 : 60 }}
             transition={{ opacity: { duration: 0.6 }, scale: { duration: 0.8 }, rotate: { duration: 6, ease: "linear" } }}
           />
+          </div>
           <div
-            className="pointer-events-none absolute left-1/2 top-[48%] h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute left-1/2 top-[64%] h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{ background: "radial-gradient(circle, #5b9bff55 0%, #ffd88922 40%, transparent 70%)" }}
           />
 

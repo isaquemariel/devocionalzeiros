@@ -7,7 +7,7 @@
 import type { MascotLook, MascotColor, MascotMood } from "@/lib/rpgMascot";
 import {
   PALETAS, calcularQuadro, desenharBraco, desenharChama, desenharCorpo, desenharEmblema, desenharPes, desenharRosto,
-  mao, noChao, noCorpo, silhueta,
+  mao, noChao, noCorpo, silhueta, type Quadro,
 } from "@/lib/devocionalzeiro/canvas";
 import { BASE_CHAMA as BASE_CHAMA_RIG, CHAO as CHAO_RIG } from "@/lib/devocionalzeiro/geometria";
 import { TAU, glowCircle, mixHex, rr, softShadow } from "@/lib/rpgDesenho";
@@ -341,7 +341,17 @@ export interface HDHeroOpts {
   mood?: MascotMood;
   /** a vitória: ele pula com os braços para o alto e a chama sobe */
   comemorando?: boolean;
+  /**
+   * Um quadro já calculado (a pose do simulador do rig): o boneco vestido do
+   * app passa o seu, e o herói se mexe exatamente como o rig em SVG.
+   */
+  quadro?: Quadro;
+  /** 0..1 — a chama apagando (quando algo pousa na cabeça dele no app) */
+  chamaAcesa?: number;
 }
+
+/** a chama da cabeça só aparece sem acessório de cabeça (ou com o próprio "foguinho") */
+export const temChama = (head?: string) => !head || head === "none" || head === "fire";
 
 /** altura do herói na cena, do chão ao topo da cabeça (sem a chama) */
 export const HERO_ALTURA = 53;
@@ -358,9 +368,9 @@ const K_ITEM = 2.8;
  *
  * O GUARDA-ROUPA foi reencaixado nesse corpo, peça por peça. A arte de cada
  * item foi preservada; o que mudou foi ONDE ela assenta:
- * - na cabeça, cada chapéu é escalado e posto sobre a curva da cabeça nova, e
- *   a chama sai pelo topo dele (nos chapéus fechados, a base da chama sobe até
- *   a copa; na coroa, na grinalda e nos espinhos, ela passa por dentro);
+ * - na cabeça, cada chapéu é escalado e posto sobre a curva da cabeça nova —
+ *   e a chama SOME: é regra do personagem, o acessório de cabeça toma o lugar
+ *   dela (só o "foguinho", que é a própria chama maior, a mantém);
  * - o traje é recortado pela silhueta do corpo novo, da boca para baixo;
  * - escudo, espada e armas ficam NA MÃO, na ponta do braço — o braço se ajeita
  *   para segurar, e a mão é redesenhada por cima do cabo;
@@ -496,20 +506,28 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   const feliz = o.mood === "happy", triste = o.mood === "sad";
   // parado e feliz, de vez em quando ele acena (se a mão estiver livre)
   const acena = feliz && !o.walking && !segura && !reduce && t % 7000 < 1300;
-  const q = calcularQuadro({
+  const paleta = PALETAS[(look.color as string) ?? "blue"] ?? PALETAS.blue;
+  // Um quadro pronto (o boneco vestido do app, que tem as molas e a fala do
+  // rig) ou o quadro simples do RPG, calculado aqui.
+  const q: Quadro = o.quadro ? { ...o.quadro, paleta, chama: Math.min(1, o.quadro.chama + (look.head === "fire" ? 0.35 : 0)) } : calcularQuadro({
     t, reduce, andando: !!o.walking && !rides,
     expressao: o.comemorando ? "radiante" : triste ? "triste" : feliz ? "feliz" : o.walking ? "feliz" : "neutro",
     gesto: o.comemorando && !segura ? "comemorar" : o.comemorando ? "vitoria" : acena ? "acenar" : "parado",
     // o "foguinho" do guarda-roupa agora é a PRÓPRIA chama crescendo
     chama: (look.head === "fire" ? 0.78 : 0.34) + (o.comemorando ? 0.3 : 0),
     olharX: 0.25,
-    paleta: PALETAS[(look.color as string) ?? "blue"] ?? PALETAS.blue,
+    paleta,
   });
-  // os braços se ajeitam para segurar o que ele carrega
+  // os braços se ajeitam para segurar o que ele carrega — menos quando as
+  // mãos estão ocupadas com outra coisa (tapar os olhos, acenar)
   const balanco = step * 6;
-  // na vitória, ele ergue o que carrega
-  if (segura) q.bracoD = o.comemorando && !reduce ? { ang: -150 + Math.sin(t * 0.006) * 14, len: 32 } : { ang: -40 + balanco, len: 31 };
-  if (look.shield) q.bracoE = { ang: 30 - balanco, len: 28 };
+  const festa = !!o.comemorando || q.gesto === "comemorar" || q.gesto === "pirueta" || q.gesto === "vitoria";
+  const maosOcupadas = q.gesto === "tampar" || q.gesto === "espiar";
+  if (segura && !maosOcupadas && q.gesto !== "acenar") {
+    // na festa, ele ergue o que carrega
+    q.bracoD = festa && !reduce ? { ang: -150 + Math.sin(t * 0.006) * 14, len: 32 } : { ang: -40 + balanco, len: 31 };
+  }
+  if (look.shield && !maosOcupadas && !festa) q.bracoE = { ang: 30 - balanco, len: 28 };
 
   g.save();
   // montado num animal ele fica um pouco menor, para caber na sela
@@ -585,11 +603,18 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
 
   g.save();
   noCorpo(g, q);
-  // a chama: nos chapéus fechados, a base sobe até a copa e ela sai por cima
-  const BASE_POR_CHAPEU: Record<string, number> = { cap: 47, hat: 37, turban: 45, kefiah: 47, fisher: 47, helmet: 48 };
-  const baseChama = BASE_POR_CHAPEU[look.head ?? ""] ?? BASE_CHAMA_RIG.y;
-  if (look.head === "fire") glowCircle(g, BASE_CHAMA_RIG.x, 40, 46, "#3f8cff", 0.35);
-  desenharChama(g, q, { x: BASE_CHAMA_RIG.x, y: baseChama });
+  // REGRA: com qualquer acessório na cabeça, a chama SOME — o chapéu, a coroa,
+  // o capacete ou a auréola tomam o lugar dela. Só o "foguinho" (que é a
+  // própria chama, maior) a mantém.
+  const acesa = o.chamaAcesa ?? 1;
+  if (temChama(look.head) && acesa > 0.01) {
+    g.save();
+    g.globalAlpha *= acesa;
+    if (acesa < 1) { g.translate(BASE_CHAMA_RIG.x, BASE_CHAMA_RIG.y); g.scale(0.4 + 0.6 * acesa, 0.4 + 0.6 * acesa); g.translate(-BASE_CHAMA_RIG.x, -BASE_CHAMA_RIG.y); }
+    if (look.head === "fire") glowCircle(g, BASE_CHAMA_RIG.x, 40, 46, "#3f8cff", 0.35);
+    desenharChama(g, q);
+    g.restore();
+  }
   desenharCorpo(g, q);
 
   // ---- as variáveis do desenho antigo do herói (centro 0, topo 0), que é
@@ -924,7 +949,17 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.moveTo(L - 0.6, helBot + 1.6);
     g.quadraticCurveTo(headCx, helBot - 0.9, x + 11.6, helBot + 1.6);
     g.stroke();
-    // (a crista agora é a própria chama, que sai pelo topo do capacete)
+    // crista (pluma) dourada-rubra
+    const crest = g.createLinearGradient(headCx, top - 13.5, headCx, top - 5);
+    crest.addColorStop(0, "#e8455a"); crest.addColorStop(1, "#a8202e");
+    g.fillStyle = crest;
+    g.beginPath();
+    g.moveTo(headCx - 5.4, top - 5.8);
+    g.quadraticCurveTo(headCx, top - 13.4, headCx + 5.4, top - 5.8);
+    g.quadraticCurveTo(headCx, top - 8.8, headCx - 5.4, top - 5.8);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(255,220,220,0.4)"; g.lineWidth = 0.6;
+    for (const dx of [-3, 0, 3]) { g.beginPath(); g.moveTo(headCx + dx, top - 6.2); g.quadraticCurveTo(headCx + dx * 0.6, top - 9.7, headCx + dx * 0.4, top - 11); g.stroke(); }
     // brilho do metal
     g.fillStyle = "rgba(255,255,255,0.4)";
     g.beginPath(); g.ellipse(headCx - 6, top - 2.2, 3.6, 1.3, -0.45, 0, TAU); g.fill();
