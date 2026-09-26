@@ -1,10 +1,10 @@
-import type { Acao, Estado, IdEtapa, Whatsapp } from "./tipos";
-import { existeEtapa, proxima } from "./roteiro";
+import type { Acao, Estado, IdEtapa, Respostas, Whatsapp } from "./tipos";
+import { existeEtapa, FAMILIARIDADE, METAS, MOTIVOS, ORIGENS, proxima } from "./roteiro";
 import { DDIS } from "@/lib/ddis";
 
 /**
  * MOTOR DA JORNADA — puro: estado + ação → estado. Nenhum efeito colateral
- * aqui (rede, localStorage, navegação); isso fica na tela. É o que permite
+ * aqui (rede, armazenamento, navegação); isso fica na tela. É o que permite
  * testar a jornada inteira sem navegador.
  */
 
@@ -60,15 +60,23 @@ export function validarNome(v: string): string | null {
   if (t.length < 2) return "Me diz pelo menos duas letrinhas 😉";
   if (t.length > 30) return "Que nome comprido! Pode encurtar um pouco?";
   if (!/\p{L}/u.test(t)) return "Esse nome precisa de pelo menos uma letra.";
+  // Só letras (com acento), espaço, apóstrofo (o reto e o curvo, que o
+  // teclado do iPhone troca sozinho), hífen e ponto. Fecha a porta
+  // para número, emoji, sinal de código (<, >, {) e caractere invisível de
+  // controle ou de inversão de texto — que viraria o nome no perfil, no
+  // ranking e no painel do admin.
+  if (!/^[\p{L}\p{M}'\u2019 .-]+$/u.test(t)) return "Usa só letras no nome, por favor.";
   return null;
 }
 
 export function validarEmail(v: string): string | null {
   const t = v.trim();
   if (!t) return "Faltou o e-mail.";
-  // Deliberadamente simples: o Supabase valida de verdade. Aqui só se pegam
-  // os tropeços de digitação (sem @, sem ponto, espaço no meio).
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)) return "Hmm, esse e-mail parece incompleto. Confere pra mim?";
+  if (t.length > 120) return "Esse e-mail é comprido demais. Confere pra mim?";
+  // Só os caracteres de um endereço de verdade. A versão frouxa (qualquer
+  // coisa com @ e ponto) aceitava "a@b.c<script>" — que seguiria para o
+  // cadastro, o perfil e o painel do admin.
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(t)) return "Hmm, esse e-mail parece incompleto. Confere pra mim?";
   return null;
 }
 
@@ -105,18 +113,70 @@ export function validarWhatsapp(w: Whatsapp): string | null {
   return null;
 }
 
-// ─── rascunho ──────────────────────────────────────────────────────────────
-// O redirecionamento do Google destrói a página. Sem rascunho, a pessoa
-// voltaria para o começo — depois de ter respondido tudo. Guarda-se o
-// estado inteiro; a senha nunca entra nele (não faz parte de `Respostas`).
+// ─── saneamento ────────────────────────────────────────────────────────────
+// Tudo o que vem de fora da memória da página — o rascunho do armazenamento,
+// que qualquer um com o aparelho na mão pode editar — passa por aqui antes de
+// ser usado ou gravado no perfil. Só sobrevive o que o roteiro poderia ter
+// produzido: valor de lista que existe na lista, nome que passa na régua,
+// número que passa na régua. O resto é descartado em silêncio.
 
-export const CHAVE_RASCUNHO = "dz.jornada.v1";
-/** Rascunho mais velho que isto é de outra visita — recomeça. */
-const VALIDADE_MS = 7 * 24 * 60 * 60 * 1000;
+export function sanearRespostas(bruto: unknown): Respostas {
+  const r = (bruto && typeof bruto === "object" ? bruto : {}) as Record<string, unknown>;
+  const s: Respostas = {};
+  const texto = (v: unknown) => (typeof v === "string" ? v : "");
+  const naLista = (lista: { valor: string }[], v: unknown) => lista.some((o) => o.valor === v);
+
+  const apelido = texto(r.apelido).trim().replace(/\s+/g, " ");
+  if (apelido && !validarNome(apelido)) s.apelido = apelido;
+  if (Array.isArray(r.motivos)) {
+    const m = [...new Set(r.motivos.filter((v) => naLista(MOTIVOS, v)) as string[])];
+    if (m.length) s.motivos = m;
+  }
+  if (naLista(FAMILIARIDADE, r.familiaridade)) s.familiaridade = r.familiaridade as string;
+  if (typeof r.meta_min === "number" && naLista(METAS, String(r.meta_min))) s.meta_min = r.meta_min;
+  if (naLista(ORIGENS, r.origem)) s.origem = r.origem as string;
+  if (r.whatsapp === null) s.whatsapp = null;
+  else if (r.whatsapp && typeof r.whatsapp === "object") {
+    const w = r.whatsapp as Record<string, unknown>;
+    const numero = texto(w.numero);
+    // só o que o campo deixa digitar (dígito, espaço, parêntese, hífen)
+    const zap = { ddi: texto(w.ddi), numero: numero.replace(/\D/g, "") };
+    if (/^[\d\s()-]*$/.test(numero) && !validarWhatsapp(zap)) s.whatsapp = zap;
+  }
+  const email = texto(r.email).trim().toLowerCase();
+  if (email && email.length <= 120 && !validarEmail(email)) s.email = email;
+  return s;
+}
+
+// ─── rascunho ──────────────────────────────────────────────────────────────
+// A jornada vive na MEMÓRIA da página: recarregar recomeça do zero, e nada do
+// que a pessoa digitou fica no aparelho. A única exceção é a ida ao Google (e
+// ao login, no meio da conta): o redirecionamento destrói a página, e sem um
+// rascunho a pessoa voltaria para o começo depois de ter respondido tudo.
+//
+// Por isso o rascunho é gravado SÓ no instante da saída, no `sessionStorage`
+// (morre com a aba, não é visto por outra aba nem sobrevive a fechar o
+// navegador), vale 30 minutos, nunca leva a senha (não faz parte de
+// `Respostas`) nem o e-mail do caminho do Google, e é apagado assim que é
+// aplicado ou que a pessoa desiste.
+
+export const CHAVE_RASCUNHO = "dz.jornada.v2";
+/** a versão antiga morava no localStorage por 7 dias — é apagada onde for achada */
+const CHAVE_ANTIGA = "dz.jornada.v1";
+/** o tempo de ir ao Google e voltar, com folga */
+const VALIDADE_MS = 30 * 60 * 1000;
+
+const sessao = (): Storage | null => {
+  try { return window.sessionStorage; } catch { return null; }
+};
+const limparAntigo = () => {
+  try { window.localStorage.removeItem(CHAVE_ANTIGA); } catch { /* ok */ }
+};
 
 export function lerRascunho(agora = Date.now()): Estado | null {
+  limparAntigo();
   try {
-    const bruto = localStorage.getItem(CHAVE_RASCUNHO);
+    const bruto = sessao()?.getItem(CHAVE_RASCUNHO);
     if (!bruto) return null;
     const e = JSON.parse(bruto) as Estado;
     if (e?.v !== 1 || typeof e.etapa !== "string" || !e.respostas) return null;
@@ -124,25 +184,33 @@ export function lerRascunho(agora = Date.now()): Estado | null {
     // visita e outra): recomeça, em vez de a tela quebrar procurando por ela.
     if (!existeEtapa(e.etapa)) return null;
     if (!Array.isArray(e.historico)) return null;
-    e.historico = e.historico.filter(existeEtapa);
-    if (agora - (e.iniciadoEm ?? 0) > VALIDADE_MS) return null;
-    return e;
+    if (typeof e.iniciadoEm !== "number" || agora - e.iniciadoEm > VALIDADE_MS || e.iniciadoEm > agora + 60_000) return null;
+    return {
+      v: 1,
+      etapa: e.etapa,
+      historico: e.historico.filter(existeEtapa),
+      respostas: sanearRespostas(e.respostas),
+      aguardandoGoogle: e.aguardandoGoogle === true,
+      iniciadoEm: e.iniciadoEm,
+    };
   } catch {
     return null; // modo anônimo, armazenamento bloqueado, JSON corrompido
   }
 }
 
-export function gravarRascunho(e: Estado): void {
+/** Grava o estado para sobreviver a UM redirecionamento. Carimba a hora da saída. */
+export function gravarRascunho(e: Estado, agora = Date.now()): void {
   try {
-    localStorage.setItem(CHAVE_RASCUNHO, JSON.stringify(e));
+    sessao()?.setItem(CHAVE_RASCUNHO, JSON.stringify({ ...e, respostas: sanearRespostas(e.respostas), iniciadoEm: agora }));
   } catch {
-    /* sem armazenamento a jornada segue — só não sobrevive a um reload */
+    /* sem armazenamento a jornada segue — só não sobrevive ao redirecionamento */
   }
 }
 
 export function apagarRascunho(): void {
+  limparAntigo();
   try {
-    localStorage.removeItem(CHAVE_RASCUNHO);
+    sessao()?.removeItem(CHAVE_RASCUNHO);
   } catch {
     /* idem */
   }

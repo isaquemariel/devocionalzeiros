@@ -132,19 +132,27 @@ const SOBRANCELHA: Record<Expressao, { e: [number, number]; d: [number, number] 
 /** ângulo que aponta o eixo do braço (local +y) na direção (dx, dy) */
 const apontarPara = (dx: number, dy: number) => (Math.atan2(-dx, dy) * 180) / Math.PI;
 const BRACO_REPOUSO = 25;
+/**
+ * Ângulo de repouso de cada braço. O esquerdo nasce junto da lateral escura
+ * do livro: a 16° a mão ficava por cima do próprio corpo, da mesma cor, e o
+ * braço só aparecia quando subia para tapar os olhos. Aberto a 44°, a mão
+ * sai para fora da silhueta, como a direita.
+ */
+const REPOUSO_E = 44;
+const REPOUSO_D = -30;
 /** do ombro ao centro da mão: o retângulo nasce 6 acima e termina num meio-círculo de 10,5 */
 const ALCANCE_MAO = 6 + 10.5;
 
 function alvoBracos(g: Gesto, t: number): { e: number; d: number; le: number; ld: number } {
   switch (g) {
     case "acenar":
-      return { e: 16, d: -150 + Math.sin(t * 9) * 24, le: BRACO_REPOUSO, ld: 32 };
+      return { e: REPOUSO_E, d: -150 + Math.sin(t * 9) * 24, le: BRACO_REPOUSO, ld: 32 };
     case "comemorar":
       return { e: 152 + Math.sin(t * 7) * 8, d: -152 - Math.sin(t * 7) * 8, le: 32, ld: 32 };
     case "pensar":
-      return { e: 18, d: apontarPara(110 - OMBRO_D.x, 112 - OMBRO_D.y), le: BRACO_REPOUSO, ld: 38 };
+      return { e: REPOUSO_E, d: apontarPara(110 - OMBRO_D.x, 112 - OMBRO_D.y), le: BRACO_REPOUSO, ld: 38 };
     case "apontar":
-      return { e: 18, d: -58 + Math.sin(t * 3) * 3, le: BRACO_REPOUSO, ld: 34 };
+      return { e: REPOUSO_E, d: -58 + Math.sin(t * 3) * 3, le: BRACO_REPOUSO, ld: 34 };
     case "tampar":
       return {
         e: apontarPara(OLHO_E.x - OMBRO_E.x, OLHO_E.y - OMBRO_E.y),
@@ -167,11 +175,11 @@ function alvoBracos(g: Gesto, t: number): { e: number; d: number; le: number; ld
       return { e: 168 + Math.sin(t * 2) * 6, d: -168 - Math.sin(t * 2) * 6, le: 36, ld: 36 };
     case "cocar":
       // a mão direita coça o lado da cabeça, rapidinho
-      return { e: 16, d: -150 + Math.sin(t * 22) * 7, le: BRACO_REPOUSO, ld: 34 };
+      return { e: REPOUSO_E, d: -150 + Math.sin(t * 22) * 7, le: BRACO_REPOUSO, ld: 34 };
     case "andar":
-      return { e: 16 + Math.sin(t * 8) * 14, d: -16 + Math.sin(t * 8) * 14, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
+      return { e: REPOUSO_E + Math.sin(t * 8) * 14, d: REPOUSO_D + Math.sin(t * 8) * 14, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
     default:
-      return { e: 16 + Math.sin(t * 1.3) * 2, d: -16 - Math.sin(t * 1.3 + 1) * 2, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
+      return { e: REPOUSO_E + Math.sin(t * 1.3) * 2, d: REPOUSO_D - Math.sin(t * 1.3 + 1) * 2, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
   }
 }
 
@@ -182,7 +190,7 @@ export function Devocionalzeiro({
   const uid = useId().replace(/:/g, "");
   const ids = {
     corpo: `c-${uid}`, lado: `l-${uid}`, iris: `i-${uid}`, fogoExt: `fe-${uid}`, fogoMed: `fm-${uid}`,
-    fogoNuc: `fn-${uid}`, brilho: `b-${uid}`, brilhoForte: `bf-${uid}`, recorte: `r-${uid}`, neon: `n-${uid}`,
+    fogoNuc: `fn-${uid}`, recorte: `r-${uid}`, neon: `n-${uid}`,
   };
 
   // alvos lidos pelo laço (props → ref, sem reiniciar o laço)
@@ -205,7 +213,6 @@ export function Devocionalzeiro({
     emblema: useRef<SVGPathElement>(null), estrelas: useRef<SVGGElement>(null),
   };
   const linguas = useRef<SVGPathElement[][]>([[], [], []]);
-  const linguasBrilho = useRef<SVGPathElement[]>([]);
   const brasas = useRef<SVGCircleElement[]>([]);
   const labaredas = useRef<SVGPathElement[]>([]);
 
@@ -216,7 +223,7 @@ export function Devocionalzeiro({
 
     // estado das molas
     const s = {
-      bracoE: 16, bracoD: -16, lenE: BRACO_REPOUSO, lenD: BRACO_REPOUSO,
+      bracoE: REPOUSO_E, bracoD: REPOUSO_D, lenE: BRACO_REPOUSO, lenD: BRACO_REPOUSO,
       gazeX: 0, gazeY: 0, chama: alvo.current.chama,
       pulsoVisto: alvo.current.pulso, pulsoEm: -10,
       toqueVisto: alvo.current.toque, toqueEm: -10,
@@ -395,7 +402,6 @@ export function Devocionalzeiro({
           const d = lingua(cx, BASE_CHAMA.y, hw, tx, ty, sway * 1.6);
           el.setAttribute("d", d);
           if (ci === 0) s.pontas[li] = { x: tx, y: ty };
-          if (ci === 0) linguasBrilho.current[li]?.setAttribute("d", d);
         });
       });
       // brasas: nascem na chama, sobem, somem
@@ -504,9 +510,6 @@ export function Devocionalzeiro({
           <stop offset="0%" stopColor="#F2FDFF" />
           <stop offset="100%" stopColor="#C4F1FF" />
         </linearGradient>
-        <filter id={ids.brilho} x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="5.5" />
-        </filter>
         <filter id={ids.neon} x="-20%" y="-40%" width="140%" height="180%">
           <feGaussianBlur stdDeviation="1.6" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
@@ -524,11 +527,6 @@ export function Devocionalzeiro({
       <g ref={r.corpo}>
         {/* chama ATRÁS do corpo: a base some dentro da cabeça */}
         <g ref={r.chama}>
-          <g filter={`url(#${ids.brilho})`} opacity="0.75">
-            {CAMADAS[0].linguas.map((_, i) => (
-              <path key={i} ref={(el) => { if (el) linguasBrilho.current[i] = el; }} fill="#3E8BFF" />
-            ))}
-          </g>
           {CAMADAS.map((cam, ci) => (
             <g key={cam.cor} opacity={ci === 0 ? 0.96 : 1}>
               {cam.linguas.map((_, li) => (
@@ -557,7 +555,6 @@ export function Devocionalzeiro({
         <path d={CORPO_FRENTE} fill={`url(#${ids.corpo})`} />
         <g clipPath={`url(#${ids.recorte})`}>
           {/* borda de luz da chama sobre o topo da cabeça */}
-          <ellipse cx="104" cy="62" rx="42" ry="11" fill="#3E8BFF" opacity="0.22" filter={`url(#${ids.brilho})`} />
           <g ref={r.estrelas}>
             {estrelas.map((e, i) => <circle key={i} cx={e.x} cy={e.y} r={e.r} fill={e.c} opacity={e.o} />)}
           </g>
@@ -594,9 +591,9 @@ export function Devocionalzeiro({
           {/* olhos de alegria (^ ^) */}
           <path ref={r.felizE} d="M83 101 Q94 88 105 101" fill="none" stroke="#EAF3FF" strokeWidth="3" strokeLinecap="round" opacity="0" />
           <path ref={r.felizD} d="M118 101 Q129 88 140 101" fill="none" stroke="#EAF3FF" strokeWidth="3" strokeLinecap="round" opacity="0" />
-          {/* olhos fechados (dormindo, bocejando): a curva para baixo, com cílios */}
-          <path ref={r.fechadoE} d="M84 97 Q94 105 104 97 M87 101 L85 104 M94 103 L94 106.5 M101 101 L103 104" fill="none" stroke="#EAF3FF" strokeWidth="2.6" strokeLinecap="round" opacity="0" />
-          <path ref={r.fechadoD} d="M119 97 Q129 105 139 97 M122 101 L120 104 M129 103 L129 106.5 M136 101 L138 104" fill="none" stroke="#EAF3FF" strokeWidth="2.6" strokeLinecap="round" opacity="0" />
+          {/* olhos fechados (dormindo, bocejando): só a curva — cílios o deixavam feminino */}
+          <path ref={r.fechadoE} d="M85 98 Q94 104 103 98" fill="none" stroke="#EAF3FF" strokeWidth="2.6" strokeLinecap="round" opacity="0" />
+          <path ref={r.fechadoD} d="M120 98 Q129 104 138 98" fill="none" stroke="#EAF3FF" strokeWidth="2.6" strokeLinecap="round" opacity="0" />
 
           <path ref={r.sobE} d="M86.5 80 Q94 76.5 101.5 79.5" fill="none" stroke="#050A1E" strokeWidth="2.2" strokeLinecap="round" />
           <path ref={r.sobD} d="M121.5 79.5 Q129 76.5 136.5 80" fill="none" stroke="#050A1E" strokeWidth="2.2" strokeLinecap="round" />
@@ -606,11 +603,11 @@ export function Devocionalzeiro({
         </g>
 
         {/* braços: na frente do corpo — é o que deixa ele tapar os olhos */}
-        <g ref={r.bracoE} transform={`translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(16)`}>
-          <rect ref={r.bracoEForma} x="-10.5" y="-6" width="21" height={BRACO_REPOUSO} rx="10.5" fill="#111D42" />
+        <g ref={r.bracoE} transform={`translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(${REPOUSO_E})`}>
+          <rect ref={r.bracoEForma} x="-10.5" y="-6" width="21" height={BRACO_REPOUSO} rx="10.5" fill="#15224C" stroke="#2F4589" strokeWidth="1.6" />
         </g>
-        <g ref={r.bracoD} transform={`translate(${OMBRO_D.x} ${OMBRO_D.y}) rotate(-16)`}>
-          <rect ref={r.bracoDForma} x="-10.5" y="-6" width="21" height={BRACO_REPOUSO} rx="10.5" fill="#111D42" />
+        <g ref={r.bracoD} transform={`translate(${OMBRO_D.x} ${OMBRO_D.y}) rotate(${REPOUSO_D})`}>
+          <rect ref={r.bracoDForma} x="-10.5" y="-6" width="21" height={BRACO_REPOUSO} rx="10.5" fill="#15224C" stroke="#2F4589" strokeWidth="1.6" />
         </g>
       </g>
     </svg>

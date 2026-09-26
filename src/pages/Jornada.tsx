@@ -78,7 +78,14 @@ export default function Jornada() {
   const navigate = useNavigate();
   const reduzirMov = useReducedMotion();
   const { user, loading, signUp } = useAuth();
-  const [estado, despachar] = useReducer(reduzir, undefined, () => lerRascunho() ?? estadoInicial());
+  // Recarregar RECOMEÇA: a jornada vive na memória da página. O único estado
+  // que se retoma é o da volta do Google (ver "rascunho" em `motor.ts`).
+  const [estado, despachar] = useReducer(reduzir, undefined, () => {
+    const salvo = lerRascunho();
+    if (salvo?.aguardandoGoogle) return salvo;
+    apagarRascunho();
+    return estadoInicial();
+  });
   const etapa = etapaDe(estado.etapa);
   const r = estado.respostas;
 
@@ -190,12 +197,6 @@ export default function Jornada() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado.etapa]);
 
-  // Rascunho a cada mudança. No fim não se grava: a conta já existe, e um
-  // rascunho parado em "fim" faria a celebração reaparecer na próxima visita.
-  useEffect(() => {
-    if (estado.etapa !== "fim") gravarRascunho(estado);
-  }, [estado]);
-
   useEffect(() => () => {
     if (timerFala.current) window.clearTimeout(timerFala.current);
     if (timerMomento.current) window.clearTimeout(timerMomento.current);
@@ -211,6 +212,7 @@ export default function Jornada() {
       if (estado.aguardandoGoogle) {
         despachar({ tipo: "cancelarGoogle" });
         limparRedirecionamento();
+        apagarRascunho(); // as respostas seguem na memória; no aparelho, nada fica
       }
       return;
     }
@@ -454,9 +456,9 @@ export default function Jornada() {
     setEnviando(true);
     setErro(null);
     despachar({ tipo: "aguardarGoogle" });
-    // Grava AGORA, fora do ciclo do React: o redirecionamento pode acontecer
-    // antes do efeito de rascunho rodar, e a volta encontraria o estado velho.
-    gravarRascunho({ ...estado, aguardandoGoogle: true });
+    // O único momento em que a jornada toca o armazenamento: a página vai ser
+    // destruída pelo redirecionamento. Sem o e-mail — o Google traz o dele.
+    gravarRascunho({ ...estado, aguardandoGoogle: true, respostas: { ...r, email: undefined } });
     try { localStorage.setItem("post_signup_redirect", "/jornada"); } catch { /* ok */ }
     try {
       const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
@@ -467,6 +469,7 @@ export default function Jornada() {
       setEnviando(false);
       despachar({ tipo: "cancelarGoogle" });
       limparRedirecionamento();
+      apagarRascunho();
       setErro("Não consegui falar com o Google agora. Tenta de novo, ou usa o e-mail.");
     }
   };
@@ -477,9 +480,11 @@ export default function Jornada() {
   };
 
   const irParaLogin = () => {
-    const q = new URLSearchParams({ entrar: "1" });
-    if (r.email) q.set("email", r.email);
-    navigate(`/auth?${q.toString()}`);
+    // No meio da conta, as respostas vão junto: o login (Auth.tsx) as aplica.
+    if (NA_CONTA.includes(estado.etapa)) gravarRascunho({ ...estado, respostas: { ...r, email: undefined } });
+    // O e-mail vai no ESTADO da navegação, nunca na URL: URL fica no
+    // histórico, em log de servidor e no que o pixel de anúncio lê da página.
+    navigate("/auth?entrar=1", { state: r.email ? { email: r.email } : undefined });
   };
 
   const voltar = () => {
@@ -552,7 +557,9 @@ export default function Jornada() {
   const transicao = reduzirMov ? "none" : "transform 420ms cubic-bezier(.3,.7,.3,1), top 420ms cubic-bezier(.3,.7,.3,1)";
 
   const numEstacao = indice(estado.etapa);
-  const mostrarBalao = !!falaAtual && !andando && !dormindo;
+  // No fim, depois de ele falar, o balão sai de cena: é o momento de a pessoa
+  // ver Jerusalém no horizonte, e o balão ficava bem na frente dela.
+  const mostrarBalao = !!falaAtual && !andando && !dormindo && !(estado.etapa === "fim" && assentado);
 
   return (
     <div ref={raiz} className="jz-raiz fixed inset-0 overflow-hidden" style={{ fontFamily: FONTE, background: "#8F7BE0" }}>

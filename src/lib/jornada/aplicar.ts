@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Json, TablesUpdate } from "@/integrations/supabase/types";
 import type { Estado } from "./tipos";
-import { apagarRascunho, lerRascunho } from "./motor";
+import { apagarRascunho, lerRascunho, sanearRespostas } from "./motor";
 
 /**
  * Leva as respostas da jornada para o perfil, DEPOIS que a conta existe.
@@ -16,13 +16,15 @@ import { apagarRascunho, lerRascunho } from "./motor";
  *   não pode estragar nada.
  *
  * O rascunho só é apagado depois do update dar certo. Se a rede falhar, ele
- * fica e a próxima tentativa (próximo login, próxima visita) aplica.
+ * fica enquanto a aba viver (ver `motor.ts`), e o próximo login nela aplica.
  */
 export type ResultadoAplicacao = "aplicada" | "nada" | "falhou";
 
 export async function aplicarJornada(userId: string, estado: Estado | null = lerRascunho()): Promise<ResultadoAplicacao> {
   if (!estado) return "nada";
-  const r = estado.respostas;
+  // Saneado de novo aqui, na porta do banco: o estado pode ter vindo do
+  // armazenamento do aparelho, e o perfil só recebe o que o roteiro produziria.
+  const r = sanearRespostas(estado.respostas);
   // rascunho que nem passou do "Bora!" não tem nada a gravar
   if (!r.apelido && !r.origem && !r.meta_min) {
     apagarRascunho();

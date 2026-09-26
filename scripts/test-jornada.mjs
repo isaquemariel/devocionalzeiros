@@ -26,13 +26,15 @@ await build({
   entryPoints: [entrada], bundle: true, format: "esm", platform: "node", outfile: saida,
   alias: { "@": join(RAIZ, "src") }, logLevel: "error",
 });
-// o rascunho vive no localStorage; no Node, um de mentira
-const memoria = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (memoria.has(k) ? memoria.get(k) : null),
-  setItem: (k, v) => memoria.set(k, String(v)),
-  removeItem: (k) => memoria.delete(k),
+// armazenamentos de mentira para o Node: o rascunho vive no sessionStorage;
+// o localStorage só existe para provar que a versão antiga é apagada
+const armazenamento = () => {
+  const m = new Map();
+  return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
 };
+globalThis.window = globalThis;
+globalThis.sessionStorage = armazenamento();
+globalThis.localStorage = armazenamento();
 const J = await import(pathToFileURL(saida).href);
 
 let ok = 0;
@@ -179,14 +181,48 @@ caso("desistir no Google devolve para a escolha da conta", () => {
   assert.equal(igual, e); // sem espera, é no-op (mesma referência, sem re-render)
 });
 caso("rascunho de uma etapa que o roteiro não tem mais recomeça do zero", () => {
-  const velho = { v: 1, etapa: "plano", historico: ["boas-vindas"], respostas: {}, aguardandoGoogle: false, iniciadoEm: Date.now() };
-  localStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(velho));
+  const velho = { v: 1, etapa: "plano", historico: ["boas-vindas"], respostas: {}, aguardandoGoogle: true, iniciadoEm: Date.now() };
+  sessionStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(velho));
   assert.equal(J.lerRascunho(), null);
   const bom = { ...velho, etapa: "meta", historico: ["boas-vindas", "plano", "nome"] };
-  localStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(bom));
+  sessionStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(bom));
   assert.deepEqual(J.lerRascunho().historico, ["boas-vindas", "nome"]); // a etapa extinta sai da pilha
   J.apagarRascunho();
   assert.equal(J.lerRascunho(), null);
+});
+caso("o rascunho mora no sessionStorage, vale 30 minutos e apaga o antigo do localStorage", () => {
+  localStorage.setItem("dz.jornada.v1", JSON.stringify({ respostas: { email: "velho@x.com" } }));
+  const e = J.reduzir(J.estadoInicial(0), { tipo: "responder", parcial: { apelido: "Ana" } });
+  J.gravarRascunho({ ...e, aguardandoGoogle: true }, 1_000_000);
+  assert.equal(localStorage.getItem(J.CHAVE_RASCUNHO), null, "nada no localStorage");
+  assert.equal(J.lerRascunho(1_000_000 + 29 * 60_000).respostas.apelido, "Ana");
+  assert.equal(J.lerRascunho(1_000_000 + 31 * 60_000), null, "passou de 30 min");
+  assert.equal(localStorage.getItem("dz.jornada.v1"), null, "a versão antiga (7 dias no localStorage) foi apagada");
+  J.apagarRascunho();
+});
+caso("rascunho adulterado: só volta o que o roteiro poderia ter produzido", () => {
+  const sujo = {
+    v: 1, etapa: "salvar", historico: ["boas-vindas", "<img>"], aguardandoGoogle: "sim", iniciadoEm: Date.now(),
+    respostas: {
+      apelido: "<script>alert(1)</script>", motivos: ["deus", "hack", "deus", 7], familiaridade: "mestre",
+      meta_min: 999, origem: "javascript:alert(1)", whatsapp: { ddi: "+55", numero: "11987654321; drop" },
+      email: "a@b.c<script>", senha: "Luz2026", admin: true,
+    },
+  };
+  sessionStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(sujo));
+  const e = J.lerRascunho();
+  assert.deepEqual(e.historico, ["boas-vindas"]);
+  assert.equal(e.aguardandoGoogle, false, "só `true` de verdade conta");
+  assert.deepEqual(e.respostas, { motivos: ["deus"] }, JSON.stringify(e.respostas));
+  J.apagarRascunho();
+});
+caso("saneamento aceita o que é legítimo", () => {
+  const ok = { apelido: "  Ana   Clara ", motivos: ["deus", "juntos"], familiaridade: "historias", meta_min: 15, origem: "igreja",
+    whatsapp: { ddi: "+55", numero: "(11) 98765-4321" }, email: " Ana@Exemplo.com " };
+  assert.deepEqual(J.sanearRespostas(ok), { apelido: "Ana Clara", motivos: ["deus", "juntos"], familiaridade: "historias", meta_min: 15,
+    origem: "igreja", whatsapp: { ddi: "+55", numero: "11987654321" }, email: "ana@exemplo.com" });
+  assert.deepEqual(J.sanearRespostas({ whatsapp: null }), { whatsapp: null }, "pular o WhatsApp continua valendo");
+  assert.deepEqual(J.sanearRespostas("lixo"), {});
 });
 caso("o estado nunca carrega senha", () => {
   const e = J.reduzir(J.estadoInicial(0), { tipo: "responder", parcial: { email: "a@b.com" } });
@@ -196,6 +232,8 @@ caso("o estado nunca carrega senha", () => {
 
 // ─── validações ─────────────────────────────────────────────────────────────
 caso("nome", () => {
+  for (const ruim of ["<b>Ana</b>", "Ana{}", "Ana\u202Eoãn", "Ana\u0000", "Ana 2", "Ana 🔥", "a@b"]) assert.ok(J.validarNome(ruim), ruim);
+  for (const bom of ["Ana Clara", "D'Ávila", "João Pedro", "Zé", "Ana-Lú", "O’Neil", "Ma. Clara"]) assert.equal(J.validarNome(bom), null, bom);
   assert.ok(J.validarNome("A"));
   assert.equal(J.validarNome("  Ana  "), null);
   assert.equal(J.validarNome("José"), null);

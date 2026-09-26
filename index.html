@@ -57,6 +57,10 @@
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
+      // autoConfig desligado: sem ele o pixel lê sozinho botões e dados da
+      // página (e, nos formulários, pode colher e-mail e telefone). Ficam só
+      // os eventos que o app manda de propósito.
+      fbq('set', 'autoConfig', false, '4225976367650961');
       fbq('init', '4225976367650961');
       fbq('track', 'PageView');
     </script>

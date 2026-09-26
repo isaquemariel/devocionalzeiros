@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { aplicarJornada } from "@/lib/jornada/aplicar";
 import { lerRascunho } from "@/lib/jornada/motor";
 import { DDIS } from "@/lib/ddis";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle,
@@ -350,8 +350,11 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
   const [isSettingNewPassword, setIsSettingNewPassword] = useState(false);
+  // A jornada manda o e-mail pelo estado da navegação (nunca pela URL).
+  const location = useLocation();
   const [email, setEmail] = useState(() => {
-    try { return new URLSearchParams(window.location.search).get("email") ?? ""; } catch { return ""; }
+    const e = (location.state as { email?: unknown } | null)?.email;
+    return typeof e === "string" && e.length <= 120 ? e : "";
   });
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
