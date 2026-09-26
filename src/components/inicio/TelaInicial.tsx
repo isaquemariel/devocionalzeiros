@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { BookOpen, Moon, Scroll, Sun, Sunrise, Sunset, Sword, Trophy, Brain } from "lucide-react";
+import { BookOpen, Scroll, Sword, Trophy, Brain } from "lucide-react";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { Balao } from "@/components/jornada/Balao";
 import { ALTURA, CenaDoDia, ESTILO_CENA, ESTRADA } from "./CenaDoDia";
 import { useMomentoDoDia } from "./useMomentoDoDia";
-import { FALAS_DO_CEU, NOME_DA_FASE, SAUDACAO, VERSOS, VIRADA, type Fase, type Momento } from "@/lib/ceu";
+import { FALAS_DO_CEU, SAUDACAO, SAUDACAO_AURORA, VERSOS, VIRADA, type Fase, type Momento } from "@/lib/ceu";
+import { NomeDoApp } from "./NomeDoApp";
 import type { Expressao, Gesto } from "@/lib/jornada/tipos";
 import logoOfficial from "@/assets/logo-icon.png";
 
@@ -38,14 +39,6 @@ const CUTUCOES: Fala[] = [
   { texto: "Hehe. Tô pronto! E você?", gesto: "vitoria", expressao: "radiante" },
 ];
 
-/** o ícone do relógio acompanha o céu: aurora, sol alto, poente, lua */
-function iconeDaHora(h: number): typeof Sun {
-  if (h >= 5 && h < 7.5) return Sunrise;
-  if (h >= 7.5 && h < 17) return Sun;
-  if (h >= 17 && h < 19.4) return Sunset;
-  return Moon;
-}
-
 const RECURSOS = [
   { Icone: Scroll, nome: "Devocional" },
   { Icone: BookOpen, nome: "Leitura" },
@@ -56,7 +49,6 @@ const RECURSOS = [
 
 const sorteio = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 const limitar = (v: number) => Math.max(-1, Math.min(1, v));
-const doisDigitos = (n: number) => String(n).padStart(2, "0");
 
 /** o que ele vai dizendo, em volta, enquanto a pessoa decide */
 function montarRoteiro(m: Momento): Fala[] {
@@ -67,7 +59,8 @@ function montarRoteiro(m: Momento): Fala[] {
     { texto: `Pode tocar em mim ou ${ceu} — eu reajo!`, gesto: "acenar", expressao: "radiante" },
     { texto: "Tem devocional, leitura da Bíblia, quiz e um RPG bíblico inteiro te esperando.", gesto: "pirueta", expressao: "radiante" },
   ];
-  const r: Fala[] = [{ texto: sorteio(SAUDACAO[m.fase]), gesto: "acenar", expressao: "feliz" }];
+  const saudacoes = m.fase === "manha" && m.hora < 7 ? SAUDACAO_AURORA : SAUDACAO[m.fase];
+  const r: Fala[] = [{ texto: sorteio(saudacoes), gesto: "acenar", expressao: "feliz" }];
   const n = Math.max(versos.length, dicas.length);
   for (let i = 0; i < n; i++) {
     if (versos[i]) r.push(versos[i]);
@@ -308,8 +301,6 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
   // ─── o sol e a lua, tocáveis ──────────────────────────────────────────────
   const astroSol = naTela(m.sol.x * L, 470 - m.sol.altura * 360);
   const astroLua = naTela(m.lua.x * L, 470 - m.lua.altura * 330);
-  const IconeFase = iconeDaHora(m.hora);
-  const hora = `${doisDigitos(Math.floor(m.hora))}:${doisDigitos(Math.floor((m.hora % 1) * 60))}`;
 
   const olhar = olharPonteiro ?? olharOcioso;
   const baixa = tela.h < 700;
@@ -361,24 +352,15 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* o relógio da cena: a hora e a fase do dia de quem abriu */}
-        <div className="dz-relogio mb-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em]"
-          style={{ background: "rgba(12,10,6,0.55)", border: "1px solid rgba(232,176,75,0.45)", color: "#ffd889" }}
-          title="A cena acompanha o relógio do seu aparelho">
-          <IconeFase className="h-3 w-3" aria-hidden="true" />
-          <span>{NOME_DA_FASE[m.fase]}</span>
-          <span style={{ color: "#b8a67f" }}>· {hora}</span>
+        {/* o logo, no centro e em destaque, com a luz de ouro por trás */}
+        <div className="relative mb-2.5" style={{ width: baixa ? 54 : 74, height: baixa ? 54 : 74 }}>
+          <div className="absolute left-1/2 top-1/2 h-[190%] w-[190%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(255,200,110,0.38) 0%, rgba(255,200,110,0) 62%)" }} />
+          <img src={logoOfficial} alt="" aria-hidden="true" className="relative h-full w-full object-contain drop-shadow-[2px_3px_0_#0b0805]" />
         </div>
 
-        <div className="mb-2 flex items-center gap-2">
-          <span className="h-px w-6" style={{ background: "linear-gradient(90deg, transparent, #e8b04b)" }} />
-          <p className="rpg-eyebrow" style={{ color: "#ffd889", textShadow: "0 1px 0 #0b0805" }}>Seja bem-vindo(a) à</p>
-          <span className="h-px w-6" style={{ background: "linear-gradient(90deg, #e8b04b, transparent)" }} />
-        </div>
-
-        <h1 className="rpg-title flex items-center gap-2 leading-none" style={{ fontSize: baixa ? "clamp(24px, 7vw, 40px)" : "clamp(26px, 7.6vw, 56px)" }}>
-          <img src={logoOfficial} alt="" aria-hidden="true" className="shrink-0 drop-shadow-[2px_2px_0_#0b0805]" style={{ width: "1em", height: "1em" }} />
-          <span className="dz-titulo">Devocionalzeiros</span>
+        <h1 className="leading-none">
+          <NomeDoApp tamanho={baixa ? "clamp(22px, 7.6vw, 40px)" : "clamp(24px, 8.4vw, 58px)"} />
         </h1>
 
         <p className="mt-2.5 max-w-[300px] text-[12.5px] font-semibold leading-snug sm:max-w-none sm:text-[14px]" style={{ color: "#ece0c6", textShadow: "0 1px 2px #000" }}>
@@ -499,11 +481,6 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
 
 const ESTILO_TELA = `
 .dz-cadente { animation: dz-cadente 1.8s ease-out forwards; }
-.dz-titulo {
-  background: linear-gradient(180deg, #fff6d8 0%, #ffd889 38%, #e8b04b 70%, #b9822c 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(2px 2px 0 #0b0805) drop-shadow(0 0 18px rgba(0,0,0,.45));
-}
 @keyframes dz-brilho { 0% { transform: translateX(-120%) skewX(-18deg) } 60%,100% { transform: translateX(260%) skewX(-18deg) } }
 .dz-brilho::after {
   content: ""; position: absolute; inset: 0 auto 0 0; width: 40%;
