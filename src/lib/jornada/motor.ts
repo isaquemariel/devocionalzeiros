@@ -1,5 +1,5 @@
 import type { Acao, Estado, IdEtapa, Whatsapp } from "./tipos";
-import { proxima } from "./roteiro";
+import { existeEtapa, proxima } from "./roteiro";
 import { DDIS } from "@/lib/ddis";
 
 /**
@@ -120,6 +120,11 @@ export function lerRascunho(agora = Date.now()): Estado | null {
     if (!bruto) return null;
     const e = JSON.parse(bruto) as Estado;
     if (e?.v !== 1 || typeof e.etapa !== "string" || !e.respostas) return null;
+    // Etapa que o roteiro não tem mais (a jornada foi reescrita entre uma
+    // visita e outra): recomeça, em vez de a tela quebrar procurando por ela.
+    if (!existeEtapa(e.etapa)) return null;
+    if (!Array.isArray(e.historico)) return null;
+    e.historico = e.historico.filter(existeEtapa);
     if (agora - (e.iniciadoEm ?? 0) > VALIDADE_MS) return null;
     return e;
   } catch {

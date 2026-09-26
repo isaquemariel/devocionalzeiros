@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 const RAIZ = resolve(import.meta.dirname, "..");
 const tmp = mkdtempSync(join(tmpdir(), "jornada-"));
@@ -18,12 +19,20 @@ writeFileSync(entrada, `
 export * from "${RAIZ}/src/lib/jornada/motor";
 export * from "${RAIZ}/src/lib/jornada/roteiro";
 export * from "${RAIZ}/src/lib/jornada/plano";
+export * from "${RAIZ}/src/lib/jornada/nomes";
 `);
 const saida = join(tmp, "b.mjs");
 await build({
   entryPoints: [entrada], bundle: true, format: "esm", platform: "node", outfile: saida,
   alias: { "@": join(RAIZ, "src") }, logLevel: "error",
 });
+// o rascunho vive no localStorage; no Node, um de mentira
+const memoria = new Map();
+globalThis.localStorage = {
+  getItem: (k) => (memoria.has(k) ? memoria.get(k) : null),
+  setItem: (k, v) => memoria.set(k, String(v)),
+  removeItem: (k) => memoria.delete(k),
+};
 const J = await import(pathToFileURL(saida).href);
 
 let ok = 0;
@@ -40,23 +49,76 @@ caso("roteiro começa nas boas-vindas e termina no fim", () => {
 caso("toda etapa do roteiro é única", () => {
   assert.equal(new Set(J.ORDEM).size, J.ORDEM.length);
 });
-caso("a conta vem DEPOIS do plano (a pessoa investe antes do pedágio)", () => {
-  assert.ok(J.ORDEM.indexOf("plano") < J.ORDEM.indexOf("salvar"));
+caso("a conta vem DEPOIS da meta (a pessoa investe antes do pedágio)", () => {
+  assert.ok(J.ORDEM.indexOf("meta") < J.ORDEM.indexOf("salvar"));
   assert.ok(J.ORDEM.indexOf("salvar") < J.ORDEM.indexOf("senha"));
 });
 caso("etapas de escolha têm opções", () => {
   for (const e of J.ROTEIRO) {
-    if (e.tipo === "unica" || e.tipo === "multipla") assert.ok(e.opcoes?.length >= 2, e.id);
+    if (["lanternas", "escala", "mostrador", "selos"].includes(e.tipo)) assert.ok(e.opcoes?.length >= 2, e.id);
   }
 });
-caso("toda fala do roteiro sai como texto, com e sem nome", () => {
-  for (const e of J.ROTEIRO) {
-    for (const r of [{}, { apelido: "Ana" }]) {
-      const f = e.fala(r);
-      assert.equal(typeof f, "string", e.id);
-      assert.ok(f.length > 0 && !f.includes("undefined"), `${e.id}: ${f}`);
+caso("a escala tem cinco estágios, em ordem, cada um com a sua reação", () => {
+  assert.deepEqual(J.FAMILIARIDADE.map((o) => o.nivel), [0, 1, 2, 3, 4]);
+  for (const o of [...J.FAMILIARIDADE, ...J.METAS]) assert.ok(o.reacao?.texto, o.valor);
+});
+caso("a chama só cresce ao longo da trilha", () => {
+  const c = J.ROTEIRO.map((e) => e.chama);
+  for (let i = 1; i < c.length; i++) assert.ok(c[i] > c[i - 1], J.ORDEM[i]);
+  assert.equal(c.at(-1), 1);
+});
+// respostas de exemplo que passam por todos os ramos das reações
+const AMOSTRAS = [
+  {},
+  { apelido: "Ana" },
+  { apelido: "Zé", motivos: ["juntos"], familiaridade: "inteira", meta_min: 20, origem: "igreja", whatsapp: null },
+  { apelido: "Maria Clara", motivos: ["deus", "habito"], meta_min: 5, origem: "google", whatsapp: { ddi: "+55", numero: "11987654321" } },
+  { apelido: "Kauã", motivos: ["habito", "entender", "divertido"], origem: "outro" },
+  { apelido: "Lu", motivos: ["outro"], origem: "tiktok" },
+];
+const todasAsFalas = () => {
+  const falas = [];
+  for (const e of J.ROTEIRO) for (const r of AMOSTRAS) {
+    for (const f of e.falas(r)) falas.push([e.id, f]);
+    for (const f of e.reacao?.(r) ?? []) falas.push([e.id + " (reação)", f]);
+  }
+  for (const o of [...J.FAMILIARIDADE, ...J.METAS, ...J.ORIGENS]) if (o.reacao) falas.push([o.valor, o.reacao]);
+  for (const n of J.NOMES_BIBLICOS) falas.push(["nome " + n, J.reacaoAoNome(n)]);
+  return falas;
+};
+caso("toda fala sai como texto, com e sem nome, e cabe no balão", () => {
+  for (const [id, f] of todasAsFalas()) {
+    assert.equal(typeof f.texto, "string", id);
+    assert.ok(f.texto.length > 0 && !f.texto.includes("undefined") && !f.texto.includes("null"), `${id}: ${f.texto}`);
+    // ~26 letras por linha no balão; mais de ~4 linhas vira duas falas
+    assert.ok(f.texto.length <= 100, `${id} tem ${f.texto.length} letras: ${f.texto}`);
+  }
+});
+caso("toda citação entre aspas confere com a ARC", () => {
+  const arc = JSON.parse(readFileSync(join(RAIZ, "public/bible/arc.json"), "utf8"));
+  const versos = Object.values(arc).flatMap((l) => l.chapters.flat().map((v) => v.t));
+  let n = 0;
+  for (const [id, f] of todasAsFalas()) {
+    for (const [, q] of f.texto.matchAll(/"([^"]+)"/g)) {
+      // a pontuação final e a maiúscula de começo de frase são de quem cita
+      const limpa = q.replace(/[.!?]$/, "");
+      const formas = [limpa, limpa[0].toLowerCase() + limpa.slice(1), limpa[0].toUpperCase() + limpa.slice(1)];
+      assert.ok(versos.some((t) => formas.some((f) => t.includes(f))), `${id}: "${q}" não está na ARC`);
+      n++;
     }
   }
+  assert.ok(n >= 8, `só ${n} citações conferidas`);
+});
+caso("o nome bíblico é reconhecido com e sem acento, pelo primeiro nome", () => {
+  assert.match(J.reacaoAoNome("Débora").texto, /Débora, juíza/);
+  assert.match(J.reacaoAoNome("debora").texto, /Débora, juíza/);
+  assert.match(J.reacaoAoNome("  josé   carlos ").texto, /José/);
+  assert.match(J.reacaoAoNome("Elias").texto, /Carmelo/);
+});
+caso("nome comum: a mesma frase para o mesmo nome, só com o primeiro nome", () => {
+  const a = J.reacaoAoNome("Kauã Henrique");
+  assert.deepEqual(J.reacaoAoNome("Kauã Henrique"), a);
+  assert.ok(a.texto.includes("Kauã") && !a.texto.includes("Henrique"), a.texto);
 });
 caso("a origem preserva os valores que o admin já conta", () => {
   const valores = J.ORIGENS.map((o) => o.valor);
@@ -115,6 +177,16 @@ caso("desistir no Google devolve para a escolha da conta", () => {
   assert.equal(e.etapa, "salvar");
   const igual = J.reduzir(e, { tipo: "cancelarGoogle" });
   assert.equal(igual, e); // sem espera, é no-op (mesma referência, sem re-render)
+});
+caso("rascunho de uma etapa que o roteiro não tem mais recomeça do zero", () => {
+  const velho = { v: 1, etapa: "plano", historico: ["boas-vindas"], respostas: {}, aguardandoGoogle: false, iniciadoEm: Date.now() };
+  localStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(velho));
+  assert.equal(J.lerRascunho(), null);
+  const bom = { ...velho, etapa: "meta", historico: ["boas-vindas", "plano", "nome"] };
+  localStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(bom));
+  assert.deepEqual(J.lerRascunho().historico, ["boas-vindas", "nome"]); // a etapa extinta sai da pilha
+  J.apagarRascunho();
+  assert.equal(J.lerRascunho(), null);
 });
 caso("o estado nunca carrega senha", () => {
   const e = J.reduzir(J.estadoInicial(0), { tipo: "responder", parcial: { email: "a@b.com" } });

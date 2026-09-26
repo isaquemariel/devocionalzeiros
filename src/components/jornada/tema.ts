@@ -1,37 +1,41 @@
 /**
- * PALETA DA JORNADA — clara, quente e colorida.
+ * PALETA DA JORNADA — clara, quente, e tirada do próprio personagem.
  *
- * O resto do app é escuro e dourado; a jornada é o primeiro contato, e a
- * pessoa ainda nem sabe o que é o Devocionalzeiros. Ela precisa de cor e de
- * personalidade, não de solenidade. O fundo creme é o da própria arte do
- * mascote, e o azul é o da chama dele — a jornada inteira sai do personagem.
+ * A tinta é o azul-noite do corpo do Devocionalzeiro; o destaque é o azul da
+ * chama dele; o ouro é o do sol que nasce na trilha. O fundo das perguntas é
+ * PAPEL — o caderno de trilha onde ele anota o que a pessoa conta —, e não um
+ * cartão branco de formulário.
  *
- * Os botões e cartões têm "espessura": uma borda inferior mais escura que
- * afunda ao toque. É o que faz um toque parecer um botão sendo apertado, e não
- * um retângulo trocando de cor.
+ * Duas letras: Nunito, para ler (balão, campos, botões), e Caveat, a letra de
+ * mão, para o que ele ESCREVE (o nome da parada, a placa, o diário). A letra
+ * de mão nunca carrega informação que precise ser lida depressa.
  */
 export const COR = {
-  fundo: "#FFF8EC",
-  superficie: "#FFFFFF",
-  texto: "#27283A",
-  texto2: "#6C6F86",
-  borda: "#E9E1D2",
-  bordaFunda: "#DCD2BF",
+  papel: "#FFFBF2",
+  papelSombra: "#F3E9D6",
+  papelBorda: "#E6D9BF",
+  lapis: "#A98457",
+
+  tinta: "#1B2550",
+  tinta2: "#5E6485",
+  tinta3: "#9A9AB0",
 
   /** a chama do Devocionalzeiro */
-  azul: "#1E7BFF",
-  azulFundo: "#1461D8",
-  azulClaro: "#E6F1FF",
-  azulBorda: "#7DB4FF",
+  chama: "#2F7BFF",
+  chamaFunda: "#1B55D6",
+  chamaClara: "#E3EEFF",
 
-  /** celebração */
+  /** o sol */
   ouro: "#FFB21E",
-  ouroFundo: "#DB8F00",
+  ouroFundo: "#C98300",
 
-  verde: "#22B866",
-  erro: "#F2555A",
-  erroClaro: "#FFECEC",
+  madeira: "#A0703F",
+  madeiraEscura: "#6E4A28",
+
+  verde: "#2FAE66",
+  erro: "#E0474C",
+  erroClaro: "#FFEDEC",
 } as const;
 
-/** Fonte arredondada da jornada (carregada em index.html). */
 export const FONTE = "'Nunito', 'Montserrat', system-ui, sans-serif";
+export const MAO = "'Caveat', 'Nunito', cursive";

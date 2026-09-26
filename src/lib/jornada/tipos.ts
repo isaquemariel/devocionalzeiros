@@ -8,8 +8,21 @@
  * pergunta vira edição de dado, não de componente.
  */
 
-/** Expressão do Devocionalzeiro. Cada uma é uma arte própria. */
-export type Humor = "base" | "feliz" | "campeao" | "triste";
+/** Rosto do Devocionalzeiro (o rig em `components/jornada/Devocionalzeiro`). */
+export type Expressao =
+  | "neutro" | "feliz" | "radiante" | "surpreso" | "pensativo" | "triste" | "orgulhoso" | "dormindo";
+
+/** O que o corpo dele está fazendo. */
+export type Gesto =
+  | "parado" | "acenar" | "comemorar" | "pensar" | "apontar" | "tampar" | "espiar" | "andar"
+  | "espreguicar" | "cocar";
+
+/** Uma frase do Devocionalzeiro, com a cara e o gesto com que ele a diz. */
+export interface Fala {
+  texto: string;
+  expressao?: Expressao;
+  gesto?: Gesto;
+}
 
 export type IdEtapa =
   | "boas-vindas"
@@ -17,7 +30,6 @@ export type IdEtapa =
   | "motivo"
   | "familiaridade"
   | "meta"
-  | "plano"
   | "origem"
   | "whatsapp"
   | "salvar"
@@ -26,27 +38,41 @@ export type IdEtapa =
   | "fim";
 
 /**
- * Como a etapa é jogada.
- * - `fala`: só o Devocionalzeiro falando, e um botão para seguir.
- * - `texto`: um campo livre (nome, e-mail).
- * - `unica` / `multipla`: cartões de escolha.
- * - `plano`: a revelação do plano de leitura calculado das respostas.
- * - `telefone`: WhatsApp, pulável.
- * - `conta`: a escolha entre Google e e-mail.
- * - `senha`: a criação da senha, que é o que de fato cria a conta.
- * - `fim`: a celebração.
+ * A MECÂNICA da etapa. Nenhuma pergunta é uma lista de cartões: cada uma tem o
+ * seu brinquedo.
+ * - `despertar`: ele está dormindo; um toque acorda, e a chama nasce faísca.
+ * - `nome`: o nome aparece gravado numa placa de madeira enquanto se digita.
+ * - `lanternas`: um varal de lanternas; acende as suas, e elas voam para a chama.
+ * - `escala`: uma planta que cresce de semente a árvore com fruto.
+ * - `mostrador`: um marcador que gira, com o plano de leitura mudando ao vivo.
+ * - `selos`: carimbos num mapa — de onde a pessoa veio.
+ * - `telefone`: o WhatsApp, pulável.
+ * - `conta`: guardar a chama — Google ou e-mail.
+ * - `email`: ele acompanha com os olhos o que se digita.
+ * - `senha`: ele tapa os olhos (e espia, se a senha for mostrada).
+ * - `fim`: o sol nasce e a cidade aparece no horizonte.
  */
-export type TipoEtapa = "fala" | "texto" | "unica" | "multipla" | "plano" | "telefone" | "conta" | "senha" | "fim";
+export type TipoEtapa =
+  | "despertar" | "nome" | "lanternas" | "escala" | "mostrador" | "selos"
+  | "telefone" | "conta" | "email" | "senha" | "fim";
+
+/** Ícones desenhados à mão em `components/jornada/Icones` — nada de emoji. */
+export type IdIcone =
+  | "maos" | "livro" | "lampada" | "pessoas" | "controle" | "balao"
+  | "camera" | "nota" | "arroba" | "claquete" | "megafone" | "coracao" | "play" | "igreja" | "lupa" | "estrela";
 
 export interface Opcao {
   valor: string;
   rotulo: string;
-  /** emoji à esquerda do rótulo */
-  icone?: string;
-  /** texto discreto à direita (ex.: "Constante") */
+  icone?: IdIcone;
+  /** nome curto do estágio ("Semente", "Constante") */
   detalhe?: string;
-  /** 0..4 — desenha as barrinhas de nível (familiaridade) */
+  /** 0..4 — o estágio da planta (familiaridade) */
   nivel?: number;
+  /** o que ele diz AO VIVO quando esta opção está marcada */
+  reacao?: Fala;
+  /** cor de fundo do selo (origem) */
+  cor?: string;
 }
 
 export interface Whatsapp {
@@ -70,26 +96,21 @@ export interface Respostas {
   email?: string;
 }
 
-/** Fala curta que o Devocionalzeiro solta logo depois de uma resposta. */
-export interface Reacao {
-  humor: Humor;
-  fala: string;
-}
-
 export interface Etapa {
   id: IdEtapa;
   tipo: TipoEtapa;
-  humor: Humor;
-  /** o que o Devocionalzeiro diz ao abrir a etapa */
-  fala: (r: Respostas) => string;
-  /** linha de apoio abaixo do balão (ex.: "Pode escolher mais de um") */
-  apoio?: string;
+  /** o nome da parada na trilha, escrito à mão no caderno ("o nome") */
+  estacao: string;
+  /** 0..1 — o tamanho da chama ao chegar aqui */
+  chama: number;
+  /** o que ele diz ao chegar, uma frase de cada vez */
+  falas: (r: Respostas) => Fala[];
   opcoes?: Opcao[];
   placeholder?: string;
-  /** rótulo do botão principal; o padrão é "Continuar" */
+  /** rótulo do botão principal; o padrão é "Seguir" */
   botao?: string;
-  /** reação ao responder — um respiro de ~1s antes da próxima etapa */
-  reacao?: (r: Respostas) => Reacao | null;
+  /** o que ele diz ao receber a resposta, antes de andar para a próxima */
+  reacao?: (r: Respostas) => Fala[] | null;
 }
 
 /** Estado do motor. É isto que vai para o rascunho no localStorage. */

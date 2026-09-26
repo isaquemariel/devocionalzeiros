@@ -1,93 +1,139 @@
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { planoDeLeitura, MINUTOS_POR_CAPITULO } from "@/lib/jornada/plano";
-import { COR, FONTE } from "./tema";
+import type { Respostas } from "@/lib/jornada/tipos";
+import { planoDeLeitura } from "@/lib/jornada/plano";
+import { FAMILIARIDADE, MOTIVOS } from "@/lib/jornada/roteiro";
+import { Icone } from "./Icones";
+import { COR, FONTE, MAO } from "./tema";
 
-// ─── revelação do plano ─────────────────────────────────────────────────────
+// ─── o sono ─────────────────────────────────────────────────────────────────
 
-/**
- * O "seu plano": três cartões que entram um de cada vez. É a recompensa por
- * ter respondido — a pessoa vê o destino antes de criar a conta. A nota de
- * rodapé diz de onde sai a conta, porque é estimativa e se apresenta como tal.
- */
-export function PlanoRevelado({ metaMin }: { metaMin: number }) {
+/** Os "z" que sobem da cabeça dele enquanto dorme — cada um de um tamanho. */
+export function Zzz() {
   const reduzir = useReducedMotion();
-  const p = useMemo(() => planoDeLeitura(metaMin), [metaMin]);
-  const ritmo = p.capitulosPorDia.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-
-  const cartoes = [
-    { icone: "📖", titulo: "A Bíblia inteira", valor: p.biblia, cor: COR.azul },
-    { icone: "✝️", titulo: "O Novo Testamento", valor: p.novoTestamento, cor: COR.verde },
-    { icone: "🔥", titulo: "Seu ritmo", valor: `${ritmo} capítulos por dia`, cor: COR.ouroFundo },
-  ];
-
+  if (reduzir) return <span className="absolute -top-2 right-0 text-[22px]" style={{ fontFamily: MAO, color: "#FFFFFF" }}>z z</span>;
   return (
-    <div className="space-y-3" style={{ fontFamily: FONTE }}>
-      {cartoes.map((c, i) => (
-        <motion.div
-          key={c.titulo}
-          initial={reduzir ? false : { opacity: 0, y: 18, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: reduzir ? 0 : 0.35 + i * 0.28, type: "spring", stiffness: 260, damping: 20 }}
-          className="flex items-center gap-4 rounded-2xl border-2 px-4 py-4"
-          style={{ background: COR.superficie, borderColor: COR.borda, borderBottomWidth: 4, borderBottomColor: COR.bordaFunda }}
+    <span className="pointer-events-none absolute inset-0" aria-hidden="true">
+      {[0, 1, 2].map((i) => (
+        <motion.span
+          key={i}
+          className="absolute"
+          style={{ right: "4%", top: "8%", fontFamily: MAO, fontWeight: 700, fontSize: 18 + i * 7, color: "#FFFFFF", textShadow: "0 2px 6px rgba(80,60,160,.35)" }}
+          initial={{ opacity: 0, x: 0, y: 0 }}
+          animate={{ opacity: [0, 1, 1, 0], x: [0, 10, 22, 30], y: [0, -18, -36, -54] }}
+          transition={{ duration: 2.6, delay: i * 0.85, repeat: Infinity, ease: "easeOut" }}
         >
-          <span className="text-[32px] leading-none" aria-hidden="true">{c.icone}</span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[13px] font-extrabold uppercase tracking-wide" style={{ color: COR.texto2 }}>{c.titulo}</span>
-            <span className="block text-[20px] font-black leading-tight" style={{ color: c.cor }}>{c.valor}</span>
-          </span>
-        </motion.div>
+          z
+        </motion.span>
       ))}
-      <p className="px-1 pt-1 text-center text-[12px] font-semibold" style={{ color: COR.texto2 }}>
-        Com {metaMin} minutos por dia, a uns {MINUTOS_POR_CAPITULO.toLocaleString("pt-BR")} min por capítulo.
-      </p>
-    </div>
+    </span>
   );
 }
 
-// ─── confete ────────────────────────────────────────────────────────────────
+// ─── celebração ─────────────────────────────────────────────────────────────
 
-const CORES_CONFETE = [COR.azul, COR.ouro, COR.verde, "#FF6FAE", "#9B6BFF"];
+const CORES_FESTA = ["#3E8BFF", "#9ED8FF", "#FFB21E", "#FFE08A", "#FF8FB1", "#FFFFFF"];
 
-/** Chuva de confete da celebração. Some para quem pediu menos movimento. */
-export function Confete() {
+/**
+ * A festa do fim: fagulhas azuis e douradas que explodem da chama dele e caem
+ * devagar, como brasa de fogueira — não confete de aniversário.
+ * `origem` é o ponto da chama, em px na tela.
+ */
+export function Festa({ origem }: { origem: { x: number; y: number } }) {
   const reduzir = useReducedMotion();
-  // posições estáveis por montagem — random a cada render faria o confete tremer
   const pedacos = useMemo(
     () =>
-      Array.from({ length: 42 }, (_, i) => ({
-        x: Math.random() * 100,
-        atraso: Math.random() * 0.5,
-        duracao: 2.2 + Math.random() * 1.6,
-        giro: (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 360),
-        deriva: (Math.random() - 0.5) * 120,
-        cor: CORES_CONFETE[i % CORES_CONFETE.length],
-        largura: 7 + Math.random() * 6,
-        redondo: i % 3 === 0,
-      })),
+      Array.from({ length: 46 }, (_, i) => {
+        const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.25;
+        const forca = 120 + Math.random() * 220;
+        return {
+          dx: Math.cos(ang) * forca,
+          dy: Math.sin(ang) * forca,
+          queda: 180 + Math.random() * 260,
+          cor: CORES_FESTA[i % CORES_FESTA.length],
+          r: 3 + Math.random() * 4,
+          atraso: Math.random() * 0.25 + (i > 30 ? 0.7 : 0),
+          dur: 1.8 + Math.random() * 1.2,
+          estrela: i % 4 === 0,
+        };
+      }),
     [],
   );
   if (reduzir) return null;
   return (
-    <div className="pointer-events-none fixed inset-0 z-40 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden="true">
       {pedacos.map((c, i) => (
         <motion.span
           key={i}
-          className="absolute top-[-4%]"
-          style={{
-            left: `${c.x}%`,
-            width: c.largura,
-            height: c.redondo ? c.largura : c.largura * 1.6,
-            background: c.cor,
-            borderRadius: c.redondo ? "50%" : 2,
-          }}
-          initial={{ y: 0, x: 0, rotate: 0, opacity: 1 }}
-          animate={{ y: "110vh", x: c.deriva, rotate: c.giro, opacity: [1, 1, 0.9, 0] }}
-          transition={{ delay: c.atraso, duration: c.duracao, ease: [0.2, 0.6, 0.4, 1] }}
-        />
+          className="absolute"
+          style={{ left: origem.x, top: origem.y, width: c.r * 2, height: c.r * 2, marginLeft: -c.r, marginTop: -c.r }}
+          initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
+          animate={{ x: [0, c.dx, c.dx * 1.15], y: [0, c.dy, c.dy + c.queda], opacity: [0, 1, 0], scale: [0.4, 1, 0.6], rotate: c.estrela ? 200 : 0 }}
+          transition={{ duration: c.dur, delay: c.atraso, ease: [0.15, 0.7, 0.4, 1], times: [0, 0.35, 1] }}
+        >
+          {c.estrela ? (
+            <svg viewBox="0 0 10 10" className="h-full w-full"><path d="M5 0 6.2 3.8 10 5 6.2 6.2 5 10 3.8 6.2 0 5 3.8 3.8Z" fill={c.cor} /></svg>
+          ) : (
+            <span className="block h-full w-full rounded-full" style={{ background: c.cor, boxShadow: `0 0 8px ${c.cor}` }} />
+          )}
+        </motion.span>
       ))}
     </div>
+  );
+}
+
+// ─── o diário ───────────────────────────────────────────────────────────────
+
+/**
+ * A página do diário de trilha: o que ele anotou no caminho, com a letra dele.
+ * É o que a pessoa leva da jornada — e o compromisso que acabou de assumir,
+ * dito de volta.
+ */
+export function Diario({ r }: { r: Respostas }) {
+  const reduzir = useReducedMotion();
+  const plano = r.meta_min ? planoDeLeitura(r.meta_min) : null;
+  const fam = FAMILIARIDADE.find((o) => o.valor === r.familiaridade);
+  const motivos = MOTIVOS.filter((m) => r.motivos?.includes(m.valor));
+  const linhas = [
+    plano && { rotulo: "o ritmo", valor: `${r.meta_min} min por dia` },
+    plano && { rotulo: "a Bíblia inteira", valor: plano.biblia },
+    fam && { rotulo: "a raiz", valor: fam.detalhe ?? fam.rotulo },
+  ].filter(Boolean) as { rotulo: string; valor: string }[];
+
+  return (
+    <motion.div
+      initial={reduzir ? false : { opacity: 0, y: 16, rotate: -2 }}
+      animate={{ opacity: 1, y: 0, rotate: -1 }}
+      transition={{ delay: reduzir ? 0 : 0.5, type: "spring", stiffness: 180, damping: 18 }}
+      className="relative rounded-[6px] px-4 pb-3 pt-3"
+      style={{
+        background: `repeating-linear-gradient(180deg, transparent 0 25px, rgba(47,123,255,.12) 25px 26px), #FFFFFF`,
+        boxShadow: `0 0 0 1px ${COR.papelBorda}, 2px 3px 0 ${COR.papelSombra}`,
+        fontFamily: FONTE,
+      }}
+    >
+      {/* fita adesiva segurando a página */}
+      <span className="absolute -top-2.5 left-1/2 h-5 w-16 -translate-x-1/2 rotate-[3deg] rounded-[2px]" style={{ background: "rgba(255,210,120,.65)" }} />
+      <p className="text-[28px] leading-[26px]" style={{ fontFamily: MAO, fontWeight: 700, color: COR.tinta }}>
+        Diário de {r.apelido?.trim().split(/\s+/)[0] ?? "trilha"}
+      </p>
+      <div className="mt-1">
+        {linhas.map((l) => (
+          <p key={l.rotulo} className="flex items-baseline justify-between gap-3 leading-[26px]">
+            <span className="text-[20px]" style={{ fontFamily: MAO, color: COR.lapis }}>{l.rotulo}</span>
+            <span className="text-[15px] font-extrabold" style={{ color: COR.tinta }}>{l.valor}</span>
+          </p>
+        ))}
+        {motivos.length > 0 && (
+          <p className="flex items-center justify-between gap-3 leading-[26px]">
+            <span className="text-[20px]" style={{ fontFamily: MAO, color: COR.lapis }}>as lanternas</span>
+            <span className="flex gap-1" style={{ color: "#D9781E" }}>
+              {motivos.map((m) => <Icone key={m.valor} id={m.icone ?? "estrela"} tamanho={19} />)}
+            </span>
+          </p>
+        )}
+      </div>
+    </motion.div>
   );
 }
 

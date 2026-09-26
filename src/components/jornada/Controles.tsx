@@ -1,92 +1,13 @@
 import { forwardRef, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Check } from "lucide-react";
-import type { Opcao } from "@/lib/jornada/tipos";
+import { Chaminha } from "./Icones";
 import { COR, FONTE } from "./tema";
 
 /** vibração curtinha ao escolher — Android sente, iOS ignora sem erro */
-export const tocar = () => { try { navigator.vibrate?.(8); } catch { /* ok */ } };
+export const tocar = (ms = 8) => { try { navigator.vibrate?.(ms); } catch { /* ok */ } };
 
-// ─── cartão de opção ────────────────────────────────────────────────────────
+// ─── botão ──────────────────────────────────────────────────────────────────
 
-interface OpcaoProps {
-  opcao: Opcao;
-  marcada: boolean;
-  multipla?: boolean;
-  onEscolher: () => void;
-}
-
-/**
- * Cartão de escolha com espessura: a borda de baixo é mais grossa e afunda ao
- * toque. Marcado, ele fica azul — da cor da chama —, e a marca de múltipla
- * escolha vira um quadradinho preenchido.
- */
-export function CartaoOpcao({ opcao, marcada, multipla, onEscolher }: OpcaoProps) {
-  const borda = marcada ? COR.azulBorda : COR.borda;
-  const fundoBorda = marcada ? COR.azul : COR.bordaFunda;
-  return (
-    <button
-      type="button"
-      role={multipla ? "checkbox" : "radio"}
-      aria-checked={marcada}
-      onClick={() => { tocar(); onEscolher(); }}
-      className="group flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left transition-[transform,background-color,border-color] duration-100 active:translate-y-[2px]"
-      style={{
-        background: marcada ? COR.azulClaro : COR.superficie,
-        borderColor: borda,
-        borderBottomColor: fundoBorda,
-        borderBottomWidth: 4,
-        fontFamily: FONTE,
-      }}
-    >
-      {opcao.icone && <span className="shrink-0 text-[26px] leading-none" aria-hidden="true">{opcao.icone}</span>}
-      {opcao.nivel !== undefined && <Barrinhas nivel={opcao.nivel} marcada={marcada} />}
-      <span className="min-w-0 flex-1 text-[16px] font-extrabold leading-tight" style={{ color: marcada ? COR.azul : COR.texto }}>
-        {opcao.rotulo}
-      </span>
-      {opcao.detalhe && (
-        <span className="shrink-0 text-[14px] font-bold" style={{ color: marcada ? COR.azul : COR.texto2 }}>{opcao.detalhe}</span>
-      )}
-      {multipla && (
-        <span
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 transition-colors"
-          style={{ borderColor: marcada ? COR.azul : COR.borda, background: marcada ? COR.azul : "transparent" }}
-          aria-hidden="true"
-        >
-          {marcada && <Check className="h-4 w-4 text-white" strokeWidth={4} />}
-        </span>
-      )}
-    </button>
-  );
-}
-
-/** Quatro barrinhas de sinal: quantas acendem diz o nível. */
-function Barrinhas({ nivel, marcada }: { nivel: number; marcada: boolean }) {
-  return (
-    <span className="flex shrink-0 items-end gap-[3px]" aria-hidden="true">
-      {[0, 1, 2, 3].map((i) => (
-        <span
-          key={i}
-          className="w-[6px] rounded-sm"
-          style={{
-            height: 9 + i * 5,
-            background: i < nivel ? (marcada ? COR.azul : "#5A9BF0") : (marcada ? "#BFD8FF" : "#DCE8F7"),
-          }}
-        />
-      ))}
-    </span>
-  );
-}
-
-// ─── botão principal ────────────────────────────────────────────────────────
-
-type Variante = "azul" | "ouro" | "branco";
-
-const ESTILO: Record<Variante, { fundo: string; baixo: string; texto: string; borda?: string }> = {
-  azul: { fundo: COR.azul, baixo: COR.azulFundo, texto: "#FFFFFF" },
-  ouro: { fundo: COR.ouro, baixo: COR.ouroFundo, texto: "#3A2600" },
-  branco: { fundo: COR.superficie, baixo: COR.bordaFunda, texto: COR.texto, borda: COR.borda },
-};
+type Variante = "tinta" | "ouro" | "papel";
 
 interface BotaoProps {
   children: ReactNode;
@@ -94,71 +15,57 @@ interface BotaoProps {
   desabilitado?: boolean;
   /**
    * Trabalhando (criando a conta, falando com o Google). Mantém a cor e só
-   * bloqueia o toque: carregando não é "desativado" — cinza diria "falta algo
-   * seu", quando na verdade é o app que está trabalhando.
+   * bloqueia o toque: carregando não é "desativado" — apagado diria "falta
+   * algo seu", quando na verdade é o app que está trabalhando.
    */
   carregando?: boolean;
   variante?: Variante;
-  tipo?: "button" | "submit";
+  /** ícone à esquerda; o padrão do botão de tinta é a chaminha */
   icone?: ReactNode;
 }
 
 /**
- * Botão grande com espessura. Desabilitado ele fica chapado e cinza — sem a
- * borda funda —, e é isso que diz "ainda falta escolher", sem precisar de
- * mensagem de erro.
+ * O botão da jornada: uma pílula da cor do corpo do Devocionalzeiro, com a
+ * chaminha dele acesa do lado. Letra normal, não caixa-alta — ele está
+ * convidando, não dando ordem.
  */
-export function Botao({ children, onClick, desabilitado, carregando, variante = "azul", tipo = "button", icone }: BotaoProps) {
-  const e = ESTILO[variante];
+export function Botao({ children, onClick, desabilitado, carregando, variante = "tinta", icone }: BotaoProps) {
+  const estilo =
+    variante === "ouro"
+      ? { background: `linear-gradient(180deg, #FFC545, ${COR.ouro})`, color: "#3A2600", boxShadow: `0 3px 0 ${COR.ouroFundo}, 0 10px 22px -10px rgba(201,131,0,.7)` }
+      : variante === "papel"
+        ? { background: "#FFFFFF", color: COR.tinta, boxShadow: `inset 0 0 0 2px ${COR.papelBorda}, 0 2px 0 ${COR.papelBorda}` }
+        : { background: `linear-gradient(180deg, #25326A, ${COR.tinta})`, color: "#FFFFFF", boxShadow: "0 3px 0 #0C1331, 0 12px 24px -12px rgba(27,37,80,.8)" };
   return (
     <button
-      type={tipo}
+      type="button"
       onClick={carregando ? undefined : onClick}
       disabled={desabilitado}
       aria-busy={carregando || undefined}
-      className="flex w-full items-center justify-center gap-2.5 rounded-2xl px-5 py-[15px] text-[16px] font-black uppercase tracking-wide transition-[transform,box-shadow] duration-100 active:translate-y-[3px] disabled:active:translate-y-0"
+      className="flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-full px-6 text-[17px] font-extrabold transition-[transform,opacity] duration-100 active:translate-y-[2px] active:scale-[0.985] disabled:active:translate-y-0 disabled:active:scale-100"
       style={{
         fontFamily: FONTE,
-        background: desabilitado ? "#E7E3DA" : e.fundo,
-        color: desabilitado ? "#AFA895" : e.texto,
-        boxShadow: desabilitado ? "none" : `0 4px 0 ${e.baixo}`,
+        ...(desabilitado ? { background: "#ECE4D3", color: "#ABA18B", boxShadow: "none" } : estilo),
         cursor: carregando ? "progress" : undefined,
-        opacity: carregando ? 0.92 : 1,
-        border: e.borda && !desabilitado ? `2px solid ${e.borda}` : "2px solid transparent",
       }}
     >
-      {icone}
+      {icone ?? (variante === "tinta" && <Chaminha tamanho={20} acesa={!desabilitado} />)}
       {children}
     </button>
   );
 }
 
-// ─── barra de progresso ─────────────────────────────────────────────────────
-
-/** Barra que enche com mola, com o brilho claro por dentro. */
-export function BarraProgresso({ valor }: { valor: number }) {
-  const reduzir = useReducedMotion();
-  const pct = Math.round(Math.max(0, Math.min(1, valor)) * 100);
+/** Ação secundária: só texto, sublinhado ao tocar. */
+export function Link({ children, onClick, cor = COR.chama }: { children: ReactNode; onClick: () => void; cor?: string }) {
   return (
-    <div
-      className="relative h-4 flex-1 overflow-hidden rounded-full"
-      style={{ background: "#EDE6D8" }}
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={pct}
-      aria-label="Progresso da jornada"
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-lg px-2 py-2 text-[15px] font-extrabold underline-offset-4 active:underline"
+      style={{ color: cor, fontFamily: FONTE }}
     >
-      <motion.div
-        className="absolute inset-y-0 left-0 rounded-full"
-        style={{ background: COR.azul }}
-        initial={false}
-        animate={{ width: `${Math.max(pct, 6)}%` }}
-        transition={reduzir ? { duration: 0 } : { type: "spring", stiffness: 140, damping: 20 }}
-      >
-        <span className="absolute left-2 right-2 top-[3px] h-[4px] rounded-full bg-white/35" />
-      </motion.div>
-    </div>
+      {children}
+    </button>
   );
 }
 
@@ -171,22 +78,27 @@ interface CampoProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 /**
- * Campo grande e arredondado. 17px de fonte não é estética: abaixo de 16px o
- * iOS dá zoom no campo ao focar e a tela inteira pula.
+ * Campo grande. 17px de fonte não é estética: abaixo de 16px o iOS dá zoom no
+ * campo ao focar e a tela inteira pula.
  */
 export const Campo = forwardRef<HTMLInputElement, CampoProps>(function Campo({ erro, esquerda, direita, ...resto }, ref) {
   return (
     <div>
       <div
-        className="flex items-center rounded-2xl border-2 transition-colors focus-within:border-[#7DB4FF]"
-        style={{ background: erro ? COR.erroClaro : COR.superficie, borderColor: erro ? COR.erro : COR.borda }}
+        className="jz-caixa flex items-center rounded-[18px] transition-shadow"
+        style={{
+          background: erro ? COR.erroClaro : "#FFFFFF",
+          boxShadow: `inset 0 0 0 2px ${erro ? COR.erro : "#DCCBA8"}`,
+        }}
       >
         {esquerda}
         <input
           ref={ref}
           {...resto}
-          className="min-w-0 flex-1 bg-transparent px-4 py-3.5 text-[17px] font-bold outline-none placeholder:font-semibold placeholder:text-[#B5AE9E]"
-          style={{ color: COR.texto, fontFamily: FONTE }}
+          className="jz-campo min-w-0 flex-1 rounded-[18px] bg-transparent px-4 py-[15px] text-[17px] font-bold outline-none placeholder:font-semibold"
+          // fundo explícito: o CSS global do app pinta os inputs, e o fundo
+          // dele cobria o anel de foco desenhado na caixa
+          style={{ color: COR.tinta, fontFamily: FONTE, background: "transparent", border: 0, boxShadow: "none" }}
           aria-invalid={!!erro}
         />
         {direita}
