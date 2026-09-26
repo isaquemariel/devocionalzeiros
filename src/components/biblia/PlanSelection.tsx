@@ -85,9 +85,13 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
         {/* Header */}
         <div className="text-center mb-8 relative">
           {/* Back button */}
-          {isChangingPlan && onBack && (
+          {/* (sempre que houver para onde voltar: quem ainda não tem plano
+              também pode sair sem escolher — escolher é opcional) */}
+          {onBack && (
             <button
+              type="button"
               onClick={onBack}
+              aria-label="Voltar"
               className="absolute left-0 top-0 p-2 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="w-6 h-6" />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"; // refreshed
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
@@ -121,13 +121,6 @@ const Biblia = () => {
 
   // Quiz hook
   const quiz = useQuiz(user?.id);
-  const startDate = useMemo(() => {
-    if (profile?.created_at) {
-      return new Date(profile.created_at);
-    }
-    return getBrazilDate();
-  }, [profile]);
-
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
   const planConfig = currentPlan !== "custom" ? readingPlans[currentPlan as keyof typeof readingPlans] : readingPlans["365"];
 
@@ -141,7 +134,8 @@ const Biblia = () => {
     regenerateSchedule,
     getTodaySchedule,
     isPlanComplete,
-  } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
+    semPlano,
+  } = useReadingProgress(user?.id, !authLoading);
 
   const todaySchedule = getTodaySchedule();
 
@@ -178,12 +172,16 @@ const Biblia = () => {
     }
   }, [user, authLoading, navigate]);
 
-  // Show plan selection on first access (onboarding)
+  // Quem chega sem plano (veio pelo card "Plano de Leitura") vê a escolha de
+  // planos logo de cara — uma vez; se voltar sem escolher, a página convida.
+  // O app nunca cria um plano sozinho.
+  const jaOfereceuPlanos = useRef(false);
   useEffect(() => {
-    if (!authLoading && profile && !profile.has_completed_onboarding && !showPlanSelection) {
+    if (semPlano && !jaOfereceuPlanos.current) {
+      jaOfereceuPlanos.current = true;
       setShowPlanSelection(true);
     }
-  }, [authLoading, profile]);
+  }, [semPlano]);
 
 
   const tabs = [
@@ -204,7 +202,7 @@ const Biblia = () => {
     },
     {
       id: "change-plan",
-      label: "Alterar Plano",
+      label: semPlano ? "Escolher Plano" : "Alterar Plano",
       icon: Book,
       color: "from-primary to-accent",
       onClick: () => setShowPlanSelection(true),
@@ -251,10 +249,10 @@ const Biblia = () => {
       return;
     }
 
-    // If changing plan (not onboarding), regenerate schedule
     // só comemora o que foi GRAVADO (o erro já foi dito pelo personagem)
+    const eraNovo = semPlano;
     if (!(await regenerateSchedule(plan))) return;
-    toast.success(profile?.has_completed_onboarding ? "Plano alterado com sucesso!" : "Plano configurado! Vamos começar sua jornada.");
+    toast.success(eraNovo ? "Plano configurado! Vamos começar sua jornada." : "Plano alterado com sucesso!");
 
     setShowPlanSelection(false);
     playSound("success");
@@ -469,8 +467,8 @@ const Biblia = () => {
     return (
       <PlanSelection
         onSelectPlan={handleSelectPlan}
-        currentPlan={profile?.has_completed_onboarding ? currentPlan : undefined}
-        isChangingPlan={profile?.has_completed_onboarding || false}
+        currentPlan={semPlano ? undefined : currentPlan}
+        isChangingPlan={!semPlano}
         onOpenCustomPlan={() => {
           setShowPlanSelection(false);
           setShowCustomPlanModal(true);
@@ -535,6 +533,25 @@ const Biblia = () => {
         >
           {/* Progress Card - Compact */}
           <div className="p-4 sm:p-5 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+            {semPlano ? (
+              <div className="flex items-center gap-4">
+                <div className="w-[70px] h-[70px] rounded-full border-[5px] border-muted/30 flex items-center justify-center flex-shrink-0">
+                  <Book className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground mb-1">Progresso</p>
+                  <p className="text-lg font-bold">Nenhum plano ativo</p>
+                  <p className="text-xs text-muted-foreground">Escolha um plano quando quiser acompanhar a leitura por dias.</p>
+                  <button
+                    type="button"
+                    onClick={() => setShowPlanSelection(true)}
+                    className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity"
+                  >
+                    Escolher um plano
+                  </button>
+                </div>
+              </div>
+            ) : (<>
             <div className="flex items-center gap-4">
               <ProgressRing progress={progressPercent} size={70} strokeWidth={5} />
               <div className="flex-1">
@@ -570,6 +587,7 @@ const Biblia = () => {
                 </motion.div>
               ))}
             </div>
+            </>)}
           </div>
 
           {/* Pomodoro Timer - Compact */}
@@ -667,6 +685,26 @@ const Biblia = () => {
           >
             {/* Today's Reading Card */}
             <div className="p-4 sm:p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+              {semPlano ? (
+                <div className="flex flex-col items-center text-center gap-3 py-4 sm:py-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
+                    <BookOpen className="w-6 h-6 text-accent" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">Você ainda não segue um plano</h2>
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                      Escolha um plano de leitura e a leitura de cada dia aparece aqui — no seu ritmo, do tamanho que você quiser.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPlanSelection(true)}
+                    className="px-5 py-3 rounded-xl font-semibold bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity"
+                  >
+                    Escolher um plano
+                  </button>
+                </div>
+              ) : (<>
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
@@ -786,6 +824,7 @@ const Biblia = () => {
               >
                 {allCompleted ? "✓ Leitura Concluída" : "Marcar Tudo como Lido"}
               </motion.button>
+              </>)}
             </div>
 
             {/* Tabs Navigation */}
@@ -807,7 +846,12 @@ const Biblia = () => {
             </div>
 
             {/* Tab Content */}
-            {activeTab === "calendario" && (
+            {activeTab === "calendario" && semPlano && (
+              <div className="p-6 rounded-2xl bg-card/50 border border-border/50 text-center text-sm text-muted-foreground">
+                O calendário mostra os dias do seu plano. Escolha um plano para começar.
+              </div>
+            )}
+            {activeTab === "calendario" && !semPlano && (
               <ReadingCalendar
                 schedule={schedule.map((s) => ({
                   ...s,

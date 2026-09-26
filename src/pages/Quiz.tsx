@@ -25,7 +25,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
-import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
+import { readingPlans } from "@/lib/bibleData";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
 import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
@@ -74,17 +74,7 @@ const Quiz = () => {
   // erro espera o resultado sair.
   useOcuparPalco((a) => a.tipo !== "erro", !!quizCompleted);
 
-  // Get reading progress with correct params
-  const startDate = useMemo(() => {
-    if (profile?.created_at) {
-      return new Date(profile.created_at);
-    }
-    return getBrazilDate();
-  }, [profile]);
-
-  const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
-
-  const { getTodaySchedule, loading: scheduleLoading } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
+  const { getTodaySchedule, loading: scheduleLoading } = useReadingProgress(user?.id, !authLoading);
   const todaySchedule = getTodaySchedule();
 
   // Calculate chapters read today

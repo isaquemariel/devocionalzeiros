@@ -11,12 +11,10 @@ import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/Float
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
-import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
-import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
 
@@ -255,13 +253,6 @@ const Home = () => {
   // Preload images for smooth carousel
   const { imagesLoaded } = useImagePreloader(cardImages);
 
-  const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
-  const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
-
-  const {
-    loading: scheduleLoading
-  } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
-
   // Record daily login
   useDailyLogin(user?.id);
 
@@ -342,7 +333,7 @@ const Home = () => {
     navigate("/auth");
   };
 
-  if (authLoading || user && scheduleLoading || !imagesLoaded || planLoading) {
+  if (authLoading || !imagesLoaded || planLoading) {
     return <MascotLoader />;
   }
 

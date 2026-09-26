@@ -285,6 +285,15 @@ Depois de mexer em ficha ou em carregamento, rode também:
 ferramenta** — importar qualquer um deles no app traz os 19 livros de volta
 para o primeiro carregamento.
 
+## Plano de leitura é escolha da pessoa (regra fixa)
+
+O app **nunca cria um plano de leitura sozinho** — nem para conta nova, nem
+quando um plano termina. A pessoa escolhe no card "Plano de Leitura" (que abre
+a escolha de planos em `/biblia`, com "voltar" para sair sem escolher). Sem
+plano, `useReadingProgress` devolve `semPlano` e a Bíblia mostra o convite
+"Escolher um plano". Gravar plano só por `regenerateSchedule`, que segura a
+vez (`geracaoEmCurso`) para a busca em tempo real não ler o meio da troca.
+
 ## Computador: aproveite a largura (regra fixa)
 
 Toda tela nova (e toda tela que for refeita) tem de ter um layout de

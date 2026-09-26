@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans, bibleBooks } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -119,12 +119,9 @@ const formatDateKey = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-/** UMA geração de plano por conta de cada vez, neste aparelho. A Home, a
- *  Bíblia e o Quiz usam este hook, e cada renderização podia disparar uma
- *  busca: numa conta nova (sem plano) duas ou três gerações corriam juntas —
- *  a segunda batia na chave única e o personagem dizia "Não consegui salvar o
- *  seu plano de leitura" a quem acabou de entrar; com datas diferentes, entravam
- *  dois planos misturados. */
+/** Uma troca de plano por conta de cada vez, neste aparelho. Enquanto ela
+ *  apaga o plano velho e grava o novo, a busca (acordada pelo tempo real)
+ *  espera, em vez de mostrar o meio do caminho. */
 const geracaoEmCurso = new Map<string, Promise<void>>();
 
 interface ReadingScheduleItem {
@@ -146,11 +143,13 @@ interface DaySchedule {
 }
 
 /**
- * @param pronto false enquanto o perfil ainda carrega: sem ele, o plano e a
- *   data de início são os padrões, e gerar um plano com eles gravava o plano
- *   errado (ou dois) para a conta nova.
+ * O plano de leitura é ESCOLHA da pessoa (card "Plano de Leitura" → escolher):
+ * o app nunca cria um sozinho. Sem plano ativo, `semPlano` é true e a tela
+ * convida a escolher.
+ *
+ * @param pronto false enquanto o perfil ainda carrega.
  */
-export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan, startDate: Date, pronto = true) => {
+export const useReadingProgress = (userId: string | undefined, pronto = true) => {
   const [schedule, setSchedule] = useState<DaySchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentDay, setCurrentDay] = useState(1);
@@ -159,12 +158,6 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const [planoNaoSalvo, setPlanoNaoSalvo] = useState(false);
   const { playSound } = useGameSounds();
 
-  // quem chama cria um `new Date()` a cada renderização: a busca depende do
-  // DIA, não do objeto (senão ela rodava de novo a cada renderização)
-  const inicioChave = formatDateKey(startDate);
-  const inicioRef = useRef(startDate);
-  inicioRef.current = startDate;
-  const buscarRef = useRef<() => Promise<void>>(async () => {});
 
   const fetchSchedule = useCallback(async () => {
     if (!pronto) return; // segue "carregando" até o perfil chegar
@@ -221,8 +214,10 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         );
 
         if (currentPlanItems.length === 0) {
-          // No items in current plan range - generate new schedule
-          await generateAndSaveSchedule();
+          // o plano anterior acabou: um novo só quando a pessoa escolher
+          setSchedule([]);
+          setCurrentDay(1);
+          setStreak(0);
           return;
         }
 
@@ -275,8 +270,10 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         // Calculate streak based on completed days in current plan
         calculateNonSequentialStreak(formattedSchedule);
       } else {
-        // No schedule items at all - generate new schedule
-        await generateAndSaveSchedule();
+        // nenhum plano: a pessoa escolhe um quando quiser
+        setSchedule([]);
+        setCurrentDay(1);
+        setStreak(0);
       }
     } catch (error) {
       console.error("Error fetching schedule:", error);
@@ -284,85 +281,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, plan, inicioChave, pronto]);
-  buscarRef.current = fetchSchedule;
-
-  const generateAndSaveSchedule = async () => {
-    if (!userId) return;
-
-    // Skip for custom plan without proper config
-    if (plan === "custom") return;
-
-    // outra geração desta conta já está gravando: espera e recarrega dela
-    const emCurso = geracaoEmCurso.get(userId);
-    if (emCurso) {
-      await emCurso;
-      await buscarRef.current();
-      return;
-    }
-    let liberar: () => void = () => {};
-    geracaoEmCurso.set(userId, new Promise<void>((r) => { liberar = r; }));
-    let recarregar = false;
-    try {
-      recarregar = await gerarEGravar(userId);
-    } finally {
-      geracaoEmCurso.delete(userId);
-      liberar();
-    }
-    // (só depois de soltar a vez: a busca espera a geração em curso)
-    if (recarregar) await buscarRef.current();
-  };
-
-  /** devolve true quando o plano certo já está no banco e é só recarregar */
-  const gerarEGravar = async (userId: string): Promise<boolean> => {
-    const hoje = formatDateKey(getBrazilDate());
-    // (re)confere no banco: entre a leitura e aqui, outro aparelho pode ter
-    // gravado o plano — gerar de novo duplicaria
-    const { data: jaTem, error: erroConferir } = await supabase
-      .from("reading_schedule")
-      .select("id")
-      .eq("user_id", userId)
-      .or(`is_completed.eq.false,scheduled_date.gte.${hoje}`)
-      .limit(1);
-    if (!erroConferir && jaTem && jaTem.length > 0) return true;
-
-    const generatedSchedule = generateReadingSchedule(plan, inicioRef.current);
-
-    // Prepare items for insertion
-    const scheduleItems: Omit<ReadingScheduleItem, "id">[] = [];
-    generatedSchedule.forEach(({ date, chapters }) => {
-      chapters.forEach(({ book, chapter }) => {
-        scheduleItems.push({
-          scheduled_date: formatDateKey(date),
-          book_name: book,
-          chapter_number: chapter,
-          is_completed: false,
-        });
-      });
-    });
-
-    const salvo = await salvarPlano(scheduleItems.map((item) => ({ ...item, user_id: userId })));
-    if (salvo.duplicado) {
-      // o mesmo plano já entrou por outro caminho: mostra o do banco
-      setPlanoNaoSalvo(false);
-      return true;
-    }
-    setPlanoNaoSalvo(!salvo.ok);
-    if (!salvo.ok) avisarQueNaoSalvou(salvo.sessao);
-
-    // Convert to DaySchedule format
-    const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
-      date: formatDateKey(date),
-      chapters: chapters.map((c) => ({ ...c, isCompleted: false, completedAt: null })),
-      isCompleted: false,
-      completedChapters: 0,
-      totalChapters: chapters.length,
-      completedTimes: [],
-    }));
-
-    setSchedule(formattedSchedule);
-    setCurrentDay(1);
-  };
+  }, [userId, pronto]);
 
   // Calculate streak based on total completed days (non-sequential approach)
   const calculateNonSequentialStreak = (scheduleData: DaySchedule[]) => {
@@ -643,6 +562,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   return {
     schedule,
     loading,
+    /** carregou e não há plano ativo: a tela convida a escolher um */
+    semPlano: !loading && pronto && !!userId && schedule.length === 0,
     currentDay,
     streak,
     planoNaoSalvo,
