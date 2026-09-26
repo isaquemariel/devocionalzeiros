@@ -270,3 +270,17 @@ Depois de mexer em ficha ou em carregamento, rode também:
 `src/lib/rpgStageAll.ts` e `src/lib/rpgStageInfoAll.ts` são **só para
 ferramenta** — importar qualquer um deles no app traz os 19 livros de volta
 para o primeiro carregamento.
+
+## A tela inicial e o céu da hora
+
+A porta do app (`/` e `/auth`) é `components/inicio/TelaInicial.tsx`: Jerusalém
+(`CenaDoDia`) na luz do RELÓGIO de quem abre — `lib/ceu.ts` (`momentoDoDia`)
+dá o céu, o sol, a lua na fase do dia, as janelas e tochas. O login/cadastro
+usa a mesma cena de fundo (`FundoDoDia`). Para ver outra hora sem mexer no
+relógio: `?hora=19.5` na URL.
+- Tudo que ele diz com versículo em `lib/ceu.ts` é ARC exato — rode
+  `node scripts/test-ceu.mjs` (0 erro) ao mexer ali.
+- A paralaxe vai por CSS (`--dz-px`/`--dz-py` num ancestral), nunca por prop:
+  mexer o ponteiro não pode redesenhar a cena.
+- O personagem fica EM PÉ na estrada (`ESTRADA`) e o balão sai da cabeça dele;
+  nada de painel cobrindo o corpo dele.

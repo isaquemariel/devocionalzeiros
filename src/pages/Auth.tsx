@@ -6,16 +6,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle,
-  Phone, BookOpen, Sword, Shield, Star, Scroll, Heart,
-  ChevronRight, X, Map, Trophy, Zap, Music
+  Phone, BookOpen, Sword, Star, Heart,
+  ChevronRight, X
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "@/lib/avisos";
 import { z } from "zod";
-import logoOfficial from "@/assets/logo-icon.png";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
+import TelaInicial from "@/components/inicio/TelaInicial";
+import { FundoDoDia } from "@/components/inicio/FundoDoDia";
+import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
@@ -86,60 +88,6 @@ const formatPhoneNumber = (value: string, countryCode: string): string => {
   return numbers;
 };
 
-// ─── Embers ──────────────────────────────────────────────────────────────────
-const Particle = ({ delay, left, size, isGold }: { delay: number; left: string; size: number; isGold: boolean }) => (
-  <motion.div
-    className="absolute rounded-full pointer-events-none"
-    style={{
-      left, bottom: "-4px", width: size, height: size,
-      background: isGold ? "rgba(251,191,36,0.95)" : "rgba(245,158,11,0.7)",
-      boxShadow: isGold ? "0 0 6px 2px rgba(251,191,36,0.5)" : "none",
-    }}
-    animate={{ y: [0, -700], opacity: [0, 1, 0.8, 0], x: [0, (Math.random() > 0.5 ? 25 : -25)] }}
-    transition={{ duration: 9 + delay * 0.4, delay, repeat: Infinity, ease: "easeIn" }}
-  />
-);
-
-// ─── Feature icons ────────────────────────────────────────────────────────────
-const FEATURE_ICONS = [
-  { Icon: Sword, label: "RPG" },
-  { Icon: BookOpen, label: "Bíblia" },
-  { Icon: Trophy, label: "Ranking" },
-  { Icon: Zap, label: "Quiz" },
-  { Icon: Heart, label: "Devocional" },
-  { Icon: Shield, label: "Conquistas" },
-  { Icon: Map, label: "Jornada" },
-  { Icon: Star, label: "Pontos" },
-  { Icon: Scroll, label: "Leitura" },
-  { Icon: Music, label: "Louvores" },
-];
-
-const FloatingFeatureIcon = ({ Icon, label, left, delay, size, opacity }: {
-  Icon: React.ElementType; label: string; left: string; delay: number; size: number; opacity: number;
-}) => (
-  <motion.div
-    className="absolute pointer-events-none flex flex-col items-center gap-1"
-    style={{ left, bottom: "-80px", opacity }}
-    animate={{ y: [0, -900], opacity: [0, opacity, opacity * 0.9, 0] }}
-    transition={{ duration: 22 + delay * 1.5, delay, repeat: Infinity, ease: "linear" }}
-  >
-    <div className="rounded-xl p-2" style={{ background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.2)" }}>
-      <Icon style={{ width: size, height: size, color: "#f59e0b" }} />
-    </div>
-    <span style={{ fontSize: size * 0.45, color: "rgba(251,191,36,0.6)", fontWeight: 700, letterSpacing: "0.05em" }}>{label}</span>
-  </motion.div>
-);
-
-// ─── Torch glow ───────────────────────────────────────────────────────────────
-const TorchGlow = () => (
-  <motion.div
-    className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-    style={{ width: 600, height: 340, background: "radial-gradient(ellipse, rgba(217,119,6,0.3) 0%, transparent 70%)" }}
-    animate={{ opacity: [0.5, 1, 0.5], scaleX: [1, 1.1, 1] }}
-    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-  />
-);
-
 // ─── Left panel (desktop only) ────────────────────────────────────────────────
 const IdentityPanel = () => {
   const features = [
@@ -149,52 +97,30 @@ const IdentityPanel = () => {
     { icon: Heart, text: "Devocionais personalizados" },
   ];
   return (
-    <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-12 py-12 overflow-hidden text-white">
-      <div className="absolute inset-0 bg-[#040810]" />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 90% 60% at 50% 0%, rgba(120,70,10,0.5) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 50% at 10% 100%, rgba(20,50,100,0.35) 0%, transparent 60%)" }} />
-      <TorchGlow />
-      {Array.from({ length: 18 }).map((_, i) => (
-        <Particle key={i} delay={i * 0.5} left={`${(i / 18) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
-      ))}
-      {FEATURE_ICONS.slice(0, 6).map(({ Icon, label }, i) => (
-        <FloatingFeatureIcon key={i} Icon={Icon} label={label} left={`${5 + i * 15}%`} delay={i * 2} size={22 + (i % 2) * 10} opacity={0.06 + (i % 3) * 0.02} />
-      ))}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-        backgroundSize: "40px 40px",
-      }} />
-      <motion.div className="absolute left-0 right-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(217,119,6,0.2), rgba(245,158,11,0.4), rgba(217,119,6,0.2), transparent)" }}
-        animate={{ top: ["0%", "100%"] }} transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-      />
-      <div className="relative z-10 flex flex-col items-center text-center gap-6 max-w-xs">
-        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 180 }} className="relative">
-          <motion.div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)", transform: "scale(1.8)" }} animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2.5, repeat: Infinity }} />
-          <div className="relative w-28 h-28 rounded-full bg-gradient-to-br from-amber-800/80 to-amber-950 flex items-center justify-center border-2 border-amber-500/40 shadow-2xl shadow-amber-500/30">
-            <img src={logoOfficial} alt="Devocionalzeiros" className="object-contain drop-shadow-xl" style={{ width: 72, height: 72 }} />
-          </div>
+    <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-12 py-12 overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center text-center gap-5 max-w-xs">
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+          <Devocionalzeiro tamanho={150} gesto="acenar" expressao="feliz" chama={0.55} />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-          <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2" style={{ background: "linear-gradient(135deg, #fbbf24 0%, #fef3c7 50%, #f59e0b 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Devocionalzeiros
-          </h1>
-          <p className="text-amber-200/50 text-sm font-medium tracking-widest uppercase">Sua jornada com a Palavra</p>
+          <h1 className="rpg-title text-3xl lg:text-4xl mb-2"><span className="dz-titulo-auth">Devocionalzeiros</span></h1>
+          <p className="rpg-eyebrow">Sua jornada com a Palavra</p>
         </motion.div>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }} className="space-y-2.5 w-full">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }} className="space-y-2 w-full">
           {features.map(({ icon: Icon, text }, i) => (
-            <motion.div key={text} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }} className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-amber-500/10 bg-white/[0.04] backdrop-blur-sm">
-              <div className="w-7 h-7 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
-                <Icon className="w-3.5 h-3.5 text-amber-400" />
+            <motion.div key={text} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-[10px]" style={{ background: "rgba(28,21,9,0.82)", border: "2px solid #3a2c18" }}>
+              <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: "#20180d", border: "1px solid #6e4e18" }}>
+                <Icon className="w-3.5 h-3.5" style={{ color: "#e8b04b" }} />
               </div>
-              <span className="text-sm text-amber-100/80 text-left">{text}</span>
-              <ChevronRight className="w-3.5 h-3.5 text-amber-500/40 ml-auto shrink-0" />
+              <span className="text-[13px] text-left" style={{ color: "#ece0c6" }}>{text}</span>
+              <ChevronRight className="w-3.5 h-3.5 ml-auto shrink-0" style={{ color: "#6e4e18" }} />
             </motion.div>
           ))}
         </motion.div>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }} className="text-xs text-amber-200/35 italic leading-relaxed px-2">
-          "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."
-          <span className="block mt-0.5 not-italic font-semibold text-amber-400/50">— Salmos 119:105</span>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }} className="text-[12px] italic leading-relaxed px-2" style={{ color: "#b8a67f" }}>
+          “Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.”
+          <span className="block mt-0.5 not-italic font-bold" style={{ color: "#e8b04b" }}>— Salmos 119:105</span>
         </motion.p>
       </div>
     </div>
@@ -210,134 +136,31 @@ const inputBase =
   "bg-white/[0.06] border border-white/10 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 focus:bg-white/[0.08]";
 const inputErr = "border-red-500/50";
 
-// ─── Splash screen ─────────────────────────────────────────────────────────────
-const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: () => void }) => (
-  <div className="h-screen bg-[#040810] flex flex-col items-center justify-center overflow-hidden relative px-6">
-    <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 55% at 50% 0%, rgba(120,70,10,0.4) 0%, transparent 65%)" }} />
-    <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 10% 100%, rgba(20,50,100,0.25) 0%, transparent 60%)" }} />
-    <TorchGlow />
-    {Array.from({ length: 14 }).map((_, i) => (
-      <Particle key={i} delay={i * 0.6} left={`${(i / 14) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
-    ))}
-    {FEATURE_ICONS.map(({ Icon, label }, i) => (
-      <FloatingFeatureIcon key={i} Icon={Icon} label={label} left={`${(i / FEATURE_ICONS.length) * 95}%`} delay={i * 1.8} size={20 + (i % 3) * 8} opacity={0.07 + (i % 4) * 0.02} />
-    ))}
-    <div className="absolute inset-0 opacity-[0.02]" style={{
-      backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-      backgroundSize: "40px 40px",
-    }} />
-
-    {/* Central content block */}
-    <div className="relative z-10 flex flex-col items-center text-center w-full max-w-xs gap-0">
-      
-      {/* Logo */}
-      <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.7, type: "spring", stiffness: 160 }} className="relative mb-7">
-        <motion.div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%)", transform: "scale(2)" }} animate={{ opacity: [0.4, 0.9, 0.4] }} transition={{ duration: 2.8, repeat: Infinity }} />
-        <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-800/70 to-amber-950 flex items-center justify-center border-2 border-amber-500/30 shadow-2xl shadow-amber-500/25">
-          <img src={logoOfficial} alt="Devocionalzeiros" style={{ width: 48, height: 48 }} className="object-contain drop-shadow-xl" />
-        </div>
-      </motion.div>
-
-      {/* Headline */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="space-y-2 mb-5">
-        {/* Welcome line - elegant italic serif */}
-        <motion.p
-          initial={{ opacity: 0, letterSpacing: "0.3em" }}
-          animate={{ opacity: 1, letterSpacing: "0.18em" }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-[0.7rem] uppercase text-amber-300/70 font-medium tracking-[0.18em]"
-        >
-          Seja bem-vindo(a) ao
-        </motion.p>
-
-        {/* Main title - bold lettering style */}
-        <h1 className="relative leading-[1.05]">
-          <motion.span
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.6 }}
-            className="block text-[1.6rem] sm:text-[1.85rem] font-black uppercase tracking-tight"
-            style={{
-              background: "linear-gradient(180deg, #ffffff 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 2px 12px rgba(245,158,11,0.4))",
-              textShadow: "none",
-            }}
-          >
-            PLATAFORMA
-          </motion.span>
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.7, type: "spring", stiffness: 120 }}
-            className="block text-[1.55rem] sm:text-[2.4rem] font-black uppercase tracking-[-0.02em] mt-[-2px]"
-            style={{
-              background: "linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 4px 20px rgba(255,255,255,0.15))",
-            }}
-          >
-            Devocionalzeiros
-          </motion.span>
-          {/* Decorative underline */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-            className="mx-auto mt-2 h-[2px] w-32 rounded-full"
-            style={{ background: "linear-gradient(90deg, transparent, #f59e0b, #f97316, transparent)" }}
-          />
-        </h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="text-[0.82rem] text-white/55 leading-relaxed font-medium pt-2 max-w-[260px] mx-auto"
-        >
-          O lugar para todo cristão que{" "}
-          <span className="text-amber-400/90 font-bold">ama a Palavra de Deus!</span>
-        </motion.p>
-      </motion.div>
-
-      {/* Tags */}
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className="text-[10px] tracking-widest uppercase text-white/25 font-medium mb-8">
-        Devocional · Leitura · RPG · Quiz · Gamificação
-      </motion.p>
-
-      {/* Buttons */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 140 }} className="w-full space-y-3">
-        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onSignup}
-          className="w-full py-4 rounded-2xl text-sm font-black tracking-widest uppercase text-[#040810] shadow-lg"
-          style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)", boxShadow: "0 4px 24px rgba(245,158,11,0.35)" }}>
-          Começar Jornada
-        </motion.button>
-        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onLogin}
-          className="w-full py-4 rounded-2xl text-sm font-semibold tracking-widest uppercase text-white/60 border border-white/15 bg-white/[0.04] hover:bg-white/[0.07] hover:text-white/80 transition-all">
-          Já Tenho Uma Conta
-        </motion.button>
-      </motion.div>
-    </div>
-  </div>
-);
-
 // ─── Submit button ─────────────────────────────────────────────────────────────
 const SubmitButton = ({ isSubmitting, label, icon, loadingLabel }: {
   isSubmitting: boolean; label: string; icon: React.ReactNode; loadingLabel: string;
 }) => (
-  <motion.button type="submit" disabled={isSubmitting} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-    className="w-full py-3 rounded-xl font-semibold text-sm relative overflow-hidden disabled:opacity-50"
-    style={{ background: "linear-gradient(135deg, rgba(217,119,6,0.9) 0%, rgba(245,158,11,0.95) 50%, rgba(234,179,8,0.9) 100%)", boxShadow: "0 4px 24px rgba(217,119,6,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", color: "#1a0a00" }}
-  >
-    <motion.div className="absolute inset-0" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }} initial={{ x: "-100%" }} animate={{ x: "200%" }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.5 }} />
-    <span className="relative z-10 flex items-center justify-center gap-2 font-bold">
+  <button type="submit" disabled={isSubmitting} className="rpg-btn dz-brilho-auth w-full py-3 text-[13px] uppercase tracking-[0.12em] relative overflow-hidden">
+    <span className="relative z-10 flex items-center justify-center gap-2">
       {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" />{loadingLabel}</> : <>{icon}{label}</>}
     </span>
-  </motion.button>
+  </button>
 );
+
+const ESTILO_AUTH = `
+.dz-titulo-auth {
+  background: linear-gradient(180deg, #fff6d8 0%, #ffd889 38%, #e8b04b 70%, #b9822c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(2px 2px 0 #0b0805);
+}
+@keyframes dz-brilho-auth { 0% { transform: translateX(-120%) skewX(-18deg) } 60%,100% { transform: translateX(260%) skewX(-18deg) } }
+.dz-brilho-auth::after {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  animation: dz-brilho-auth 3.2s ease-in-out 1.4s infinite;
+}
+@media (prefers-reduced-motion: reduce) { .dz-brilho-auth::after { animation: none; display: none; } }
+`;
 
 // ─── Main component ────────────────────────────────────────────────────────────
 /** `?entrar=1` pula o splash e abre o login (a jornada manda para cá quando o e-mail já tem conta). */
@@ -692,7 +515,7 @@ const Auth = () => {
       {showSplash && !isSettingNewPassword ? (
         /* ── SPLASH ── */
         <motion.div key="splash" initial={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
-          <SplashScreen
+          <TelaInicial
             onSignup={() => navigate("/jornada")}
             onLogin={() => { setIsLogin(true); setShowSplash(false); }}
           />
@@ -705,30 +528,21 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 60 }}
           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          className="h-screen bg-[#040810] flex overflow-hidden"
+          className="rpg-root relative h-screen flex overflow-hidden"
+          style={{ background: "#040810" }}
         >
+          <style>{ESTILO_AUTH}</style>
+          {/* a mesma Jerusalém da tela inicial, na hora de agora, sob um véu */}
+          <FundoDoDia veu="linear-gradient(90deg, rgba(4,8,16,0.45) 0%, rgba(4,8,16,0.55) 40%, rgba(4,8,16,0.82) 60%, rgba(4,8,16,0.86) 100%)" />
           {/* Desktop left panel */}
           <div className="hidden lg:block lg:w-[46%] xl:w-[44%] shrink-0 relative">
             <IdentityPanel />
-            <div className="absolute inset-y-0 right-0 w-20 pointer-events-none" style={{ background: "linear-gradient(to right, transparent, #040810)" }} />
           </div>
 
           {/* Right / full panel */}
           <div className="flex-1 relative h-full overflow-hidden">
-            {/* BG (mobile) */}
-            <div className="absolute inset-0 lg:hidden">
-              <div className="absolute inset-0 bg-[#040810]" />
-              <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 90% 50% at 50% 0%, rgba(120,70,10,0.45) 0%, transparent 60%)" }} />
-              <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 90% 90%, rgba(60,10,90,0.25) 0%, transparent 60%)" }} />
-              {FEATURE_ICONS.map(({ Icon, label }, i) => (
-                <FloatingFeatureIcon key={i} Icon={Icon} label={label} left={`${(i / FEATURE_ICONS.length) * 92}%`} delay={i * 2} size={18 + (i % 3) * 7} opacity={0.05 + (i % 4) * 0.015} />
-              ))}
-              {Array.from({ length: 12 }).map((_, i) => (
-                <Particle key={i} delay={i * 0.7} left={`${(i / 12) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
-              ))}
-            </div>
-            {/* BG (desktop right) */}
-            <div className="absolute inset-0 hidden lg:block" style={{ background: "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(30,20,5,0.6) 0%, transparent 80%)" }} />
+            {/* no celular o véu é por igual (o formulário ocupa a tela toda) */}
+            <div className="absolute inset-0 lg:hidden pointer-events-none" style={{ background: "rgba(4,8,16,0.4)" }} />
 
             {/* ── X button — top-right corner ── */}
             {!isSettingNewPassword && (
@@ -751,17 +565,15 @@ const Auth = () => {
             >
               <div className="w-full max-w-md px-5 py-8 flex flex-col items-center gap-5">
 
-                {/* Logo centered */}
+                {/* ele recebe quem chega (no computador, ele já está no painel ao lado) */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, type: "spring", stiffness: 180 }}
-                  className="relative mt-2"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative mt-1 lg:hidden"
                 >
-                  <motion.div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, transparent 70%)", transform: "scale(2)" }} animate={{ opacity: [0.4, 0.8, 0.4] }} transition={{ duration: 2.8, repeat: Infinity }} />
-                  <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-amber-800/60 to-amber-950 flex items-center justify-center border-2 border-amber-500/30 shadow-xl shadow-amber-900/30">
-                    <img src={logoOfficial} alt="Logo" className="object-contain" style={{ width: 38, height: 38 }} />
-                  </div>
+                  <div className="pointer-events-none absolute left-1/2 top-[40%] h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "radial-gradient(circle, #5b9bff44 0%, #5b9bff00 62%)" }} />
+                  <Devocionalzeiro tamanho={84} gesto={isLogin ? "acenar" : "vitoria"} expressao="feliz" chama={0.5} />
                 </motion.div>
 
                 {/* Mode header — splash-style lettering */}
@@ -774,37 +586,18 @@ const Auth = () => {
                 >
                   {isRecovery || isSettingNewPassword ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white mb-1">{modeTitle}</h2>
-                      <p className="text-sm text-white/40">{modeSubtitle}</p>
+                      <h2 className="rpg-title text-2xl mb-1">{modeTitle}</h2>
+                      <p className="text-[12.5px]" style={{ color: "#b8a67f" }}>{modeSubtitle}</p>
                     </>
                   ) : (
                     <>
-                      <p className="text-[0.65rem] uppercase text-amber-300/70 font-medium tracking-[0.18em] mb-1">
+                      <p className="rpg-eyebrow mb-1.5">
                         {isLogin ? "Bem-vindo(a) de volta ao" : "Seja bem-vindo(a) ao"}
                       </p>
-                      <h2 className="leading-[1.05]">
-                        <span
-                          className="block text-[1.3rem] font-black uppercase tracking-tight"
-                          style={{
-                            background: "linear-gradient(180deg, #ffffff 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          }}
-                        >
-                          PLATAFORMA
-                        </span>
-                        <span
-                          className="block text-[1.55rem] font-black uppercase tracking-[-0.02em]"
-                          style={{
-                            background: "linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          }}
-                        >
-                          Devocionalzeiros
-                        </span>
+                      <h2 className="rpg-title text-[1.75rem] leading-none">
+                        <span className="dz-titulo-auth">Devocionalzeiros</span>
                       </h2>
-                      <p className="text-[0.75rem] text-white/40 mt-1">{modeSubtitle}</p>
+                      <p className="text-[12px] mt-2" style={{ color: "#b8a67f" }}>{modeSubtitle}</p>
                     </>
                   )}
                 </motion.div>
@@ -816,12 +609,11 @@ const Auth = () => {
                   transition={{ duration: 0.35, delay: 0.12, type: "spring", stiffness: 180, damping: 22 }}
                   className="relative rounded-2xl overflow-hidden w-full"
                   style={{
-                    background: "linear-gradient(145deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%)",
-                    border: "1px solid rgba(245,158,11,0.15)",
-                    boxShadow: "0 0 60px rgba(245,158,11,0.04), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    background: "linear-gradient(rgba(43,33,20,0.9), rgba(20,16,10,0.94))",
+                    border: "2px solid #3a2c18",
+                    boxShadow: "0 24px 60px -24px #000, inset 0 1px 0 #4a3820",
                   }}
                 >
-                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)" }} />
 
                   <div className="p-5">
                     <form onSubmit={handleSubmit} className="space-y-3.5">

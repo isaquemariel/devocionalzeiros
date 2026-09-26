@@ -201,8 +201,8 @@ function Palco({ item, onFim }: { item: Item; onFim: () => void }) {
     const H = (tamanho * 229) / 205;
     // a ponta do rabicho (15 px abaixo do balão) mira ~22% abaixo do topo da
     // caixa dele — a chama e o alto da cabeça
-    // (na festa grande a chama sobe alta: o balão fica um pouco mais acima)
-    const sobre = Math.round(H * (centro ? 0.1 : 0.22));
+    // quanto mais alta a chama, mais acima fica o balão (a ponta mira o topo dela)
+    const sobre = Math.round(H * (0.26 - Math.min(1, chama) * 0.16));
     return (
       <div className={`flex flex-col ${centro ? "items-center" : "items-start"}`}>
         <div
@@ -305,22 +305,27 @@ function Palco({ item, onFim }: { item: Item; onFim: () => void }) {
     );
   }
 
-  const tamanho = festa ? (festa.tamanho === "pequena" ? 92 : 112) : 100;
+  // Toda aparição dele é NO CENTRO da tela — nunca no rodapé ou no topo. Sem
+  // fundo escuro (só a festa grande escurece): a tela segue tocável em volta,
+  // e só o boneco com o balão recebe o toque (que o dispensa).
+  const tamanho = festa ? (festa.tamanho === "pequena" ? 104 : 124) : 112;
   return (
-    <div
-      className="rpg-root pointer-events-none fixed inset-x-0 z-[200] flex justify-center px-3"
-      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 76px)", background: "transparent" }}
-      role="status"
-    >
+    <div className="rpg-root pointer-events-none fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ background: "transparent" }} role="status">
+      {/* um halo suave atrás dele, para ler sobre qualquer tela */}
       <motion.div
-        className="pointer-events-auto w-full max-w-[440px]"
-        initial={reduzir ? { opacity: 0 } : { y: "115%" }}
-        animate={reduzir ? { opacity: 1 } : { y: 0 }}
-        exit={reduzir ? { opacity: 0 } : { y: "130%", transition: { duration: 0.35, ease: "easeIn" } }}
-        transition={{ type: "spring", stiffness: 380, damping: 17 }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(5,7,12,0.55) 0%, rgba(5,7,12,0.25) 45%, transparent 70%)" }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      />
+      <motion.div
+        className="pointer-events-auto relative w-full max-w-[340px]"
+        initial={reduzir ? { opacity: 0 } : { opacity: 0, scale: 0.4, y: 40 }}
+        animate={reduzir ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+        exit={reduzir ? { opacity: 0 } : { opacity: 0, scale: 0.6, y: 30, transition: { duration: 0.25, ease: "easeIn" } }}
+        transition={{ type: "spring", stiffness: 340, damping: 18 }}
         onClick={() => fim.current()}
       >
-        {falaComBoneco(tamanho, false)}
+        {falaComBoneco(tamanho, true)}
       </motion.div>
     </div>
   );
