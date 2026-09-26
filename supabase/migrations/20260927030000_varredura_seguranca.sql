@@ -133,10 +133,14 @@ $$;
 -- outro estava na tela. E a hora vinha do cliente (dava para se calar para
 -- sempre com uma data no futuro).
 ALTER TABLE public.user_app_presence ADD COLUMN IF NOT EXISTS device_id text NOT NULL DEFAULT 'legado';
-DO $$ BEGIN
-  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_app_presence_pkey'
-             AND pg_get_constraintdef(oid) = 'PRIMARY KEY (user_id)') THEN
-    ALTER TABLE public.user_app_presence DROP CONSTRAINT user_app_presence_pkey;
+DO $$ DECLARE v_pk text; BEGIN
+  SELECT conname INTO v_pk FROM pg_constraint
+   WHERE conrelid = 'public.user_app_presence'::regclass AND contype = 'p'
+     AND pg_get_constraintdef(oid) = 'PRIMARY KEY (user_id)';
+  IF v_pk IS NOT NULL THEN
+    EXECUTE format('ALTER TABLE public.user_app_presence DROP CONSTRAINT %I', v_pk);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conrelid = 'public.user_app_presence'::regclass AND contype = 'p') THEN
     ALTER TABLE public.user_app_presence ADD PRIMARY KEY (user_id, device_id);
   END IF;
 END $$;
