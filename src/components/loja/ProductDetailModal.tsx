@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ShoppingCart, ShieldCheck, Loader2, Image as ImageIcon, PackageX, Package, Lock, RotateCcw, Truck } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { RatingStars, getPlaceholderRating } from "./RatingStars";
 import { SecureCheckoutNote } from "./SecureCheckoutNote";
 

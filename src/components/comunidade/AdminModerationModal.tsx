@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { adminDeleteCommunityPost, adminDeleteCommunityReply } from "@/hooks/useCommunity";
 
 interface Props {

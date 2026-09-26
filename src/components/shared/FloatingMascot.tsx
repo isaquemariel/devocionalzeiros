@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mascot3D } from "./Mascot3D";
+import { Balao } from "@/components/jornada/Balao";
 import { supabase } from "@/integrations/supabase/client";
 
 // Pages where the floating mascot should NOT appear at all
@@ -63,6 +64,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const [showBubble, setShowBubble] = useState(false);
   const [bubbleText, setBubbleText] = useState("");
   const [bubbleType, setBubbleType] = useState<"psalm" | "devotional">("psalm");
+  const [falandoBalao, setFalandoBalao] = useState(false);
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
   const posStart = useRef({ x: 0, y: 0 });
@@ -218,7 +220,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
     >
       {/* Mascot with speech bubble — ele acena e mexe a boca enquanto o balão está aberto */}
       <div className="relative">
-        <Mascot3D mood="idle" size="sm" falando={showBubble} gesto={showBubble ? "acenar" : undefined} />
+        <Mascot3D mood="idle" size="sm" falando={showBubble && falandoBalao} gesto={showBubble ? "acenar" : undefined} />
 
         {/* Speech bubble - positioned top-right, tail points to mascot's mouth */}
         <AnimatePresence>
@@ -230,30 +232,19 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className="absolute pointer-events-none"
               style={{
-                bottom: "calc(100% - 10px)",
-                left: "50%",
-                width: "max-content",
-                maxWidth: "220px",
+                // a ponta do rabicho (15 px da borda do balão) cai no meio dele
+                bottom: "calc(100% - 4px)",
+                left: "calc(50% - 15px)",
+                transformOrigin: "15px 100%",
               }}
             >
-              <div className={`relative rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed font-medium ${
-                bubbleType === "devotional"
-                  ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-[0_4px_20px_rgba(245,158,11,0.4)]"
-                  : "bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30"
-              }`}>
-                {bubbleType === "psalm" && (
-                  <span className="text-[10px] text-blue-300/80 font-bold uppercase tracking-wider block mb-1">📖 Versículo do dia</span>
-                )}
-                {bubbleText}
-                {/* Tail pointing to mascot */}
-                <div className="absolute -bottom-2 left-3">
-                  <div className={`w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent ${
-                    bubbleType === "devotional" ? "border-t-orange-500" : "border-t-[#243B63]"
-                  }`} style={{ transform: "rotate(-15deg)" }} />
-                </div>
-                <div className={`absolute -bottom-3.5 left-1.5 w-2 h-2 rounded-full ${
-                  bubbleType === "devotional" ? "bg-orange-500" : "bg-[#243B63]"
-                }`} />
+              {/* o balão do RPG, saindo DELE: o rabicho desce até a cabeça */}
+              <div className="rpg-root" style={{ background: "transparent", width: "min(240px, calc(100vw - 32px))" }}>
+                <Balao
+                  texto={bubbleText}
+                  quem={bubbleType === "psalm" ? "Versículo do dia" : "Devocionalzeiro"}
+                  onFalando={setFalandoBalao}
+                />
               </div>
             </motion.div>
           )}

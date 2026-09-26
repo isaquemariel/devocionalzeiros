@@ -12,7 +12,7 @@ import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTranslation } from "@/lib/bibleService";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGStageScene from "./RPGStageScene";

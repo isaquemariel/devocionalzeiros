@@ -9,7 +9,7 @@ import { VSLModal } from "@/components/shared/VSLModal";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { NotificationsBell } from "@/components/shared/NotificationsBell";
 
 interface AppHeaderProps {
@@ -321,25 +321,39 @@ export function AppHeader({
                 )}
 
                 {claimableCount > 0 && !isConquistasPage && (
+                  // o selo de "conquista para resgatar", no padrão do RPG: a
+                  // ficha de ouro com a contagem — leva direto à área de conquistas
                   <motion.button
                     onClick={() => navigate("/conquistas")}
-                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 border border-emerald-700 hover:bg-emerald-700 dark:bg-transparent dark:bg-gradient-to-r dark:from-emerald-500/30 dark:to-green-500/30 dark:border-emerald-500/50 dark:hover:border-emerald-400/70 transition-all"
+                    className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5"
+                    style={{
+                      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                      background: "linear-gradient(180deg, #2a1f10, #1a1308)",
+                      boxShadow: "inset 0 0 0 2px #e8b04b, 0 0 0 1px #0b0805",
+                    }}
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],
-                      boxShadow: ["0 0 10px rgba(16,185,129,0.3)", "0 0 20px rgba(16,185,129,0.6)", "0 0 10px rgba(16,185,129,0.3)"]
+                      boxShadow: [
+                        "inset 0 0 0 2px #e8b04b, 0 0 8px rgba(232,176,75,0.25)",
+                        "inset 0 0 0 2px #ffd889, 0 0 18px rgba(232,176,75,0.55)",
+                        "inset 0 0 0 2px #e8b04b, 0 0 8px rgba(232,176,75,0.25)",
+                      ],
                     }}
                     transition={{
-                      scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-                      boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-                      type: "spring", stiffness: 300, delay: 0.4
+                      scale: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+                      boxShadow: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+                      type: "spring", stiffness: 300, delay: 0.4,
                     }}
                     title="Conquistas para resgatar"
+                    aria-label={`${claimableCount} conquistas para resgatar`}
                   >
-                    <Gift className="w-4 h-4 text-white dark:text-emerald-400" />
-                    <span className="font-bold text-sm text-white dark:text-emerald-400">+{claimablePoints}</span>
-
-                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
+                    <Gift className="w-4 h-4" style={{ color: "#ffd889" }} />
+                    <span className="text-sm font-extrabold" style={{ color: "#ffd889" }}>+{claimablePoints}</span>
+                    <span
+                      className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-extrabold"
+                      style={{ background: "#e8b04b", color: "#1a1206", boxShadow: "0 0 0 2px #0b0805" }}
+                    >
                       {claimableCount}
                     </span>
                   </motion.button>

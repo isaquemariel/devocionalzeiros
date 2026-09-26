@@ -21,6 +21,8 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.save-push-subscription]
     verify_jwt = false
+  [functions.notificar-conquista]
+    verify_jwt = false
   [functions.send-push-notification]
     verify_jwt = false
   [functions.send-native-push]

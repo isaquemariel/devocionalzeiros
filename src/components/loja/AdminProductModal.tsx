@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 const CATEGORIES = ["Livros", "Bíblias", "Presentes", "Combos", "Destaques"];
 const BADGES = ["", "Destaque", "Lançamento", "Mais Vendido", "Kit", "Promoção"];

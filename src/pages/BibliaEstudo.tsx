@@ -19,7 +19,7 @@ import {
   Feather,
   Brain } from
 "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";

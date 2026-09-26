@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Ban, Loader2, ShieldCheck, RefreshCw, Clock } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { supabase } from "@/integrations/supabase/client";
 import { adminListRoomBans, adminUnblockRoomUser, type RoomBan } from "@/lib/roomModeration";
 

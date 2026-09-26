@@ -12,8 +12,18 @@ interface Props {
   onAvancar?: () => void;
   /** há mais frases depois desta — mostra a setinha piscando */
   mais?: boolean;
-  /** de que lado desce o rabicho (o lado em que ele está) */
-  rabicho?: "esquerda" | "direita";
+  /** de que lado desce o rabicho (o lado em que ele está); "centro" desce reto */
+  rabicho?: "esquerda" | "direita" | "centro";
+  /**
+   * A distância, em px, da PONTA do rabicho até a borda daquele lado (no
+   * "centro", até a borda esquerda). É o que faz o balão sair da cabeça dele:
+   * quem posiciona o balão sabe onde o personagem está e aponta para lá.
+   */
+  ponta?: number;
+  /** uma linha menor debaixo da fala */
+  detalhe?: string;
+  /** um botão dentro do balão (ex.: "Ver planos") */
+  acao?: { rotulo: string; onClick: () => void };
   /** o nome em cima da caixa */
   quem?: string;
 }
@@ -40,7 +50,7 @@ const TETO_FALA = 1300;
  * O texto completo fica num espelho invisível: o balão já nasce do tamanho
  * final e não cresce a cada letra.
  */
-export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho = "esquerda", quem = "Devocionalzeiro" }: Props) {
+export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho = "esquerda", quem = "Devocionalzeiro", ponta, detalhe, acao }: Props) {
   const reduzir = useReducedMotion();
   // O progresso PERTENCE a um texto. Guardar só o número de letras fazia o
   // aviso de "terminei" disparar cedo: quando a frase trocava por uma mais
@@ -98,19 +108,46 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho =
           <span className="invisible">{texto}</span>
           <span className="absolute inset-0">{texto.slice(0, n)}</span>
         </span>
+        {detalhe && (
+          <span className="mt-1 block text-[12px] leading-snug" style={{ color: COR.texto2 }}>{detalhe}</span>
+        )}
+        {acao && (
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={(e) => { e.stopPropagation(); acao.onClick(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); acao.onClick(); } }}
+            className="rpg-btn mt-2 inline-block cursor-pointer px-3 py-1.5 text-[11px] uppercase tracking-[0.1em]"
+          >
+            {acao.rotulo}
+          </span>
+        )}
         {mais && completo && (
           <span className="jz-seta absolute bottom-1.5 right-2.5 text-[10px]" style={{ color: COR.ouroClaro }} aria-hidden="true">▼</span>
         )}
       </span>
-      {/* o rabicho: desce para a esquerda, até a cabeça dele */}
-      <svg
-        className={`absolute -bottom-[15px] ${rabicho === "direita" ? "right-[14px]" : "left-[14px]"}`}
-        style={rabicho === "direita" ? { transform: "scaleX(-1)" } : undefined}
-        width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"
-      >
-        <path d="M5 0 C7 6 5 11 1 16 C8 14 15 9 19 0 Z" fill={COR.dialogoFundo} />
-        <path d="M5 1 C7 6 5 11 1 16 C8 14 15 9 19 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-      </svg>
+      {/* o rabicho: desce até a cabeça dele */}
+      {rabicho === "centro" ? (
+        <svg
+          className="absolute -bottom-[15px]"
+          style={{ left: ponta != null ? ponta - 11 : "calc(50% - 11px)" }}
+          width="22" height="17" viewBox="0 0 22 17" aria-hidden="true"
+        >
+          <path d="M1 0 C6 4 9 9 11 16 C13 9 16 4 21 0 Z" fill={COR.dialogoFundo} />
+          <path d="M2 1 C6.5 4.5 9 9 11 16 C13 9 15.5 4.5 20 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        </svg>
+      ) : (
+        <svg
+          className="absolute -bottom-[15px]"
+          style={rabicho === "direita"
+            ? { right: ponta != null ? ponta - 1 : 14, transform: "scaleX(-1)" }
+            : { left: ponta != null ? ponta - 1 : 14 }}
+          width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"
+        >
+          <path d="M5 0 C7 6 5 11 1 16 C8 14 15 9 19 0 Z" fill={COR.dialogoFundo} />
+          <path d="M5 1 C7 6 5 11 1 16 C8 14 15 9 19 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        </svg>
+      )}
       <span className="sr-only" aria-live="polite">{texto}</span>
     </button>
   );

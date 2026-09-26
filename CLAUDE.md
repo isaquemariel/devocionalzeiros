@@ -33,8 +33,9 @@ algo ficou vermelho, NÃO suba: conserte ou avise.
 - **O que ele veste no RPG, ele veste no app todo.** `SincronizaVisual` (no
   `App`) lê o equipamento do guarda-roupa e `useVisual()` o entrega ao
   `<Devocionalzeiro/>`: sem nada equipado é o SVG; com algo, o mesmo boneco
-  vestido (canvas), com o mesmo movimento. Montaria e companheiro ficam só no
-  RPG. `look={null}` força o padrão.
+  vestido (canvas), com o mesmo movimento. Fora do RPG vai só o que fica NO
+  personagem: montaria, companheiro e aura (cenário) ficam no RPG
+  (`paraOApp` em `visual.ts`). `look={null}` força o padrão.
 - **Nada de confete.** Comemoração é o personagem: `celebrar(motivo)` de
   `lib/celebrar.ts`.
 

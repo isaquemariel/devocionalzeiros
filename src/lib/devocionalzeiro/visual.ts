@@ -11,10 +11,11 @@ import type { MascotLook } from "@/lib/rpgMascot";
  * escolha quando a pessoa entra e a acompanha quando ela troca de peça; este
  * módulo só guarda o valor e avisa quem desenha.
  *
- * Fora do RPG ficam de fora a MONTARIA e o COMPANHEIRO: são da aventura — um
- * cavalo no canto da home, ou um leão ao lado do carregamento, tomariam a tela
- * e mudariam o tamanho do boneco em cada lugar. O que ele VESTE (cor, cabeça,
- * óculos, barba, traje, escudo, espada, arma, asas e aura) vai junto.
+ * Fora do RPG vai SÓ O QUE FICA NO PERSONAGEM — cor, cabeça, óculos, barba,
+ * traje, escudo, espada, arma e asas. Ficam no RPG a MONTARIA, o COMPANHEIRO
+ * e a AURA: são cenário da aventura, não roupa. Um cavalo no canto da home, um
+ * leão ao lado do carregamento ou uma coluna de fogo atrás do balão tomariam a
+ * tela e mudariam o tamanho da apresentação em cada lugar.
  */
 
 export const EVENTO_VISUAL = "dz:visual";
@@ -43,17 +44,17 @@ export function useVisual(): Partial<MascotLook> | null {
 }
 
 /**
- * O que vale fora do RPG: sem montaria nem companheiro. `null` quando não
+ * O que vale fora do RPG: sem montaria, companheiro nem aura. `null` quando não
  * sobra nada além do padrão — aí ele é o rig em SVG, sem custo de canvas.
  */
 export function paraOApp(look: Partial<MascotLook> | null | undefined): Partial<MascotLook> | null {
   if (!look) return null;
-  const { mount: _m, pet: _p, ...resto } = look;
-  void _m; void _p;
+  const { mount: _m, pet: _p, aura: _a, ...resto } = look;
+  void _m; void _p; void _a;
   const vazio =
     (!resto.head || resto.head === "none") && !resto.glasses && !resto.beard &&
     (!resto.robe || resto.robe === "none") && !resto.shield && !resto.sword &&
     (!resto.weapon || resto.weapon === "none") && (!resto.wings || resto.wings === "none") &&
-    (!resto.aura || resto.aura === "none") && (!resto.color || resto.color === "blue");
+    (!resto.color || resto.color === "blue");
   return vazio ? null : resto;
 }

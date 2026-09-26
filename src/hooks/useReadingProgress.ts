@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans, bibleBooks } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 // Create a map of book names to their canonical order index
 const bookOrderMap = new Map<string, number>();

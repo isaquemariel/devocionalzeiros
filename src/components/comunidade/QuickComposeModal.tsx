@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { HandHeart, Loader2, Send, Award } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { createCommunityPost, PostType } from "@/hooks/useCommunity";
 import { cn } from "@/lib/utils";
 

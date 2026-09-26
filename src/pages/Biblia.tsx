@@ -16,7 +16,7 @@ import {
   Eye,
   Brain
 } from "lucide-react";
-import AchievementsGrid from "@/components/biblia/AchievementsGrid";
+import { PainelConquistas } from "@/components/conquistas/PainelConquistas";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
@@ -39,7 +39,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR, generateCustomReadingSchedule } from "@/lib/bibleData";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
@@ -859,7 +859,7 @@ const Biblia = () => {
             )}
 
             {activeTab === "conquistas" && (
-              <AchievementsGrid userId={user?.id} />
+              <PainelConquistas userId={user?.id} />
             )}
           </motion.main>
         </div>

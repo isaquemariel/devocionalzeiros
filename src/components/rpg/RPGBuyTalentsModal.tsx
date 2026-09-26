@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { createTalentCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
 import StripeCheckoutModal from "@/components/checkout/StripeCheckoutModal";
 

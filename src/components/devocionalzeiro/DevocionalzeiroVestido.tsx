@@ -21,7 +21,7 @@ interface Props {
   semChama?: boolean;
 }
 
-/** folga do canvas em volta da caixa do boneco: asas, aura e o que ele ergue */
+/** folga do canvas em volta da caixa do boneco: asas e o que ele ergue */
 const FOLGA = { lado: 0.6, cima: 0.6, baixo: 0.12 };
 
 /**
@@ -48,7 +48,7 @@ export default function DevocionalzeiroVestido({
   const canvas = useRef<HTMLCanvasElement>(null);
   const camada = useRef<SVGGElement>(null);
   const apagada = semChama || !!naCabeca;
-  const vestido: MascotLook = { ...DEFAULT_LOOK, ...look, mount: "none", pet: "none", ...(naCabeca ? { head: "none" as const } : {}) };
+  const vestido: MascotLook = { ...DEFAULT_LOOK, ...look, mount: "none", pet: "none", aura: "none", ...(naCabeca ? { head: "none" as const } : {}) };
 
   const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, apagada, vestido });
   alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, apagada, vestido };

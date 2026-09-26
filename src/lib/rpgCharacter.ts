@@ -38,25 +38,30 @@ export function validateNameFormat(v: string): { ok: boolean; reason?: string } 
   return { ok: true };
 }
 
+export type DisponibilidadeNome = "livre" | "em-uso" | "falhou";
+
 /**
- * Disponibilidade real: valida o formato e consulta o banco (RPC). Exclui o
- * próprio usuário (pra reconfirmar o mesmo nome). Em caso de falha do RPC,
- * retorna true (fail-open) — o índice único do banco ainda barra o dado, e a
- * gravação trata o conflito.
+ * Disponibilidade real: valida o formato e consulta o banco (RPC), excluindo o
+ * próprio usuário (para reconfirmar o mesmo nome).
+ *
+ * Três respostas, não duas: antes, uma falha do RPC respondia "disponível"
+ * (fail-open) — a pessoa via o ✓, seguia o tutorial inteiro e só no fim o
+ * banco recusava. Agora "não consegui verificar" é um estado próprio, e o
+ * botão de confirmar espera uma resposta de verdade.
  */
-export async function isNameAvailable(name: string): Promise<boolean> {
-  if (!validateNameFormat(name).ok) return false;
+export async function verificarNome(name: string): Promise<DisponibilidadeNome> {
+  if (!validateNameFormat(name).ok) return "em-uso";
   try {
     const { data: auth } = await supabase.auth.getUser();
     const { data, error } = await supabase.rpc("is_character_name_available", {
       name_input: name.trim(),
       exclude_user: auth?.user?.id ?? null,
     });
-    if (error) { console.warn("name availability RPC failed:", error.message); return true; }
-    return data === true;
+    if (error) { console.warn("name availability RPC failed:", error.message); return "falhou"; }
+    return data === true ? "livre" : "em-uso";
   } catch (e) {
     console.warn("name availability check error:", e);
-    return true;
+    return "falhou";
   }
 }
 

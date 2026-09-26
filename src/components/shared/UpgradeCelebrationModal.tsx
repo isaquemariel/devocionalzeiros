@@ -115,7 +115,7 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
 
             {/* ── o palco ─────────────────────────────────────────────── */}
             <div
-              className="relative h-[270px] overflow-hidden rounded-[18px]"
+              className="relative h-[300px] overflow-hidden rounded-[18px]"
               style={{
                 border: "2px solid #e8b04b",
                 boxShadow: "0 0 0 2px #0b0805, 0 24px 60px -20px #000",
@@ -139,6 +139,23 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
               <Cidade />
               {/* o chão de pedra */}
               <div className="absolute inset-x-0 bottom-0 h-[46px]" style={{ background: "linear-gradient(#6b5a52, #3e3230)", borderTop: "2px solid #8a7466" }} />
+
+              {/* a fala SAI DELE: o balão fica logo acima da cabeça, com o
+                  rabicho descendo até a coroa — como na cena viva do RPG */}
+              <AnimatePresence>
+                {tempo === "fala" && (
+                  <motion.div
+                    className="absolute inset-x-3 z-10"
+                    style={{ bottom: 26 + (150 * 229) / 205 - 42 }}
+                    initial={{ opacity: 0, scale: 0.7, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 420, damping: 24 }}
+                  >
+                    <div style={{ transformOrigin: "50% 100%" }}>
+                      <Balao texto={p.fala} onFalando={setFalando} rabicho="centro" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* ele, e a coroa caindo exatamente onde fica a cabeça dele */}
               <div className="absolute bottom-[26px] left-1/2 -translate-x-1/2" style={{ width: 150, height: (150 * 229) / 205 }}>
@@ -179,23 +196,13 @@ export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCe
               </div>
             </div>
 
-            {/* ── a caixa de diálogo do RPG ─────────────────────────────── */}
-            <div className="relative mt-3 min-h-[96px]">
-              <div className="mb-2 flex justify-center">
-                <span
-                  className="rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em]"
-                  style={{ background: "#1c1509", color: p.cor, boxShadow: `inset 0 0 0 2px ${p.cor}` }}
-                >
-                  Plano {p.nome}
-                </span>
-              </div>
-              <AnimatePresence>
-                {tempo === "fala" && (
-                  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                    <Balao texto={p.fala} onFalando={setFalando} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            <div className="mt-3 flex justify-center">
+              <span
+                className="rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em]"
+                style={{ background: "#1c1509", color: p.cor, boxShadow: `inset 0 0 0 2px ${p.cor}` }}
+              >
+                Plano {p.nome}
+              </span>
             </div>
 
             {/* ── o que abriu: acende um por um ─────────────────────────── */}

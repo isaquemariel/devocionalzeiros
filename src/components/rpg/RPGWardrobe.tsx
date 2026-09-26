@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles, Loader2, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { supabase } from "@/integrations/supabase/client";
 import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
 import RPGPurchaseSheet from "@/components/rpg/RPGPurchaseSheet";
@@ -58,6 +58,9 @@ function buildAvailable(userId: string, isAdmin: boolean): Set<string> {
   return s;
 }
 
+/** peças de slots diferentes que ocupam o MESMO lugar do corpo (a mão direita) */
+const MESMO_LUGAR: Partial<Record<Slot, Slot[]>> = { sword: ["weapon"], weapon: ["sword"] };
+
 const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobeProps) => {
   // ownedVersion: recomputa "disponível" após comprar/resgatar (some o preço/lock na hora)
   const [ownedVersion, setOwnedVersion] = useState(0);
@@ -93,10 +96,17 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   };
 
   // Clicar numa peça = PROVAR (prévia). Só persiste o que a pessoa possui.
+  // Uma peça por LUGAR do corpo: clicar noutra da mesma categoria troca — a
+  // anterior sai. A espada e as armas da loja vão na MESMA mão, então uma tira
+  // a outra (antes a espada ficava marcada e escondia a arma nova).
   const onSelect = (c: Cosmetic) => {
     const wasOn = preview[c.slot] === c.id;
     const next = { ...preview };
-    if (wasOn) delete next[c.slot]; else next[c.slot] = c.id;
+    if (wasOn) delete next[c.slot];
+    else {
+      next[c.slot] = c.id;
+      for (const outro of MESMO_LUGAR[c.slot] ?? []) delete next[outro];
+    }
     setPreview(next);
     setEquip(userId, ownedFilter(next, available)); // nunca fixa item não adquirido
     pushCosmeticsToDB(userId);
@@ -111,6 +121,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
     const availNow = new Set([...available, id]);
     const c = COSMETIC_BY_ID[id];
     const next = { ...preview, [c.slot]: id };
+    for (const outro of MESMO_LUGAR[c.slot] ?? []) delete next[outro];
     setPreview(next);
     setEquip(userId, ownedFilter(next, availNow));
     pushCosmeticsToDB(userId);

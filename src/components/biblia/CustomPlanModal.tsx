@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, BookOpen, Calendar, CheckCircle2, AlertCircle, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 interface CustomPlanData {
   name: string;

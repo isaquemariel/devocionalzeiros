@@ -100,21 +100,26 @@ export const useRPGProgress = (userId: string | undefined) => {
   const saveCharacter = useCallback(async (name: string): Promise<{ ok: boolean; error?: string }> => {
     if (!userId) return { ok: false };
     const clean = name.trim().slice(0, 10); // só letras · até 10 (validado no onboarding)
-    // garante que a linha existe
-    const { data: existing } = await supabase
-      .from('rpg_user_stats')
-      .select('id')
-      .eq('user_id', userId)
-      .maybeSingle();
-    const res = existing
-      ? await supabase.from('rpg_user_stats').update({ character_name: clean } as any).eq('user_id', userId)
-      : await supabase.from('rpg_user_stats').insert({
-          user_id: userId, total_xp: 0, current_level: 1, current_stage: 1, streak_days: 0,
-          character_name: clean,
-        } as any);
+    // O conflito que importa é o do NOME (índice único em character_name). O
+    // da LINHA (user_id único) acontecia quando a linha era criada ao mesmo
+    // tempo pelo initializeStats: o insert batia no user_id e o erro 23505 era
+    // lido como "nome já escolhido" — a pessoa via um aviso falso no fim do
+    // tutorial. Agora: atualiza; se não havia linha, cria; se ela surgiu no
+    // meio do caminho, atualiza de novo.
+    const ehConflitoDeNome = (e: { code?: string; message?: string; details?: string } | null) =>
+      !!e && e.code === "23505" && /character_name/i.test(`${e.message ?? ""} ${e.details ?? ""}`);
+    const atualizar = () =>
+      supabase.from('rpg_user_stats').update({ character_name: clean } as any).eq('user_id', userId).select('id');
+    let res = await atualizar();
+    if (!res.error && (!res.data || res.data.length === 0)) {
+      const ins = await supabase.from('rpg_user_stats').insert({
+        user_id: userId, total_xp: 0, current_level: 1, current_stage: 1, streak_days: 0,
+        character_name: clean,
+      } as any).select('id');
+      res = ins.error && ins.error.code === '23505' && !ehConflitoDeNome(ins.error) ? await atualizar() : ins;
+    }
     if (res.error) {
-      // 23505 = índice único → nome já em uso (corrida rara, pós-checagem)
-      if ((res.error as any).code === '23505') return { ok: false, error: 'name_taken' };
+      if (ehConflitoDeNome(res.error)) return { ok: false, error: 'name_taken' };
       return { ok: false, error: res.error.message };
     }
     // otimista: reflete localmente na hora (fecha o onboarding sem esperar refetch)

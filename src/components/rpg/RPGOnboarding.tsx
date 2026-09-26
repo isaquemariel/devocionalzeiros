@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotMood } from "@/lib/rpgMascot";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
-import { isNameAvailable, suggestNames, sanitizeName, validateNameFormat, NAME_MAX } from "@/lib/rpgCharacter";
+import { verificarNome, suggestNames, sanitizeName, validateNameFormat, NAME_MAX } from "@/lib/rpgCharacter";
 
 interface RPGOnboardingProps {
-  onDone: (name: string) => void;
+  /** grava o nome; se ele foi tomado no meio do caminho, a tela volta para o nome */
+  onDone: (name: string) => Promise<{ ok: boolean; error?: string } | void> | void;
 }
 
 const SCENE_W = 256;
@@ -48,31 +49,44 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
   const curText = inTutorial ? STEPS[tutorialIdx].tx.replace(/\{n\}/g, nm) : "";
   const curMood: MascotMood = inTutorial ? STEPS[tutorialIdx].mood : "idle";
 
-  // ----- verificação de nome (debounced) -----
+  // ----- verificação de nome, NA HORA da escolha -----
+  // Cada digitação dispara uma consulta (com 350 ms de folga); só a resposta
+  // da ÚLTIMA vale — uma resposta atrasada de "Dav" não pode marcar "Davi"
+  // como livre. O ✓ só aparece com a resposta do banco, e "Confirmar"
+  // reconsulta antes de seguir.
   const checkTimer = useRef<ReturnType<typeof setTimeout>>();
+  const consulta = useRef(0);
+  const [confirmando, setConfirmando] = useState(false);
+  const mostrarResultado = useCallback((nome: string, r: "livre" | "em-uso" | "falhou") => {
+    if (r === "livre") {
+      setNameOK(true);
+      setStatus({ kind: "ok", msg: `✓ "${nome}" está disponível!` });
+    } else if (r === "em-uso") {
+      setNameOK(false);
+      setStatus({ kind: "no", msg: `✗ "${nome}" já tem dono. Que tal:` });
+      setSugs(suggestNames(nome));
+    } else {
+      setNameOK(false);
+      setStatus({ kind: "no", msg: "Não consegui verificar agora. Confira a conexão e toque em Confirmar de novo." });
+    }
+  }, []);
   const checkName = useCallback((v: string) => {
     setNameOK(false);
     setSugs([]);
     const trimmed = v.trim();
+    const id = ++consulta.current;
+    clearTimeout(checkTimer.current);
     const fmt = validateNameFormat(trimmed);
     if (!fmt.ok) {
       setStatus({ kind: "no", msg: trimmed ? (fmt.reason || "Nome inválido.") : "" });
       return;
     }
     setStatus({ kind: "chk", msg: "Verificando disponibilidade…" });
-    clearTimeout(checkTimer.current);
     checkTimer.current = setTimeout(async () => {
-      const ok = await isNameAvailable(trimmed);
-      if (ok) {
-        setNameOK(true);
-        setStatus({ kind: "ok", msg: `✓ "${trimmed}" está disponível!` });
-      } else {
-        setNameOK(false);
-        setStatus({ kind: "no", msg: `✗ "${trimmed}" já está em uso. Que tal:` });
-        setSugs(suggestNames(trimmed));
-      }
-    }, 400);
-  }, []);
+      const r = await verificarNome(trimmed);
+      if (id === consulta.current) mostrarResultado(trimmed, r);
+    }, 350);
+  }, [mostrarResultado]);
 
   const onNameChange = (v: string) => {
     // aceita só letras e no máx. NAME_MAX (bloqueia número/símbolo já na digitação)
@@ -81,12 +95,21 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
     checkName(clean);
   };
 
-  const confirmName = useCallback(() => {
-    if (!nameOK) return;
+  const confirmName = useCallback(async () => {
     const finalName = nameInput.trim().slice(0, NAME_MAX);
+    if (!validateNameFormat(finalName).ok || confirmando) return;
+    // reconfirma no banco no momento da escolha (alguém pode ter pego o nome
+    // entre a digitação e o toque)
+    setConfirmando(true);
+    const id = ++consulta.current;
+    const r = await verificarNome(finalName);
+    setConfirmando(false);
+    if (id !== consulta.current) return;
+    mostrarResultado(finalName, r);
+    if (r !== "livre") return;
     setName(finalName);
     setStep(1);
-  }, [nameOK, nameInput]);
+  }, [nameInput, confirmando, mostrarResultado]);
 
   const advance = useCallback(() => {
     if (step < 0) {
@@ -102,9 +125,17 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
     if (step < STEPS.length) {
       setStep((s) => s + 1);
     } else {
-      onDone(name);
+      // grava; se o nome foi tomado nesse meio-tempo (raro), volta para a
+      // escolha já dizendo isso — em vez de um aviso solto no fim
+      Promise.resolve(onDone(name)).then((r) => {
+        if (r && !r.ok && r.error === "name_taken") {
+          setStep(0);
+          setNameInput(name);
+          mostrarResultado(name, "em-uso");
+        }
+      });
     }
-  }, [step, naming, typing, curText.length, name, onDone]);
+  }, [step, naming, typing, curText.length, name, onDone, mostrarResultado]);
 
   const back = useCallback(() => {
     if (step > 1) setStep((s) => s - 1);
@@ -322,8 +353,8 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
                   ))}
                 </div>
               )}
-              <button onClick={confirmName} disabled={!nameOK} className="rpg-btn w-full mt-4 py-3 text-sm">
-                Confirmar
+              <button onClick={confirmName} disabled={confirmando || (!nameOK && status.kind !== "no")} className="rpg-btn w-full mt-4 py-3 text-sm">
+                {confirmando ? "Verificando…" : "Confirmar"}
               </button>
             </motion.div>
           </motion.div>

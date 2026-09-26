@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgHero";
 import { drawScenicHD } from "@/lib/rpgScenicHD";

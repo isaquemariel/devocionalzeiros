@@ -22,7 +22,7 @@ import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
 import { celebrar } from "@/lib/celebrar";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { DevotionalCalendar } from "@/components/devocional/DevotionalCalendar";

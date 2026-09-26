@@ -12,7 +12,7 @@ import {
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis } from "recharts";
 import { RefreshCw, DollarSign, CreditCard, Gamepad2, Receipt, Loader2, TrendingUp, Coins } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 

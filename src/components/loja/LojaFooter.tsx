@@ -1,6 +1,6 @@
 import { ShieldCheck, Instagram, Facebook, Youtube } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 const CATEGORY_LINKS = ["Livros", "Bíblias", "Presentes", "Combos", "Destaques"];
 const STORE_LINKS = [

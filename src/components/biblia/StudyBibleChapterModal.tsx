@@ -28,7 +28,7 @@ import { fetchChapterVerses, BOOK_ID_MAP } from "@/lib/bibleService";
 import { useStudyBible } from "@/hooks/useStudyBible";
 import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 // Parse a Bible reference like "João 3:16" or "Gênesis 1:1-3" and find the bookId
 const parseReference = (ref: string): { bookId: string; bookName: string; chapter: number; verseStart: number; verseEnd: number } | null => {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/shared/AppHeader";
-import AchievementsGrid from "@/components/biblia/AchievementsGrid";
+import { PainelConquistas } from "@/components/conquistas/PainelConquistas";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
 
@@ -24,21 +24,9 @@ const Conquistas = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden noise-overlay">
-      {/* Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden bg-background">
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `
-            linear-gradient(hsl(var(--foreground) / 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }} />
-        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] rounded-full blur-[200px] -translate-y-1/2" style={{ backgroundColor: 'hsl(var(--primary) / 0.03)' }} />
-        <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] rounded-full blur-[180px] -translate-x-1/2" style={{ backgroundColor: 'hsl(var(--accent) / 0.02)' }} />
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-24">
+    // a página inteira no padrão do RPG: fundo de tinta e ouro, letra do jogo
+    <div className="rpg-root min-h-screen overflow-x-hidden">
+      <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-8 pb-24">
         {/* Header */}
         <AppHeader 
           userId={user?.id}
@@ -46,29 +34,7 @@ const Conquistas = () => {
           showBack={true}
         />
 
-        {/* Page Title */}
-        <motion.div
-          className="mb-6 text-center relative"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Conquistas
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Complete desafios e resgate seus pontos
-          </p>
-        </motion.div>
-
-        {/* Main Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <AchievementsGrid userId={user?.id} />
-        </motion.div>
+        <PainelConquistas userId={user?.id} />
 
         {/* Footer */}
         <motion.footer

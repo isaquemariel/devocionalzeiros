@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 const SHOPIFY_API_VERSION = '2025-07';
 const SHOPIFY_STORE_PERMANENT_DOMAIN = 'devocionalzeiros-uv3k9.myshopify.com';

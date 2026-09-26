@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { toPng } from "html-to-image";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { downloadImageSmart, shareImageSmart } from "@/lib/shareImage";
 
 

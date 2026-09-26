@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { Capacitor } from "@capacitor/core";
 
 type WebSharePayload = {

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, ShieldCheck, Loader2, Image as ImageIcon, PackageX, Flame, BellRing, Lock } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { RatingStars, getPlaceholderRating } from "./RatingStars";
 
 const formatBRL = (v: number) =>

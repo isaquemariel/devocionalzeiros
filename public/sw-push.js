@@ -11,14 +11,20 @@ self.addEventListener('push', (event) => {
     data = { title: 'Devocionalzeiros', body: event.data.text() };
   }
 
+  const url = data.url || '/devocional';
+  // As conquistas se agrupam numa notificação só (a mais nova substitui a
+  // anterior e toca de novo), e o botão já diz o que fazer: resgatar.
+  const conquista = url.indexOf('/conquistas') === 0;
   const options = {
     body: data.body || 'Você tem um novo devocional!',
     icon: '/pwa-192x192.png',
     badge: '/pwa-192x192.png',
     vibrate: [200, 100, 200],
-    data: { url: data.url || '/devocional' },
+    data: { url },
+    tag: data.tag || (conquista ? 'conquistas' : undefined),
+    renotify: conquista || undefined,
     actions: [
-      { action: 'open', title: 'Abrir' },
+      { action: 'open', title: conquista ? 'Resgatar' : 'Abrir' },
       { action: 'close', title: 'Fechar' },
     ],
   };

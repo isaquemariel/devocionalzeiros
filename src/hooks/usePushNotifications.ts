@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 
 // ============================================================================
 // A CHAVE VAPID VEM DO SERVIDOR, NÃO DO BUILD.

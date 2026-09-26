@@ -21,7 +21,7 @@ import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import lojaBanner from "@/assets/loja-banner.png";

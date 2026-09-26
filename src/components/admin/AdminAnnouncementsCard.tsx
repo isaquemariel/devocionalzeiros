@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Bell, Plus, Send, Trash2, Loader2, Clock, Repeat, Zap, AlertTriangle } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 

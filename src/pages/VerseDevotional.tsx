@@ -17,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { celebrar } from "@/lib/celebrar";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/lib/avisos";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
