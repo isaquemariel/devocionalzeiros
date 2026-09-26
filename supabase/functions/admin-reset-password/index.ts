@@ -75,9 +75,20 @@ Deno.serve(async (req) => {
 
     // Acha a conta pelo e-mail direto no banco (paginar listUsers parava nos
     // primeiros 10 mil usuários e devolvia "User not found" para o resto)
+    let targetUserId: string | null = null;
     const { data: achado, error: achaErr } = await admin.rpc("admin_find_user_id_by_email", { p_email: targetEmail });
-    if (achaErr) throw achaErr;
-    const targetUserId = (achado as string | null) ?? null;
+    if (!achaErr) {
+      targetUserId = (achado as string | null) ?? null;
+    } else {
+      // banco ainda sem a função: procura página a página (sem teto)
+      console.warn("admin_find_user_id_by_email indisponível, usando listUsers:", achaErr.message);
+      for (let page = 1; !targetUserId; page++) {
+        const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+        if (error) throw error;
+        targetUserId = data.users.find((u) => u.email?.toLowerCase() === targetEmail)?.id ?? null;
+        if (data.users.length < 1000) break;
+      }
+    }
 
     if (!targetUserId) {
       return new Response(JSON.stringify({ error: "User not found" }), {
@@ -103,8 +114,10 @@ Deno.serve(async (req) => {
     // Derruba TODAS as sessões da conta (se a troca foi por conta invadida, o
     // invasor sai junto). `auth.admin.signOut` pede o token da pessoa, não o
     // id — com o id ele falhava em silêncio e as sessões continuavam vivas.
+    // (a senha já foi trocada: se o banco ainda não tem a função, avisa no log
+    // em vez de devolver erro para uma troca que deu certo)
     const { error: sessErr } = await admin.rpc("admin_revoke_sessions", { p_user_id: targetUserId });
-    if (sessErr) throw sessErr;
+    if (sessErr) console.error("não consegui derrubar as sessões:", sessErr.message);
 
     return new Response(
       JSON.stringify({

@@ -29,7 +29,7 @@ ALTER TABLE public.email_verificado ENABLE ROW LEVEL SECURITY;
 -- quem já existia continua como está (ninguém que paga perde o plano). Data
 -- FIXA: reaplicar esta migração no futuro não pode "provar" contas novas.
 INSERT INTO public.email_verificado (user_id, verificado_em, como)
-SELECT id, now(), 'anterior' FROM auth.users WHERE created_at < '2026-09-28T03:00:00Z'
+SELECT id, now(), 'anterior' FROM auth.users WHERE created_at < '2026-09-26T17:30:00Z'
 ON CONFLICT (user_id) DO NOTHING;
 
 CREATE OR REPLACE FUNCTION public.email_comprovado(p_uid uuid)
