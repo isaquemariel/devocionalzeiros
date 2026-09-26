@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
     });
   } catch (err) {
     console.error("send-native-push error:", err);
-    return new Response(JSON.stringify({ error: String(err?.message ?? err) }), {
+    return new Response(JSON.stringify({ error: String(err instanceof Error ? err.message : err) }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

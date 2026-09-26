@@ -518,15 +518,18 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         questions = JSON.parse(cleanContent);
         
         // Normalize correct_answer to uppercase for all questions
-        questions = questions.map(q => ({
+        questions = questions.map(q => {
+          const rawOptions = q.options as QuizQuestion['options'] & { a?: string; b?: string; c?: string };
+          return ({
           ...q,
           correct_answer: (q.correct_answer || 'A').toUpperCase() as 'A' | 'B' | 'C',
           options: {
-            A: q.options?.A || q.options?.a || '',
-            B: q.options?.B || q.options?.b || '',
-            C: q.options?.C || q.options?.c || '',
+            A: rawOptions?.A || rawOptions?.a || '',
+            B: rawOptions?.B || rawOptions?.b || '',
+            C: rawOptions?.C || rawOptions?.c || '',
           },
-        }));
+          });
+        });
       } catch (parseError) {
         console.error('Failed to parse AI response:', content);
         throw new Error('Failed to parse AI response');
