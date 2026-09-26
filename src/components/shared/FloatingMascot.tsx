@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useCentroAtivo, useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mascot3D } from "./Mascot3D";
@@ -60,6 +61,8 @@ interface DraggableMascotProps {
 /** Draggable floating mascot for /home */
 export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const navigate = useNavigate();
+  // ele subiu no meio da tela (aviso/festa): este sai de cena até ele descer
+  const noCentro = useCentroAtivo();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [showBubble, setShowBubble] = useState(false);
   const [bubbleText, setBubbleText] = useState("");
@@ -209,7 +212,8 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
         transform: "translate(-50%, -50%)",
         touchAction: "none",
         cursor: isDragging.current ? "grabbing" : "grab",
-        opacity: initialized ? 1 : 0,
+        opacity: initialized && !noCentro ? 1 : 0,
+        pointerEvents: noCentro ? "none" : undefined,
         transition: "opacity 0.3s ease",
       }}
       onMouseDown={handleMouseDown}
@@ -255,15 +259,20 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
 };
 
 /** Small mascot in the header for non-home pages */
-export const HeaderMascot = () => (
-  <motion.div
-    className="flex-shrink-0"
-    animate={{ y: [0, -2, 0] }}
-    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-  >
-    <Mascot3D mood="idle" size="xs" />
-  </motion.div>
-);
+export const HeaderMascot = () => {
+  // o mesmo personagem não fica em dois lugares: some enquanto ele fala no centro
+  const noCentro = useCentroAtivo();
+  return (
+    <motion.div
+      className="flex-shrink-0"
+      style={{ opacity: noCentro ? 0 : 1, transition: "opacity 0.3s ease" }}
+      animate={{ y: [0, -2, 0] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <Mascot3D mood="idle" size="xs" />
+    </motion.div>
+  );
+};
 
 /** Global floating mascot — renders the right variant per route */
 export const FloatingMascot = () => {
@@ -286,7 +295,12 @@ export const FloatingMascot = () => {
  *  login) e o leitor via um carregamento diferente a cada tela. `label` só
  *  troca a frase; a figura é sempre o personagem principal.
  */
-export const MascotLoader = ({ label = "Carregando..." }: { label?: string }) => (
+export const MascotLoader = ({ label = "Carregando..." }: { label?: string }) => {
+  // o personagem já está em cena: um aviso que chegar agora (o "Bem-vindo de
+  // volta!" do login) espera o carregamento sair, em vez de subir um segundo
+  // boneco por cima deste
+  useOcuparPalco();
+  return (
   <div className="min-h-screen bg-black flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
       {/* ele caminha no lugar: a página está a caminho */}
@@ -300,6 +314,7 @@ export const MascotLoader = ({ label = "Carregando..." }: { label?: string }) =>
       </motion.p>
     </div>
   </div>
-);
+  );
+};
 
 export default FloatingMascot;

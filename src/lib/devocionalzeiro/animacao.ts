@@ -27,6 +27,8 @@ export interface AlvoAnimacao {
   pulso: number;
   /** muda → aceno curto de cabeça */
   toque: number;
+  /** muda → PULO de verdade (alto, o da tela inicial: toque duplo / espaço) */
+  salto?: number;
 }
 
 export interface Pose {
@@ -68,6 +70,7 @@ export interface EstadoAnimacao {
   proximaPiscada: number; piscandoEm: number; piscadaDupla: boolean;
   vagarX: number; vagarY: number; proximoVagar: number;
   alturaAnt: number; inclinacao: number;
+  saltoVisto: number; saltoEm: number;
 }
 
 export function criarEstado(a: AlvoAnimacao): EstadoAnimacao {
@@ -79,6 +82,7 @@ export function criarEstado(a: AlvoAnimacao): EstadoAnimacao {
     proximaPiscada: 1.2 + Math.random() * 2, piscandoEm: -10, piscadaDupla: false,
     vagarX: 0, vagarY: 0, proximoVagar: 2,
     alturaAnt: 0, inclinacao: 0,
+    saltoVisto: a.salto ?? 0, saltoEm: -10,
   };
 }
 
@@ -97,7 +101,12 @@ export function avancar(s: EstadoAnimacao, a: AlvoAnimacao, t: number, dt: numbe
     else if (tt < 0.64) { const u = (tt - 0.49) / 0.15; const k = Math.sin(Math.PI * u);     // pouso
       sy = 1 - 0.14 * k; sx = 1 + 0.1 * k; }
   };
-  if (!reduzir) {
+  if ((a.salto ?? 0) !== s.saltoVisto) { s.saltoVisto = a.salto ?? 0; s.saltoEm = t; }
+  // o pulo grande: o mesmo arco (antecipa, voa, amassa no pouso), mais alto e
+  // um pouco mais lento; a sombra fica no chão e encolhe com a altura
+  const noSalto = t - s.saltoEm;
+  if (!reduzir && noSalto < 0.86) pulando(noSalto * (0.64 / 0.86), 66);
+  else if (!reduzir) {
     if (a.gesto === "comemorar" || a.gesto === "vitoria") pulando(t % 1.05, a.gesto === "vitoria" ? 14 : 22);
     else if (a.gesto === "pirueta") pulando((t % 1.4) * 0.75, 34);
     else if (t - s.pulsoEm < 0.64) pulando(t - s.pulsoEm, 18);
@@ -184,7 +193,7 @@ export function avancar(s: EstadoAnimacao, a: AlvoAnimacao, t: number, dt: numbe
   s.chama = mola(s.chama, Math.max(0, Math.min(1, a.chama)) + excit, 2.6, dt);
 
   return {
-    altura, sx, sy, tilt, sombra: Math.max(0.55, 1 - altura / 55), peE, peD,
+    altura, sx, sy, tilt, sombra: Math.max(0.35, 1 - altura / 90), peE, peD,
     gazeX: s.gazeX, gazeY: s.gazeY, escalaOlho, abertura, olhosFelizes, olhosFechados,
     expressao: exp, boca, bochecha,
     bracoE: { ang: s.bracoE, len: s.lenE }, bracoD: { ang: s.bracoD, len: s.lenD },

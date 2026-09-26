@@ -4,6 +4,8 @@ import { Devocionalzeiro, type Expressao, type Gesto } from "./Devocionalzeiro";
 import { Balao } from "@/components/jornada/Balao";
 import { EVENTO_CELEBRAR, type MotivoCelebracao, type PedidoCelebracao } from "@/lib/celebrar";
 import { EVENTO_AVISO, type PedidoAviso, type TipoAviso } from "@/lib/avisos";
+import { definirCentroAtivo, donoDoPalco, useVersaoDoPalco } from "@/lib/devocionalzeiro/palco";
+import { JEITO, tempoDeLeitura } from "@/lib/devocionalzeiro/jeitoDoAviso";
 
 /**
  * O PALCO DO DEVOCIONALZEIRO — o único lugar onde ele aparece por conta
@@ -26,6 +28,10 @@ import { EVENTO_AVISO, type PedidoAviso, type TipoAviso } from "@/lib/avisos";
  * Um aviso de sucesso que chega junto de uma comemoração (o "+1 ponto!
  * Gênesis 2 marcado como lido" do capítulo) vira a FALA dela — um personagem
  * só, dizendo a coisa certa, em vez de dois balões brigando.
+ *
+ * E o palco é de um só (`lib/devocionalzeiro/palco`): se a tela já tem o
+ * personagem em cena (tela inicial, login, carregamento), é ele quem diz o
+ * aviso, ou o aviso espera ela sair. Nunca dois bonecos ao mesmo tempo.
  */
 
 type Tamanho = "pequena" | "media" | "grande";
@@ -69,34 +75,55 @@ const CENAS: Record<MotivoCelebracao, Cena> = {
   },
 };
 
-/** a cara e o gesto de cada tipo de aviso */
-const JEITO: Record<TipoAviso, { expressao: Expressao; gesto: Gesto; depois: Gesto; chama: number }> = {
-  sucesso: { expressao: "feliz", gesto: "vitoria", depois: "parado", chama: 0.6 },
-  erro: { expressao: "pensativo", gesto: "cocar", depois: "parado", chama: 0.22 },
-  info: { expressao: "feliz", gesto: "apontar", depois: "parado", chama: 0.4 },
-  alerta: { expressao: "surpreso", gesto: "parado", depois: "parado", chama: 0.4 },
-};
-
 const PESO: Record<Tamanho, number> = { pequena: 0, media: 1, grande: 2 };
 const sortear = (l: string[]) => l[Math.floor(Math.random() * l.length)];
-/** quanto tempo o aviso fica: dá para ler com calma, sem ficar para sempre */
-const tempoDeLeitura = (texto: string, detalhe?: string, acao?: boolean) =>
-  Math.max(acao ? 6500 : 3000, Math.min(8000, 2400 + (texto.length + (detalhe?.length ?? 0)) * 48));
-
 type Festa = { id: number; tipo: "festa"; motivo: MotivoCelebracao; fala: string; detalhe?: string; desde: number };
 type Aviso = { id: number; tipo: "aviso"; aviso: TipoAviso; fala: string; detalhe?: string; acao?: PedidoAviso["acao"]; dura: number; desde: number };
 type Item = Festa | Aviso;
+
+/** na fila de espera há mais de 30 s, o aviso já não é notícia: cai */
+const VALIDADE_NA_FILA = 30_000;
 
 export function Comemoracao() {
   const [ativo, setAtivo] = useState<Item | null>(null);
   const fila = useRef<Item[]>([]);
   const seq = useRef(0);
+  const versaoPalco = useVersaoDoPalco();
+  const ativoRef = useRef(ativo);
+  ativoRef.current = ativo;
+  // os bonecos fixos das telas (home, cabeçalho) saem de cena enquanto ele fala aqui
+  useEffect(() => { definirCentroAtivo(!!ativo); }, [ativo]);
+  useEffect(() => () => definirCentroAtivo(false), []);
+
+  const proximoDaFila = useCallback((): Item | null => {
+    while (fila.current.length) {
+      const p = fila.current.shift()!;
+      if (Date.now() - p.desde < VALIDADE_NA_FILA) return { ...p, desde: Date.now() };
+    }
+    return null;
+  }, []);
+
+  // alguém pôs o personagem em cena (ou tirou): o palco central cede ou volta
+  useEffect(() => {
+    if (donoDoPalco()) {
+      const a = ativoRef.current;
+      if (a) { fila.current.unshift({ ...a, desde: Date.now() }); setAtivo(null); }
+    } else if (!ativoRef.current) {
+      const t = window.setTimeout(() => { if (!donoDoPalco() && !ativoRef.current) setAtivo(proximoDaFila()); }, 350);
+      return () => window.clearTimeout(t);
+    }
+  }, [versaoPalco, proximoDaFila]);
 
   useEffect(() => {
     const aoCelebrar = (e: Event) => {
       const p = (e as CustomEvent<PedidoCelebracao>).detail;
       if (!p || !CENAS[p.motivo]) return;
       const cena = CENAS[p.motivo];
+      // palco ocupado por outra tela: a festa espera a vez
+      if (donoDoPalco()) {
+        if (fila.current.length < 3) fila.current.push({ id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() });
+        return;
+      }
       setAtivo((a) => {
         const nova: Festa = { id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() };
         if (!a) return nova;
@@ -116,11 +143,19 @@ export function Comemoracao() {
     const aoAvisar = (e: Event) => {
       const p = (e as CustomEvent<PedidoAviso>).detail;
       if (!p?.texto) return;
+      // a tela que já tem o personagem em cena diz o aviso pela boca dele
+      const dono = donoDoPalco();
+      if (dono?.falar?.(p)) return;
       const novo: Aviso = {
         id: ++seq.current, tipo: "aviso", aviso: p.tipo, fala: p.texto, detalhe: p.detalhe, acao: p.acao,
         dura: p.duracao ? Math.min(12000, Math.max(2500, p.duracao)) : tempoDeLeitura(p.texto, p.detalhe, !!p.acao),
         desde: Date.now(),
       };
+      if (dono) {
+        // (o carregamento): espera ele sair
+        if (fila.current.length < 3) fila.current.push(novo);
+        return;
+      }
       setAtivo((a) => {
         if (!a) return novo;
         // o sucesso que chega junto da festa vira a fala dela
@@ -144,12 +179,13 @@ export function Comemoracao() {
 
   const encerrar = useCallback(() => {
     setAtivo(null);
-    // o próximo entra depois que este saiu de cena
+    // o próximo entra depois que este saiu de cena (se o palco estiver livre)
     window.setTimeout(() => {
-      const p = fila.current.shift();
-      if (p) setAtivo({ ...p, desde: Date.now() });
+      if (donoDoPalco() || ativoRef.current) return;
+      const p = proximoDaFila();
+      if (p) setAtivo(p);
     }, 350);
-  }, []);
+  }, [proximoDaFila]);
 
   return (
     <AnimatePresence>

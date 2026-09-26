@@ -12,8 +12,12 @@ interface Props {
   onAvancar?: () => void;
   /** há mais frases depois desta — mostra a setinha piscando */
   mais?: boolean;
-  /** de que lado desce o rabicho (o lado em que ele está); "centro" desce reto */
-  rabicho?: "esquerda" | "direita" | "centro";
+  /**
+   * de que lado desce o rabicho (o lado em que ele está); "centro" desce reto;
+   * "cima" SOBE reto, para quando o balão fica embaixo dele (no login, ele está
+   * no alto da tela e fala para baixo)
+   */
+  rabicho?: "esquerda" | "direita" | "centro" | "cima";
   /**
    * A distância, em px, da PONTA do rabicho até a borda daquele lado (no
    * "centro", até a borda esquerda). É o que faz o balão sair da cabeça dele:
@@ -127,7 +131,16 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho =
         )}
       </span>
       {/* o rabicho: desce até a cabeça dele */}
-      {rabicho === "centro" ? (
+      {rabicho === "cima" ? (
+        <svg
+          className="absolute -top-[15px]"
+          style={{ left: ponta != null ? ponta - 11 : "calc(50% - 11px)", transform: "scaleY(-1)" }}
+          width="22" height="17" viewBox="0 0 22 17" aria-hidden="true"
+        >
+          <path d="M1 0 C6 4 9 9 11 16 C13 9 16 4 21 0 Z" fill={COR.dialogo} />
+          <path d="M2 1 C6.5 4.5 9 9 11 16 C13 9 15.5 4.5 20 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        </svg>
+      ) : rabicho === "centro" ? (
         <svg
           className="absolute -bottom-[15px]"
           style={{ left: ponta != null ? ponta - 11 : "calc(50% - 11px)" }}

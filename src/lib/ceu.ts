@@ -100,39 +100,8 @@ export function naLuz(m: Momento, dia: string, noite: string, quente = "#ff9f5a"
   return misturar(base, quente, m.calor * 0.28);
 }
 
-// ─── o que o Devocionalzeiro diz em cada hora ───────────────────────────────
-/** Versículos da ARC, conferidos palavra por palavra (scripts/test-ceu.mjs). */
-export const VERSOS: Record<Fase, { texto: string; ref: string }[]> = {
-  madrugada: [
-    { texto: "Os meus olhos anteciparam as vigílias da noite, para meditar na tua palavra.", ref: "Salmos 119:148" },
-    { texto: "Eis que não tosquenejará nem dormirá o guarda de Israel.", ref: "Salmos 121:4" },
-  ],
-  manha: [
-    { texto: "Novas são cada manhã; grande é a tua fidelidade.", ref: "Lamentações 3:23" },
-    { texto: "Pela manhã ouvirás a minha voz, ó Senhor", ref: "Salmos 5:3" },
-    { texto: "Levanta-te, resplandece, porque vem a tua luz", ref: "Isaías 60:1" },
-  ],
-  tarde: [
-    { texto: "Este é o dia que fez o Senhor; regozijemo-nos, e alegremo-nos nele.", ref: "Salmos 118:24" },
-    { texto: "Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.", ref: "Salmos 119:105" },
-    { texto: "Desde o nascimento do sol até ao ocaso, seja louvado o nome do Senhor.", ref: "Salmos 113:3" },
-  ],
-  noite: [
-    { texto: "Em paz também me deitarei e dormirei, porque só tu, Senhor, me fazes habitar em segurança.", ref: "Salmos 4:8" },
-    { texto: "Os céus declaram a glória de Deus e o firmamento anuncia a obra das suas mãos.", ref: "Salmos 19:1" },
-    { texto: "de noite a sua canção estará comigo", ref: "Salmos 42:8" },
-  ],
-};
-
-/** antes das 7h o sol ainda não subiu: a manhã é aurora */
-export const SAUDACAO_AURORA = ["Bom dia! O dia está nascendo, e a chama também.", "Bom dia! Chegou cedo — o sol ainda nem subiu."];
-
-export const SAUDACAO: Record<Fase, string[]> = {
-  madrugada: ["Acordado a essa hora? A Palavra também é pra madrugada.", "Madrugada quieta... boa hora pra ouvir a Deus."],
-  manha: ["Bom dia! Que tal começar o dia na Palavra?", "Bom dia! O sol já brilha lá fora, e a chama aqui também."],
-  tarde: ["Boa tarde! Uma pausa na Palavra cai bem agora.", "Boa tarde! Bora dar mais um passo na estrada?"],
-  noite: ["Boa noite! Uma leitura antes de descansar?", "Boa noite! Olha as estrelas — e a Palavra pra fechar o dia."],
-};
+// ─── o céu, falado por ele ──────────────────────────────────────────────────
+/** Citações da ARC, conferidas palavra por palavra (scripts/test-ceu.mjs). */
 
 /** o nome da fase da lua de hoje, como se fala */
 export function nomeDaLua(f: number): string {

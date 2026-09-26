@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,8 @@ interface Top3CelebrationModalProps {
 
 export const Top3CelebrationModal = ({ isOpen, rank, onClose }: Top3CelebrationModalProps) => {
   const [visible, setVisible] = useState(isOpen);
+  // o personagem já está em cena aqui: avisos esperam a festa acabar
+  useOcuparPalco(undefined, visible);
 
   useEffect(() => {
     if (isOpen) {

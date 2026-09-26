@@ -38,6 +38,15 @@ algo ficou vermelho, NÃO suba: conserte ou avise.
   (`paraOApp` em `visual.ts`). `look={null}` força o padrão.
 - **Nada de confete.** Comemoração é o personagem: `celebrar(motivo)` de
   `lib/celebrar.ts`.
+- **Um boneco por vez na tela.** Aviso e festa sobem no palco central
+  (`Comemoracao`), mas a tela que JÁ tem o personagem em cena ocupa o palco
+  com `useOcuparPalco` (`lib/devocionalzeiro/palco.ts`): com `falar`, é o boneco
+  dela que diz o aviso (tela inicial, login — `PersonagemQueFala`); sem
+  `falar` (carregamento, jornada, modais de festa), o aviso espera ela sair.
+  Os bonecos fixos (o arrastável da home, o do cabeçalho) somem enquanto o
+  palco central está no ar (`useCentroAtivo`). Toda tela nova que desenhe o
+  personagem em destaque tem de ocupar o palco — foi assim que o "Bem-vindo
+  de volta!" aparecia como um segundo boneco por cima do login.
 
 ## A VOZ DE DEUS na cena viva (regra fixa)
 
@@ -271,6 +280,17 @@ Depois de mexer em ficha ou em carregamento, rode também:
 ferramenta** — importar qualquer um deles no app traz os 19 livros de volta
 para o primeiro carregamento.
 
+## Computador: aproveite a largura (regra fixa)
+
+Toda tela nova (e toda tela que for refeita) tem de ter um layout de
+COMPUTADOR pensado, não o do celular esticado ou uma coluna estreita no meio
+de um vazio. A partir de `lg` (1024 px): duas colunas ou painel lateral, com o
+conteúdo que no celular fica escondido/abreviado ganhando espaço (cartões com
+descrição, legenda de teclas, lista lado a lado). Exemplos: a tela inicial
+(painel à esquerda com os recursos em cartões e a cidade aberta à direita) e
+o login/cadastro (painel de identidade + formulário). Fotografe sempre em
+1440×900 além de 390×844.
+
 ## A tela inicial e o céu da hora
 
 A porta do app (`/` e `/auth`) é `components/inicio/TelaInicial.tsx`: Jerusalém
@@ -284,3 +304,12 @@ relógio: `?hora=19.5` na URL.
   mexer o ponteiro não pode redesenhar a cena.
 - O personagem fica EM PÉ na estrada (`ESTRADA`) e o balão sai da cabeça dele;
   nada de painel cobrindo o corpo dele.
+- Ele se controla como no RPG: arrastar abre o joystick flutuante
+  (`RPGJoystick`) e anda na estrada; um toque avança a conversa (no boneco,
+  ele reage); toque duplo pula (`salto` no rig); no computador, setas/A-D e
+  espaço. Botões, balão e painéis levam `data-sem-controle` (ou são
+  `button`) para não virarem controle.
+- A conversa é SOBRE O APP (`inicio/roteiro.ts`): o que tem lá dentro e por
+  que fazer parte, chamando para o botão certo. Quem já entrou neste aparelho
+  é recebido pelo nome e vestido como deixou o boneco (`quemVolta`); quem
+  parou a jornada no meio ouve "Continuar Jornada".

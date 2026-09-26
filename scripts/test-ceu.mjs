@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Confere, palavra por palavra, os versículos que o Devocionalzeiro diz na
- * tela inicial (src/lib/ceu.ts) contra o texto ARC (public/bible/arc.json).
+ * tela inicial (src/lib/ceu.ts — o sol, a lua, a estrela cadente) contra o
+ * texto ARC (public/bible/arc.json).
  * Uso: node scripts/test-ceu.mjs  → termina com "0 erro(s)" ou sai com 1.
  */
 import { readFileSync } from "node:fs";
@@ -24,6 +25,6 @@ for (const { texto, ref } of casos) {
   if (!v) { console.log(`ERRO  ${ref}: referência não encontrada`); erros++; continue; }
   if (!v.t.includes(texto)) { console.log(`ERRO  ${ref}: "${texto}" não é trecho exato de "${v.t}"`); erros++; continue; }
 }
-if (casos.length < 10) { console.log(`ERRO  só ${casos.length} versículos lidos — o formato de ceu.ts mudou?`); erros++; }
+if (casos.length < 3) { console.log(`ERRO  só ${casos.length} versículos lidos — o formato de ceu.ts mudou?`); erros++; }
 console.log(`${casos.length} versículo(s) conferido(s), ${erros} erro(s)`);
 process.exit(erros ? 1 : 0);
