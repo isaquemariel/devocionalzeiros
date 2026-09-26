@@ -1,6 +1,6 @@
 // Checkout para COMPRAR TALENTOS (moeda do jogo). R$ 1 = 20 talentos.
 // O usuário escolhe o valor em R$; o webhook credita os talentos após o pagamento.
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { corsHeaders } from '../_shared/cors.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import Stripe from 'npm:stripe@17';
 
@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     // talentos = reais * 20 (piso). amount está em centavos → /100 * 20 = /5.
     const talents = Math.floor(amount / 5);
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' as Stripe.LatestApiVersion });
     const admin = createClient(supabaseUrl, serviceKey);
 
     let customerId: string | undefined;
