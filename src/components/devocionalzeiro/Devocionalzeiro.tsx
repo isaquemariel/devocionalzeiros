@@ -49,6 +49,8 @@ interface Props {
   pulso?: number;
   /** muda → aceno curto de cabeça (uma letra digitada, um toque) */
   toque?: number;
+  /** muda → pulo alto (a tela inicial: toque duplo, espaço) */
+  salto?: number;
   /** largura em px */
   tamanho?: number;
   className?: string;
@@ -67,7 +69,7 @@ interface Props {
 
 export function DevocionalzeiroSVG({
   expressao = "neutro", gesto = "parado", chama = 0.3, falando = false, olhar = null,
-  pulso = 0, toque = 0, tamanho = 180, className, naCabeca, semChama = false,
+  pulso = 0, toque = 0, salto = 0, tamanho = 180, className, naCabeca, semChama = false,
 }: Props) {
   const apagada = semChama || !!naCabeca;
   const uid = useId().replace(/:/g, "");
@@ -77,8 +79,8 @@ export function DevocionalzeiroSVG({
   };
 
   // alvos lidos pelo laço (props → ref, sem reiniciar o laço)
-  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, apagada });
-  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, apagada };
+  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, salto, apagada });
+  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, salto, apagada };
 
   const r = {
     raiz: useRef<SVGGElement>(null), corpo: useRef<SVGGElement>(null), rosto: useRef<SVGGElement>(null),

@@ -30,12 +30,18 @@ interface Props {
   /** largura/altura da tela */
   proporcao: number;
   reduzir?: boolean;
+  /**
+   * onde fica o Templo (e a porta da muralha), em fração da largura. No
+   * computador a tela inicial tem um painel à esquerda: a cidade se abre à
+   * direita dele (0,7) em vez de ficar escondida atrás.
+   */
+  centro?: number;
 }
 
-export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzir }: Props) {
+export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzir, centro = 0.5 }: Props) {
   const uid = useId().replace(/:/g, "");
   const L = Math.max(400, Math.round(ALTURA * proporcao));
-  const c0 = L / 2;
+  const c0 = L * centro;
 
   // ─── o que não muda com a hora (posições) ────────────────────────────────
   const fixo = useMemo(() => {

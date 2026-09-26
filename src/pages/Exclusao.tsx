@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { esquecerQuemVolta } from "@/lib/devocionalzeiro/quemVolta";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ export default function Exclusao() {
       }
 
       // Sign out locally
+      esquecerQuemVolta();
       await supabase.auth.signOut();
       setStep("success");
     } catch (error) {

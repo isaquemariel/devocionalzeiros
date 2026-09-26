@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
@@ -33,6 +34,8 @@ const STEPS: Step[] = [
 
 // step: -1 = boot, 0 = naming, 1..STEPS.length = tutorial
 const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
+  // ele já está em cena apresentando o RPG: avisos esperam
+  useOcuparPalco();
   const [step, setStep] = useState(-1);
   const [name, setName] = useState("");
   const [nameInput, setNameInput] = useState("");

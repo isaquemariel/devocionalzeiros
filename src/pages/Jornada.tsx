@@ -1,4 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Eye, EyeOff, Heart, Loader2, Mail } from "lucide-react";
@@ -99,6 +100,8 @@ const CUTUCADAS = ["hihi!", "cócegas não!", "ei!", "essa chama não queima", "
  * pelo Stripe mostra "Gerenciar assinatura".
  */
 export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "portas" }) {
+  // a jornada inteira é dele em cena: nenhum aviso sobe um segundo boneco
+  useOcuparPalco();
   const portas = modo === "portas";
   const navigate = useNavigate();
   const reduzirMov = useReducedMotion();

@@ -15,6 +15,8 @@ interface Props {
   olhar?: { x: number; y: number } | null;
   pulso?: number;
   toque?: number;
+  /** muda → pulo alto (a tela inicial: toque duplo, espaço) */
+  salto?: number;
   tamanho?: number;
   className?: string;
   naCabeca?: ReactNode;
@@ -41,7 +43,7 @@ const FOLGA = { lado: 0.6, cima: 0.6, baixo: 0.12 };
  */
 export default function DevocionalzeiroVestido({
   look, expressao = "neutro", gesto = "parado", chama = 0.3, falando = false, olhar = null,
-  pulso = 0, toque = 0, tamanho = 180, className, naCabeca, semChama = false,
+  pulso = 0, toque = 0, salto = 0, tamanho = 180, className, naCabeca, semChama = false,
 }: Props) {
   const W = tamanho, H = (tamanho * 229) / 205;
   const cw = W * (1 + 2 * FOLGA.lado), ch = H * (1 + FOLGA.cima + FOLGA.baixo);
@@ -50,8 +52,8 @@ export default function DevocionalzeiroVestido({
   const apagada = semChama || !!naCabeca;
   const vestido: MascotLook = { ...DEFAULT_LOOK, ...look, mount: "none", pet: "none", aura: "none", ...(naCabeca ? { head: "none" as const } : {}) };
 
-  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, apagada, vestido });
-  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, apagada, vestido };
+  const alvo = useRef({ expressao, gesto, chama, falando, olhar, pulso, toque, salto, apagada, vestido });
+  alvo.current = { expressao, gesto, chama, falando, olhar, pulso, toque, salto, apagada, vestido };
 
   useEffect(() => {
     const cv = canvas.current;

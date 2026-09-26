@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Devocionalzeiro, type Expressao, type Gesto } from "@/components/devocionalzeiro/Devocionalzeiro";
@@ -67,6 +68,8 @@ function itensDo(chave: Chave) {
 type Tempo = "entra" | "coroa" | "pousa" | "festa" | "fala";
 
 export const UpgradeCelebrationModal = ({ isOpen, onClose, planName }: UpgradeCelebrationModalProps) => {
+  // o personagem já está em cena aqui: avisos esperam a festa acabar
+  useOcuparPalco(undefined, isOpen);
   const k = planName.toLowerCase();
   const chave: Chave = k === "premium" || k === "admin" ? "premium" : k === "embaixador" ? "embaixador" : "gold";
   const p = PLANO[chave];

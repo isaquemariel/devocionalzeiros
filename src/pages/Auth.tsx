@@ -18,7 +18,7 @@ import { MascotLoader } from "@/components/shared/FloatingMascot";
 import TelaInicial from "@/components/inicio/TelaInicial";
 import { FundoDoDia } from "@/components/inicio/FundoDoDia";
 import { NomeDoApp } from "@/components/inicio/NomeDoApp";
-import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
+import { PersonagemQueFala } from "@/components/inicio/PersonagemQueFala";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
@@ -90,7 +90,7 @@ const formatPhoneNumber = (value: string, countryCode: string): string => {
 };
 
 // ─── Left panel (desktop only) ────────────────────────────────────────────────
-const IdentityPanel = () => {
+const IdentityPanel = ({ registrar }: { registrar: boolean }) => {
   const features = [
     { icon: BookOpen, text: "Leitura bíblica diária" },
     { icon: Sword, text: "RPG Jornada Bíblica" },
@@ -101,7 +101,7 @@ const IdentityPanel = () => {
     <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-12 py-12 overflow-hidden">
       <div className="relative z-10 flex flex-col items-center text-center gap-5 max-w-xs">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-          <Devocionalzeiro tamanho={150} gesto="acenar" expressao="feliz" chama={0.55} />
+          <PersonagemQueFala tamanho={150} registrar={registrar} largura={320} />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
           <h1 className="mb-2"><NomeDoApp tamanho="clamp(28px, 2.6vw, 40px)" /></h1>
@@ -198,6 +198,15 @@ const Auth = () => {
   }, []);
   // o cadastro tem mais campos: aperta já numa tela de celular comum
   const compacto = alturaTela < (isLogin || isRecovery ? 760 : 900);
+  // no computador quem fala é o boneco do painel ao lado; no celular, o do alto
+  const [desktop, setDesktop] = useState(() => window.matchMedia?.("(min-width: 1024px)").matches ?? false);
+  useEffect(() => {
+    const mq = window.matchMedia?.("(min-width: 1024px)");
+    if (!mq) return;
+    const mudar = () => setDesktop(mq.matches);
+    mq.addEventListener?.("change", mudar);
+    return () => mq.removeEventListener?.("change", mudar);
+  }, []);
   const apertado = alturaTela < 620;
   const campo = compacto ? inputBase.replace("py-2.5", "py-2") : inputBase;
   const rotulo = `block text-xs font-semibold ${compacto ? "mb-1" : "mb-1.5"} text-white/60 uppercase tracking-wider`;
@@ -401,10 +410,13 @@ const Auth = () => {
           }
           return;
         }
-        toast.success("Bem-vindo de volta!");
         if (data?.session?.user) {
           navigate(getRedirectTarget(), { replace: true });
         }
+        // as boas-vindas saem na tela de dentro: dadas aqui, eram ditas por um
+        // segundo boneco por cima do login que já estava saindo. Lá, se a tela
+        // ainda estiver carregando, o aviso espera o carregamento sair.
+        window.setTimeout(() => toast.success("Bem-vindo de volta!"), 450);
       } else {
         // Garante que tanto o listener de auth quanto o fluxo de confirmação por email
         // levem o novo usuário direto para a escolha de plano.
@@ -524,10 +536,16 @@ const Auth = () => {
       {showSplash && !isSettingNewPassword ? (
         /* ── SPLASH ── */
         <motion.div key="splash" initial={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
+          {loading || user ? (
+            // já tem sessão (voltou do Google, ou abriu o app logado): vai para
+            // dentro — sem a tela inicial piscar com o personagem no meio
+            <div className="relative h-[100dvh] overflow-hidden"><FundoDoDia veu="rgba(6,8,16,0.25)" /></div>
+          ) : (
           <TelaInicial
             onSignup={() => navigate("/jornada")}
             onLogin={() => { setIsLogin(true); setShowSplash(false); }}
           />
+          )}
         </motion.div>
       ) : (
         /* ── FORM PAGE ── */
@@ -547,7 +565,7 @@ const Auth = () => {
           <FundoDoDia veu="linear-gradient(180deg, rgba(6,8,16,0.32) 0%, rgba(6,8,16,0) 30%, rgba(6,8,16,0) 70%, rgba(6,8,14,0.3) 100%)" />
           {/* Desktop left panel */}
           <div className="hidden lg:block lg:w-[46%] xl:w-[44%] shrink-0 relative">
-            <IdentityPanel />
+            <IdentityPanel registrar={desktop} />
           </div>
 
           {/* Right / full panel */}
@@ -585,7 +603,7 @@ const Auth = () => {
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="relative lg:hidden"
                   >
-                    <Devocionalzeiro tamanho={compacto ? 62 : 88} gesto="acenar" expressao="feliz" chama={0.5} />
+                    <PersonagemQueFala tamanho={compacto ? 62 : 88} registrar={!desktop} largura={Math.min(340, window.innerWidth - 40)} />
                   </motion.div>
                 )}
 

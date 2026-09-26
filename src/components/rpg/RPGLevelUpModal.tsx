@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
@@ -15,6 +16,8 @@ interface Props {
 
 /** Comemoração estilo RPG ao subir de nível (novo livro concluído). */
 export const RPGLevelUpModal = ({ isOpen, level, previousLevel, onClose }: Props) => {
+  // o personagem já está em cena aqui: avisos esperam a festa acabar
+  useOcuparPalco(undefined, isOpen);
   const tier = getLevelTier(level);
   const prevTier = previousLevel != null ? getLevelTier(previousLevel) : null;
   const newRank = !prevTier || prevTier.title !== tier.title;

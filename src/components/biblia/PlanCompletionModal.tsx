@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { Trophy, Gift, ArrowRight, Award } from "lucide-react";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 
@@ -17,6 +18,8 @@ export const PlanCompletionModal = ({
   planName,
   bonusPoints,
 }: PlanCompletionModalProps) => {
+  // o personagem já está em cena aqui: avisos esperam o modal fechar
+  useOcuparPalco(undefined, isOpen);
   if (!isOpen) return null;
 
   return (
