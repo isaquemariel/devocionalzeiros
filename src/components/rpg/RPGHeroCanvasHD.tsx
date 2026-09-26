@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { DEFAULT_LOOK, type MascotLook, type MascotMood } from "@/lib/rpgMascot";
-import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
+import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgHero";
 
 export type HeroFrame = "full" | "close";
 
 interface RPGHeroCanvasHDProps {
   look?: Partial<MascotLook>;
-  /** aceito por compatibilidade com o RPGMascotCanvas (o HD tem expressão própria) */
+  /** o humor da tela: feliz ele sorri (e acena de vez em quando), triste ele murcha */
   mood?: MascotMood;
   walking?: boolean;
   /** direção que o herói olha (1 = direita, -1 = esquerda) */
@@ -46,6 +46,7 @@ export function heroHeadTop(size: number, look?: Partial<MascotLook>, frame: Her
  */
 const RPGHeroCanvasHD = ({
   look,
+  mood,
   walking = false,
   face = 1,
   frame = "full",
@@ -54,8 +55,8 @@ const RPGHeroCanvasHD = ({
 }: RPGHeroCanvasHDProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>();
-  const propsRef = useRef({ look, walking, face });
-  propsRef.current = { look, walking, face };
+  const propsRef = useRef({ look, walking, face, mood });
+  propsRef.current = { look, walking, face, mood };
 
   const { CW, CH } = FRAMES[frame];
 
@@ -77,14 +78,14 @@ const RPGHeroCanvasHD = ({
       const dt = Math.min(48, now - last || 16);
       last = now;
       t += dt;
-      const { look: lk, walking: wk, face: fc } = propsRef.current;
+      const { look: lk, walking: wk, face: fc, mood: md } = propsRef.current;
       const full: MascotLook = { ...DEFAULT_LOOK, ...(lk || {}) };
       // supersampling: desenha em unidades lógicas com nitidez de retina
       const k = canvas.width / CW;
       g.setTransform(k, 0, 0, k, 0, 0);
       g.clearRect(0, 0, CW, CH);
       g.imageSmoothingEnabled = true;
-      drawHeroHD(g, BX + (full.pet !== "none" ? 6 : 0), FEET_Y, full, { t, reduce, walking: wk, face: fc });
+      drawHeroHD(g, BX + (full.pet !== "none" ? 6 : 0), FEET_Y, full, { t, reduce, walking: wk, face: fc, mood: md });
       if (full.pet !== "none") drawPetHD(g, BX - 30, FEET_Y, full.pet, t, reduce);
       if (reduce) return; // um frame estático
       rafRef.current = requestAnimationFrame(frameFn);

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
-import { triggerConfetti } from "@/utils/confetti";
+import { celebrar } from "@/lib/celebrar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -220,7 +220,7 @@ const VerseDevotional = () => {
 
       setIsCompleted(true);
       playSound("achievement");
-      triggerConfetti("celebration");
+      celebrar("devocional");
       toast.success("Devocional concluído! +1 ponto");
     } catch (error) {
       console.error("Error completing devotional:", error);

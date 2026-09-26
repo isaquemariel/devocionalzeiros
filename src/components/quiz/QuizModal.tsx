@@ -2,9 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import mascotHappy from "@/assets/mascot-happy.png";
-import mascotSad from "@/assets/mascot-sad.png";
-import mascotChampion from "@/assets/mascot-champion.png";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 const TIMER_SECONDS = 30;
 
@@ -212,7 +210,6 @@ export const QuizModal = ({
                   const moreCorrect = results.correct > results.total - results.correct;
                   const allCorrect = results.correct === results.total;
                   const allWrong = results.correct === 0;
-                  const mascotImg = moreCorrect ? mascotChampion : mascotSad;
                   const title = allCorrect ? "Perfeito! 🏆" : moreCorrect ? "Muito bem!" : allWrong ? "Não desista!" : "Continue tentando!";
                   const subtitle = allCorrect 
                     ? "Você acertou todas!" 
@@ -229,13 +226,9 @@ export const QuizModal = ({
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{ type: "spring", damping: 8, delay: 0.2 }}
                       >
-                        <motion.img 
-                          src={mascotImg} 
-                          alt={title} 
-                          className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        />
+                        <div className="flex h-full w-full items-end justify-center" role="img" aria-label={title}>
+                          <Mascot3D mood={moreCorrect ? "champion" : "sad"} size="md" />
+                        </div>
                         <Trophy className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
                       </motion.div>
                       <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
@@ -368,14 +361,16 @@ export const QuizModal = ({
                           {currentQuestion.options[option]}
                         </span>
                         {answered && selectedAnswer === option && (
-                          <motion.img 
-                            src={option === currentQuestion.correct_answer ? mascotHappy : mascotSad} 
-                            alt={option === currentQuestion.correct_answer ? "Acertou!" : "Errou!"} 
-                            className="w-10 h-10 object-contain"
+                          <motion.div
+                            className="w-10 h-11 shrink-0"
+                            role="img"
+                            aria-label={option === currentQuestion.correct_answer ? "Acertou!" : "Errou!"}
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ type: "spring", damping: 8 }}
-                          />
+                          >
+                            <Mascot3D mood={option === currentQuestion.correct_answer ? "happy" : "sad"} size="xs" />
+                          </motion.div>
                         )}
                       </div>
                     </motion.button>

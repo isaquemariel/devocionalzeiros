@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useLayoutEffect, useRef, useMemo } from "react";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX, ChevronLeft } from "lucide-react";
 import { initAudio, setAmbience, stopAudio, setSoundscape, type Soundscape } from "@/lib/rpgAudio";
@@ -383,10 +384,9 @@ const RPGReadingScene = ({
   useEffect(() => {
     const c = canvasRef.current;
     if (!c) return;
-    c.width = camW;
-    c.height = camH;
-    const g = c.getContext("2d");
-    if (g) g.imageSmoothingEnabled = false;
+    // em alta resolução: o cenário continua em blocos de pixel, e o herói (o
+    // rig do app, vetorial) sai nítido em vez de borrado
+    setupHiResCanvas(c, camW, camH, 3);
     drawFrameRef.current?.(performance.now());
   }, [camW, camH, isLoading, error]);
 

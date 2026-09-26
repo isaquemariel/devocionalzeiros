@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
@@ -61,11 +62,9 @@ export default function RPGSceneBackdrop({ bookId, chapter, chapterText = "", lo
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    canvas.width = camW;
-    canvas.height = CAM_H;
-    const g = canvas.getContext("2d");
+    // alta resolução: o herói é vetorial (ver RPGReadingScene)
+    const g = setupHiResCanvas(canvas, camW, CAM_H, 3);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
     const dims: SceneDims = { W: camW, H: CAM_H, GROUND: ground };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 7;

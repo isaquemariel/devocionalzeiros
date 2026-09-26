@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { drawHeroHD } from "@/lib/rpgStageHD";
+import { drawHeroHD } from "@/lib/rpgHero";
 import { DEFAULT_LOOK } from "@/lib/rpgMascot";
 
 // ============================================================================

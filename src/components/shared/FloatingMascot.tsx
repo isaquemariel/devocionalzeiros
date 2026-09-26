@@ -216,13 +216,9 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
     >
-      {/* Mascot with speech bubble */}
-      <motion.div
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative"
-      >
-        <Mascot3D mood="idle" size="sm" />
+      {/* Mascot with speech bubble — ele acena e mexe a boca enquanto o balão está aberto */}
+      <div className="relative">
+        <Mascot3D mood="idle" size="sm" falando={showBubble} gesto={showBubble ? "acenar" : undefined} />
 
         {/* Speech bubble - positioned top-right, tail points to mascot's mouth */}
         <AnimatePresence>
@@ -262,7 +258,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </div>
   );
 };
@@ -302,12 +298,8 @@ export const FloatingMascot = () => {
 export const MascotLoader = ({ label = "Carregando..." }: { label?: string }) => (
   <div className="min-h-screen bg-black flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Mascot3D mood="idle" size="lg" />
-      </motion.div>
+      {/* ele caminha no lugar: a página está a caminho */}
+      <Mascot3D mood="happy" size="lg" gesto="andar" />
       <motion.p
         className="text-white/50 text-sm"
         animate={{ opacity: [0.3, 1, 0.3] }}

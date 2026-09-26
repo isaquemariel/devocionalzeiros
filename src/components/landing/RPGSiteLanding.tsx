@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
@@ -20,10 +21,9 @@ function HeroScene() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const g = cv.getContext("2d"); if (!g) return;
-    g.imageSmoothingEnabled = false;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const W = 340, H = 190, GROUND = 150;
+    const g = setupHiResCanvas(cv, W, H, 3); if (!g) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const DIMS: SceneDims = { W, H, GROUND };
     let seed = 9; const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
     const particles: Particle[] = seedParticles("revelation", DIMS, rand);
@@ -59,8 +59,7 @@ function CosmeticMascot() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const g = cv.getContext("2d"); if (!g) return;
-    g.imageSmoothingEnabled = false;
+    const g = setupHiResCanvas(cv, 72, 80, 4); if (!g) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let t = 0, last = 0, raf = 0, on = true;
     const frame = (now: number) => {

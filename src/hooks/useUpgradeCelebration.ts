@@ -9,6 +9,7 @@ interface UpgradeCelebrationResult {
 
 // Plan hierarchy for detecting upgrades
 const PLAN_HIERARCHY: Record<string, number> = {
+  free: 1,
   start: 1,
   gold: 2,
   premium: 3,
@@ -68,7 +69,8 @@ export const useUpgradeCelebration = (
             .from("profiles")
             .update({ last_celebrated_plan: currentPlanType })
             .eq("user_id", user.id);
-        } else if (!lastCelebratedPlan && currentPlanType !== "start") {
+        } else if (!lastCelebratedPlan && currentPlanLevel > 1) {
+          // (só plano PAGO se comemora: a conta grátis saía com "Parabéns! Plano FREE")
           // First time user with a paid plan - celebrate!
           setNewPlanName(currentPlanType);
           setShowCelebration(true);

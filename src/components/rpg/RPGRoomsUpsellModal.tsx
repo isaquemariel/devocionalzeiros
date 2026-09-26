@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { X, Crown, MessageCircle, Users, Globe, Sparkles, Check } from "lucide-react";
@@ -34,11 +35,9 @@ export default function RPGRoomsUpsellModal({ open, onClose }: Props) {
     if (!open) return;
     const cv = canvasRef.current;
     if (!cv) return;
-    const g = cv.getContext("2d");
-    if (!g) return;
     const W = 380, H = 200, GROUND = Math.round(H * 0.68);
-    cv.width = W; cv.height = H;
-    g.imageSmoothingEnabled = false;
+    const g = setupHiResCanvas(cv, W, H, 3);
+    if (!g) return;
     // fundo: o Céu (Sala Global)
     drawHeavenScene(g, { W, H, GROUND }, 0, true);
     // personagens (fundo → frente p/ sobreposição correta)

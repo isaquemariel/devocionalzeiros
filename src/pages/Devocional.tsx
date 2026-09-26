@@ -20,7 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
-import { triggerConfetti } from "@/utils/confetti";
+import { celebrar } from "@/lib/celebrar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -245,7 +245,7 @@ const Devocional = () => {
       }));
 
       playSound("achievement");
-      triggerConfetti("celebration");
+      celebrar("devocional");
       toast.success("Devocional concluído!");
     } catch (error) {
       console.error("Error completing devotional:", error);

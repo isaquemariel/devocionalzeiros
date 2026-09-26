@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { triggerConfetti } from "@/utils/confetti";
+import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { getLevelTier, MAX_LEVEL } from "@/lib/rpgLevel";
 import { RPGLevelBadge } from "@/components/rpg/RPGLevelBadge";
 
@@ -20,8 +20,13 @@ export const RPGLevelUpModal = ({ isOpen, level, previousLevel, onClose }: Props
   const newRank = !prevTier || prevTier.title !== tier.title;
   const isMax = level >= MAX_LEVEL;
 
+  // Sem confete: quem comemora é o Devocionalzeiro, ao lado da patente —
+  // chega surpreso, depois pula com a chama alta.
+  const [festa, setFesta] = useState(false);
   useEffect(() => {
-    if (isOpen) triggerConfetti("achievement");
+    if (!isOpen) { setFesta(false); return; }
+    const id = window.setTimeout(() => setFesta(true), 650);
+    return () => window.clearTimeout(id);
   }, [isOpen]);
 
   return (
@@ -53,14 +58,29 @@ export const RPGLevelUpModal = ({ isOpen, level, previousLevel, onClose }: Props
               {isMax ? "Nível Máximo!" : "Subiu de Nível!"}
             </p>
 
-            <motion.div
-              className="relative mx-auto my-3 flex justify-center"
-              initial={{ rotate: -12, scale: 0.6 }}
-              animate={{ rotate: 0, scale: 1 }}
-              transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-            >
-              <RPGLevelBadge level={level} size={120} />
-            </motion.div>
+            <div className="relative mx-auto my-3 flex items-end justify-center gap-1">
+              <motion.div
+                initial={{ rotate: -12, scale: 0.6 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+              >
+                <RPGLevelBadge level={level} size={110} />
+              </motion.div>
+              <motion.div
+                className="-mb-1"
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 320, damping: 16, delay: 0.25 }}
+              >
+                <Devocionalzeiro
+                  tamanho={92}
+                  expressao={festa ? "radiante" : "surpreso"}
+                  gesto={festa ? (newRank || isMax ? "pirueta" : "comemorar") : "parado"}
+                  chama={festa ? 0.95 : 0.45}
+                  olhar={festa ? null : { x: -0.9, y: 0.2 }}
+                />
+              </motion.div>
+            </div>
 
             <p className="relative text-3xl font-black text-white leading-none">Nível {level}</p>
             <p className="relative mt-1 text-sm font-bold" style={{ color: tier.color }}>

@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
+import { Comemoracao } from "@/components/devocionalzeiro/Comemoracao";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
@@ -226,6 +227,8 @@ const App = () => (
               <FloatingMascot />
               {/* Global achievement unlock popup - works on any page */}
               <GlobalAchievementUnlockWatcher />
+              {/* o Devocionalzeiro comemorando (no lugar do confete) — ver lib/celebrar */}
+              <Comemoracao />
               </CartSyncWrapper>
               </AppPresenceWrapper>
             </Suspense>

@@ -6,7 +6,7 @@ import AchievementClaimModal from "./AchievementClaimModal";
 import { useAchievements, Achievement } from "@/hooks/useAchievements";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { triggerConfetti } from "@/utils/confetti";
+import { celebrar } from "@/lib/celebrar";
 
 interface AchievementsGridProps {
   userId?: string;
@@ -76,7 +76,7 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
       
       const result = await claimAllAchievements();
       if (result.success) {
-        triggerConfetti("achievement");
+        celebrar("conquista");
         toast.success(`🎉 +${result.totalPoints} pontos resgatados!`, {
           description: "Suas conquistas foram resgatadas com sucesso!",
         });
@@ -107,7 +107,7 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
     try {
       const result = await claimAchievement(selectedAchievement.id);
       if (result.success) {
-        triggerConfetti("achievement");
+        celebrar("conquista");
         toast.success(`🎉 +${result.points} pontos resgatados!`, {
           description: `Conquista "${selectedAchievement.title}" resgatada!`,
         });

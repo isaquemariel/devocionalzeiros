@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
-import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
+import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgHero";
 import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { getRoomDecor, drawRoomProp, roomPropFy, type RoomProp } from "@/lib/rpgRoomDecor";
 import { drawRoomFloor, drawRoomForeground } from "@/lib/rpgRoomFloor";

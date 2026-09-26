@@ -1,8 +1,15 @@
-import { useEffect, useId, useRef } from "react";
-import type { Expressao, Gesto } from "@/lib/jornada/tipos";
+import { useEffect, useId, useRef, type ReactNode } from "react";
+import {
+  BASE_CHAMA, BOCAS, BRACO_REPOUSO, CAMADAS, CORES, CORPO_FRENTE, CORPO_LADO, EMBLEMA, N_BRASAS,
+  N_LABAREDAS, OLHO_D, OLHO_E, OMBRO_D, OMBRO_E, REPOUSO_D, REPOUSO_E, SOBRANCELHA, alvoBracos, gota, lingua,
+  type Boca, type Expressao, type Gesto,
+} from "@/lib/devocionalzeiro/geometria";
 
 /**
- * O DEVOCIONALZEIRO, como boneco de jogo.
+ * O DEVOCIONALZEIRO, como boneco de jogo — o personagem ÚNICO do app.
+ *
+ * As medidas e os contornos moram em `lib/devocionalzeiro/geometria`, e o RPG
+ * desenha o mesmo boneco em canvas a partir deles (`lib/devocionalzeiro/canvas`).
  *
  * A primeira versão da jornada usava as artes em PNG — e PNG não se mexe: a
  * chama ficava parada, ele não sorria, não piscava, não olhava para nada. Aqui
@@ -42,147 +49,17 @@ interface Props {
   /** largura em px */
   tamanho?: number;
   className?: string;
-}
-
-// ─── geometria (viewBox 0 -24 205 229) ──────────────────────────────────────
-// Medidas tiradas da arte oficial (1024 px) na escala de 1:5.
-const OLHO_E = { x: 94, y: 97 };
-const OLHO_D = { x: 129, y: 97 };
-const OMBRO_E = { x: 71, y: 134 };
-const OMBRO_D = { x: 153, y: 138 };
-const BASE_CHAMA = { x: 104, y: 72 };
-
-// Cantos macios à esquerda (a arte não tem quina viva) e o bojo do D inteiro.
-const CORPO_FRENTE = "M74 63 L100 63 A57 57 0 0 1 100 177 L74 177 Q67 177 67 170 L67 70 Q67 63 74 63 Z";
-const CORPO_LADO = "M58 69 Q58 66 62 65 L68 63.5 L68 176.5 L62 175 Q58 174 58 171 Z";
-// Na barriga, SÓ a chama. Havia uma faixa neon em D em volta dela (um D
-// menor dentro do D), que se lia como um círculo, uma moldura de botão.
-
-/** línguas de fogo: deslocamento x, altura relativa, meia-largura, fase */
-type Lingua = { dx: number; h: number; hw: number; f: number };
-// As bases ficam JUNTAS e as pontas se espalham: é isso que faz uma gota de
-// fogo. Com as bases espalhadas numa linha, a primeira versão parecia uma
-// coroa de espinhos.
-const CAMADAS: { cor: string; linguas: Lingua[] }[] = [
-  { cor: "externa", linguas: [
-    { dx: -13, h: 0.6, hw: 15, f: 0.0 }, { dx: -5, h: 0.92, hw: 17, f: 1.7 },
-    { dx: 3, h: 1.0, hw: 18, f: 3.1 }, { dx: 10, h: 0.74, hw: 15, f: 4.6 }, { dx: 15, h: 0.5, hw: 11, f: 2.3 },
-  ] },
-  { cor: "media", linguas: [
-    { dx: -6, h: 0.62, hw: 12, f: 0.9 }, { dx: 3, h: 0.78, hw: 13, f: 2.8 }, { dx: 10, h: 0.52, hw: 10, f: 5.1 },
-  ] },
-  { cor: "nucleo", linguas: [
-    { dx: -1, h: 0.4, hw: 9, f: 1.3 }, { dx: 6, h: 0.46, hw: 8, f: 3.9 },
-  ] },
-];
-const N_BRASAS = 12;
-/**
- * Labaredas soltas: gotinhas de fogo que se desprendem da ponta das línguas e
- * sobem encolhendo. É o detalhe que separa fogo de "desenho de fogo" — sem
- * elas, a chama é um recorte que balança.
- */
-const N_LABAREDAS = 5;
-const gota = (x: number, y: number, r: number) =>
-  `M${x} ${y - r * 2.2} C${x + r * 0.9} ${y - r * 0.9} ${x + r} ${y + r * 0.6} ${x} ${y + r} ` +
-  `C${x - r} ${y + r * 0.6} ${x - r * 0.9} ${y - r * 0.9} ${x} ${y - r * 2.2} Z`;
-
-/**
- * Uma língua de fogo: gota que sobe e CURVA a ponta para o lado em que está
- * balançando (`curva`). Ponta reta e simétrica é espinho; fogo enrola.
- */
-function lingua(cx: number, by: number, hw: number, tx: number, ty: number, curva: number): string {
-  const h = by - ty;
-  return `M${cx - hw} ${by} ` +
-    `C${cx - hw * 1.08} ${by - h * 0.5} ${tx - hw * 0.62 + curva} ${ty + h * 0.46} ${tx} ${ty} ` +
-    `C${tx + hw * 0.3 + curva * 0.4} ${ty + h * 0.32} ${cx + hw * 1.06} ${by - h * 0.52} ${cx + hw} ${by} ` +
-    `Q${cx} ${by + hw * 0.55} ${cx - hw} ${by} Z`;
-}
-
-// ─── bocas ──────────────────────────────────────────────────────────────────
-type Boca = { d: string; cheia: boolean; lingua?: boolean };
-const BOCAS: Record<Expressao | "falaAberta" | "falaMeia", Boca> = {
-  neutro: { d: "M104 113Q112 119.5 120 113", cheia: false },
-  feliz: { d: "M103 111.5Q112 125 121 111.5Q112 115.5 103 111.5Z", cheia: true, lingua: true },
-  radiante: { d: "M100.5 110Q112 130 123.5 110Q112 114.5 100.5 110Z", cheia: true, lingua: true },
-  surpreso: { d: "M112 111C116.5 111 117 122 112 122C107 122 107.5 111 112 111Z", cheia: true },
-  pensativo: { d: "M106 116.5Q111.5 114.5 118 117", cheia: false },
-  triste: { d: "M104.5 119Q112 112 119.5 119", cheia: false },
-  orgulhoso: { d: "M104 114.5Q113.5 119 121 111", cheia: false },
-  dormindo: { d: "M108.5 115.5Q112 118.5 115.5 115.5", cheia: false },
-  falaAberta: { d: "M105 112Q112 124 119 112Q112 114.5 105 112Z", cheia: true, lingua: true },
-  falaMeia: { d: "M106 113Q112 118.5 118 113Q112 114.5 106 113Z", cheia: true },
-};
-
-// sobrancelhas: deslocamento vertical e inclinação (graus) por expressão
-const SOBRANCELHA: Record<Expressao, { e: [number, number]; d: [number, number] }> = {
-  neutro: { e: [0, 0], d: [0, 0] },
-  feliz: { e: [-2, -4], d: [-2, 4] },
-  radiante: { e: [-3.5, -6], d: [-3.5, 6] },
-  surpreso: { e: [-5.5, -2], d: [-5.5, 2] },
-  pensativo: { e: [-3.5, -10], d: [1, 6] },
-  triste: { e: [-1, 14], d: [-1, -14] },
-  orgulhoso: { e: [-1, -8], d: [-3, 8] },
-  dormindo: { e: [2, 4], d: [2, -4] },
-};
-
-// ─── braços: ângulo alvo (graus) e comprimento ──────────────────────────────
-/** ângulo que aponta o eixo do braço (local +y) na direção (dx, dy) */
-const apontarPara = (dx: number, dy: number) => (Math.atan2(-dx, dy) * 180) / Math.PI;
-const BRACO_REPOUSO = 25;
-/**
- * Ângulo de repouso de cada braço. O esquerdo nasce junto da lateral escura
- * do livro: a 16° a mão ficava por cima do próprio corpo, da mesma cor, e o
- * braço só aparecia quando subia para tapar os olhos. Aberto a 44°, a mão
- * sai para fora da silhueta, como a direita.
- */
-const REPOUSO_E = 44;
-const REPOUSO_D = -30;
-/** do ombro ao centro da mão: o retângulo nasce 6 acima e termina num meio-círculo de 10,5 */
-const ALCANCE_MAO = 6 + 10.5;
-
-function alvoBracos(g: Gesto, t: number): { e: number; d: number; le: number; ld: number } {
-  switch (g) {
-    case "acenar":
-      return { e: REPOUSO_E, d: -150 + Math.sin(t * 9) * 24, le: BRACO_REPOUSO, ld: 32 };
-    case "comemorar":
-      return { e: 152 + Math.sin(t * 7) * 8, d: -152 - Math.sin(t * 7) * 8, le: 32, ld: 32 };
-    case "pensar":
-      return { e: REPOUSO_E, d: apontarPara(110 - OMBRO_D.x, 112 - OMBRO_D.y), le: BRACO_REPOUSO, ld: 38 };
-    case "apontar":
-      return { e: REPOUSO_E, d: -58 + Math.sin(t * 3) * 3, le: BRACO_REPOUSO, ld: 34 };
-    case "tampar":
-      return {
-        e: apontarPara(OLHO_E.x - OMBRO_E.x, OLHO_E.y - OMBRO_E.y),
-        d: apontarPara(OLHO_D.x - OMBRO_D.x, OLHO_D.y - OMBRO_D.y),
-        // o braço começa 6 acima do ombro e a mão é a ponta arredondada (raio
-        // 10,5): para a MÃO cair sobre o olho, o braço passa do olho nisso
-        le: Math.hypot(OLHO_E.x - OMBRO_E.x, OLHO_E.y - OMBRO_E.y) + ALCANCE_MAO,
-        ld: Math.hypot(OLHO_D.x - OMBRO_D.x, OLHO_D.y - OMBRO_D.y) + ALCANCE_MAO,
-      };
-    case "espiar":
-      // a mão direita desce um pouco — um olho aparece
-      return {
-        e: apontarPara(OLHO_E.x - OMBRO_E.x, OLHO_E.y - OMBRO_E.y),
-        d: apontarPara(OLHO_D.x - OMBRO_D.x, OLHO_D.y + 16 - OMBRO_D.y),
-        le: Math.hypot(OLHO_E.x - OMBRO_E.x, OLHO_E.y - OMBRO_E.y) + ALCANCE_MAO,
-        ld: Math.hypot(OLHO_D.x - OMBRO_D.x, OLHO_D.y + 16 - OMBRO_D.y) + ALCANCE_MAO - 4,
-      };
-    case "espreguicar":
-      // braços lá no alto, bem esticados, balançando devagar
-      return { e: 168 + Math.sin(t * 2) * 6, d: -168 - Math.sin(t * 2) * 6, le: 36, ld: 36 };
-    case "cocar":
-      // a mão direita coça o lado da cabeça, rapidinho
-      return { e: REPOUSO_E, d: -150 + Math.sin(t * 22) * 7, le: BRACO_REPOUSO, ld: 34 };
-    case "andar":
-      return { e: REPOUSO_E + Math.sin(t * 8) * 14, d: REPOUSO_D + Math.sin(t * 8) * 14, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
-    default:
-      return { e: REPOUSO_E + Math.sin(t * 1.3) * 2, d: REPOUSO_D - Math.sin(t * 1.3 + 1) * 2, le: BRACO_REPOUSO, ld: BRACO_REPOUSO };
-  }
+  /**
+   * Algo que ele VESTE na cabeça, em unidades do viewBox (a coroa que recebe
+   * ao assinar, por exemplo). Fica dentro do corpo: pula, inclina e amassa
+   * junto com ele.
+   */
+  naCabeca?: ReactNode;
 }
 
 export function Devocionalzeiro({
   expressao = "neutro", gesto = "parado", chama = 0.3, falando = false, olhar = null,
-  pulso = 0, toque = 0, tamanho = 180, className,
+  pulso = 0, toque = 0, tamanho = 180, className, naCabeca,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const ids = {
@@ -252,7 +129,8 @@ export function Devocionalzeiro({
           sy = 1 - 0.14 * k; sx = 1 + 0.1 * k; }
       };
       if (!reduzir) {
-        if (a.gesto === "comemorar") pulando((t % 1.05), 22);
+        if (a.gesto === "comemorar" || a.gesto === "vitoria") pulando((t % 1.05), a.gesto === "vitoria" ? 14 : 22);
+        else if (a.gesto === "pirueta") pulando((t % 1.4) * 0.75, 34);
         else if (t - s.pulsoEm < 0.64) pulando(t - s.pulsoEm, 18);
       }
       // andar: quique curto, alternando os pés
@@ -285,6 +163,12 @@ export function Devocionalzeiro({
         : dorme ? 5 + Math.sin(t * 0.6) * (reduzir ? 0 : 2.5)
         : a.gesto === "andar" ? 4
         : a.expressao === "surpreso" ? 0 : Math.sin(t * 0.9) * (reduzir ? 0 : 1.2)) + aceno;
+      // pirueta: no ar, ele dá uma volta inteira em torno de si — em 2D, a
+      // largura passa por zero e ele aparece de costas (espelhado) no meio
+      if (a.gesto === "pirueta" && !reduzir) {
+        const u = ((t % 1.4) * 0.75 - 0.09) / 0.4;
+        if (u > 0 && u < 1) sx *= Math.cos(u * Math.PI * 2);
+      }
       r.corpo.current?.setAttribute(
         "transform",
         `translate(102 188) translate(0 ${-altura}) rotate(${tilt}) scale(${sx} ${sy}) translate(-102 -188)`,
@@ -325,7 +209,7 @@ export function Devocionalzeiro({
       const exp = a.expressao;
       const bocejo = a.gesto === "espreguicar";
       const olhosFechados = dorme || bocejo;
-      const olhosFelizes = !olhosFechados && (exp === "radiante" || a.gesto === "comemorar");
+      const olhosFelizes = !olhosFechados && (exp === "radiante" || a.gesto === "comemorar" || a.gesto === "pirueta");
       const surpreso = exp === "surpreso";
       const escalaOlho = surpreso ? 1.12 : exp === "triste" ? 0.92 : 1;
       const abertura = Math.max(0.06, 1 - fechar) * escalaOlho;
@@ -366,7 +250,7 @@ export function Devocionalzeiro({
 
       // ── braços (mola) ───────────────────────────────────────────────────
       const ab = alvoBracos(reduzir && a.gesto !== "tampar" && a.gesto !== "espiar" ? "parado" : a.gesto, t);
-      const kb = a.gesto === "acenar" || a.gesto === "comemorar" || a.gesto === "andar" ? 18 : 11;
+      const kb = a.gesto === "acenar" || a.gesto === "comemorar" || a.gesto === "andar" || a.gesto === "pirueta" || a.gesto === "vitoria" ? 18 : 11;
       s.bracoE = mola(s.bracoE, ab.e, kb, dt); s.bracoD = mola(s.bracoD, ab.d, kb, dt);
       s.lenE = mola(s.lenE, ab.le, 12, dt); s.lenD = mola(s.lenD, ab.ld, 12, dt);
       r.bracoE.current?.setAttribute("transform", `translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(${s.bracoE})`);
@@ -375,7 +259,7 @@ export function Devocionalzeiro({
       r.bracoDForma.current?.setAttribute("height", String(s.lenD));
 
       // ── chama ───────────────────────────────────────────────────────────
-      const excit = a.gesto === "comemorar" ? 0.18 : t - s.pulsoEm < 0.9 ? 0.12 : 0;
+      const excit = a.gesto === "comemorar" || a.gesto === "pirueta" || a.gesto === "vitoria" ? 0.18 : t - s.pulsoEm < 0.9 ? 0.12 : 0;
       s.chama = mola(s.chama, Math.max(0, Math.min(1, a.chama)) + excit, 2.6, dt);
       const H = 17 + 58 * s.chama;
       const tremor = reduzir ? 0.25 : 1;
@@ -402,7 +286,7 @@ export function Devocionalzeiro({
         });
       });
       // brasas: nascem na chama, sobem, somem
-      const taxa = reduzir ? 0 : 0.6 + s.chama * 2.2 + (a.gesto === "comemorar" ? 3 : 0);
+      const taxa = reduzir ? 0 : 0.6 + s.chama * 2.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 3 : 0);
       s.brasas.forEach((b, i) => {
         const el = brasas.current[i];
         if (!el) return;
@@ -425,7 +309,7 @@ export function Devocionalzeiro({
         el.setAttribute("opacity", (k * 0.95).toFixed(2));
       });
       // labaredas: nascem numa ponta da camada externa e sobem encolhendo
-      const taxaLab = reduzir ? 0 : 1.4 + s.chama * 3.2 + (a.gesto === "comemorar" ? 4 : 0);
+      const taxaLab = reduzir ? 0 : 1.4 + s.chama * 3.2 + (a.gesto === "comemorar" || a.gesto === "pirueta" ? 4 : 0);
       s.labaredas.forEach((b, i) => {
         const el = labaredas.current[i];
         if (!el) return;
@@ -543,7 +427,7 @@ export function Devocionalzeiro({
         <g transform="translate(112 148) scale(1.55) translate(-112 -148)">
           <path
             ref={r.emblema}
-            d="M112 139 C117.5 144.5 118.5 151 114.8 155.3 C113.2 157 110.8 157 109.2 155.3 C105.5 151.5 107.8 145.5 110 143.3 C110.5 145.5 111.6 146.6 112.7 146.6 C112.1 144 111.6 141.3 112 139 Z"
+            d={EMBLEMA}
             fill={`url(#${ids.fogoMed})`}
           />
         </g>
@@ -579,6 +463,8 @@ export function Devocionalzeiro({
           <path ref={r.boca} d={BOCAS.neutro.d} fill="none" stroke="#0A0F24" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
           <ellipse ref={r.lingua} cx="112" cy="119" rx="4.2" ry="2.5" fill="#FF7A9C" opacity="0" />
         </g>
+
+        {naCabeca}
 
         {/* braços: na frente do corpo — é o que deixa ele tapar os olhos */}
         <g ref={r.bracoE} transform={`translate(${OMBRO_E.x} ${OMBRO_E.y}) rotate(${REPOUSO_E})`}>

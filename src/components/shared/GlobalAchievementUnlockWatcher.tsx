@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import AchievementClaimModal from "@/components/biblia/AchievementClaimModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useAchievements, Achievement } from "@/hooks/useAchievements";
-import { triggerConfetti } from "@/utils/confetti";
+import { celebrar } from "@/lib/celebrar";
 
 /**
  * Watches for newly unlocked achievements globally and shows the claim modal
@@ -77,7 +77,7 @@ export const GlobalAchievementUnlockWatcher = () => {
     try {
       const result = await claimAchievement(selected.id);
       if (result.success) {
-        triggerConfetti("achievement");
+        celebrar("conquista");
         toast.success(`🎉 +${result.points} pontos resgatados!`, {
           description: `Conquista "${selected.title}" resgatada!`,
         });

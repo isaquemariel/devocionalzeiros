@@ -18,7 +18,7 @@ import {
 } from "@/lib/jornada/motor";
 import { aplicarJornada } from "@/lib/jornada/aplicar";
 import type { Expressao, Fala, Gesto, IdEtapa, Respostas } from "@/lib/jornada/tipos";
-import { Devocionalzeiro } from "@/components/jornada/Devocionalzeiro";
+import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { Trilha, posicaoDaTrilha } from "@/components/jornada/Trilha";
 import { Balao } from "@/components/jornada/Balao";
 import { Botao, Campo, Link, tocar } from "@/components/jornada/Controles";

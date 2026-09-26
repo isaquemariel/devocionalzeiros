@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { triggerConfetti } from '@/utils/confetti';
 import { useGameSounds } from '@/hooks/useGameSounds';
 import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 
@@ -369,7 +368,7 @@ export const useQuiz = (userId: string | undefined) => {
         });
       } else if (isCorrect) {
         playSound('correct');
-        triggerConfetti('complete');
+        // (o Devocionalzeiro da tela do quiz já reage a cada resposta)
         const streakMessage = currentStreakValue >= 3 ? ` 🔥 Sequência de ${currentStreakValue}!` : '';
         const bonusMessage = streakBonusAwarded > 0 ? ` (+${streakBonusAwarded} bônus!)` : '';
         toast({
@@ -399,11 +398,7 @@ export const useQuiz = (userId: string | undefined) => {
         setResults({ correct: correctCount, total: totalAnswered, pointsEarned: newSessionPoints, bestStreak: bestStreakValue, streakBonus: newSessionStreakBonus });
         setQuizCompleted(true);
         
-        if (correctCount === totalAnswered) {
-          triggerConfetti('celebration');
-        } else if (correctCount > 0) {
-          triggerConfetti('achievement');
-        }
+        // o resultado tem o Devocionalzeiro comemorando (ou consolando) — é a festa
       }
     } catch (error) {
       console.error('Error submitting answer:', error);

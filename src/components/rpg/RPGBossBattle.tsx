@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
-import { drawHeroHD } from "@/lib/rpgStageHD";
+import { drawHeroHD } from "@/lib/rpgHero";
 import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
@@ -124,9 +124,8 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const flash = useRef(0);
   const defeat = useRef(0);      // 0..1 queda do chefe na vitória
   const tRef = useRef(0);
-  // números de dano flutuando + confete da vitória
+  // números de dano flutuando
   const floatsRef = useRef<{ txt: string; color: string; born: number; atBoss: boolean }[]>([]);
-  const confettiRef = useRef<{ x: number; y: number; vx: number; vy: number; c: string; born: number }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -144,11 +143,13 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
     const trail: { x: number; t: number }[] = [];
     let t = 0, last = 0, raf = 0, mounted = true;
 
-    const drawHeroAt = (hx: number, alpha: number, walking: boolean) => {
+    const drawHeroAt = (hx: number, alpha: number, walking: boolean, comemorando = false) => {
       g.save();
       g.globalAlpha *= alpha;
       g.translate(hx, GROUND); g.scale(HERO_K, HERO_K); g.translate(-hx, -GROUND);
-      drawHeroHD(g, hx, GROUND, lookRef.current, { t, reduce, walking, face: 1 });
+      // levou o revide: murcha; venceu: comemora (o pulo e a chama são dele)
+      const mood = phaseRef.current === "bosshit" ? "sad" : undefined;
+      drawHeroHD(g, hx, GROUND, lookRef.current, { t, reduce, walking, face: 1, mood, comemorando });
       g.restore();
     };
 
@@ -247,13 +248,8 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         }
         g.globalAlpha = 1;
       } else if (trail.length) trail.length = 0;
-      // pulinho de vitória
-      if (ph === "won" && !reduce) {
-        const hop = Math.abs(Math.sin(t * 0.008)) * 7;
-        g.save(); g.translate(0, -hop); drawHeroAt(heroX, 1, false); g.restore();
-      } else {
-        drawHeroAt(heroX, 1, walking);
-      }
+      // vitória: o Devocionalzeiro comemora — pula de braços erguidos, a chama sobe
+      drawHeroAt(heroX, 1, walking, ph === "won");
 
       // ----- golpe: corte com GLOW + explosão de impacto -----
       if (ph === "attacking") {
@@ -325,7 +321,7 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         g.fillText(f.txt, fx2, fy2);
         g.restore();
       }
-      // ----- vitória: raios de glória + CONFETE -----
+      // ----- vitória: raios de glória (sem confete: quem comemora é o Devocionalzeiro) -----
       if (ph === "won" && defeat.current > 0.4) {
         g.globalAlpha = Math.min(0.16, (defeat.current - 0.4) * 0.32); g.fillStyle = "#fff2cc";
         for (let i = 0; i < 9; i++) {
@@ -336,26 +332,6 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
           g.closePath(); g.fill();
         }
         g.globalAlpha = 1;
-        // confete caindo
-        if (!reduce) {
-          if (confettiRef.current.length === 0) {
-            for (let i = 0; i < 26; i++) {
-              confettiRef.current.push({
-                x: CAM_W * (0.2 + ((i * 37) % 60) / 100), y: -8 - ((i * 23) % 40),
-                vx: (((i * 13) % 10) - 5) * 0.08, vy: 0.35 + ((i * 7) % 5) * 0.08,
-                c: ["#ffd24a", "#5b9bff", "#ff7a8a", "#7dedaa", "#f0d8ff"][i % 5], born: now,
-              });
-            }
-          }
-          for (const cf of confettiRef.current) {
-            cf.x += cf.vx * dt * 0.06; cf.y += cf.vy * dt * 0.06;
-            if (cf.y > CAM_H + 6) { cf.y = -6; cf.x = CAM_W * Math.abs(Math.sin(cf.x)); }
-            g.save();
-            g.translate(cf.x, cf.y); g.rotate((t * 0.004 + cf.x) % 6.28);
-            g.fillStyle = cf.c; g.fillRect(-2, -1.2, 4, 2.4);
-            g.restore();
-          }
-        }
       }
 
       if (reduce) return;

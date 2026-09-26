@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotMood } from "@/lib/rpgMascot";
@@ -358,37 +359,13 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
   );
 };
 
-// Mascote estático (aceno) para a tela de nome
-const RPGNameMascot = () => {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const c = ref.current;
-    if (!c) return;
-    const g = c.getContext("2d");
-    if (!g) return;
-    g.imageSmoothingEnabled = false;
-    let t = 0;
-    let last = 0;
-    let raf = 0;
-    let mounted = true;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const frame = (now: number) => {
-      if (!mounted) return;
-      const dt = Math.min(48, now - last || 16);
-      last = now;
-      t += dt;
-      g.clearRect(0, 0, 64, 72);
-      drawMascot(g, 32, 64, DEFAULT_LOOK, { t, reduce, mood: "happy" });
-      if (reduce) return;
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => {
-      mounted = false;
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-  return <canvas ref={ref} width={64} height={72} style={{ width: 96, height: 108, imageRendering: "pixelated" }} aria-hidden="true" />;
-};
+// O Devocionalzeiro na tela do nome: acenando, com a boca mexendo — é a
+// primeira vez que a pessoa o vê de perto, e ele se apresenta. É o rig do app
+// (SVG), o mesmo da jornada: aqui não há cena de canvas em volta.
+const RPGNameMascot = () => (
+  <div style={{ width: 96, height: 108 }} aria-hidden="true">
+    <Devocionalzeiro tamanho={96} expressao="feliz" gesto="acenar" chama={0.45} />
+  </div>
+);
 
 export default RPGOnboarding;

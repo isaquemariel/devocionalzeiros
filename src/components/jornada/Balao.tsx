@@ -12,6 +12,10 @@ interface Props {
   onAvancar?: () => void;
   /** há mais frases depois desta — mostra a setinha piscando */
   mais?: boolean;
+  /** de que lado desce o rabicho (o lado em que ele está) */
+  rabicho?: "esquerda" | "direita";
+  /** o nome em cima da caixa */
+  quem?: string;
 }
 
 /** ms por caractere nas frases curtas */
@@ -36,7 +40,7 @@ const TETO_FALA = 1300;
  * O texto completo fica num espelho invisível: o balão já nasce do tamanho
  * final e não cresce a cada letra.
  */
-export function Balao({ texto, onTerminou, onFalando, onAvancar, mais }: Props) {
+export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho = "esquerda", quem = "Devocionalzeiro" }: Props) {
   const reduzir = useReducedMotion();
   // O progresso PERTENCE a um texto. Guardar só o número de letras fazia o
   // aviso de "terminei" disparar cedo: quando a frase trocava por uma mais
@@ -87,7 +91,7 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais }: Props) 
     >
       {/* a caixa de diálogo do RPG (`.rpg-dialogue`), com o nome de quem fala */}
       <span className="rpg-dialogue relative block px-3.5 pb-3 pt-2">
-        <span className="who block pb-1 font-bold">Devocionalzeiro</span>
+        <span className="who block pb-1 font-bold">{quem}</span>
         {/* a versão animada é só para os olhos; o leitor de tela ouve a frase
             inteira de uma vez, pela região viva abaixo */}
         <span className="relative block text-[14.5px] font-medium leading-[1.4]" style={{ color: COR.dialogoTexto }} aria-hidden="true">
@@ -99,7 +103,11 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais }: Props) 
         )}
       </span>
       {/* o rabicho: desce para a esquerda, até a cabeça dele */}
-      <svg className="absolute -bottom-[15px] left-[14px]" width="26" height="18" viewBox="0 0 26 18" aria-hidden="true">
+      <svg
+        className={`absolute -bottom-[15px] ${rabicho === "direita" ? "right-[14px]" : "left-[14px]"}`}
+        style={rabicho === "direita" ? { transform: "scaleX(-1)" } : undefined}
+        width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"
+      >
         <path d="M5 0 C7 6 5 11 1 16 C8 14 15 9 19 0 Z" fill={COR.dialogoFundo} />
         <path d="M5 1 C7 6 5 11 1 16 C8 14 15 9 19 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
       </svg>

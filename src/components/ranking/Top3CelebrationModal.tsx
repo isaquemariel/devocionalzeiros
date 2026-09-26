@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { triggerConfetti } from "@/utils/confetti";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 
 interface Top3CelebrationModalProps {
@@ -17,9 +16,7 @@ export const Top3CelebrationModal = ({ isOpen, rank, onClose }: Top3CelebrationM
   useEffect(() => {
     if (isOpen) {
       setVisible(true);
-      // Trigger confetti celebration
-      triggerConfetti("celebration");
-      
+      // (a festa é o Devocionalzeiro comemorando no próprio modal)
       // Auto-close after 5 seconds
       const timer = setTimeout(() => {
         onClose();

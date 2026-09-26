@@ -30,7 +30,7 @@ import { QuizModal } from "@/components/quiz/QuizModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { useGameSounds } from "@/hooks/useGameSounds";
-import { triggerConfetti } from "@/utils/confetti";
+import { celebrar } from "@/lib/celebrar";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useQuiz } from "@/hooks/useQuiz";
@@ -265,7 +265,7 @@ const Biblia = () => {
 
     setShowPlanSelection(false);
     playSound("success");
-    triggerConfetti("celebration");
+    celebrar("plano-criado");
   };
 
   const handleCustomPlanConfirm = async (planData: { name: string; description: string; books: string[]; totalDays: number; totalChapters: number; chaptersPerDay: number }) => {
@@ -303,7 +303,7 @@ const Biblia = () => {
 
       setShowCustomPlanModal(false);
       playSound("success");
-      triggerConfetti("celebration");
+      celebrar("plano-criado");
       toast.success(`Plano "${planData.name}" criado com sucesso!`);
     } catch (error) {
       console.error("Error creating custom plan:", error);
@@ -340,7 +340,7 @@ const Biblia = () => {
       // Show celebration
       setHasShownCompletion(true);
       playSound("achievement");
-      triggerConfetti("celebration");
+      // o modal de conclusão é a comemoração (o Devocionalzeiro está nele)
       setShowCompletionModal(true);
     } catch (error) {
       console.error("Error recording plan completion:", error);
@@ -383,7 +383,7 @@ const Biblia = () => {
     
     await markChapterComplete(todaySchedule.date, selectedChapter.book, selectedChapter.chapter);
     playSound("complete");
-    triggerConfetti("complete");
+    celebrar("capitulo");
     
     // Check if all chapters are now complete
     const updatedChapters = todaySchedule.chapters.map((c) =>
@@ -392,7 +392,7 @@ const Biblia = () => {
     
     if (updatedChapters.every((c) => c.isCompleted)) {
       playSound("achievement");
-      triggerConfetti("celebration");
+      celebrar("leitura-do-dia");
       toast.success("Parabéns! Leitura do dia concluída! 🎉");
     }
   };
@@ -408,7 +408,7 @@ const Biblia = () => {
 
     await markChapterComplete(todaySchedule.date, book, chapter);
     playSound("complete");
-    triggerConfetti("complete");
+    celebrar("capitulo");
 
     // Check if all chapters are now complete
     const updatedChapters = todaySchedule.chapters.map((c) =>
@@ -417,7 +417,7 @@ const Biblia = () => {
 
     if (updatedChapters.every((c) => c.isCompleted)) {
       playSound("achievement");
-      triggerConfetti("celebration");
+      celebrar("leitura-do-dia");
       toast.success("Parabéns! Leitura do dia concluída! 🎉");
     }
   };
@@ -427,7 +427,7 @@ const Biblia = () => {
 
     await markDayComplete(todaySchedule.date);
     playSound("achievement");
-    triggerConfetti("celebration");
+    celebrar("leitura-do-dia");
     toast.success("Leitura do dia concluída! 🎉");
   };
 
@@ -450,7 +450,7 @@ const Biblia = () => {
     // Mark in the reading schedule (plan progress)
     await markChapterComplete(todaySchedule.date, studyBibleChapter.book, studyBibleChapter.chapter);
     playSound("complete");
-    triggerConfetti("complete");
+    celebrar("capitulo");
     
     // Update local state
     setStudyBibleChapter({ ...studyBibleChapter, isCompleted: true });
@@ -462,7 +462,7 @@ const Biblia = () => {
     
     if (updatedChapters.every((c) => c.isCompleted)) {
       playSound("achievement");
-      triggerConfetti("celebration");
+      celebrar("leitura-do-dia");
       toast.success("Parabéns! Leitura do dia concluída! 🎉");
     }
   };
@@ -656,7 +656,7 @@ const Biblia = () => {
                     await regenerateSchedule("custom", customPlanCache.selected_books, customPlanCache.total_days);
                     toast.success(`Plano "${customPlanCache.plan_name}" reiniciado!`);
                     playSound("success");
-                    triggerConfetti("celebration");
+                    celebrar("plano-criado");
                   } else {
                     await handleSelectPlan(plan);
                   }
@@ -830,13 +830,13 @@ const Biblia = () => {
                 onMarkDayComplete={async (date) => {
                   await markDayComplete(date);
                   playSound("achievement");
-                  triggerConfetti("celebration");
+                  celebrar("leitura-do-dia");
                   toast.success("Leitura do dia marcada como concluída! 🎉");
                 }}
                 onMarkChapterComplete={async (date, book, chapter) => {
                   await markChapterComplete(date, book, chapter);
                   playSound("complete");
-                  triggerConfetti("complete");
+                  celebrar("capitulo");
                 }}
                 onOpenChapter={(book, chapter, isCompleted) => {
                   setSelectedChapter({ book, chapter, isCompleted });

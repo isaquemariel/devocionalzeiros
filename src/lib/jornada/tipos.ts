@@ -8,14 +8,14 @@
  * pergunta vira edição de dado, não de componente.
  */
 
-/** Rosto do Devocionalzeiro (o rig em `components/jornada/Devocionalzeiro`). */
+/** Rosto do Devocionalzeiro (o rig em `components/devocionalzeiro/Devocionalzeiro`). */
 export type Expressao =
   | "neutro" | "feliz" | "radiante" | "surpreso" | "pensativo" | "triste" | "orgulhoso" | "dormindo";
 
 /** O que o corpo dele está fazendo. */
 export type Gesto =
   | "parado" | "acenar" | "comemorar" | "pensar" | "apontar" | "tampar" | "espiar" | "andar"
-  | "espreguicar" | "cocar";
+  | "espreguicar" | "cocar" | "pirueta" | "vitoria";
 
 /** Uma frase do Devocionalzeiro, com a cara e o gesto com que ele a diz. */
 export interface Fala {
