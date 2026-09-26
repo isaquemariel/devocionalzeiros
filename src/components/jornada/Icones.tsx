@@ -141,11 +141,11 @@ export function Chaminha({ tamanho = 18, acesa = true, className }: { tamanho?: 
     <svg width={tamanho} height={tamanho} viewBox="0 0 24 24" className={className} aria-hidden="true">
       <path
         d="M12.6 2.5c3.9 3.6 6.4 7.4 6.4 11.1A7 7 0 0 1 5 13.6c0-2.6 1.3-4.9 3.1-6.5.2 1.7 1 3 2.2 3.4-.6-2.9.3-5.6 2.3-8Z"
-        fill={acesa ? "#3E8BFF" : "#DCD3C0"}
+        fill={acesa ? "#3E8BFF" : "#4A3820"}
       />
       <path
         d="M12.4 10.5c1.9 1.7 3 3.4 3 5a3.4 3.4 0 0 1-6.8 0c0-1.1.5-2.1 1.3-2.8.2.9.7 1.4 1.3 1.6-.3-1.3.1-2.6 1.2-3.8Z"
-        fill={acesa ? "#BFEFFF" : "#EFE9DC"}
+        fill={acesa ? "#BFEFFF" : "#5E4A2E"}
       />
     </svg>
   );

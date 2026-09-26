@@ -5,64 +5,61 @@ import { planoDeLeitura } from "@/lib/jornada/plano";
 import { forcaSenha } from "@/lib/jornada/motor";
 import { Chaminha, Icone } from "./Icones";
 import { tocar } from "./Controles";
-import { COR, FONTE, MAO } from "./tema";
+import { COR, FONTE } from "./tema";
 
 /*
  * AS MECÂNICAS DA JORNADA — um brinquedo por pergunta.
  *
- * Nenhuma é "lista de cartões com um check": o nome é GRAVADO numa placa, os
+ * Nenhuma é "lista de cartões com um check": o nome é GRAVADO numa pedra, os
  * motivos são lanternas que se ACENDEM, o quanto se conhece é uma planta que
  * CRESCE, a meta é um marcador que GIRA, a origem é um CARIMBO. Cada uma
  * continua sendo um controle de verdade por baixo (botão, rádio, range), com
  * teclado e leitor de tela funcionando — o brinquedo é a pele.
  */
 
-// ─── a placa do nome ────────────────────────────────────────────────────────
+// ─── a lápide do nome ───────────────────────────────────────────────────────
 
 /**
- * Placa de madeira fincada na beira da trilha. As letras aparecem queimadas na
- * tábua conforme se digita — cada uma com um estalo de brasa.
+ * Lápide de pedra de Jerusalém fincada na beira da estrada romana, como as
+ * inscrições das cidades da época. As letras aparecem GRAVADAS enquanto se
+ * digita — cada uma com uma faísca de cinzel — em capitais, como numa
+ * inscrição.
  */
 export function Placa({ nome, largura = 132 }: { nome: string; largura?: number }) {
   const reduzir = useReducedMotion();
-  const t = nome.trim();
-  // a letra encolhe para o nome caber na tábua
-  const fonte = Math.max(17, Math.min(34, (largura - 22) / Math.max(4, t.length * 0.52)));
-  const altura = largura * 0.62;
+  const t = nome.trim().toUpperCase();
+  // a letra encolhe para o nome caber na pedra
+  const fonte = Math.max(12, Math.min(22, (largura - 26) / Math.max(4, t.length * 0.62)));
+  const altura = largura * 0.58;
   return (
-    <div className="relative" style={{ width: largura, height: altura + 26 }} aria-hidden="true">
-      {/* estacas */}
-      <span className="absolute bottom-0 w-[7px] rounded-sm" style={{ left: largura * 0.2, height: altura * 0.7 + 26, background: `linear-gradient(90deg, ${COR.madeiraEscura}, ${COR.madeira})` }} />
-      <span className="absolute bottom-0 w-[7px] rounded-sm" style={{ right: largura * 0.2, height: altura * 0.7 + 26, background: `linear-gradient(90deg, ${COR.madeiraEscura}, ${COR.madeira})` }} />
-      {/* tábua */}
+    <div className="relative" style={{ width: largura, height: altura + 18 }} aria-hidden="true">
+      {/* pedestal */}
+      <span className="absolute bottom-0 left-[14%] right-[14%] h-[22px] rounded-[2px]" style={{ background: "linear-gradient(180deg, #C9A874, #A8864F)", boxShadow: "inset 0 2px 0 rgba(255,240,200,.35)" }} />
+      {/* a lápide */}
       <div
-        className="absolute left-0 right-0 top-0 flex items-center justify-center overflow-hidden"
+        className="absolute left-0 right-0 top-0 flex flex-col items-center justify-center overflow-hidden"
         style={{
           height: altura,
-          borderRadius: "9px 7px 10px 8px",
-          background: `repeating-linear-gradient(177deg, rgba(0,0,0,0) 0 9px, rgba(90,55,25,.13) 9px 10px), linear-gradient(180deg, #D7A66E, #B98149)`,
-          boxShadow: `inset 0 0 0 2px ${COR.madeiraEscura}, inset 0 -5px 0 rgba(110,74,40,.35), 0 4px 0 rgba(60,35,15,.25)`,
+          borderRadius: "10px 10px 3px 3px",
+          background: "radial-gradient(120% 90% at 30% 20%, #F2E2BE 0%, #E2C995 55%, #CFB07A 100%)",
+          boxShadow: "inset 0 0 0 2px #B8955C, inset 0 0 0 5px #EAD6A8, inset 0 0 0 6px #B8955C, 0 4px 0 rgba(40,25,10,.35)",
         }}
       >
-        {/* pregos */}
-        {[[8, 8], [largura - 12, 8], [8, altura - 12], [largura - 12, altura - 12]].map(([x, y], i) => (
-          <span key={i} className="absolute h-[5px] w-[5px] rounded-full" style={{ left: x, top: y, background: "#5B3B1E", boxShadow: "inset 1px 1px 0 rgba(255,255,255,.25)" }} />
-        ))}
         {t ? (
-          <span className="flex whitespace-pre px-3" style={{ fontFamily: MAO, fontWeight: 700, fontSize: fonte, color: "#4A2A12", textShadow: "0 1px 0 rgba(255,220,170,.45)" }}>
+          <span className="flex whitespace-pre px-3" style={{ fontFamily: FONTE, fontWeight: 800, fontSize: fonte, letterSpacing: "0.08em", color: "#5A3F1E", textShadow: "0 1px 0 rgba(255,245,215,.8), 0 -1px 0 rgba(80,50,20,.35)" }}>
             {Array.from(t).map((c, i) => (
               <motion.span
                 key={`${i}-${c}`}
-                initial={reduzir ? false : { opacity: 0, scale: 1.6, filter: "blur(2px)", color: "#FF8A2A" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)", color: "#4A2A12" }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
+                initial={reduzir ? false : { opacity: 0, scale: 1.5, color: "#FFB23A" }}
+                animate={{ opacity: 1, scale: 1, color: "#5A3F1E" }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 {c}
               </motion.span>
             ))}
           </span>
         ) : (
-          <span style={{ fontFamily: MAO, fontSize: 22, color: "rgba(74,42,18,.35)" }}>seu nome aqui</span>
+          <span style={{ fontFamily: FONTE, fontSize: 11, letterSpacing: "0.2em", color: "rgba(90,63,30,.45)" }}>SEU NOME</span>
         )}
       </div>
     </div>
@@ -87,8 +84,8 @@ export function Lanternas({ opcoes, marcadas, onAlternar, soltas }: {
     <div className="relative pt-3">
       {/* o fio do varal, em duas curvas */}
       <svg className="pointer-events-none absolute inset-x-0 top-0 h-[150px] w-full" viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M-4 6 Q150 26 304 6" fill="none" stroke={COR.lapis} strokeWidth="1.4" strokeDasharray="1 3" strokeLinecap="round" />
-        <path d="M-4 84 Q150 104 304 84" fill="none" stroke={COR.lapis} strokeWidth="1.4" strokeDasharray="1 3" strokeLinecap="round" />
+        <path d="M-4 6 Q150 26 304 6" fill="none" stroke={COR.texto3} strokeWidth="1.4" strokeDasharray="1 3" strokeLinecap="round" />
+        <path d="M-4 84 Q150 104 304 84" fill="none" stroke={COR.texto3} strokeWidth="1.4" strokeDasharray="1 3" strokeLinecap="round" />
       </svg>
       <div className="relative grid grid-cols-3 gap-x-2 gap-y-1" role="group" aria-label="Seus motivos">
         {opcoes.map((o, i) => {
@@ -106,7 +103,7 @@ export function Lanternas({ opcoes, marcadas, onAlternar, soltas }: {
               style={{ opacity: soltas && acesa ? 0 : 1, transition: "opacity 200ms" }}
             >
               <span className={`relative flex flex-col items-center ${acesa ? "jz-balanca" : ""}`} style={{ animationDelay: `${-i * 0.37}s`, transformOrigin: "50% 0" }}>
-                <span className="h-3 w-px" style={{ background: COR.lapis }} />
+                <span className="h-3 w-px" style={{ background: COR.texto3 }} />
                 {/* tampa */}
                 <span className="h-[5px] w-[26px] rounded-t-[4px]" style={{ background: "#7A5530" }} />
                 {/* papel */}
@@ -117,11 +114,11 @@ export function Lanternas({ opcoes, marcadas, onAlternar, soltas }: {
                     borderRadius: "16px 16px 18px 18px / 20px 20px 24px 24px",
                     background: acesa
                       ? "radial-gradient(circle at 50% 62%, #FFF6C9 0%, #FFD36B 38%, #FF9F3A 100%)"
-                      : "linear-gradient(180deg, #F6EBD6, #E9D8B9)",
+                      : "linear-gradient(180deg, #4A3B24, #372A18)",
                     boxShadow: acesa
                       ? "0 0 0 1.5px #D9781E, 0 0 22px 4px rgba(255,170,60,.55)"
-                      : "0 0 0 1.5px #CDB892",
-                    color: acesa ? "#9B3F00" : "#B29C77",
+                      : "0 0 0 1.5px #5E4A2E",
+                    color: acesa ? "#9B3F00" : "#9C8B68",
                   }}
                 >
                   {/* costelas do papel */}
@@ -135,7 +132,7 @@ export function Lanternas({ opcoes, marcadas, onAlternar, soltas }: {
               </span>
               <span
                 className="mt-1.5 min-h-[34px] text-center text-[13px] font-extrabold leading-[1.2]"
-                style={{ color: acesa ? COR.tinta : COR.tinta2, fontFamily: FONTE }}
+                style={{ color: acesa ? COR.ouroClaro : COR.texto2, fontFamily: FONTE }}
               >
                 {o.rotulo}
               </span>
@@ -215,10 +212,10 @@ export function Escala({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: str
       <div className="flex w-full items-center gap-3">
         <Planta nivel={tocado ? atual.nivel ?? i : 0} />
         <div className="min-w-0 flex-1">
-          <p className="text-[27px] leading-none" style={{ fontFamily: MAO, fontWeight: 700, color: COR.verde }}>
+          <p className="rpg-eyebrow leading-none">
             {tocado ? atual.detalhe : "Semente?"}
           </p>
-          <p className="mt-1 text-[16px] font-extrabold leading-tight" style={{ color: COR.tinta, fontFamily: FONTE }}>
+          <p className="mt-1.5 text-[15px] font-bold leading-tight" style={{ color: COR.texto, fontFamily: FONTE }}>
             {tocado ? atual.rotulo : "Arrasta e me mostra"}
           </p>
         </div>
@@ -240,7 +237,7 @@ export function Escala({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: str
         className="jz-range mt-3 w-full"
         style={{ ["--jz-p" as string]: `${(i / (opcoes.length - 1)) * 100}%` }}
       />
-      <div className="mt-1 flex w-full justify-between px-0.5 text-[12px] font-bold" style={{ color: COR.tinta3, fontFamily: FONTE }}>
+      <div className="mt-1 flex w-full justify-between px-0.5 text-[12px] font-bold" style={{ color: COR.texto3, fontFamily: FONTE }}>
         <span>começando</span>
         <span>a Bíblia inteira</span>
       </div>
@@ -295,12 +292,12 @@ export function Mostrador({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: 
       >
         <defs>
           <linearGradient id="jz-arco" x1="0" x2="1">
-            <stop offset="0%" stopColor="#BFD8FF" />
-            <stop offset="100%" stopColor={COR.chamaFunda} />
+            <stop offset="0%" stopColor="#8A6420" />
+            <stop offset="100%" stopColor={COR.ouroClaro} />
           </linearGradient>
         </defs>
         {/* trilho */}
-        <path d={`M${CX - R} ${CY} A${R} ${R} 0 0 1 ${CX + R} ${CY}`} fill="none" stroke="#EFE5D1" strokeWidth="20" strokeLinecap="round" />
+        <path d={`M${CX - R} ${CY} A${R} ${R} 0 0 1 ${CX + R} ${CY}`} fill="none" stroke={COR.campo} strokeWidth="20" strokeLinecap="round" />
         {/* parte cheia até a alça */}
         <path
           d={`M${CX - R} ${CY} A${R} ${R} 0 0 1 ${alca.x.toFixed(1)} ${alca.y.toFixed(1)}`}
@@ -315,8 +312,8 @@ export function Mostrador({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: 
             <g key={o.valor} role="radio" aria-checked={marcado} aria-label={`${o.rotulo} por dia, ${o.detalhe}`} tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onMudar(o.valor); } }}
               className="cursor-pointer outline-none">
-              <circle cx={d.x} cy={d.y} r="2.2" fill={marcado ? COR.chama : "#D6CAB2"} />
-              <text x={m.x} y={m.y + 5} textAnchor="middle" fontSize="15" fontWeight="900" fill={marcado ? COR.chama : COR.tinta3} style={{ fontFamily: FONTE }}>
+              <circle cx={d.x} cy={d.y} r="2.2" fill={marcado ? COR.ouroClaro : COR.borda} />
+              <text x={m.x} y={m.y + 5} textAnchor="middle" fontSize="15" fontWeight="900" fill={marcado ? COR.ouroClaro : COR.texto3} style={{ fontFamily: FONTE }}>
                 {o.valor}
               </text>
             </g>
@@ -324,15 +321,15 @@ export function Mostrador({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: 
         })}
         {/* alça */}
         <g style={{ transform: `translate(${alca.x}px, ${alca.y}px)`, transition: reduzir ? undefined : "transform 380ms cubic-bezier(.34,1.56,.64,1)" }}>
-          <circle r="16" fill="#FFFFFF" stroke={COR.chama} strokeWidth="3" />
+          <circle r="16" fill={COR.painelFundo} stroke={COR.ouroClaro} strokeWidth="3" />
           <path d="M0.5 -8c3.4 3.1 5.6 6.4 5.6 9.7A6 6 0 0 1-6 1.7c0-2.3 1.1-4.3 2.7-5.7.2 1.5.9 2.6 1.9 3-.5-2.5.3-4.9 1.9-7Z" fill={COR.chama} />
         </g>
         {/* o número no meio */}
-        <text x={CX} y={CY - 32} textAnchor="middle" fontSize="36" fontWeight="900" fill={COR.tinta} style={{ fontFamily: FONTE }}>{minutos}</text>
-        <text x={CX} y={CY - 12} textAnchor="middle" fontSize="13" fontWeight="800" fill={COR.tinta2} style={{ fontFamily: FONTE }}>min por dia</text>
+        <text x={CX} y={CY - 32} textAnchor="middle" fontSize="36" fontWeight="900" fill={COR.texto} style={{ fontFamily: FONTE }}>{minutos}</text>
+        <text x={CX} y={CY - 12} textAnchor="middle" fontSize="13" fontWeight="800" fill={COR.texto2} style={{ fontFamily: FONTE }}>min por dia</text>
       </svg>
 
-      <p className="-mt-1 text-[26px] leading-none" style={{ fontFamily: MAO, fontWeight: 700, color: COR.chama }}>{atual.detalhe}</p>
+      <p className="rpg-eyebrow -mt-1 leading-none">{atual.detalhe}</p>
 
       {/* o plano, ao vivo */}
       <div className="mt-3 grid w-full grid-cols-3 gap-2">
@@ -341,7 +338,7 @@ export function Mostrador({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: 
           { rotulo: "Novo Testamento", valor: p.novoTestamento.replace("cerca de ", "") },
           { rotulo: "a Bíblia inteira", valor: p.biblia.replace("cerca de ", "") },
         ].map((c) => (
-          <div key={c.rotulo} className="rounded-2xl px-2 py-2 text-center" style={{ background: COR.papelSombra }}>
+          <div key={c.rotulo} className="rounded-[10px] px-2 py-2 text-center" style={{ background: COR.campo, boxShadow: `inset 0 0 0 2px ${COR.borda}` }}>
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
                 key={c.valor}
@@ -350,16 +347,16 @@ export function Mostrador({ opcoes, valor, onMudar }: { opcoes: Opcao[]; valor: 
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.22 }}
                 className="block text-[16px] font-black leading-tight"
-                style={{ color: COR.tinta }}
+                style={{ color: COR.ouroClaro }}
               >
                 {c.valor}
               </motion.span>
             </AnimatePresence>
-            <span className="block text-[11.5px] font-bold leading-tight" style={{ color: COR.tinta2 }}>{c.rotulo}</span>
+            <span className="block text-[11.5px] font-bold leading-tight" style={{ color: COR.texto3 }}>{c.rotulo}</span>
           </div>
         ))}
       </div>
-      <p className="mt-2 text-center text-[11.5px] font-semibold" style={{ color: COR.tinta3 }}>
+      <p className="mt-2 text-center text-[11.5px] font-semibold" style={{ color: COR.texto3 }}>
         estimativa: uns 3,5 minutos por capítulo
       </p>
     </div>
@@ -394,9 +391,9 @@ export function Selos({ opcoes, valor, onEscolher }: { opcoes: Opcao[]; valor: s
               animate={marcado && !reduzir ? { scale: [1.5, 0.92, 1], rotate: [-18, -8, -8] } : { scale: 1, rotate: k % 2 ? 3 : -3 }}
               transition={{ duration: 0.42, ease: "easeOut" }}
               style={{
-                background: marcado ? cor : "#FFFFFF",
+                background: marcado ? cor : COR.campo,
                 color: marcado ? "#FFFFFF" : cor,
-                boxShadow: marcado ? `0 0 0 3px ${COR.papel}, 0 0 0 5px ${cor}` : `inset 0 0 0 2px ${cor}33`,
+                boxShadow: marcado ? `0 0 0 3px ${COR.painelFundo}, 0 0 0 5px ${COR.ouroClaro}` : `inset 0 0 0 2px ${COR.borda}`,
                 opacity: valor && !marcado ? 0.4 : 1,
                 transition: "opacity 250ms",
               }}
@@ -414,7 +411,7 @@ export function Selos({ opcoes, valor, onEscolher }: { opcoes: Opcao[]; valor: s
                 />
               )}
             </motion.span>
-            <span className="mt-1.5 text-center text-[11.5px] font-extrabold leading-[1.15]" style={{ color: marcado ? COR.tinta : COR.tinta2, fontFamily: FONTE }}>
+            <span className="mt-1.5 text-center text-[11.5px] font-extrabold leading-[1.15]" style={{ color: marcado ? COR.ouroClaro : COR.texto2, fontFamily: FONTE }}>
               {o.rotulo}
             </span>
           </button>
@@ -438,7 +435,7 @@ export function MedidorSenha({ senha }: { senha: string }) {
           <Chaminha tamanho={18} acesa={i <= f} />
         </motion.span>
       ))}
-      <span className="ml-1 text-[19px] leading-none" style={{ fontFamily: MAO, fontWeight: 700, color: f >= 3 ? COR.chama : COR.lapis }}>
+      <span className="ml-1 text-[11px] font-bold uppercase leading-none tracking-[0.18em]" style={{ fontFamily: FONTE, color: f >= 3 ? COR.ouroClaro : COR.texto3 }}>
         {rotulos[f]}
       </span>
     </div>

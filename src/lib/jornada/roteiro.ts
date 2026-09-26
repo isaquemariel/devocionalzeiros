@@ -117,7 +117,7 @@ export const ROTEIRO: Etapa[] = [
     chama: 0.16,
     falas: () => [{ texto: "Primeiro o mais importante: como te chamam?", expressao: "feliz", gesto: "apontar" }],
     placeholder: "Seu nome ou apelido",
-    botao: "Gravar na placa",
+    botao: "Gravar na pedra",
     reacao: (r) => (r.apelido ? [reacaoAoNome(r.apelido)] : null),
   },
   {

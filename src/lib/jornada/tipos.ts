@@ -41,7 +41,7 @@ export type IdEtapa =
  * A MECÂNICA da etapa. Nenhuma pergunta é uma lista de cartões: cada uma tem o
  * seu brinquedo.
  * - `despertar`: ele está dormindo; um toque acorda, e a chama nasce faísca.
- * - `nome`: o nome aparece gravado numa placa de madeira enquanto se digita.
+ * - `nome`: o nome aparece gravado numa lápide de pedra enquanto se digita.
  * - `lanternas`: um varal de lanternas; acende as suas, e elas voam para a chama.
  * - `escala`: uma planta que cresce de semente a árvore com fruto.
  * - `mostrador`: um marcador que gira, com o plano de leitura mudando ao vivo.

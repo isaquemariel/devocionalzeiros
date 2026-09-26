@@ -55,11 +55,8 @@ const BASE_CHAMA = { x: 104, y: 72 };
 // Cantos macios à esquerda (a arte não tem quina viva) e o bojo do D inteiro.
 const CORPO_FRENTE = "M74 63 L100 63 A57 57 0 0 1 100 177 L74 177 Q67 177 67 170 L67 70 Q67 63 74 63 Z";
 const CORPO_LADO = "M58 69 Q58 66 62 65 L68 63.5 L68 176.5 L62 175 Q58 174 58 171 Z";
-// A faixa neon emoldura a BARRIGA — um D menor dentro do D. Na primeira
-// versão ela cruzava a altura da boca e, em "pensar", lia-se como uma
-// segunda boca.
-const FAIXA_NEON = "M84 130 L124 130 A20 20 0 0 1 124 170 L84 170";
-const BOLSO = "M84 130 L124 130 A20 20 0 0 1 124 170 L84 170 Z";
+// Na barriga, SÓ a chama. Havia uma faixa neon em D em volta dela (um D
+// menor dentro do D), que se lia como um círculo, uma moldura de botão.
 
 /** línguas de fogo: deslocamento x, altura relativa, meia-largura, fase */
 type Lingua = { dx: number; h: number; hw: number; f: number };
@@ -190,7 +187,7 @@ export function Devocionalzeiro({
   const uid = useId().replace(/:/g, "");
   const ids = {
     corpo: `c-${uid}`, lado: `l-${uid}`, iris: `i-${uid}`, fogoExt: `fe-${uid}`, fogoMed: `fm-${uid}`,
-    fogoNuc: `fn-${uid}`, recorte: `r-${uid}`, neon: `n-${uid}`,
+    fogoNuc: `fn-${uid}`, recorte: `r-${uid}`,
   };
 
   // alvos lidos pelo laço (props → ref, sem reiniciar o laço)
@@ -510,10 +507,6 @@ export function Devocionalzeiro({
           <stop offset="0%" stopColor="#F2FDFF" />
           <stop offset="100%" stopColor="#C4F1FF" />
         </linearGradient>
-        <filter id={ids.neon} x="-20%" y="-40%" width="140%" height="180%">
-          <feGaussianBlur stdDeviation="1.6" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
         <clipPath id={ids.recorte}><path d={CORPO_FRENTE} /></clipPath>
       </defs>
 
@@ -560,15 +553,14 @@ export function Devocionalzeiro({
           </g>
         </g>
 
-        {/* faixa neon e emblema de chama na barriga */}
-        <path d={BOLSO} fill="#2A66FF" opacity="0.16" />
-        <path d={FAIXA_NEON} fill="none" stroke="#39B8FF" strokeWidth="2.3" strokeLinecap="round" filter={`url(#${ids.neon})`} opacity="0.95" />
-        <path
-          ref={r.emblema}
-          d="M112 139 C117.5 144.5 118.5 151 114.8 155.3 C113.2 157 110.8 157 109.2 155.3 C105.5 151.5 107.8 145.5 110 143.3 C110.5 145.5 111.6 146.6 112.7 146.6 C112.1 144 111.6 141.3 112 139 Z"
-          fill="#4FC3FF"
-          filter={`url(#${ids.neon})`}
-        />
+        {/* a chama da barriga, sozinha, sem moldura nem halo */}
+        <g transform="translate(112 148) scale(1.55) translate(-112 -148)">
+          <path
+            ref={r.emblema}
+            d="M112 139 C117.5 144.5 118.5 151 114.8 155.3 C113.2 157 110.8 157 109.2 155.3 C105.5 151.5 107.8 145.5 110 143.3 C110.5 145.5 111.6 146.6 112.7 146.6 C112.1 144 111.6 141.3 112 139 Z"
+            fill={`url(#${ids.fogoMed})`}
+          />
+        </g>
 
         {/* rosto: acompanha o olhar */}
         <g ref={r.rosto}>

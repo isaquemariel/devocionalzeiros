@@ -24,9 +24,10 @@ const RITMO = 24;
 const TETO_FALA = 1300;
 
 /**
- * O BALÃO DE FALA, como nos quadrinhos: contorno de tinta, cantos desiguais
- * (desenhado à mão, não um retângulo de sistema) e um rabicho que desce até a
- * boca do Devocionalzeiro, que fica à esquerda, embaixo.
+ * O BALÃO DE FALA é a caixa de diálogo do RPG Bíblico (`.rpg-dialogue`):
+ * azul-noite, borda de ouro e o nome de quem fala em cima — a mesma dos
+ * personagens da cena viva. Um rabicho desce até a cabeça do Devocionalzeiro,
+ * que fica à esquerda, embaixo.
  *
  * O texto é "falado" letra a letra, e a boca dele mexe junto (`onFalando`).
  * Nunca pode virar espera: tocar completa a frase na hora, e um segundo toque
@@ -84,29 +85,23 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais }: Props) 
       className="relative block w-full cursor-default text-left"
       style={{ fontFamily: FONTE }}
     >
-      <span
-        className="relative block px-4 pb-3 pt-2.5"
-        style={{
-          background: "#FFFFFF",
-          border: `2.5px solid ${COR.tinta}`,
-          borderRadius: "22px 26px 24px 18px / 20px 22px 26px 24px",
-          boxShadow: "3px 4px 0 rgba(27,37,80,.16)",
-        }}
-      >
+      {/* a caixa de diálogo do RPG (`.rpg-dialogue`), com o nome de quem fala */}
+      <span className="rpg-dialogue relative block px-3.5 pb-3 pt-2">
+        <span className="who block pb-1 font-bold">Devocionalzeiro</span>
         {/* a versão animada é só para os olhos; o leitor de tela ouve a frase
             inteira de uma vez, pela região viva abaixo */}
-        <span className="relative block text-[16.5px] font-bold leading-[1.32]" style={{ color: COR.tinta }} aria-hidden="true">
+        <span className="relative block text-[14.5px] font-medium leading-[1.4]" style={{ color: COR.dialogoTexto }} aria-hidden="true">
           <span className="invisible">{texto}</span>
           <span className="absolute inset-0">{texto.slice(0, n)}</span>
         </span>
         {mais && completo && (
-          <span className="jz-seta absolute bottom-1.5 right-3 text-[11px]" style={{ color: COR.chama }} aria-hidden="true">▼</span>
+          <span className="jz-seta absolute bottom-1.5 right-2.5 text-[10px]" style={{ color: COR.ouroClaro }} aria-hidden="true">▼</span>
         )}
       </span>
-      {/* o rabicho: desce para a esquerda, até a boca dele */}
-      <svg className="absolute -bottom-[17px] left-[14px]" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true">
-        <path d="M6 0 C8 7 5 13 1 18 C9 16 17 10 22 0 Z" fill="#FFFFFF" />
-        <path d="M6 1 C8 7 5 13 1 18 C9 16 17 10 22 1" fill="none" stroke={COR.tinta} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+      {/* o rabicho: desce para a esquerda, até a cabeça dele */}
+      <svg className="absolute -bottom-[15px] left-[14px]" width="26" height="18" viewBox="0 0 26 18" aria-hidden="true">
+        <path d="M5 0 C7 6 5 11 1 16 C8 14 15 9 19 0 Z" fill={COR.dialogoFundo} />
+        <path d="M5 1 C7 6 5 11 1 16 C8 14 15 9 19 1" fill="none" stroke={COR.ouro} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
       </svg>
       <span className="sr-only" aria-live="polite">{texto}</span>
     </button>

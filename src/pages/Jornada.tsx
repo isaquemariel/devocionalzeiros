@@ -19,7 +19,7 @@ import { Balao } from "@/components/jornada/Balao";
 import { Botao, Campo, Link, tocar } from "@/components/jornada/Controles";
 import { Escala, Lanternas, MedidorSenha, Mostrador, Placa, Selos } from "@/components/jornada/Mecanicas";
 import { Diario, Festa, LogoGoogle, Zzz } from "@/components/jornada/Cenas";
-import { COR, FONTE, MAO } from "@/components/jornada/tema";
+import { COR, FONTE } from "@/components/jornada/tema";
 
 /** conta criada há mais que isto = a pessoa já tinha conta (entrou pelo Google) */
 const CONTA_ANTIGA_MS = 5 * 60 * 1000;
@@ -562,7 +562,7 @@ export default function Jornada() {
   const mostrarBalao = !!falaAtual && !andando && !dormindo && !(estado.etapa === "fim" && assentado);
 
   return (
-    <div ref={raiz} className="jz-raiz fixed inset-0 overflow-hidden" style={{ fontFamily: FONTE, background: "#8F7BE0" }}>
+    <div ref={raiz} className="rpg-root jz-raiz fixed inset-0 overflow-hidden" style={{ fontFamily: FONTE, background: "#26356A" }}>
       <style>{ESTILO}</style>
 
       {/* ── o mundo ──────────────────────────────────────────────────────── */}
@@ -584,17 +584,17 @@ export default function Jornada() {
           disabled={estado.etapa === "fim" || enviando || !!reacao}
           aria-label="Voltar"
           className="absolute left-3 z-30 flex h-10 w-10 items-center justify-center rounded-full transition active:scale-90 disabled:opacity-0"
-          style={{ top: "max(12px, env(safe-area-inset-top, 0px))", background: "rgba(255,255,255,.72)", boxShadow: "0 2px 8px rgba(27,37,80,.12)" }}
+          style={{ top: "max(12px, env(safe-area-inset-top, 0px))", background: COR.painelFundo, boxShadow: `inset 0 0 0 2px ${COR.borda}, 0 4px 10px -4px #000` }}
         >
-          <ArrowLeft className="h-5 w-5" style={{ color: COR.tinta }} strokeWidth={2.6} />
+          <ArrowLeft className="h-5 w-5" style={{ color: COR.ouroClaro }} strokeWidth={2.6} />
         </button>
 
-        {/* a placa do nome, fincada na beira da trilha */}
+        {/* a lápide do nome, na beira da estrada */}
         <AnimatePresence>
           {estado.etapa === "nome" && !andando && (
             <motion.div
               className="absolute right-4 z-[5]"
-              style={{ top: pesY - Math.min(132, W * 0.34) * 0.62 - 20, transition: transicao }}
+              style={{ top: pesY - Math.min(132, W * 0.34) * 0.58 - 14, transition: transicao }}
               initial={reduzirMov ? false : { y: 40, opacity: 0, rotate: 6 }}
               animate={{ y: 0, opacity: 1, rotate: -2 }}
               exit={{ y: 30, opacity: 0 }}
@@ -629,7 +629,7 @@ export default function Jornada() {
               <motion.span
                 key={momento.tag}
                 className="pointer-events-none absolute left-1/2 whitespace-nowrap"
-                style={{ top: -8, fontFamily: MAO, fontWeight: 700, fontSize: 22, color: COR.tinta, textShadow: "0 0 6px rgba(255,255,255,.95), 0 0 2px #fff" }}
+                style={{ top: -8, fontFamily: FONTE, fontWeight: 800, fontSize: 13, letterSpacing: "0.04em", color: COR.ouroClaro, textShadow: `2px 2px 0 ${COR.tintaEscura}, -1px -1px 0 ${COR.tintaEscura}, 1px -1px 0 ${COR.tintaEscura}, -1px 1px 0 ${COR.tintaEscura}` }}
                 initial={{ opacity: 0, y: 6, rotate: -6 }}
                 animate={{ opacity: 1, y: -14, rotate: -4 }}
                 exit={{ opacity: 0, y: -26 }}
@@ -674,20 +674,19 @@ export default function Jornada() {
           className="absolute inset-x-0 z-20"
           style={{ bottom: teclado, transition: reduzirMov ? "none" : "bottom 180ms ease-out" }}
         >
-          {/* borda de papel rasgado */}
-          <svg className="absolute -top-[9px] left-0 h-[10px] w-full" viewBox="0 0 400 10" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 10 L0 5 L14 3 L27 6 L41 2 L58 5 L70 3 L86 6 L99 2 L117 4 L130 7 L146 3 L160 5 L175 2 L191 6 L206 3 L220 5 L236 2 L250 6 L266 3 L280 5 L297 2 L311 6 L326 3 L340 5 L355 2 L371 6 L386 3 L400 5 L400 10 Z" fill={COR.papel} />
-          </svg>
+          {/* o painel do RPG (`.rpg-panel`), encaixado embaixo */}
           <div
-            className="max-h-[78dvh] overflow-y-auto px-5 pt-2"
+            className="max-h-[78dvh] overflow-y-auto px-5 pt-3.5"
             style={{
-              background: COR.papel,
+              background: `linear-gradient(${COR.painel}, ${COR.painelFundo})`,
+              borderTop: `2px solid ${COR.borda}`,
+              borderRadius: "16px 16px 0 0",
               paddingBottom: teclado ? 12 : "max(16px, env(safe-area-inset-bottom, 0px))",
-              boxShadow: "0 -12px 28px -18px rgba(27,37,80,.35)",
+              boxShadow: `0 -18px 40px -20px #000, inset 0 1px 0 ${COR.painelBrilho}`,
             }}
           >
-            <p className="mb-2 text-[21px] leading-none" style={{ fontFamily: MAO, fontWeight: 700, color: COR.lapis }}>
-              {numEstacao > 0 && numEstacao < ROTEIRO.length - 1 ? `parada ${numEstacao} · ` : ""}{etapa.estacao}
+            <p className="rpg-eyebrow mb-3 leading-none">
+              {numEstacao > 0 && numEstacao < ROTEIRO.length - 1 ? `Parada ${numEstacao} · ` : ""}{etapa.estacao}
             </p>
 
             <AnimatePresence mode="wait" initial={false}>
@@ -737,7 +736,7 @@ export default function Jornada() {
       return (
         <div className="space-y-3 pb-1">
           <Botao onClick={irParaLogin}>Entrar com esse e-mail</Botao>
-          <Botao variante="papel" onClick={() => despachar({ tipo: "irPara", etapa: "email" })}>Usar outro e-mail</Botao>
+          <Botao variante="escuro" onClick={() => despachar({ tipo: "irPara", etapa: "email" })}>Usar outro e-mail</Botao>
         </div>
       );
     }
@@ -750,12 +749,12 @@ export default function Jornada() {
         return (
           <div className="flex flex-col items-center gap-2 pb-1">
             {dormindo && (
-              <p className="pb-1 text-center text-[27px] leading-tight" style={{ fontFamily: MAO, fontWeight: 700, color: COR.tinta }}>
+              <p className="pb-1 text-center text-[15px] font-bold leading-snug" style={{ color: COR.texto }}>
                 Psiu… ele ainda tá dormindo.
               </p>
             )}
             <Botao onClick={continuar}>{dormindo ? "Acordar o Devocionalzeiro" : etapa.botao}</Botao>
-            <Link onClick={irParaLogin} cor={COR.tinta2}>Já tenho uma conta</Link>
+            <Link onClick={irParaLogin} cor={COR.texto2}>Já tenho uma conta</Link>
           </div>
         );
 
@@ -888,14 +887,14 @@ export default function Jornada() {
                   onChange={(e) => { setDdi(e.target.value); setErro(null); campoRef.current?.focus(); }}
                   aria-label="País"
                   className="ml-2 shrink-0 cursor-pointer rounded-xl bg-transparent py-2 pl-2 pr-1 text-[16px] font-extrabold outline-none"
-                  style={{ color: COR.tinta, fontFamily: FONTE }}
+                  style={{ color: COR.texto, fontFamily: FONTE }}
                 >
                   {DDIS.map((x) => <option key={x.code} value={x.code}>{x.flag} {x.code}</option>)}
                 </select>
               }
             />
             <div className="pt-1"><Botao onClick={continuar} desabilitado={!numero.replace(/\D/g, "")}>{etapa.botao}</Botao></div>
-            <div className="text-center"><Link onClick={() => { tocar(); responder({ whatsapp: null }); }} cor={COR.tinta2}>Agora não</Link></div>
+            <div className="text-center"><Link onClick={() => { tocar(); responder({ whatsapp: null }); }} cor={COR.texto2}>Agora não</Link></div>
           </form>
         );
       }
@@ -903,7 +902,7 @@ export default function Jornada() {
       case "conta":
         return (
           <div className="space-y-3 pb-1">
-            <Botao variante="papel" onClick={entrarComGoogle} carregando={enviando}
+            <Botao variante="escuro" onClick={entrarComGoogle} carregando={enviando}
               icone={enviando ? <Loader2 className="h-5 w-5 animate-spin" /> : <LogoGoogle />}>
               Continuar com Google
             </Botao>
@@ -911,7 +910,7 @@ export default function Jornada() {
               Continuar com e-mail
             </Botao>
             {erro && <p className="px-1 text-center text-[14px] font-bold" style={{ color: COR.erro }} role="alert">{erro}</p>}
-            <p className="text-center text-[15px] font-bold" style={{ color: COR.tinta2 }}>
+            <p className="text-center text-[15px] font-bold" style={{ color: COR.texto2 }}>
               Já tem uma conta? <Link onClick={irParaLogin}>Entrar</Link>
             </p>
           </div>
@@ -944,9 +943,9 @@ export default function Jornada() {
       case "senha":
         return (
           <form onSubmit={(e) => { e.preventDefault(); continuar(); }} className="pb-1">
-            <p className="mb-2.5 px-1 text-[14px] font-bold" style={{ color: COR.tinta2 }}>
-              Conta para <span style={{ color: COR.tinta }}>{r.email}</span>{" "}
-              <button type="button" className="font-extrabold" style={{ color: COR.chama }} onClick={() => despachar({ tipo: "voltar" })}>
+            <p className="mb-2.5 px-1 text-[14px] font-bold" style={{ color: COR.texto2 }}>
+              Conta para <span style={{ color: COR.texto }}>{r.email}</span>{" "}
+              <button type="button" className="font-extrabold" style={{ color: COR.ouroClaro }} onClick={() => despachar({ tipo: "voltar" })}>
                 trocar
               </button>
             </p>
@@ -964,7 +963,7 @@ export default function Jornada() {
               aria-label="Crie uma senha"
               direita={
                 <button type="button" onClick={() => setVerSenha((v) => !v)} className="px-4 py-3" aria-label={verSenha ? "Esconder senha" : "Mostrar senha"}>
-                  {verSenha ? <EyeOff className="h-5 w-5" style={{ color: COR.tinta2 }} /> : <Eye className="h-5 w-5" style={{ color: COR.tinta2 }} />}
+                  {verSenha ? <EyeOff className="h-5 w-5" style={{ color: COR.texto2 }} /> : <Eye className="h-5 w-5" style={{ color: COR.texto2 }} />}
                 </button>
               }
             />
@@ -1000,9 +999,10 @@ function limparRedirecionamento() {
 // (index.css). Na jornada o campo é desenhado pela caixa em volta — o fundo
 // branco do input cobria o anel de foco e pintava o trilho da escala.
 const ESTILO = `
-.jz-raiz input.jz-campo,.jz-raiz select,.jz-raiz input.jz-range{background-color:transparent!important;color:${COR.tinta}!important}
-.jz-caixa:focus-within{box-shadow:inset 0 0 0 2px ${COR.chama},0 0 0 4px rgba(47,123,255,.14)!important}
-.jz-campo::placeholder{color:#AFA38A;opacity:1;font-weight:600}
+.jz-raiz input.jz-campo,.jz-raiz .jz-caixa select,.jz-raiz input.jz-range{background-color:transparent!important;color:${COR.texto}!important}
+.jz-caixa:focus-within{box-shadow:inset 0 0 0 2px ${COR.ouro},0 0 0 4px rgba(232,176,75,.16)!important}
+.jz-campo::placeholder{color:${COR.texto3};opacity:.75;font-weight:500}
+.jz-raiz select option{background:${COR.painelFundo};color:${COR.texto}}
 @keyframes jz-balanca{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 .jz-balanca{animation:jz-balanca 2.6s ease-in-out infinite}
 @keyframes jz-pisca{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(1.35) translateX(.5px);opacity:.8}}
@@ -1010,11 +1010,11 @@ const ESTILO = `
 @keyframes jz-seta{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(2px);opacity:.5}}
 .jz-seta{animation:jz-seta .9s ease-in-out infinite}
 .jz-range{-webkit-appearance:none;appearance:none;height:34px;background:transparent!important;border:0;padding:0;cursor:pointer;touch-action:pan-y}
-.jz-range::-webkit-slider-runnable-track{height:10px;border-radius:99px;background:linear-gradient(90deg,${COR.verde} var(--jz-p),#EFE5D1 var(--jz-p))}
-.jz-range::-moz-range-track{height:10px;border-radius:99px;background:linear-gradient(90deg,${COR.verde} var(--jz-p),#EFE5D1 var(--jz-p))}
-.jz-range::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;margin-top:-11px;border-radius:50%;background:#fff;border:4px solid ${COR.verde};box-shadow:0 3px 8px rgba(27,37,80,.25)}
-.jz-range::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid ${COR.verde};box-shadow:0 3px 8px rgba(27,37,80,.25)}
+.jz-range::-webkit-slider-runnable-track{height:10px;border-radius:99px;background:linear-gradient(90deg,${COR.ouro} var(--jz-p),${COR.campo} var(--jz-p));box-shadow:inset 0 0 0 2px ${COR.borda}}
+.jz-range::-moz-range-track{height:10px;border-radius:99px;background:linear-gradient(90deg,${COR.ouro} var(--jz-p),${COR.campo} var(--jz-p))}
+.jz-range::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;margin-top:-11px;border-radius:50%;background:${COR.ouroClaro};border:3px solid ${COR.tintaEscura};box-shadow:0 3px 0 ${COR.ouroFundo}}
+.jz-range::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:${COR.ouroClaro};border:3px solid ${COR.tintaEscura}}
 .jz-range:focus-visible{outline:none}
-.jz-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 5px rgba(47,174,102,.25)}
+.jz-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 5px rgba(232,176,75,.3)}
 @media (prefers-reduced-motion:reduce){.jz-balanca,.jz-pisca,.jz-seta{animation:none}}
 `;

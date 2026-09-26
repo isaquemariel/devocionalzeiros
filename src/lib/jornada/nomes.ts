@@ -67,7 +67,7 @@ const BIBLICOS: Record<string, string> = {
 /** frases para os nomes que não estão na lista — escolhidas pelo próprio nome */
 const COMUNS: ((n: string) => string)[] = [
   (n) => `${n}. Gostei de como soa. Vou gravar direitinho aqui.`,
-  (n) => `${n}! Nome guardado. Agora a placa é sua.`,
+  (n) => `${n}! Nome gravado. Agora essa pedra é sua.`,
   (n) => `Prazer, ${n}. Esse nome combina com trilha.`,
 ];
 

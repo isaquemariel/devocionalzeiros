@@ -4,21 +4,21 @@ import type { Respostas } from "@/lib/jornada/tipos";
 import { planoDeLeitura } from "@/lib/jornada/plano";
 import { FAMILIARIDADE, MOTIVOS } from "@/lib/jornada/roteiro";
 import { Icone } from "./Icones";
-import { COR, FONTE, MAO } from "./tema";
+import { COR, FONTE } from "./tema";
 
 // ─── o sono ─────────────────────────────────────────────────────────────────
 
 /** Os "z" que sobem da cabeça dele enquanto dorme — cada um de um tamanho. */
 export function Zzz() {
   const reduzir = useReducedMotion();
-  if (reduzir) return <span className="absolute -top-2 right-0 text-[22px]" style={{ fontFamily: MAO, color: "#FFFFFF" }}>z z</span>;
+  if (reduzir) return <span className="absolute -top-2 right-0 text-[22px]" style={{ fontFamily: FONTE, fontWeight: 800, color: "#FFFFFF" }}>z z</span>;
   return (
     <span className="pointer-events-none absolute inset-0" aria-hidden="true">
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
           className="absolute"
-          style={{ right: "4%", top: "8%", fontFamily: MAO, fontWeight: 700, fontSize: 18 + i * 7, color: "#FFFFFF", textShadow: "0 2px 6px rgba(80,60,160,.35)" }}
+          style={{ right: "4%", top: "8%", fontFamily: FONTE, fontWeight: 800, fontSize: 14 + i * 5, color: "#FFFFFF", textShadow: "0 2px 0 #0b0805" }}
           initial={{ opacity: 0, x: 0, y: 0 }}
           animate={{ opacity: [0, 1, 1, 0], x: [0, 10, 22, 30], y: [0, -18, -36, -54] }}
           transition={{ duration: 2.6, delay: i * 0.85, repeat: Infinity, ease: "easeOut" }}
@@ -102,31 +102,32 @@ export function Diario({ r }: { r: Respostas }) {
 
   return (
     <motion.div
-      initial={reduzir ? false : { opacity: 0, y: 16, rotate: -2 }}
-      animate={{ opacity: 1, y: 0, rotate: -1 }}
-      transition={{ delay: reduzir ? 0 : 0.5, type: "spring", stiffness: 180, damping: 18 }}
-      className="relative rounded-[6px] px-4 pb-3 pt-3"
+      initial={reduzir ? false : { opacity: 0, scaleY: 0.2 }}
+      animate={{ opacity: 1, scaleY: 1 }}
+      transition={{ delay: reduzir ? 0 : 0.5, type: "spring", stiffness: 170, damping: 20 }}
+      className="relative px-4 pb-3 pt-3"
       style={{
-        background: `repeating-linear-gradient(180deg, transparent 0 25px, rgba(47,123,255,.12) 25px 26px), #FFFFFF`,
-        boxShadow: `0 0 0 1px ${COR.papelBorda}, 2px 3px 0 ${COR.papelSombra}`,
+        // um rolo de pergaminho: as pontas enroladas, mais escuras, em cima e embaixo
+        background: `linear-gradient(180deg, #b8a06e 0, ${COR.pergaminho} 7px, ${COR.pergaminho} calc(100% - 7px), #b8a06e 100%)`,
+        borderRadius: 6,
+        boxShadow: `0 0 0 2px ${COR.tintaEscura}, 0 10px 24px -12px #000`,
         fontFamily: FONTE,
+        transformOrigin: "50% 0",
       }}
     >
-      {/* fita adesiva segurando a página */}
-      <span className="absolute -top-2.5 left-1/2 h-5 w-16 -translate-x-1/2 rotate-[3deg] rounded-[2px]" style={{ background: "rgba(255,210,120,.65)" }} />
-      <p className="text-[28px] leading-[26px]" style={{ fontFamily: MAO, fontWeight: 700, color: COR.tinta }}>
+      <p className="text-[12px] font-extrabold uppercase tracking-[0.2em]" style={{ color: "#7a5410" }}>
         Diário de {r.apelido?.trim().split(/\s+/)[0] ?? "trilha"}
       </p>
       <div className="mt-1">
         {linhas.map((l) => (
           <p key={l.rotulo} className="flex items-baseline justify-between gap-3 leading-[26px]">
-            <span className="text-[20px]" style={{ fontFamily: MAO, color: COR.lapis }}>{l.rotulo}</span>
-            <span className="text-[15px] font-extrabold" style={{ color: COR.tinta }}>{l.valor}</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.12em]" style={{ color: "#7a5410" }}>{l.rotulo}</span>
+            <span className="text-[14px] font-extrabold" style={{ color: COR.tintaPergaminho }}>{l.valor}</span>
           </p>
         ))}
         {motivos.length > 0 && (
           <p className="flex items-center justify-between gap-3 leading-[26px]">
-            <span className="text-[20px]" style={{ fontFamily: MAO, color: COR.lapis }}>as lanternas</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.12em]" style={{ color: "#7a5410" }}>as lanternas</span>
             <span className="flex gap-1" style={{ color: "#D9781E" }}>
               {motivos.map((m) => <Icone key={m.valor} id={m.icone ?? "estrela"} tamanho={19} />)}
             </span>
