@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'invalid_return_url' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' as Stripe.LatestApiVersion });
     const admin = createClient(supabaseUrl, serviceKey);
 
     let customerId: string | null = null;

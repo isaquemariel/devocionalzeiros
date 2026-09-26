@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     // talentos = reais * 20 (piso). amount está em centavos → /100 * 20 = /5.
     const talents = Math.floor(amount / 5);
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' as Stripe.LatestApiVersion });
     const admin = createClient(supabaseUrl, serviceKey);
 
     let customerId: string | undefined;

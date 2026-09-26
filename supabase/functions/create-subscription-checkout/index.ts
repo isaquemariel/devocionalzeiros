@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     }
 
     const priceCfg = PRICES[plan][period];
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' as Stripe.LatestApiVersion });
     const admin = createClient(supabaseUrl, serviceKey);
 
     let customerId: string | null = null;
