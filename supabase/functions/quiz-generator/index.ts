@@ -247,6 +247,11 @@ serve(async (req) => {
     console.log('Quiz generator: request received');
     
     let { chapters, difficulty = 'medium', mode = 'normal', questionsPerChapter = 2 } = body;
+    // entradas soltas do cliente: número de perguntas entre 1 e 5; dificuldade
+    // e modo só dos valores conhecidos (vão para o prompt e para a cota)
+    questionsPerChapter = Math.min(5, Math.max(1, Math.floor(Number(questionsPerChapter) || 2)));
+    if (!['easy', 'medium', 'hard'].includes(difficulty)) difficulty = 'medium';
+    if (mode !== 'random') mode = 'normal';
 
     // Server-side plan + quota enforcement
     const featureKey = mode === 'random' ? 'quiz_random' : 'quiz_free_choice';
@@ -315,7 +320,9 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      if (bookName.trim().length === 0 || bookName.length > MAX_BOOK_LENGTH) {
+      // nome de livro de verdade: letras (com acento), números e espaço — o texto
+      // vai direto para o prompt da IA, então nada de instruções embutidas
+      if (bookName.trim().length === 0 || bookName.length > MAX_BOOK_LENGTH || !/^[\p{L}0-9 ]{2,40}$/u.test(bookName.trim())) {
         if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: `Capítulo ${i}: bookName deve ter entre 1 e ${MAX_BOOK_LENGTH} caracteres` }), {
           status: 400,

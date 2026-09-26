@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { AnimatePresence, motion } from "framer-motion";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { Balao } from "@/components/jornada/Balao";
@@ -24,10 +25,23 @@ export function CenaConquista({
   const [resgatando, setResgatando] = useState(false);
   const [resgatou, setResgatou] = useState(false);
   const [falando, setFalando] = useState(false);
+  const [aviso, setAviso] = useState<string | null>(null);
+  const caixa = useRef<HTMLDivElement>(null);
+  // a cena é o palco enquanto está aberta: um aviso (o erro do resgate) sai
+  // do balão DELE aqui, não de um segundo boneco por cima do modal
+  useOcuparPalco((a) => { setAviso(a.texto); return true; });
+  useEffect(() => { if (!aviso) return; const t = window.setTimeout(() => setAviso(null), 5000); return () => window.clearTimeout(t); }, [aviso]);
+  // Esc fecha; o foco entra no diálogo (teclado e leitor de tela ficam nele)
+  useEffect(() => {
+    caixa.current?.focus();
+    const tecla = (e: KeyboardEvent) => { if (e.key === "Escape" && !resgatando) onFechar(); };
+    window.addEventListener("keydown", tecla);
+    return () => window.removeEventListener("keydown", tecla);
+  }, [onFechar, resgatando]);
   const pronta = conquista.desbloqueada && !conquista.resgatada && !resgatou;
   const estado = resgatou || conquista.resgatada ? "resgatada" : conquista.desbloqueada ? "resgatavel" : "bloqueada";
 
-  const fala = resgatou
+  const fala = aviso ? aviso : resgatou
     ? `Resgatada! +${conquista.pontos} pontos no seu placar.`
     : pronta
       ? `Olha só o que você conquistou! ${conquista.descricao}. Resgata os ${conquista.pontos} pontos!`
@@ -57,14 +71,17 @@ export function CenaConquista({
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       onClick={resgatando ? undefined : onFechar}
       role="dialog"
+      aria-modal="true"
       aria-label={conquista.titulo}
     >
       <motion.div
-        className="w-full max-w-[400px] rounded-t-3xl px-5 pb-6 pt-4 sm:rounded-3xl"
+        className="w-full max-w-[400px] rounded-t-3xl px-5 pb-6 pt-4 outline-none sm:rounded-3xl"
         style={{ background: "linear-gradient(180deg, #241b10, #140f08)", border: `2px solid ${r.cor}`, boxShadow: `0 0 0 2px #0b0805, 0 -10px 60px -20px ${r.brilho}` }}
         initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
+        ref={caixa}
+        tabIndex={-1}
       >
         <div className="mb-1 flex items-center justify-between">
           <span className="text-[10.5px] font-extrabold uppercase tracking-[0.2em]" style={{ color: r.cor }}>

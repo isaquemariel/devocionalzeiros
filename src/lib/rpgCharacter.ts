@@ -52,10 +52,12 @@ export type DisponibilidadeNome = "livre" | "em-uso" | "falhou";
 export async function verificarNome(name: string): Promise<DisponibilidadeNome> {
   if (!validateNameFormat(name).ok) return "em-uso";
   try {
-    const { data: auth } = await supabase.auth.getUser();
+    // a sessão já está em mãos (getUser ia ao servidor a cada letra digitada,
+    // e, se falhasse, o próprio nome salvo aparecia como "já tem dono")
+    const { data: sessao } = await supabase.auth.getSession();
     const { data, error } = await supabase.rpc("is_character_name_available", {
       name_input: name.trim(),
-      exclude_user: auth?.user?.id ?? null,
+      exclude_user: sessao.session?.user.id ?? null,
     });
     if (error) { console.warn("name availability RPC failed:", error.message); return "falhou"; }
     return data === true ? "livre" : "em-uso";

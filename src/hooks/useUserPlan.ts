@@ -98,11 +98,15 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
       planCache.delete(userEmail);
       fetchUserPlan();
     };
+    // o plano mudou agora (e-mail confirmado, troca de plano): busca de novo
+    const mudou = () => { planCache.delete(userEmail); fetchUserPlan(); };
     document.addEventListener("visibilitychange", revalidarAoVoltar);
     window.addEventListener("focus", revalidarAoVoltar);
+    window.addEventListener("dz:plano-mudou", mudou);
     return () => {
       document.removeEventListener("visibilitychange", revalidarAoVoltar);
       window.removeEventListener("focus", revalidarAoVoltar);
+      window.removeEventListener("dz:plano-mudou", mudou);
     };
   }, [userEmail]);
 

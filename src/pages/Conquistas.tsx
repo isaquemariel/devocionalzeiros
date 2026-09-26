@@ -15,7 +15,8 @@ const Conquistas = () => {
   // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate("/auth");
+      // volta para cá depois de entrar (e o ?resgatar= do push não se perde)
+      navigate(`/auth?entrar=1&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`);
     }
   }, [user, authLoading, navigate]);
 

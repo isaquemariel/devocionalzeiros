@@ -52,14 +52,19 @@ const garantirSessao = async (): Promise<boolean> => {
 // ainda em voo encontra a sessão já fechada) ou o login vencido — e nesse caso
 // o próprio app a leva para a tela de entrar. Dizer "sua sessão expirou" para
 // quem acabou de tocar em "Sair" era um aviso sem sentido.
-const avisarQueNaoSalvou = (deSessao: boolean) => {
-  if (deSessao) return;
-  {
-    toast.error("Não consegui salvar o seu plano de leitura.", {
-      description: "O que está na tela ainda não foi guardado. Tente escolher o plano de novo em instantes.",
-      duration: 10000,
-    });
+// (Quem acabou de tocar em "Sair" não vê este aviso: `lib/avisos` cala os
+// erros dos segundos seguintes à saída. Fora isso, falha de sessão também é
+// falha — calar fazia a tela comemorar o que não foi salvo.)
+const avisarQueNaoSalvou = (deSessao: boolean, oQue: "plano" | "leitura" = "plano") => {
+  const dica = deSessao ? "Confira a internet e tente de novo — se continuar, entre de novo na conta." : "Tente de novo em instantes.";
+  if (oQue === "leitura") {
+    toast.error("Não consegui marcar a leitura.", { description: dica, duration: 8000 });
+    return;
   }
+  toast.error("Não consegui salvar o seu plano de leitura.", {
+    description: `O que está na tela ainda não foi guardado. ${dica}`,
+    duration: 10000,
+  });
 };
 
 /** Grava o plano em lotes. Se travar no meio, APAGA o que já entrou: meio
@@ -300,8 +305,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     setStreak(completedDays);
   };
 
-  const markChapterComplete = async (date: string, book: string, chapter: number) => {
-    if (!userId) return;
+  /** devolve se SALVOU — quem chama só comemora com `true` */
+  const markChapterComplete = async (date: string, book: string, chapter: number): Promise<boolean> => {
+    if (!userId) return false;
 
     // Use Brasília timezone for completion timestamp
     const now = new Date();
@@ -319,8 +325,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       // silêncio aqui era um toque que simplesmente não acontecia: o capítulo
       // continuava por ler e ninguém dizia por quê.
       console.error("Error marking chapter complete:", error);
-      avisarQueNaoSalvou(ehErroDeSessao(error));
-      return;
+      avisarQueNaoSalvou(ehErroDeSessao(error), "leitura");
+      return false;
     }
 
     // Play chapter complete sound
@@ -352,10 +358,12 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       
       return updated;
     });
+    return true;
   };
 
-  const markDayComplete = async (date: string) => {
-    if (!userId) return;
+  /** devolve se SALVOU — quem chama só comemora com `true` */
+  const markDayComplete = async (date: string): Promise<boolean> => {
+    if (!userId) return false;
 
     const now = new Date().toISOString();
 
@@ -367,8 +375,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     if (error) {
       console.error("Error marking day complete:", error);
-      avisarQueNaoSalvou(ehErroDeSessao(error));
-      return;
+      avisarQueNaoSalvou(ehErroDeSessao(error), "leitura");
+      return false;
     }
 
     // Update local state
@@ -391,10 +399,12 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       
       return updated;
     });
+    return true;
   };
 
-  const regenerateSchedule = async (newPlan: ReadingPlan | "custom", customBooks?: string[], customDays?: number) => {
-    if (!userId) return;
+  /** devolve se o plano novo foi GRAVADO — quem chama só comemora com `true` */
+  const regenerateSchedule = async (newPlan: ReadingPlan | "custom", customBooks?: string[], customDays?: number): Promise<boolean> => {
+    if (!userId) return false;
 
     setLoading(true);
 
@@ -408,7 +418,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         avisarQueNaoSalvou(true);
         setPlanoNaoSalvo(true);
         setLoading(false);
-        return;
+        return false;
       }
 
       // STEP 1: Move completed chapters to reading_progress (historical points table)
@@ -447,7 +457,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         avisarQueNaoSalvou(ehErroDeSessao(deleteError));
         setPlanoNaoSalvo(true);
         setLoading(false);
-        return;
+        return false;
       }
 
       // STEP 3: Generate new schedule starting today
@@ -491,8 +501,11 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       }));
 
       setSchedule(formattedSchedule);
+      return salvo.ok;
     } catch (error) {
       console.error("Error regenerating schedule:", error);
+      avisarQueNaoSalvou(false);
+      return false;
     } finally {
       setLoading(false);
     }

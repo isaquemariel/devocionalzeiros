@@ -32,8 +32,11 @@ async function invoke<T>(fn: string, body: Record<string, unknown>): Promise<T> 
   return data as T;
 }
 
+/** quem já assina pelo Stripe não abre checkout: a assinatura é TROCADA no servidor */
+export interface PlanoTrocado { trocado: true; igual?: boolean }
+
 export const createSubscriptionCheckout = (plan: PlanKey, period: PlanPeriod) =>
-  invoke<CheckoutInit>("create-subscription-checkout", { plan, period });
+  invoke<CheckoutInit | PlanoTrocado>("create-subscription-checkout", { plan, period });
 
 export const createDonationCheckout = (amount: number) =>
   invoke<CheckoutInit>("create-donation-checkout", { amount });

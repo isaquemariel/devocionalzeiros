@@ -61,6 +61,12 @@ Deno.serve(async (req) => {
     // passam a receber 403 do Google e 400 da Apple para sempre, e sem esta
     // coluna não havia como as distinguir das boas.
     const chave = typeof vapid_key === "string" ? vapid_key.replace(/=+$/, "") : null;
+    // Um navegador (endpoint) é de UMA conta: quem entrou agora toma o lugar de
+    // quem saiu. Sem isto, num aparelho compartilhado os pushes da conta
+    // anterior continuavam chegando para a pessoa nova.
+    const { error: delErr } = await serviceClient
+      .from("push_subscriptions").delete().eq("endpoint", endpoint).neq("user_id", user.id);
+    if (delErr) throw delErr;
     const { error } = await serviceClient
       .from("push_subscriptions")
       .upsert(

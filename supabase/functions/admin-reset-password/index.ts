@@ -73,24 +73,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Find target user by email
-    let targetUserId: string | null = null;
-    let page = 1;
-    const perPage = 200;
-    while (!targetUserId) {
-      const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
-      if (error) throw error;
-      const found = data.users.find(
-        (u) => (u.email || "").toLowerCase() === targetEmail,
-      );
-      if (found) {
-        targetUserId = found.id;
-        break;
-      }
-      if (data.users.length < perPage) break;
-      page++;
-      if (page > 50) break; // safety
-    }
+    // Acha a conta pelo e-mail direto no banco (paginar listUsers parava nos
+    // primeiros 10 mil usuários e devolvia "User not found" para o resto)
+    const { data: achado, error: achaErr } = await admin.rpc("admin_find_user_id_by_email", { p_email: targetEmail });
+    if (achaErr) throw achaErr;
+    const targetUserId = (achado as string | null) ?? null;
 
     if (!targetUserId) {
       return new Response(JSON.stringify({ error: "User not found" }), {
@@ -107,17 +94,17 @@ Deno.serve(async (req) => {
     if (updErr) throw updErr;
 
     // Mark profile so the app forces a password change on next login
-    await admin
+    const { error: perfErr } = await admin
       .from("profiles")
       .update({ must_change_password: true, updated_at: new Date().toISOString() })
       .eq("user_id", targetUserId);
+    if (perfErr) throw perfErr;
 
-    // Sign out all sessions of the target user so they must use the new password
-    try {
-      await admin.auth.admin.signOut(targetUserId, "global");
-    } catch (_) {
-      // signOut variant may differ; ignore
-    }
+    // Derruba TODAS as sessões da conta (se a troca foi por conta invadida, o
+    // invasor sai junto). `auth.admin.signOut` pede o token da pessoa, não o
+    // id — com o id ele falhava em silêncio e as sessões continuavam vivas.
+    const { error: sessErr } = await admin.rpc("admin_revoke_sessions", { p_user_id: targetUserId });
+    if (sessErr) throw sessErr;
 
     return new Response(
       JSON.stringify({
@@ -134,7 +121,7 @@ Deno.serve(async (req) => {
   } catch (e: any) {
     console.error("admin-reset-password error:", e);
     return new Response(
-      JSON.stringify({ error: e?.message || "Internal error" }),
+      JSON.stringify({ error: "Internal error" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

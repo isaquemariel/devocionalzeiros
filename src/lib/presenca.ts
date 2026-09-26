@@ -20,9 +20,12 @@ let token: string | null = null;
 supabase.auth.getSession().then(({ data }) => { token = data.session?.access_token ?? null; });
 supabase.auth.onAuthStateChange((_evento, sessao) => { token = sessao?.access_token ?? null; });
 
-/** um pedido que sobrevive à página indo para o fundo */
-export function pedidoAoSair(caminho: string, metodo: "POST" | "PATCH", corpo: unknown, extra: Record<string, string> = {}) {
-  if (!token || !URL_BASE) return;
+/**
+ * Um pedido que sobrevive à página indo para o fundo. Devolve se o pedido
+ * SAIU (sem sessão em mãos, não sai — quem chama não deve dar por feito).
+ */
+export function pedidoAoSair(caminho: string, metodo: "POST" | "PATCH", corpo: unknown, extra: Record<string, string> = {}): boolean {
+  if (!token || !URL_BASE) return false;
   try {
     void fetch(`${URL_BASE}${caminho}`, {
       method: metodo,
@@ -30,13 +33,52 @@ export function pedidoAoSair(caminho: string, metodo: "POST" | "PATCH", corpo: u
       headers: { "Content-Type": "application/json", apikey: CHAVE, Authorization: `Bearer ${token}`, ...extra },
       body: JSON.stringify(corpo),
     }).catch(() => { /* saída: melhor esforço */ });
-  } catch { /* sem fetch keepalive: melhor esforço */ }
+    return true;
+  } catch { return false; /* sem fetch keepalive */ }
 }
 
-export const presencaVisivel = (userId: string) =>
-  supabase
-    .from("user_app_presence" as never)
-    .upsert({ user_id: userId, visivel: true, visto_em: new Date().toISOString() } as never, { onConflict: "user_id" });
+/**
+ * Cada aparelho tem a sua linha de presença: o celular no bolso não marca
+ * "fora do app" enquanto o computador está com o app na tela. O id do
+ * aparelho é aleatório e só vive neste navegador.
+ */
+function idDoAparelho(): string {
+  try {
+    let id = localStorage.getItem("dz.aparelho");
+    if (!id) {
+      id = (crypto.randomUUID?.() ?? `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`).slice(0, 64);
+      localStorage.setItem("dz.aparelho", id);
+    }
+    return id;
+  } catch { return "sem-armazenamento"; }
+}
+const APARELHO = idDoAparelho();
+/** banco ainda sem a coluna do aparelho (migração não aplicada): uma linha por pessoa */
+let semAparelho = false;
 
-export const presencaSaiu = (userId: string) =>
-  pedidoAoSair(`/rest/v1/user_app_presence?user_id=eq.${userId}`, "PATCH", { visivel: false, visto_em: new Date().toISOString() }, { Prefer: "return=minimal" });
+/**
+ * "Estou aqui". O construtor de consulta do supabase-js só ENVIA quando alguém
+ * espera por ele (`then`) — antes a chamada era `void presencaVisivel(...)`,
+ * nada saía, e o servidor nunca soube que ninguém estava no app.
+ */
+export async function presencaVisivel(userId: string): Promise<void> {
+  // (com a migração, o gatilho do banco troca `visto_em` pela hora do servidor)
+  const agora = new Date().toISOString();
+  const linha = semAparelho
+    ? { user_id: userId, visivel: true, visto_em: agora }
+    : { user_id: userId, device_id: APARELHO, visivel: true, visto_em: agora };
+  const { error } = await supabase
+    .from("user_app_presence" as never)
+    .upsert(linha as never, { onConflict: semAparelho ? "user_id" : "user_id,device_id" });
+  if (error && !semAparelho && /device_id|42703|PGRST204|42P10/.test(`${error.code} ${error.message}`)) {
+    semAparelho = true;
+    return presencaVisivel(userId);
+  }
+  if (error) console.warn("presença:", error.message);
+}
+
+export const presencaSaiu = (userId: string): boolean =>
+  pedidoAoSair(
+    `/rest/v1/user_app_presence?user_id=eq.${encodeURIComponent(userId)}${semAparelho ? "" : `&device_id=eq.${encodeURIComponent(APARELHO)}`}`,
+    "PATCH", { visivel: false, visto_em: new Date().toISOString() }, { Prefer: "return=minimal" },
+  );

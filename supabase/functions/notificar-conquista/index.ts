@@ -52,7 +52,13 @@ Deno.serve(async (req) => {
     const db = createClient(url, service);
     const { data: catalogo } = await db.from("achievement_catalog").select("achievement_id, points").in("achievement_id", pedidas.map((c) => c.id));
     const pontos = new Map((catalogo ?? []).map((c: { achievement_id: string; points: number }) => [c.achievement_id, c.points]));
-    const validas = pedidas.filter((c) => pontos.has(c.id));
+    // já resgatada (aqui ou noutro aparelho): não há o que avisar
+    const { data: resgatadas, error: resgErr } = await db
+      .from("achievement_claims").select("achievement_id")
+      .eq("user_id", user.id).in("achievement_id", pedidas.map((c) => c.id));
+    if (resgErr) return json({ error: "failed" }, 500);
+    const jaEra = new Set((resgatadas ?? []).map((r: { achievement_id: string }) => r.achievement_id));
+    const validas = pedidas.filter((c) => pontos.has(c.id) && !jaEra.has(c.id));
     if (!validas.length) return json({ novas: 0 });
 
     // só as que ainda não foram notificadas (a chave primária decide)
@@ -60,7 +66,7 @@ Deno.serve(async (req) => {
       .from("achievement_notifications")
       .upsert(validas.map((c) => ({ user_id: user.id, achievement_id: c.id })), { onConflict: "user_id,achievement_id", ignoreDuplicates: true })
       .select("achievement_id");
-    if (insErr) return json({ error: insErr.message }, 500);
+    if (insErr) return json({ error: "failed" }, 500);
     const novas = validas.filter((c) => (inseridas ?? []).some((i: { achievement_id: string }) => i.achievement_id === c.id));
     if (!novas.length) return json({ novas: 0 });
 
@@ -72,10 +78,11 @@ Deno.serve(async (req) => {
     const link = uma ? `/conquistas?resgatar=${encodeURIComponent(novas[0].id)}` : "/conquistas";
 
     // o sino do app
-    await db.from("user_notifications").insert({
+    const { error: sinoErr } = await db.from("user_notifications").insert({
       user_id: user.id, type: "achievement", title: titulo, body: texto, link,
       metadata: { conquistas: novas.map((c) => c.id) },
     });
+    if (sinoErr) console.warn("notificar-conquista: sino", sinoErr.message);
 
     // o push (web + nativo)
     const r = await fetch(`${url}/functions/v1/send-push-notification`, {
@@ -85,8 +92,15 @@ Deno.serve(async (req) => {
       body: JSON.stringify({ user_id: user.id, title: titulo, message: texto, url: link, source: "achievement", ignorar_presenca: true }),
     }).catch(() => null);
 
+    // o push falhou: desfaz a marca, para a próxima saída do app tentar de novo
+    // (senão a conquista ficava "avisada" para sempre sem ninguém ter visto)
+    if (!r?.ok) {
+      await db.from("achievement_notifications").delete()
+        .eq("user_id", user.id).in("achievement_id", novas.map((c) => c.id));
+    }
     return json({ novas: novas.length, push: r?.ok ?? false });
   } catch (e) {
-    return json({ error: (e as Error).message }, 500);
+    console.error("notificar-conquista", e);
+    return json({ error: "failed" }, 500);
   }
 });

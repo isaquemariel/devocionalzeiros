@@ -66,7 +66,33 @@ Deno.serve(async (req) => {
     } else {
       const customer = await stripe.customers.create({ email, metadata: { user_id: user.id } });
       customerId = customer.id;
-      await admin.from('stripe_customers').upsert({ user_id: user.id, customer_id: customerId });
+      const { error: upErr } = await admin.from('stripe_customers').upsert({ user_id: user.id, customer_id: customerId });
+      if (upErr) throw upErr;
+    }
+
+    // JÁ ASSINA pelo Stripe: trocar de plano é MUDAR a assinatura que existe
+    // (com o valor proporcional), nunca abrir uma segunda. Com duas, a pessoa
+    // pagava as duas, e a fatura da antiga devolvia o plano antigo.
+    const vigentes = await stripe.subscriptions.list({ customer: customerId!, status: 'all', limit: 20 });
+    const atual = vigentes.data.find((s) => ['active', 'trialing', 'past_due'].includes(s.status));
+    if (atual) {
+      const meta = (atual.metadata ?? {}) as Record<string, string>;
+      if (meta.plan === plan && meta.period === period) {
+        return new Response(JSON.stringify({ trocado: true, igual: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      const preco = await stripe.prices.create({
+        currency: 'brl',
+        unit_amount: priceCfg.amount,
+        recurring: { interval: priceCfg.interval },
+        product_data: { name: `${PLAN_NAMES[plan]} (${period === 'annual' ? 'Anual' : 'Mensal'})` },
+      });
+      await stripe.subscriptions.update(atual.id, {
+        items: [{ id: atual.items.data[0].id, price: preco.id }],
+        proration_behavior: 'always_invoice',
+        payment_behavior: 'error_if_incomplete',
+        metadata: { user_id: user.id, email, plan, period },
+      });
+      return new Response(JSON.stringify({ trocado: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -104,7 +130,9 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('create-subscription-checkout error', e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), {
+    // a mensagem crua do Stripe fica no log, não vai para o cliente
+    const cartao = (e as { type?: string })?.type === 'StripeCardError';
+    return new Response(JSON.stringify({ error: cartao ? 'card_declined' : 'checkout_failed' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

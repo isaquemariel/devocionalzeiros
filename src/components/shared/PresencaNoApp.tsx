@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { reclamarPushDesteAparelho } from "@/lib/pushDoAparelho";
 import { useAuth } from "@/hooks/useAuth";
 import { presencaSaiu, presencaVisivel } from "@/lib/presenca";
 import { irPara, toast } from "@/lib/avisos";
@@ -11,6 +12,9 @@ import { irPara, toast } from "@/lib/avisos";
 export function PresencaNoApp() {
   const { user } = useAuth();
   const uid = user?.id;
+
+  // entrou: a inscrição de push deste navegador passa a ser DESTA conta
+  useEffect(() => { if (uid) void reclamarPushDesteAparelho(); }, [uid]);
 
   useEffect(() => {
     if (!uid) return;
@@ -25,6 +29,8 @@ export function PresencaNoApp() {
       window.clearInterval(renovar);
       document.removeEventListener("visibilitychange", aoMudar);
       window.removeEventListener("pagehide", aoSair);
+      // saiu da conta (ou trocou): esta pessoa não está mais no app aqui
+      presencaSaiu(uid);
     };
   }, [uid]);
 
@@ -32,8 +38,10 @@ export function PresencaNoApp() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
     const aoReceber = (e: MessageEvent) => {
-      const d = e.data as { tipo?: string; title?: string; body?: string; url?: string } | null;
+      const d = e.data as { tipo?: string; origem?: string; title?: string; body?: string; url?: string } | null;
       if (d?.tipo !== "push-no-app" || !d.title) return;
+      // a conquista ele já avisou por conta própria (GlobalAchievementUnlockWatcher)
+      if (d.origem === "achievement") return;
       toast.info(d.title, { description: d.body, action: d.url ? { label: "Ver", onClick: () => irPara(d.url!) } : undefined });
     };
     navigator.serviceWorker.addEventListener("message", aoReceber);

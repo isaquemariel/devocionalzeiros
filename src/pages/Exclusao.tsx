@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { esquecerQuemVolta } from "@/lib/devocionalzeiro/quemVolta";
+import { limparDadosLocaisDaConta, prepararSaida } from "@/lib/sairDaConta";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,9 @@ export default function Exclusao() {
       }
 
       // Sign out locally
-      esquecerQuemVolta();
+      const { data: sessaoAtual } = await supabase.auth.getSession();
+      limparDadosLocaisDaConta(sessaoAtual.session?.user.id);
+      await prepararSaida();
       await supabase.auth.signOut();
       setStep("success");
     } catch (error) {

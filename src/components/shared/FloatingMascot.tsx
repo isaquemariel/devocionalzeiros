@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useCentroAtivo, useOcuparPalco } from "@/lib/devocionalzeiro/palco";
+import { donoDoPalco, useCentroAtivo, useOcuparPalco, useVersaoDoPalco } from "@/lib/devocionalzeiro/palco";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mascot3D } from "./Mascot3D";
@@ -61,8 +61,11 @@ interface DraggableMascotProps {
 /** Draggable floating mascot for /home */
 export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const navigate = useNavigate();
-  // ele subiu no meio da tela (aviso/festa): este sai de cena até ele descer
-  const noCentro = useCentroAtivo();
+  // ele subiu no meio da tela (aviso/festa), ou um modal com ele em cena abriu
+  // (a festa do Top 3, o fim do plano): este sai de cena até ele descer
+  const centro = useCentroAtivo();
+  useVersaoDoPalco();
+  const noCentro = centro || !!donoDoPalco();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [showBubble, setShowBubble] = useState(false);
   const [bubbleText, setBubbleText] = useState("");
@@ -261,7 +264,10 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
 /** Small mascot in the header for non-home pages */
 export const HeaderMascot = () => {
   // o mesmo personagem não fica em dois lugares: some enquanto ele fala no centro
-  const noCentro = useCentroAtivo();
+  // ou enquanto outra tela/modal o tem em cena
+  const centro = useCentroAtivo();
+  useVersaoDoPalco();
+  const noCentro = centro || !!donoDoPalco();
   return (
     <motion.div
       className="flex-shrink-0"

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
@@ -8,7 +9,6 @@ import { CenaConquista } from "./CenaConquista";
 import { useAchievements } from "@/hooks/useAchievements";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { CATEGORIAS, CONQUISTAS, RARIDADES, faltam, type Conquista } from "@/lib/conquistas";
-import { celebrar } from "@/lib/celebrar";
 import { toast } from "@/lib/avisos";
 
 const ehNativo = () => {
@@ -29,7 +29,15 @@ const ehNativo = () => {
  *   da notificação) abre direto a cena de resgate.
  */
 export function PainelConquistas({ userId }: { userId?: string }) {
-  const { conquistas, loading, totalClaimablePoints, claimAchievement, claimAllAchievements } = useAchievements(userId);
+  const { conquistas, loading, erro, totalClaimablePoints, claimAchievement, claimAllAchievements, refetch } = useAchievements(userId);
+  // O painel tem o personagem em cena: é o palco. Aviso sai do balão DELE, e a
+  // festa do "resgatar tudo" é ele mesmo quem faz (sem subir um segundo boneco).
+  const [aviso, setAviso] = useState<string | null>(null);
+  const [festa, setFesta] = useState<string | null>(null);
+  useOcuparPalco((a) => { setAviso(a.texto); return true; });
+  useEffect(() => { if (!aviso) return; const t = window.setTimeout(() => setAviso(null), 5000); return () => window.clearTimeout(t); }, [aviso]);
+  useEffect(() => { if (!festa) return; const t = window.setTimeout(() => setFesta(null), 3200); return () => window.clearTimeout(t); }, [festa]);
+  const fecharCena = useCallback(() => setAberta(null), []);
   const [params, setParams] = useSearchParams();
   const [aberta, setAberta] = useState<Conquista | null>(null);
   const [resgatandoTudo, setResgatandoTudo] = useState(false);
@@ -68,16 +76,18 @@ export function PainelConquistas({ userId }: { userId?: string }) {
     setResgatandoTudo(false);
     if (!r.success) { toast.error("Não consegui resgatar agora. Tenta de novo?"); return; }
     window.dispatchEvent(new CustomEvent("achievement-claimed"));
-    celebrar("conquista", `+${r.totalPoints} pontos resgatados! Tá brilhando, hein?`);
+    setFesta(r.totalPoints > 0 ? `+${r.totalPoints} pontos resgatados! Tá brilhando, hein?` : "Tudo resgatado!");
   };
 
-  const fala = loading
+  const fala = aviso ?? festa ?? (loading
     ? "Deixa eu ver suas conquistas…"
+    : erro
+      ? "Não consegui carregar suas conquistas agora. Toca em Tentar de novo?"
     : resgataveis.length
       ? `Você tem ${resgataveis.length === 1 ? "uma conquista" : `${resgataveis.length} conquistas`} para resgatar — ${totalClaimablePoints} pontos!`
       : proxima
         ? `${feitas} de ${CONQUISTAS.length}. A próxima é "${proxima.titulo}": faltam ${faltam(proxima)}.`
-        : "Todas as conquistas são suas. Que caminhada!";
+        : "Todas as conquistas são suas. Que caminhada!");
 
   const pedirAvisos = !ehNativo() && push.isSupported && push.permission === "default" && !push.isSubscribed;
 
@@ -91,9 +101,9 @@ export function PainelConquistas({ userId }: { userId?: string }) {
         <div className="shrink-0">
           <Devocionalzeiro
             tamanho={104}
-            expressao={resgataveis.length ? "radiante" : "feliz"}
-            gesto={resgataveis.length ? "apontar" : "parado"}
-            chama={resgataveis.length ? 0.7 : 0.45}
+            expressao={festa ? "radiante" : erro ? "pensativo" : resgataveis.length ? "radiante" : "feliz"}
+            gesto={festa ? "comemorar" : erro ? "cocar" : resgataveis.length ? "apontar" : "parado"}
+            chama={festa ? 1 : resgataveis.length ? 0.7 : 0.45}
             falando={falando}
           />
         </div>
@@ -140,7 +150,9 @@ export function PainelConquistas({ userId }: { userId?: string }) {
       {/* ── as categorias ─────────────────────────────────────────────── */}
       {loading
         ? <p className="mt-6 text-center text-[12px]" style={{ color: "#9c8b68" }}>Carregando…</p>
-        : CATEGORIAS.map((cat) => {
+        : erro
+          ? <div className="mt-6 text-center"><button type="button" onClick={() => void refetch()} className="rpg-btn px-4 py-2 text-[12px] uppercase tracking-[0.1em]">Tentar de novo</button></div>
+          : CATEGORIAS.map((cat) => {
             const lista = conquistas.filter((c) => c.categoria === cat.id);
             if (!lista.length) return null;
             return (
@@ -155,7 +167,7 @@ export function PainelConquistas({ userId }: { userId?: string }) {
           <CenaConquista
             key={aberta.id}
             conquista={conquistas.find((c) => c.id === aberta.id) ?? aberta}
-            onFechar={() => setAberta(null)}
+            onFechar={fecharCena}
             onResgatar={resgatar}
           />
         )}

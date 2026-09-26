@@ -93,14 +93,25 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho =
   useEffect(() => () => falando.current?.(false), []);
 
   return (
-    <button
-      type="button"
+    // um DIV tocável (não um <button>): o botão de ação vai dentro dele, e
+    // botão dentro de botão é HTML inválido — leitor de tela achatava tudo e o
+    // Espaço não acionava o "Resgatar"/"Ver planos"
+    <div
+      role="group"
+      aria-label="Fala do Devocionalzeiro"
+      tabIndex={0}
       onClick={(e) => {
         e.stopPropagation();
         if (!completo) setProg({ de: texto, n: texto.length });
         else onAvancar?.();
       }}
-      className="relative block w-full cursor-default text-left"
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget || (e.key !== "Enter" && e.key !== " ")) return;
+        e.preventDefault();
+        if (!completo) setProg({ de: texto, n: texto.length });
+        else onAvancar?.();
+      }}
+      className="relative block w-full cursor-default text-left outline-none focus-visible:ring-2 focus-visible:ring-[#ffd889] rounded-[7px]"
       style={{ fontFamily: FONTE }}
     >
       {/* a caixa de diálogo do RPG (`.rpg-dialogue`), com o nome de quem fala */}
@@ -116,15 +127,14 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho =
           <span className="mt-1 block text-[12px] leading-snug" style={{ color: COR.texto2 }}>{detalhe}</span>
         )}
         {acao && (
-          <span
-            role="button"
-            tabIndex={0}
+          <button
+            type="button"
             onClick={(e) => { e.stopPropagation(); acao.onClick(); }}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); acao.onClick(); } }}
+            onKeyDown={(e) => e.stopPropagation()}
             className="rpg-btn mt-2 inline-block cursor-pointer px-3 py-1.5 text-[11px] uppercase tracking-[0.1em]"
           >
             {acao.rotulo}
-          </span>
+          </button>
         )}
         {mais && completo && (
           <span className="jz-seta absolute bottom-1.5 right-2.5 text-[10px]" style={{ color: COR.ouroClaro }} aria-hidden="true">▼</span>
@@ -162,6 +172,6 @@ export function Balao({ texto, onTerminou, onFalando, onAvancar, mais, rabicho =
         </svg>
       )}
       <span className="sr-only" aria-live="polite">{texto}</span>
-    </button>
+    </div>
   );
 }

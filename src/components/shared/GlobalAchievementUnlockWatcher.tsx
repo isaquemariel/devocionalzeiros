@@ -17,9 +17,9 @@ import { EVENTO_CELEBRAR } from "@/lib/celebrar";
  *   navegador), que abre o mesmo resgate. O servidor garante UM push por
  *   conquista, mesmo com vários aparelhos.
  *
- * Cada conquista é avisada uma vez (a lista fica no aparelho). Na primeira vez
- * que a conta passa por aqui, o que já estava pendente vira um resumo só, sem
- * push — para não despejar dez notificações de uma vez em quem já jogava.
+ * Cada conquista é avisada uma vez neste aparelho (a lista fica nele). O que
+ * já estava pendente quando a conta passa por aqui vira UM aviso só; o push
+ * de quem sai também é um só, agrupado (e o servidor não repete conquista).
  *
  * As conquistas são recontadas quando algo pode tê-las mudado: depois de cada
  * comemoração (capítulo, devocional…) e ao trocar de tela.
@@ -52,7 +52,10 @@ export const GlobalAchievementUnlockWatcher = () => {
     const chave = `dz.conquistas.avisadas.${uid}`;
     let lido: string | null = null;
     try { lido = localStorage.getItem(chave); } catch { /* sem armazenamento */ }
-    const avisadas = new Set<string>(lido ? (JSON.parse(lido) as string[]) : []);
+    // valor corrompido no aparelho não pode derrubar a tela
+    let lista: unknown = [];
+    try { lista = lido ? JSON.parse(lido) : []; } catch { lista = []; }
+    const avisadas = new Set<string>(Array.isArray(lista) ? lista.filter((x): x is string => typeof x === "string") : []);
     const novas = resgataveis.filter((c) => !avisadas.has(c.id));
     if (!novas.length) return;
     novas.forEach((c) => avisadas.add(c.id));
@@ -83,9 +86,12 @@ export const GlobalAchievementUnlockWatcher = () => {
       try { ja = new Set(JSON.parse(localStorage.getItem(chave) || "[]") as string[]); } catch { /* sem armazenamento */ }
       const faltam = pendentes.current.filter((c) => !ja.has(c.id));
       if (!faltam.length) return;
+      // só marca como enviado se o pedido SAIU (sem sessão em mãos, fica para
+      // a próxima saída — antes a marca vinha antes e o push se perdia)
+      const saiu = pedidoAoSair("/functions/v1/notificar-conquista", "POST", { conquistas: faltam.map((c) => ({ id: c.id, titulo: c.titulo })) });
+      if (!saiu) return;
       faltam.forEach((c) => ja.add(c.id));
       try { localStorage.setItem(chave, JSON.stringify([...ja])); } catch { /* sem armazenamento */ }
-      pedidoAoSair("/functions/v1/notificar-conquista", "POST", { conquistas: faltam.map((c) => ({ id: c.id, titulo: c.titulo })) });
     };
     document.addEventListener("visibilitychange", aoSair);
     return () => document.removeEventListener("visibilitychange", aoSair);

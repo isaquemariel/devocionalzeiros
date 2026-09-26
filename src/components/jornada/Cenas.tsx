@@ -32,18 +32,20 @@ export function Zzz() {
 
 // ─── celebração ─────────────────────────────────────────────────────────────
 
-const CORES_FESTA = ["#3E8BFF", "#9ED8FF", "#FFB21E", "#FFE08A", "#FF8FB1", "#FFFFFF"];
+// só as cores da CHAMA dele (lib/devocionalzeiro/geometria: fogoExt/fogoMed/fogoNuc)
+const CORES_FESTA = ["#2F7BFF", "#3AA2FF", "#7FD2FF", "#A6E8FF", "#C4F1FF", "#F2FDFF"];
 
 /**
- * A festa do fim: fagulhas azuis e douradas que explodem da chama dele e caem
- * devagar, como brasa de fogueira — não confete de aniversário.
+ * A festa do fim: fagulhas da CHAMA dele, que sobem e se apagam como brasa de
+ * fogueira — só no azul do fogo dele, sem estrelas nem cores de festa. (A
+ * regra é "nada de confete": a comemoração é o personagem e a chama dele.)
  * `origem` é o ponto da chama, em px na tela.
  */
 export function Festa({ origem }: { origem: { x: number; y: number } }) {
   const reduzir = useReducedMotion();
   const pedacos = useMemo(
     () =>
-      Array.from({ length: 46 }, (_, i) => {
+      Array.from({ length: 28 }, (_, i) => {
         const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.25;
         const forca = 120 + Math.random() * 220;
         return {
@@ -52,9 +54,9 @@ export function Festa({ origem }: { origem: { x: number; y: number } }) {
           queda: 180 + Math.random() * 260,
           cor: CORES_FESTA[i % CORES_FESTA.length],
           r: 3 + Math.random() * 4,
-          atraso: Math.random() * 0.25 + (i > 30 ? 0.7 : 0),
+          atraso: Math.random() * 0.25 + (i > 18 ? 0.6 : 0),
           dur: 1.8 + Math.random() * 1.2,
-          estrela: i % 4 === 0,
+          estrela: false,
         };
       }),
     [],
