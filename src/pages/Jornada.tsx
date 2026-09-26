@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Eye, EyeOff, Loader2, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useKeyboardInset } from "@/hooks/useKeyboardInset";
+import { invalidatePlanCache, useUserPlan } from "@/hooks/useUserPlan";
+import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
+import { PRECOS, type ChavePlano, type Recurso } from "@/lib/planos";
 import { lovable } from "@/integrations/lovable";
 import { DDIS } from "@/lib/ddis";
-import { etapa as etapaDe, indice, progresso, proxima, ROTEIRO } from "@/lib/jornada/roteiro";
+import { etapa as etapaDe, indice, progresso, proxima } from "@/lib/jornada/roteiro";
 import {
   estadoInicial, reduzir, podeVoltar, lerRascunho, gravarRascunho, apagarRascunho,
   validarNome, validarEmail, validarSenha, validarWhatsapp,
@@ -19,7 +22,11 @@ import { Balao } from "@/components/jornada/Balao";
 import { Botao, Campo, Link, tocar } from "@/components/jornada/Controles";
 import { Escala, Lanternas, MedidorSenha, Mostrador, Placa, Selos } from "@/components/jornada/Mecanicas";
 import { Diario, Festa, LogoGoogle, Zzz } from "@/components/jornada/Cenas";
+import { Portas, type Periodo } from "@/components/jornada/Portas";
 import { COR, FONTE } from "@/components/jornada/tema";
+
+// O checkout traz o Stripe junto: só é baixado quando a pessoa escolhe assinar.
+const StripeCheckoutModal = lazy(() => import("@/components/checkout/StripeCheckoutModal"));
 
 /** conta criada há mais que isto = a pessoa já tinha conta (entrou pelo Google) */
 const CONTA_ANTIGA_MS = 5 * 60 * 1000;
@@ -78,6 +85,8 @@ export default function Jornada() {
   const navigate = useNavigate();
   const reduzirMov = useReducedMotion();
   const { user, loading, signUp } = useAuth();
+  // quem já assina (voltou pelo Google numa conta paga) não passa pelas portas
+  const { hasPaidPlan } = useUserPlan(user?.email ?? undefined);
   // Recarregar RECOMEÇA: a jornada vive na memória da página. O único estado
   // que se retoma é o da volta do Google (ver "rascunho" em `motor.ts`).
   const [estado, despachar] = useReducer(reduzir, undefined, () => {
@@ -105,6 +114,10 @@ export default function Jornada() {
   const [aguardandoEmail, setAguardandoEmail] = useState(false);
   const [contaAntiga, setContaAntiga] = useState(false);
   const [focoNoCampo, setFocoNoCampo] = useState(false);
+  // as portas da cidade (planos)
+  const [plano, setPlano] = useState<ChavePlano>("gold");
+  const [periodo, setPeriodo] = useState<Periodo>("annual");
+  const [checkout, setCheckout] = useState<CheckoutInit | null>(null);
 
   // ─── direção do personagem ────────────────────────────────────────────────
   /** ele começa dormindo — só na primeira parada, e só se ninguém o acordou ainda */
@@ -125,6 +138,8 @@ export default function Jornada() {
   const [voo, setVoo] = useState<{ valor: string; x: number; y: number }[] | null>(null);
 
   const timerFala = useRef<number | null>(null);
+  /** o que fazer quando a reação acabar — em vez de andar para a próxima parada */
+  const aoTerminar = useRef<(() => void) | null>(null);
   const timerMomento = useRef<number | null>(null);
   const ultimaAcao = useRef(Date.now());
   const cutucada = useRef(0);
@@ -216,7 +231,7 @@ export default function Jornada() {
       }
       return;
     }
-    if (estado.etapa === "fim") return;
+    if (estado.etapa === "fim" || estado.etapa === "plano") return;
     const emCurso = estado.aguardandoGoogle || NA_CONTA.includes(estado.etapa);
     if (!emCurso) {
       // logado, sem jornada em andamento: esta tela não é para ele
@@ -283,7 +298,7 @@ export default function Jornada() {
     if (reacao) {
       const ultima = reacaoIdx >= reacao.length - 1;
       timerFala.current = window.setTimeout(
-        () => (ultima ? seguir() : setReacaoIdx((i) => i + 1)),
+        () => (ultima ? encerrarReacao() : setReacaoIdx((i) => i + 1)),
         reduzirMov ? 1000 : leitura(falaAtual.texto, ultima),
       );
     } else if (haMais) {
@@ -291,14 +306,37 @@ export default function Jornada() {
     } else {
       timerFala.current = window.setTimeout(() => setAssentado(true), 2200);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [falaAtual, reacao, reacaoIdx, haMais, seguir, reduzirMov]);
 
   /** toque no balão já escrito: não espera o relógio */
   const pularFala = useCallback(() => {
     limparTimerFala();
-    if (reacao) { if (reacaoIdx < reacao.length - 1) setReacaoIdx((i) => i + 1); else seguir(); return; }
+    if (reacao) { if (reacaoIdx < reacao.length - 1) setReacaoIdx((i) => i + 1); else encerrarReacao(); return; }
     if (haMais) setFalaIdx((i) => i + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reacao, reacaoIdx, haMais, seguir]);
+
+  /** a última frase da reação foi lida: anda para a próxima parada, ou faz o combinado */
+  function encerrarReacao() {
+    const depois = aoTerminar.current;
+    if (!depois) { seguir(); return; }
+    aoTerminar.current = null;
+    limparTimerFala();
+    setReacao(null);
+    setReacaoIdx(0);
+    depois();
+  }
+
+  /** ele fala, e só depois acontece `depois` (sair da jornada, por exemplo) */
+  const falarEDepois = (falas: Fala[], depois: () => void) => {
+    limparTimerFala();
+    setAoVivo(null);
+    setReacao(falas);
+    setReacaoIdx(0);
+    setPulso((p) => p + 1);
+    aoTerminar.current = depois;
+  };
 
   // ─── distrações e cutucadas ───────────────────────────────────────────────
   const viver = (m: Momento, ms: number) => {
@@ -389,7 +427,16 @@ export default function Jornada() {
         void criarConta();
         return;
       case "fim":
-        comecar();
+        // quem já assina entra direto; os outros vão até as portas (planos)
+        if (hasPaidPlan) terminar();
+        else seguir();
+        return;
+      case "planos":
+        if (plano === "free") {
+          falarEDepois([{ texto: "Bora! O caminho grátis já leva longe. Quando quiser mais, é só voltar aqui.", expressao: "radiante", gesto: "comemorar" }], terminar);
+        } else {
+          void assinar(plano);
+        }
         return;
       default:
         seguir();
@@ -474,9 +521,29 @@ export default function Jornada() {
     }
   };
 
-  const comecar = () => {
+  const terminar = () => {
     apagarRascunho();
-    navigate("/escolher-plano", { replace: true });
+    navigate("/home", { replace: true });
+  };
+
+  /** abre o checkout do Stripe embutido, o mesmo do resto do app */
+  const assinar = async (p: Exclude<ChavePlano, "free">) => {
+    setErro(null);
+    setEnviando(true);
+    try {
+      setCheckout(await createSubscriptionCheckout(p, periodo));
+    } catch {
+      setErro("Não consegui abrir o pagamento agora. Tenta de novo em instantes?");
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  const assinou = () => {
+    setCheckout(null);
+    // o plano é concedido pelo webhook; o cache velho diria "free" por 5 min
+    invalidatePlanCache(user?.email ?? undefined);
+    falarEDepois([{ texto: "Obrigado! Sua assinatura mantém a Palavra no ar pra muita gente.", expressao: "radiante", gesto: "comemorar" }], terminar);
   };
 
   const irParaLogin = () => {
@@ -570,7 +637,7 @@ export default function Jornada() {
         <Trilha
           progresso={dormindo ? 0 : progresso(estado.etapa)}
           passo={numEstacao}
-          destino={estado.etapa === "fim"}
+          destino={estado.etapa === "fim" || estado.etapa === "plano"}
           proporcao={tela.w / (H + reserva)}
         />
       </div>
@@ -686,7 +753,7 @@ export default function Jornada() {
             }}
           >
             <p className="rpg-eyebrow mb-3 leading-none">
-              {numEstacao > 0 && numEstacao < ROTEIRO.length - 1 ? `Parada ${numEstacao} · ` : ""}{etapa.estacao}
+              {numEstacao > 0 && etapa.tipo !== "fim" && etapa.tipo !== "planos" ? `Parada ${numEstacao} · ` : ""}{etapa.estacao}
             </p>
 
             <AnimatePresence mode="wait" initial={false}>
@@ -727,6 +794,18 @@ export default function Jornada() {
       ))}
 
       {estado.etapa === "fim" && !andando && <Festa origem={chamaNaTela} />}
+
+      {/* o pagamento, por cima de tudo */}
+      {checkout && (
+        <Suspense fallback={null}>
+          <StripeCheckoutModal
+            init={checkout}
+            title={`Assinar ${plano === "premium" ? "Premium" : "Gold"} — ${periodo === "monthly" ? "Mensal" : "Anual"}`}
+            onClose={() => setCheckout(null)}
+            onSuccess={assinou}
+          />
+        </Suspense>
+      )}
     </div>
   );
 
@@ -981,9 +1060,48 @@ export default function Jornada() {
         return (
           <div className="space-y-4 pb-1">
             <Diario r={r} />
-            <Botao variante="ouro" onClick={continuar}>{etapa.botao}</Botao>
+            <Botao variante="ouro" onClick={continuar}>{hasPaidPlan ? "Entrar na cidade" : etapa.botao}</Botao>
           </div>
         );
+
+      case "planos": {
+        const pago = plano === "free" ? null : PRECOS[plano];
+        return (
+          <div className="space-y-3 pb-1">
+            <Portas
+              planos={etapa.opcoes!}
+              plano={plano}
+              periodo={periodo}
+              onPlano={(p) => {
+                setPlano(p);
+                setErro(null);
+                const o = etapa.opcoes!.find((x) => x.valor === p);
+                limparTimerFala();
+                setAoVivo(o?.reacao ?? null);
+                setAssentado(false);
+                if (p === "premium") setPulso((n) => n + 1);
+                else setToque((n) => n + 1);
+              }}
+              onPeriodo={setPeriodo}
+              onExplicar={(item: Recurso) => {
+                limparTimerFala();
+                setAoVivo({ texto: item.explicacao, expressao: "feliz", gesto: "apontar" });
+                setAssentado(false);
+                setToque((n) => n + 1);
+              }}
+            />
+            {erro && <p className="px-1 text-center text-[13px] font-bold" style={{ color: COR.erro }} role="alert">{erro}</p>}
+            <Botao onClick={continuar} carregando={enviando} icone={enviando ? <Loader2 className="h-5 w-5 animate-spin" /> : undefined}>
+              {!pago ? "Começar grátis" : `Assinar ${pago.name === "GOLD" ? "Gold" : "Premium"} ${periodo === "annual" ? "anual" : "mensal"}`}
+            </Botao>
+            {pago && (
+              <div className="text-center">
+                <Link onClick={() => { setPlano("free"); setAoVivo(etapa.opcoes![0].reacao ?? null); }} cor={COR.texto2}>Prefiro começar grátis</Link>
+              </div>
+            )}
+          </div>
+        );
+      }
     }
   }
 }

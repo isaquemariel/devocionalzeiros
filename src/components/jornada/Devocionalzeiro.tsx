@@ -187,7 +187,7 @@ export function Devocionalzeiro({
   const uid = useId().replace(/:/g, "");
   const ids = {
     corpo: `c-${uid}`, lado: `l-${uid}`, iris: `i-${uid}`, fogoExt: `fe-${uid}`, fogoMed: `fm-${uid}`,
-    fogoNuc: `fn-${uid}`, recorte: `r-${uid}`,
+    fogoNuc: `fn-${uid}`,
   };
 
   // alvos lidos pelo laço (props → ref, sem reiniciar o laço)
@@ -207,7 +207,7 @@ export function Devocionalzeiro({
     bracoEForma: useRef<SVGRectElement>(null), bracoDForma: useRef<SVGRectElement>(null),
     peE: useRef<SVGEllipseElement>(null), peD: useRef<SVGEllipseElement>(null),
     sombra: useRef<SVGEllipseElement>(null), chama: useRef<SVGGElement>(null),
-    emblema: useRef<SVGPathElement>(null), estrelas: useRef<SVGGElement>(null),
+    emblema: useRef<SVGPathElement>(null),
   };
   const linguas = useRef<SVGPathElement[][]>([[], [], []]);
   const brasas = useRef<SVGCircleElement[]>([]);
@@ -451,11 +451,6 @@ export function Devocionalzeiro({
         "transform",
         `translate(112 149) scale(${1 + (reduzir ? 0 : Math.sin(t * 5.3) * 0.05)} ${1 + (reduzir ? 0 : Math.sin(t * 6.1) * 0.08)}) translate(-112 -149)`,
       );
-      // algumas estrelas do corpo cintilam
-      const est = r.estrelas.current?.children;
-      if (est && !reduzir) for (let i = 0; i < est.length; i += 3) {
-        (est[i] as SVGElement).setAttribute("opacity", (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * (1.7 + i * 0.13) + i))).toFixed(2));
-      }
 
       raf = requestAnimationFrame(quadro);
     };
@@ -466,8 +461,6 @@ export function Devocionalzeiro({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // estrelas do corpo: posições estáveis (semente fixa), dentro do D
-  const estrelas = ESTRELAS;
 
   return (
     <svg
@@ -507,7 +500,6 @@ export function Devocionalzeiro({
           <stop offset="0%" stopColor="#F2FDFF" />
           <stop offset="100%" stopColor="#C4F1FF" />
         </linearGradient>
-        <clipPath id={ids.recorte}><path d={CORPO_FRENTE} /></clipPath>
       </defs>
 
       {/* sombra no chão */}
@@ -546,12 +538,6 @@ export function Devocionalzeiro({
         {/* corpo em D, com espessura à esquerda */}
         <path d={CORPO_LADO} fill={`url(#${ids.lado})`} />
         <path d={CORPO_FRENTE} fill={`url(#${ids.corpo})`} />
-        <g clipPath={`url(#${ids.recorte})`}>
-          {/* borda de luz da chama sobre o topo da cabeça */}
-          <g ref={r.estrelas}>
-            {estrelas.map((e, i) => <circle key={i} cx={e.x} cy={e.y} r={e.r} fill={e.c} opacity={e.o} />)}
-          </g>
-        </g>
 
         {/* a chama da barriga, sozinha, sem moldura nem halo */}
         <g transform="translate(112 148) scale(1.55) translate(-112 -148)">
@@ -605,17 +591,3 @@ export function Devocionalzeiro({
     </svg>
   );
 }
-
-/** estrelas do corpo — semente fixa, para não mudarem a cada montagem */
-const ESTRELAS = (() => {
-  let seed = 7;
-  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const lista: { x: number; y: number; r: number; c: string; o: number }[] = [];
-  for (let i = 0; i < 34; i++) {
-    const x = 70 + rnd() * 84, y = 66 + rnd() * 108;
-    // dentro do D (o recorte cuida da borda; aqui só evita a região dos olhos)
-    if (Math.hypot(x - 111, y - 99) < 30) continue;
-    lista.push({ x, y, r: 0.35 + rnd() * 0.9, c: rnd() > 0.7 ? "#8FD3FF" : "#E8F2FF", o: 0.35 + rnd() * 0.6 });
-  }
-  return lista;
-})();

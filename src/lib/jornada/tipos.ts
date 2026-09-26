@@ -35,7 +35,8 @@ export type IdEtapa =
   | "salvar"
   | "email"
   | "senha"
-  | "fim";
+  | "fim"
+  | "plano";
 
 /**
  * A MECÂNICA da etapa. Nenhuma pergunta é uma lista de cartões: cada uma tem o
@@ -51,10 +52,12 @@ export type IdEtapa =
  * - `email`: ele acompanha com os olhos o que se digita.
  * - `senha`: ele tapa os olhos (e espia, se a senha for mostrada).
  * - `fim`: o sol nasce e a cidade aparece no horizonte.
+ * - `planos`: nas portas da cidade, ele apresenta os planos e explica cada
+ *   item que a pessoa tocar; dali ela começa grátis ou assina.
  */
 export type TipoEtapa =
   | "despertar" | "nome" | "lanternas" | "escala" | "mostrador" | "selos"
-  | "telefone" | "conta" | "email" | "senha" | "fim";
+  | "telefone" | "conta" | "email" | "senha" | "fim" | "planos";
 
 /** Ícones desenhados à mão em `components/jornada/Icones` — nada de emoji. */
 export type IdIcone =

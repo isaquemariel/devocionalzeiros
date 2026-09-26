@@ -92,6 +92,16 @@ export const ORIGENS: Opcao[] = [
     reacao: { texto: "Caminho próprio. Os melhores costumam ser assim.", expressao: "feliz" } },
 ];
 
+/** Os três planos, com o que ele diz de cada um quando a pessoa o escolhe. */
+export const PLANOS: Opcao[] = [
+  { valor: "free", rotulo: "Grátis", detalhe: "R$ 0",
+    reacao: { texto: "No Grátis você já tem o devocional, a Bíblia inteira e 2 fases do RPG por dia.", expressao: "feliz", gesto: "parado" } },
+  { valor: "gold", rotulo: "Gold", detalhe: "Mais popular",
+    reacao: { texto: "O Gold abre as salas dos livros, 10 fases por dia e um plano de leitura só seu.", expressao: "orgulhoso", gesto: "apontar" } },
+  { valor: "premium", rotulo: "Premium", detalhe: "Sem limite",
+    reacao: { texto: "O Premium não tem limite: RPG, quiz, chat, todas as salas, Finanças e Embaixador.", expressao: "radiante", gesto: "comemorar" } },
+];
+
 const opcaoDe = (lista: Opcao[], valor?: string) => lista.find((o) => o.valor === valor);
 
 export const ROTEIRO: Etapa[] = [
@@ -230,7 +240,21 @@ export const ROTEIRO: Etapa[] = [
       { texto: `Olha o sol, ${nome(r)}! A chama tá acesa.`, expressao: "radiante", gesto: "comemorar" },
       { texto: "Lá na frente fica a cidade. Cada dia de leitura é um passo até ela.", expressao: "orgulhoso", gesto: "apontar" },
     ],
-    botao: "Entrar na cidade",
+    botao: "Ir até a porta",
+  },
+  {
+    // A escolha do plano, dentro da jornada: ele explica cada plano e cada
+    // item. Os números saem de `lib/planos.ts` — o teste confere que o que ele
+    // DIZ bate com a tabela (2 fases por dia no Grátis, 10 no Gold…).
+    id: "plano",
+    tipo: "planos",
+    estacao: "as portas da cidade",
+    chama: 1,
+    opcoes: PLANOS,
+    falas: (r) => [
+      { texto: `Chegamos, ${nome(r)}! Antes de entrar, deixa eu te mostrar os planos.`, expressao: "feliz", gesto: "apontar" },
+      { texto: "Toca num plano, e em qualquer item dele, que eu te explico.", expressao: "neutro", gesto: "parado" },
+    ],
   },
 ];
 
@@ -259,7 +283,8 @@ export function indice(id: IdEtapa): number {
   return INDICE.get(id) ?? 0;
 }
 
-/** Fração 0..1 do caminho: é a hora do dia no céu. */
+/** Fração 0..1 do caminho: é a hora do dia no céu. O sol chega ao alto no
+ *  fim da jornada; nas portas da cidade (os planos) ele continua lá. */
 export function progresso(id: IdEtapa): number {
-  return indice(id) / (ORDEM.length - 1);
+  return Math.min(1, indice(id) / indice("fim"));
 }

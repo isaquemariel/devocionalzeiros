@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Crown, Loader2, User, ArrowLeft, Flame, Heart, BookOpen, Trophy, Gem } from "lucide-react";
+import { RECURSOS, PRECOS, formatBRL } from "@/lib/planos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,28 +10,8 @@ import { toast } from "sonner";
 import StripeCheckoutModal from "@/components/checkout/StripeCheckoutModal";
 import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
 
-interface FeatureItem {
-  name: string;
-  free: string;
-  gold: string;
-  premium: string;
-}
-
-const FEATURES: FeatureItem[] = [
-  { name: "Devocional Diário", free: "✅ Completo", gold: "✅ Completo", premium: "✅ Completo" },
-  { name: "Leitura Bíblica", free: "Bíblia completa", gold: "✅ Todos os planos", premium: "✅ Todos os planos" },
-  { name: "Ranking", free: "✅ Completo", gold: "✅ Completo", premium: "✅ Completo" },
-  { name: "Devocionalzeiros RPG", free: "2 estágios/dia", gold: "10 estágios/dia", premium: "Ilimitado" },
-  { name: "Salas de Bate-papo (chat ao vivo)", free: "❌ Bloqueado", gold: "Salas dos livros (Gênesis→Apocalipse)", premium: "Todas + Sala Global" },
-  { name: "Quiz Bíblico (Plano + Livre)", free: "1x/dia", gold: "5x/dia", premium: "Ilimitado" },
-  { name: "Quiz Modo Aleatório", free: "❌ Bloqueado", gold: "❌ Bloqueado", premium: "✅ Ilimitado" },
-  { name: "Gerador de Sermão", free: "❌ Bloqueado", gold: "5/dia", premium: "Ilimitado" },
-  { name: "Devocionalzeiro.CHAT", free: "❌ Bloqueado", gold: "5 perguntas/dia", premium: "Ilimitado" },
-  { name: "Explicação de Versículo", free: "2/dia", gold: "10/dia", premium: "Ilimitado" },
-  { name: "Plano Personalizado (IA)", free: "❌ Bloqueado", gold: "✅ Ilimitado", premium: "✅ Ilimitado" },
-  { name: "Devocionalzeiros Finanças", free: "❌ Bloqueado", gold: "❌ Bloqueado", premium: "✅ Completo" },
-  { name: "Programa Embaixador", free: "❌ Bloqueado", gold: "❌ Bloqueado", premium: "✅ Disponível" },
-];
+// A tabela mora em `lib/planos.ts` — fonte única com a jornada.
+const FEATURES = RECURSOS;
 
 const PLAN_INFO = {
   gold: {
@@ -39,11 +20,11 @@ const PLAN_INFO = {
     color: "text-amber-400",
     bgColor: "from-amber-500/20 to-amber-600/10",
     borderColor: "border-amber-500/30",
-    monthlyPrice: "R$ 14,90",
-    monthlyValue: 14.9,
-    annualPrice: "R$ 149,90",
-    annualValue: 149.9,
-    highlight: "Mais popular",
+    monthlyPrice: PRECOS.gold.monthlyPrice,
+    monthlyValue: PRECOS.gold.monthlyValue,
+    annualPrice: PRECOS.gold.annualPrice,
+    annualValue: PRECOS.gold.annualValue,
+    highlight: PRECOS.gold.highlight,
   },
   premium: {
     name: "PREMIUM",
@@ -51,16 +32,15 @@ const PLAN_INFO = {
     color: "text-purple-400",
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",
-    monthlyPrice: "R$ 29,90",
-    monthlyValue: 29.9,
-    annualPrice: "R$ 249,90",
-    annualValue: 249.9,
-    highlight: "Uso ilimitado",
+    monthlyPrice: PRECOS.premium.monthlyPrice,
+    monthlyValue: PRECOS.premium.monthlyValue,
+    annualPrice: PRECOS.premium.annualPrice,
+    annualValue: PRECOS.premium.annualValue,
+    highlight: PRECOS.premium.highlight,
   },
 };
 
-const formatBRL = (n: number) =>
-  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
 
 export default function EscolherPlano() {
   const navigate = useNavigate();

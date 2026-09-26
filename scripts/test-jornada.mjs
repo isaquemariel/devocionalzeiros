@@ -20,6 +20,7 @@ export * from "${RAIZ}/src/lib/jornada/motor";
 export * from "${RAIZ}/src/lib/jornada/roteiro";
 export * from "${RAIZ}/src/lib/jornada/plano";
 export * from "${RAIZ}/src/lib/jornada/nomes";
+export { RECURSOS, PRECOS, economiaAnual, formatBRL, lerValor } from "${RAIZ}/src/lib/planos";
 `);
 const saida = join(tmp, "b.mjs");
 await build({
@@ -44,9 +45,10 @@ const caso = (nome, fn) => {
 };
 
 // ─── roteiro ────────────────────────────────────────────────────────────────
-caso("roteiro começa nas boas-vindas e termina no fim", () => {
+caso("roteiro começa nas boas-vindas, celebra no fim e termina nas portas (planos)", () => {
   assert.equal(J.ORDEM[0], "boas-vindas");
-  assert.equal(J.ORDEM.at(-1), "fim");
+  assert.equal(J.ORDEM.at(-2), "fim");
+  assert.equal(J.ORDEM.at(-1), "plano");
 });
 caso("toda etapa do roteiro é única", () => {
   assert.equal(new Set(J.ORDEM).size, J.ORDEM.length);
@@ -57,17 +59,44 @@ caso("a conta vem DEPOIS da meta (a pessoa investe antes do pedágio)", () => {
 });
 caso("etapas de escolha têm opções", () => {
   for (const e of J.ROTEIRO) {
-    if (["lanternas", "escala", "mostrador", "selos"].includes(e.tipo)) assert.ok(e.opcoes?.length >= 2, e.id);
+    if (["lanternas", "escala", "mostrador", "selos", "planos"].includes(e.tipo)) assert.ok(e.opcoes?.length >= 2, e.id);
   }
 });
 caso("a escala tem cinco estágios, em ordem, cada um com a sua reação", () => {
   assert.deepEqual(J.FAMILIARIDADE.map((o) => o.nivel), [0, 1, 2, 3, 4]);
   for (const o of [...J.FAMILIARIDADE, ...J.METAS]) assert.ok(o.reacao?.texto, o.valor);
 });
-caso("a chama só cresce ao longo da trilha", () => {
+caso("a chama só cresce até o fim, e fica cheia nas portas", () => {
   const c = J.ROTEIRO.map((e) => e.chama);
-  for (let i = 1; i < c.length; i++) assert.ok(c[i] > c[i - 1], J.ORDEM[i]);
+  const fim = J.ORDEM.indexOf("fim");
+  for (let i = 1; i <= fim; i++) assert.ok(c[i] > c[i - 1], J.ORDEM[i]);
+  assert.equal(c[fim], 1);
   assert.equal(c.at(-1), 1);
+});
+caso("o que ele diz de cada plano bate com a tabela dos planos", () => {
+  const rpg = J.RECURSOS.find((r) => r.name === "Devocionalzeiros RPG");
+  const fala = (v) => J.PLANOS.find((o) => o.valor === v).reacao.texto;
+  assert.ok(fala("free").includes(rpg.free.match(/\d+/)[0] + " fases"), fala("free"));
+  assert.ok(fala("gold").includes(rpg.gold.match(/\d+/)[0] + " fases"), fala("gold"));
+  assert.equal(rpg.premium, "Ilimitado");
+  assert.match(fala("premium"), /não tem limite/);
+  // Finanças e Embaixador só no Premium, como ele diz
+  for (const n of ["Devocionalzeiros Finanças", "Programa Embaixador"]) {
+    const r = J.RECURSOS.find((x) => x.name === n);
+    assert.ok(!J.lerValor(r.gold).tem && J.lerValor(r.premium).tem, n);
+  }
+  assert.deepEqual(J.PLANOS.map((o) => o.valor), ["free", "gold", "premium"]);
+});
+caso("preço escrito = preço em número (a vitrine não pode divergir de si mesma)", () => {
+  const n = (t) => t.replace(/\s/g, " ");
+  for (const [k, p] of Object.entries(J.PRECOS)) {
+    assert.equal(n(p.monthlyPrice), n(J.formatBRL(p.monthlyValue)), k);
+    assert.equal(n(p.annualPrice), n(J.formatBRL(p.annualValue)), k);
+    assert.ok(p.annualValue < p.monthlyValue * 12, `${k}: o anual tem de sair mais barato`);
+  }
+  assert.equal(J.economiaAnual(J.PRECOS.gold).pct, 16);
+  assert.deepEqual(J.lerValor("❌ Bloqueado"), { tem: false, texto: "Bloqueado" });
+  assert.deepEqual(J.lerValor("✅ Completo"), { tem: true, texto: "Completo" });
 });
 // respostas de exemplo que passam por todos os ramos das reações
 const AMOSTRAS = [
@@ -86,6 +115,7 @@ const todasAsFalas = () => {
   }
   for (const o of [...J.FAMILIARIDADE, ...J.METAS, ...J.ORIGENS]) if (o.reacao) falas.push([o.valor, o.reacao]);
   for (const n of J.NOMES_BIBLICOS) falas.push(["nome " + n, J.reacaoAoNome(n)]);
+  for (const r of J.RECURSOS) falas.push(["recurso " + r.name, { texto: r.explicacao }]);
   return falas;
 };
 caso("toda fala sai como texto, com e sem nome, e cabe no balão", () => {
@@ -128,11 +158,13 @@ caso("a origem preserva os valores que o admin já conta", () => {
     assert.ok(valores.includes(antigo), antigo);
   }
 });
-caso("progresso vai de 0 a 1 e só cresce", () => {
+caso("o céu vai de 0 a 1 até o fim, e fica no dia nas portas", () => {
   const p = J.ORDEM.map((id) => J.progresso(id));
+  const fim = J.ORDEM.indexOf("fim");
   assert.equal(p[0], 0);
+  assert.equal(p[fim], 1);
   assert.equal(p.at(-1), 1);
-  for (let i = 1; i < p.length; i++) assert.ok(p[i] > p[i - 1]);
+  for (let i = 1; i <= fim; i++) assert.ok(p[i] > p[i - 1]);
 });
 
 // ─── reducer ────────────────────────────────────────────────────────────────
@@ -181,10 +213,10 @@ caso("desistir no Google devolve para a escolha da conta", () => {
   assert.equal(igual, e); // sem espera, é no-op (mesma referência, sem re-render)
 });
 caso("rascunho de uma etapa que o roteiro não tem mais recomeça do zero", () => {
-  const velho = { v: 1, etapa: "plano", historico: ["boas-vindas"], respostas: {}, aguardandoGoogle: true, iniciadoEm: Date.now() };
+  const velho = { v: 1, etapa: "etapa-extinta", historico: ["boas-vindas"], respostas: {}, aguardandoGoogle: true, iniciadoEm: Date.now() };
   sessionStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(velho));
   assert.equal(J.lerRascunho(), null);
-  const bom = { ...velho, etapa: "meta", historico: ["boas-vindas", "plano", "nome"] };
+  const bom = { ...velho, etapa: "meta", historico: ["boas-vindas", "etapa-extinta", "nome"] };
   sessionStorage.setItem(J.CHAVE_RASCUNHO, JSON.stringify(bom));
   assert.deepEqual(J.lerRascunho().historico, ["boas-vindas", "nome"]); // a etapa extinta sai da pilha
   J.apagarRascunho();
