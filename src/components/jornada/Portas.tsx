@@ -19,6 +19,8 @@ const TITULO: Record<ChavePlano, string> = { free: "O que já vem de graça", go
 
 interface Props {
   planos: Opcao[];
+  /** o plano que a pessoa já tem (página de planos) — a aba ganha o selo */
+  atual?: ChavePlano | null;
   plano: ChavePlano;
   periodo: Periodo;
   onPlano: (p: ChavePlano) => void;
@@ -42,7 +44,7 @@ interface Props {
  *   miolo — o topo e o botão não se mexem;
  * - embaixo, o botão, fora da rolagem.
  */
-export function Portas({ planos, plano, periodo, onPlano, onPeriodo, onExplicar, rodape }: Props) {
+export function Portas({ planos, atual = null, plano, periodo, onPlano, onPeriodo, onExplicar, rodape }: Props) {
   const reduzir = useReducedMotion();
   const [tudo, setTudo] = useState(false);
   const cor = COR_PLANO[plano];
@@ -66,11 +68,16 @@ export function Portas({ planos, plano, periodo, onPlano, onPeriodo, onExplicar,
                 role="radio"
                 aria-checked={marcado}
                 onClick={() => { if (!marcado) { tocar(12); setTudo(false); onPlano(k); } }}
-                className="flex flex-col items-center rounded-[10px] px-1 py-1.5 transition-transform active:scale-[0.97]"
+                className="relative flex flex-col items-center rounded-[10px] px-1 py-1.5 transition-transform active:scale-[0.97]"
                 style={{ background: marcado ? COR.painelFundo : COR.campo, boxShadow: `inset 0 0 0 2px ${marcado ? COR_PLANO[k] : COR.borda}` }}
               >
                 <span className="text-[12.5px] font-extrabold uppercase tracking-[0.08em]" style={{ color: marcado ? COR_PLANO[k] : COR.texto2 }}>{o.rotulo}</span>
                 <span className="text-[10px] font-bold" style={{ color: COR.texto3 }}>{k === "free" ? "R$ 0" : `${PRECOS[k].monthlyPrice}/mês`}</span>
+                {atual === k && (
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-1.5 text-[8.5px] font-extrabold uppercase tracking-[0.08em]" style={{ background: COR_PLANO[k], color: COR.tintaEscura }}>
+                    Seu plano
+                  </span>
+                )}
               </button>
             );
           })}

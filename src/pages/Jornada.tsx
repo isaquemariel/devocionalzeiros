@@ -1,12 +1,13 @@
 import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Eye, EyeOff, Loader2, Mail } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Heart, Loader2, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useKeyboardInset } from "@/hooks/useKeyboardInset";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { esperarPlano } from "@/lib/jornada/assinatura";
-import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
+import { createSubscriptionCheckout, openCustomerPortal, type CheckoutInit } from "@/lib/stripeCheckout";
+import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { PRECOS, type ChavePlano, type Recurso } from "@/lib/planos";
 import { lovable } from "@/integrations/lovable";
 import { DDIS } from "@/lib/ddis";
@@ -28,6 +29,10 @@ import { COR, FONTE } from "@/components/jornada/tema";
 
 // O checkout traz o Stripe junto: só é baixado quando a pessoa escolhe assinar.
 const StripeCheckoutModal = lazy(() => import("@/components/checkout/StripeCheckoutModal"));
+const Doacao = lazy(() => import("@/components/jornada/Doacao"));
+
+/** a ordem dos planos — para saber o que é upgrade e o que já está incluso */
+const ORDEM_PLANO: Record<string, number> = { free: 0, gold: 1, premium: 2, embaixador: 3, admin: 4 };
 
 /** conta criada há mais que isto = a pessoa já tinha conta (entrou pelo Google) */
 const CONTA_ANTIGA_MS = 5 * 60 * 1000;
@@ -82,15 +87,26 @@ const CUTUCADAS = ["hihi!", "cócegas não!", "ei!", "essa chama não queima", "
  * chega na hora, já que a confirmação por e-mail está desligada) e a volta do
  * Google (que destrói a página e retoma pelo rascunho).
  */
-export default function Jornada() {
+/**
+ * `portas`: a página OFICIAL de planos (`/escolher-plano` e `/planos`). É a
+ * mesma cena das portas da cidade que fecha a jornada — o Devocionalzeiro
+ * explicando cada plano —, aberta direto, para quem já tem conta. Sabe o plano
+ * atual: marca a aba, não oferece o que já está incluso, e para quem assina
+ * pelo Stripe mostra "Gerenciar assinatura".
+ */
+export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "portas" }) {
+  const portas = modo === "portas";
   const navigate = useNavigate();
   const reduzirMov = useReducedMotion();
   const { user, loading, signUp } = useAuth();
   // quem já assina (voltou pelo Google numa conta paga) não passa pelas portas
-  const { hasPaidPlan } = useUserPlan(user?.email ?? undefined);
+  const { hasPaidPlan, planType } = useUserPlan(user?.email ?? undefined);
+  const { managesStripe } = useStripeSubscription(portas && hasPaidPlan);
+  const ordemAtual = ORDEM_PLANO[planType ?? "free"] ?? 0;
   // Recarregar RECOMEÇA: a jornada vive na memória da página. O único estado
   // que se retoma é o da volta do Google (ver "rascunho" em `motor.ts`).
   const [estado, despachar] = useReducer(reduzir, undefined, () => {
+    if (portas) return { ...estadoInicial(), etapa: "plano" as IdEtapa };
     const salvo = lerRascunho();
     if (salvo?.aguardandoGoogle) return salvo;
     apagarRascunho();
@@ -117,6 +133,21 @@ export default function Jornada() {
   const [focoNoCampo, setFocoNoCampo] = useState(false);
   // as portas da cidade (planos)
   const [plano, setPlano] = useState<ChavePlano>("gold");
+  const [doando, setDoando] = useState(false);
+  // nas portas, a aba começa no plano de quem já assina
+  const abaInicial = useRef(false);
+  useEffect(() => {
+    if (!portas || abaInicial.current || !planType) return;
+    abaInicial.current = true;
+    if (planType === "gold" || planType === "premium") setPlano(planType);
+    else if (ordemAtual >= 3) setPlano("premium");
+  }, [portas, planType, ordemAtual]);
+  // nas portas, o nome vem da conta (só na memória, para ele chamar pelo nome)
+  useEffect(() => {
+    if (!portas || !user) return;
+    const nome = String((user as { user_metadata?: { full_name?: unknown } }).user_metadata?.full_name ?? "").trim();
+    if (nome) despachar({ tipo: "responder", parcial: { apelido: nome.slice(0, 30) } });
+  }, [portas, user]);
   const [periodo, setPeriodo] = useState<Periodo>("monthly");
   const [checkout, setCheckout] = useState<CheckoutInit | null>(null);
   /** pagou; esperando o webhook conceder o plano */
@@ -224,6 +255,11 @@ export default function Jornada() {
   const aplicando = useRef(false);
   useEffect(() => {
     if (loading) return;
+    if (portas) {
+      // a página de planos é de quem tem conta: o pagamento é da conta
+      if (!user) navigate("/auth?entrar=1", { replace: true });
+      return;
+    }
     if (!user) {
       // Voltou do Google sem entrar: desfaz a espera e o redirecionamento
       // pendente, senão um login futuro por outro caminho cairia aqui.
@@ -281,6 +317,14 @@ export default function Jornada() {
   const dormindo = etapa.tipo === "despertar" && !acordado;
 
   let falas: Fala[] = dormindo ? [] : etapa.falas(r);
+  if (portas && estado.etapa === "plano") {
+    falas = [
+      hasPaidPlan
+        ? { texto: `Oi, ${nomeCurto}! Você já é ${planType === "premium" ? "Premium" : planType === "gold" ? "Gold" : "de casa"}. Aqui estão os planos.`, expressao: "radiante", gesto: "acenar" }
+        : { texto: `Bem-vindo(a) às portas da cidade, ${nomeCurto}! Aqui ficam os planos.`, expressao: "feliz", gesto: "apontar" },
+      falas[1],
+    ];
+  }
   if (estado.etapa === "fim" && contaAntiga) {
     falas = [{ texto: `Que bom te ver de novo, ${nomeCurto}! Guardei o que você me contou.`, expressao: "radiante", gesto: "comemorar" }, ...falas.slice(1)];
   }
@@ -436,6 +480,11 @@ export default function Jornada() {
         else seguir();
         return;
       case "planos":
+        if (portas && ORDEM_PLANO[plano] === ordemAtual && plano !== "free") {
+          if (managesStripe) void gerenciar();
+          return;
+        }
+        if (portas && ORDEM_PLANO[plano] < ordemAtual) return;
         if (plano === "free") {
           falarEDepois([{ texto: "Bora! O caminho grátis já leva longe. Quando quiser mais, é só voltar aqui.", expressao: "radiante", gesto: "comemorar" }], terminar);
         } else {
@@ -526,8 +575,22 @@ export default function Jornada() {
   };
 
   const terminar = () => {
-    apagarRascunho();
+    if (!portas) apagarRascunho();
     navigate("/home", { replace: true });
+  };
+
+  /** o portal da Stripe: trocar cartão, cancelar, ver faturas */
+  const gerenciar = async () => {
+    setErro(null);
+    setEnviando(true);
+    try {
+      await openCustomerPortal(window.location.href);
+    } catch (e) {
+      setEnviando(false);
+      setErro(String((e as Error)?.message ?? "").includes("no_customer")
+        ? "Sua assinatura foi feita por outro meio de pagamento. Para mudar, fala com o suporte."
+        : "Não consegui abrir o gerenciamento agora. Tenta de novo?");
+    }
   };
 
   /** abre o checkout do Stripe embutido, o mesmo do resto do app */
@@ -569,6 +632,11 @@ export default function Jornada() {
 
   const voltar = () => {
     if (reacao || enviando || voo || liberando) return;
+    if (portas) {
+      if (window.history.length > 1) navigate(-1);
+      else navigate("/home", { replace: true });
+      return;
+    }
     if (podeVoltar(estado)) despachar({ tipo: "voltar" });
     else navigate("/", { replace: true });
   };
@@ -632,7 +700,7 @@ export default function Jornada() {
   const topoMascote = pesY - altura * 0.96;
   // O balão mora acima da cabeça dele; sem espaço (celular baixo com o teclado
   // aberto), ele desce para o lado — nunca sai por cima da tela nem entra no caderno.
-  const baseBalao = Math.min(pesY - 6, Math.max(pesY - altura * 0.62 - 17, alturaBalao + 10));
+  const baseBalao = Math.min(pesY - 6, Math.max(pesY - altura * 0.62 - 17, alturaBalao + (portas ? 60 : 10)));
   const chamaNaTela = { x: offCol.x + mascoteX + tamanho * 0.01, y: offCol.y + pesY - altura * 0.76 };
   const transicao = reduzirMov ? "none" : "transform 420ms cubic-bezier(.3,.7,.3,1), top 420ms cubic-bezier(.3,.7,.3,1)";
 
@@ -668,6 +736,20 @@ export default function Jornada() {
         >
           <ArrowLeft className="h-5 w-5" style={{ color: COR.ouroClaro }} strokeWidth={2.6} />
         </button>
+
+        {/* nas portas (página de planos): apoiar com uma doação */}
+        {portas && (
+          <button
+            type="button"
+            onClick={() => setDoando(true)}
+            disabled={enviando || liberando}
+            className="absolute right-3 z-30 flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[11px] font-extrabold uppercase tracking-[0.08em] transition active:scale-95 disabled:opacity-0"
+            style={{ top: "max(12px, env(safe-area-inset-top, 0px))", background: COR.painelFundo, color: COR.ouroClaro, boxShadow: `inset 0 0 0 2px ${COR.borda}, 0 4px 10px -4px #000` }}
+          >
+            <Heart className="h-4 w-4" style={{ color: COR.erro }} fill="currentColor" />
+            Apoiar
+          </button>
+        )}
 
         {/* a lápide do nome, na beira da estrada */}
         <AnimatePresence>
@@ -808,12 +890,30 @@ export default function Jornada() {
 
       {estado.etapa === "fim" && !andando && <Festa origem={chamaNaTela} />}
 
+      {doando && (
+        <Suspense fallback={null}>
+          <Doacao
+            onClose={() => setDoando(false)}
+            onDoou={() => {
+              setDoando(false);
+              falarEDepois([{ texto: "Obrigado pela oferta! Ela mantém a Palavra no ar pra muita gente.", expressao: "radiante", gesto: "comemorar" }], () => {});
+            }}
+          />
+        </Suspense>
+      )}
+
       {/* o pagamento, por cima de tudo */}
       {checkout && (
         <Suspense fallback={null}>
           <StripeCheckoutModal
             init={checkout}
             title={`Assinar ${plano === "premium" ? "Premium" : "Gold"} — ${periodo === "monthly" ? "Mensal" : "Anual"}`}
+            item={plano !== "free" ? {
+              nome: `Devocionalzeiros ${plano === "premium" ? "Premium" : "Gold"}`,
+              detalhe: periodo === "monthly" ? "Assinatura mensal · cancele quando quiser" : "Assinatura anual · cancele quando quiser",
+              preco: periodo === "monthly" ? PRECOS[plano].monthlyPrice : PRECOS[plano].annualPrice,
+              icone: plano === "premium" ? "💎" : "👑",
+            } : undefined}
             onClose={() => setCheckout(null)}
             onSuccess={assinou}
           />
@@ -1079,10 +1179,14 @@ export default function Jornada() {
 
       case "planos": {
         const pago = plano === "free" ? null : PRECOS[plano];
+        // só nas portas (página de planos): o que a pessoa já tem
+        const seuPlano = portas && ORDEM_PLANO[plano] === ordemAtual;
+        const jaIncluso = portas && ORDEM_PLANO[plano] < ordemAtual;
         return (
           <div className="flex min-h-0 flex-1 flex-col pb-1">
             <Portas
               planos={etapa.opcoes!}
+              atual={portas ? (planType === "gold" || planType === "premium" || planType === "free" ? planType : ordemAtual >= 3 ? "premium" : null) : null}
               plano={plano}
               periodo={periodo}
               onPlano={(p) => {
@@ -1105,10 +1209,17 @@ export default function Jornada() {
               rodape={
                 <>
                   {erro && <p className="mb-2 px-1 text-center text-[12.5px] font-bold" style={{ color: COR.erro }} role="alert">{erro}</p>}
-                  <Botao onClick={continuar} carregando={enviando || liberando} icone={enviando || liberando ? <Loader2 className="h-5 w-5 animate-spin" /> : undefined}>
+                  <Botao
+                    onClick={continuar}
+                    carregando={enviando || liberando}
+                    desabilitado={jaIncluso || (seuPlano && !!pago && !managesStripe)}
+                    icone={enviando || liberando ? <Loader2 className="h-5 w-5 animate-spin" /> : undefined}
+                  >
                     {liberando ? "Liberando seu acesso…"
-                      : !pago ? "Começar grátis"
-                      : `Assinar ${pago.name === "GOLD" ? "Gold" : "Premium"} ${periodo === "annual" ? "anual" : "mensal"}`}
+                      : jaIncluso ? "Já incluso no seu plano"
+                      : seuPlano && pago ? (managesStripe ? "Gerenciar assinatura" : "Seu plano atual")
+                      : !pago ? (portas ? "Continuar grátis" : "Começar grátis")
+                      : `${portas && ordemAtual > 0 ? "Mudar para" : "Assinar"} ${pago.name === "GOLD" ? "Gold" : "Premium"} ${periodo === "annual" ? "anual" : "mensal"}`}
                   </Botao>
                 </>
               }

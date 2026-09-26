@@ -5,7 +5,7 @@ import { Mascot3D } from "./Mascot3D";
 import { supabase } from "@/integrations/supabase/client";
 
 // Pages where the floating mascot should NOT appear at all
-const EXCLUDED_ROUTES = ["/", "/clubehd", "/auth", "/jornada", "/seja-embaixador", "/adminhd"];
+const EXCLUDED_ROUTES = ["/", "/clubehd", "/auth", "/jornada", "/planos", "/escolher-plano", "/seja-embaixador", "/adminhd"];
 
 // Pages that are internal app pages
 const APP_ROUTES = ["/home", "/biblia", "/biblia-estudo", "/ranking", "/devocional", "/chat", "/sermao", "/quiz", "/embaixador", "/verse-devotional", "/planos", "/conquistas"];

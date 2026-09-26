@@ -34,6 +34,7 @@ export default function RPGBuyTalentsModal({ onClose, onPurchased }: { onClose: 
       <StripeCheckoutModal
         init={init}
         title={`Comprar ${talents} talentos`}
+        item={{ nome: `${talents} talentos`, detalhe: "Moeda do jogo · entra no seu saldo", preco: `R$ ${reais.toFixed(2).replace(".", ",")}`, icone: "🪙" }}
         onClose={onClose}
         onSuccess={() => { toast.success(`+${talents} talentos creditados! 🪙`); onPurchased(); }}
       />

@@ -82,8 +82,6 @@ const AdminHD = lazyRetry(() => import("./pages/AdminHD"));
 const Embaixador = lazyRetry(() => import("./pages/Embaixador"));
 const EmbaixadorPublic = lazyRetry(() => import("./pages/EmbaixadorPublic"));
 const VerseDevotional = lazyRetry(() => import("./pages/VerseDevotional"));
-const Planos = lazyRetry(() => import("./pages/Planos"));
-const EscolherPlano = lazyRetry(() => import("./pages/EscolherPlano"));
 const Jornada = lazyRetry(() => import("./pages/Jornada"));
 const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
 const RPG = lazyRetry(() => import("./pages/RPG"));
@@ -210,8 +208,10 @@ const App = () => (
                 <Route path="/embaixador" element={<Embaixador />} />
                 <Route path="/seja-embaixador" element={<EmbaixadorPublic />} />
                 <Route path="/verse-devotional" element={<VerseDevotional />} />
-                <Route path="/planos" element={<Planos />} />
-                <Route path="/escolher-plano" element={<EscolherPlano />} />
+                {/* A página OFICIAL de planos é a das portas da cidade, a mesma cena
+                    que fecha a jornada. As duas rotas antigas apontam para ela. */}
+                <Route path="/planos" element={<Jornada modo="portas" />} />
+                <Route path="/escolher-plano" element={<Jornada modo="portas" />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="/mundo" element={<RPGWorld />} />

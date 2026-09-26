@@ -1,10 +1,10 @@
 /**
  * O CATÁLOGO DOS PLANOS — preço e o que cada plano libera.
  *
- * Fonte única. Antes, a mesma tabela vivia copiada em `pages/Planos.tsx` e em
- * `pages/EscolherPlano.tsx`, e a jornada seria a terceira cópia: um reajuste
- * de preço ou um limite novo teria de ser lembrado em três lugares, e o
- * primeiro esquecido mostraria à pessoa um preço que o checkout não cobra.
+ * Fonte única da vitrine: a jornada e a página oficial de planos (as portas da
+ * cidade, em `/planos` e `/escolher-plano`) leem daqui. A tabela já viveu
+ * copiada em duas telas antigas — um reajuste de preço lembrado numa só
+ * mostrava à pessoa um preço que o checkout não cobra.
  *
  * O preço cobrado de verdade é o do Stripe (edge function
  * `create-subscription-checkout`); estes valores são a VITRINE e precisam
