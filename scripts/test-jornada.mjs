@@ -20,7 +20,7 @@ export * from "${RAIZ}/src/lib/jornada/motor";
 export * from "${RAIZ}/src/lib/jornada/roteiro";
 export * from "${RAIZ}/src/lib/jornada/plano";
 export * from "${RAIZ}/src/lib/jornada/nomes";
-export { RECURSOS, PRECOS, economiaAnual, formatBRL, lerValor } from "${RAIZ}/src/lib/planos";
+export { RECURSOS, PRECOS, economiaAnual, formatBRL, lerValor, resumo, diferencas, incluidos } from "${RAIZ}/src/lib/planos";
 `);
 const saida = join(tmp, "b.mjs");
 await build({
@@ -80,12 +80,45 @@ caso("o que ele diz de cada plano bate com a tabela dos planos", () => {
   assert.ok(fala("gold").includes(rpg.gold.match(/\d+/)[0] + " fases"), fala("gold"));
   assert.equal(rpg.premium, "Ilimitado");
   assert.match(fala("premium"), /não tem limite/);
-  // Finanças e Embaixador só no Premium, como ele diz
-  for (const n of ["Devocionalzeiros Finanças", "Programa Embaixador"]) {
-    const r = J.RECURSOS.find((x) => x.name === n);
-    assert.ok(!J.lerValor(r.gold).tem && J.lerValor(r.premium).tem, n);
-  }
+  // o Embaixador é só do Premium, como ele diz
+  const emb = J.RECURSOS.find((x) => x.name === "Programa Embaixador");
+  assert.ok(!J.lerValor(emb.gold).tem && J.lerValor(emb.premium).tem);
+  // Finanças saiu do app: não pode aparecer em plano nenhum, nem na fala
+  assert.ok(!J.RECURSOS.some((r) => /finan/i.test(r.name)), "Finanças voltou para a tabela");
+  assert.ok(!J.PLANOS.some((o) => /finan/i.test(o.reacao.texto)), "ele ainda fala de Finanças");
   assert.deepEqual(J.PLANOS.map((o) => o.valor), ["free", "gold", "premium"]);
+});
+caso("o preço da vitrine é o que o Stripe cobra (create-subscription-checkout)", () => {
+  const fonte = readFileSync(join(RAIZ, "supabase/functions/create-subscription-checkout/index.ts"), "utf8");
+  for (const [plano, p] of Object.entries(J.PRECOS)) {
+    const bloco = fonte.slice(fonte.indexOf(`${plano}: {`));
+    const mensal = Number(bloco.match(/monthly:\s*\{\s*amount:\s*(\d+)/)[1]);
+    const anual = Number(bloco.match(/annual:\s*\{\s*amount:\s*(\d+)/)[1]);
+    assert.equal(mensal, Math.round(p.monthlyValue * 100), `${plano} mensal`);
+    assert.equal(anual, Math.round(p.annualValue * 100), `${plano} anual`);
+  }
+});
+caso("cada aba mostra SÓ o que muda — e cabe na tela", () => {
+  const nomes = (l) => l.map((r) => r.curto);
+  const gratis = J.incluidos("free"), gold = J.diferencas("free", "gold"), premium = J.diferencas("gold", "premium");
+  // nada se repete de uma aba para a outra sem ter mudado de valor
+  for (const r of gold) assert.notEqual(J.resumo(r.free), J.resumo(r.gold), r.curto);
+  for (const r of premium) assert.notEqual(J.resumo(r.gold), J.resumo(r.premium), r.curto);
+  assert.ok(nomes(gold).includes("RPG") && nomes(gold).includes("Salas ao vivo"), nomes(gold).join());
+  assert.ok(nomes(premium).includes("Embaixador") && nomes(premium).includes("Quiz aleatório"), nomes(premium).join());
+  assert.ok(!nomes(premium).includes("Devocional"), "o Devocional não muda do Gold ao Premium");
+  // selos em duas colunas: até 10 (5 fileiras) cabem sem rolar num celular pequeno
+  for (const [n, l] of [["grátis", gratis], ["gold", gold], ["premium", premium]]) assert.ok(l.length <= 10, `${n}: ${l.length} selos`);
+  // o nome curto cabe no selo
+  for (const r of J.RECURSOS) assert.ok(r.curto.length <= 17, r.curto);
+});
+caso("o resumo do valor fala a língua do selo", () => {
+  assert.equal(J.resumo("10 estágios/dia"), "10 por dia");
+  assert.equal(J.resumo("5 perguntas/dia"), "5 por dia");
+  assert.equal(J.resumo("1x/dia"), "1 por dia");
+  assert.equal(J.resumo("Salas dos livros (Gênesis→Apocalipse)"), "de cada livro");
+  assert.equal(J.resumo("Todas + Sala Global"), "todas + Global");
+  assert.equal(J.resumo("✅ Ilimitado"), "Ilimitado");
 });
 caso("preço escrito = preço em número (a vitrine não pode divergir de si mesma)", () => {
   const n = (t) => t.replace(/\s/g, " ");

@@ -43,3 +43,10 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.handle-email-events]
     verify_jwt = false
+  # O Stripe chama este webhook sem JWT do Supabase — quem prova a origem é a
+  # assinatura `stripe-signature`, conferida dentro da função com o
+  # STRIPE_WEBHOOK_SECRET (whsec_…). Com verify_jwt ligado (o padrão), o
+  # gateway recusava toda notificação antes de ela chegar à função, e nenhum
+  # pagamento virava plano.
+  [functions.stripe-webhook]
+    verify_jwt = false

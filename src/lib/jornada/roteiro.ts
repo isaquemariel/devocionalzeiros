@@ -99,7 +99,7 @@ export const PLANOS: Opcao[] = [
   { valor: "gold", rotulo: "Gold", detalhe: "Mais popular",
     reacao: { texto: "O Gold abre as salas dos livros, 10 fases por dia e um plano de leitura só seu.", expressao: "orgulhoso", gesto: "apontar" } },
   { valor: "premium", rotulo: "Premium", detalhe: "Sem limite",
-    reacao: { texto: "O Premium não tem limite: RPG, quiz, chat, todas as salas, Finanças e Embaixador.", expressao: "radiante", gesto: "comemorar" } },
+    reacao: { texto: "O Premium não tem limite: RPG, quiz, chat, todas as salas, e ainda o Embaixador.", expressao: "radiante", gesto: "comemorar" } },
 ];
 
 const opcaoDe = (lista: Opcao[], valor?: string) => lista.find((o) => o.valor === valor);

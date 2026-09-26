@@ -4,7 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Eye, EyeOff, Loader2, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useKeyboardInset } from "@/hooks/useKeyboardInset";
-import { invalidatePlanCache, useUserPlan } from "@/hooks/useUserPlan";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { esperarPlano } from "@/lib/jornada/assinatura";
 import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
 import { PRECOS, type ChavePlano, type Recurso } from "@/lib/planos";
 import { lovable } from "@/integrations/lovable";
@@ -116,8 +117,10 @@ export default function Jornada() {
   const [focoNoCampo, setFocoNoCampo] = useState(false);
   // as portas da cidade (planos)
   const [plano, setPlano] = useState<ChavePlano>("gold");
-  const [periodo, setPeriodo] = useState<Periodo>("annual");
+  const [periodo, setPeriodo] = useState<Periodo>("monthly");
   const [checkout, setCheckout] = useState<CheckoutInit | null>(null);
+  /** pagou; esperando o webhook conceder o plano */
+  const [liberando, setLiberando] = useState(false);
 
   // ─── direção do personagem ────────────────────────────────────────────────
   /** ele começa dormindo — só na primeira parada, e só se ninguém o acordou ainda */
@@ -284,6 +287,7 @@ export default function Jornada() {
   const sobreposta: Fala | null =
     contaExiste ? { texto: "Esse e-mail já tem conta por aqui! Quer entrar com ele?", expressao: "surpreso", gesto: "parado" }
       : aguardandoEmail ? { texto: `Te mandei um link em ${r.email}. Abre ele pra ativar a conta!`, expressao: "feliz", gesto: "apontar" }
+      : liberando ? { texto: "Pagamento recebido! Só um instante, tô liberando o seu acesso…", expressao: "feliz", gesto: "pensar" }
       : estado.etapa === "senha" && verSenha && !reacao ? { texto: "Ei, você mostrou! Eu não vi nada… quase nada.", expressao: "orgulhoso", gesto: "espiar" }
       : null;
   const falaAtual: Fala | null = reacao
@@ -539,11 +543,20 @@ export default function Jornada() {
     }
   };
 
-  const assinou = () => {
+  const assinou = async () => {
     setCheckout(null);
-    // o plano é concedido pelo webhook; o cache velho diria "free" por 5 min
-    invalidatePlanCache(user?.email ?? undefined);
-    falarEDepois([{ texto: "Obrigado! Sua assinatura mantém a Palavra no ar pra muita gente.", expressao: "radiante", gesto: "comemorar" }], terminar);
+    if (plano === "free" || !user?.email) { terminar(); return; }
+    // Espera o plano existir (o webhook chega segundos depois do "pago") —
+    // senão a Home lê "free", guarda em cache e a pessoa não vê o plano.
+    setLiberando(true);
+    const ok = await esperarPlano(user.email, plano);
+    setLiberando(false);
+    falarEDepois(
+      ok
+        ? [{ texto: `Pronto, você é ${plano === "premium" ? "Premium" : "Gold"}! Obrigado por manter a Palavra no ar pra muita gente.`, expressao: "radiante", gesto: "comemorar" }]
+        : [{ texto: "Pagamento recebido! O plano aparece no app em instantes. Se demorar, fala com a gente.", expressao: "feliz", gesto: "parado" }],
+      terminar,
+    );
   };
 
   const irParaLogin = () => {
@@ -555,7 +568,7 @@ export default function Jornada() {
   };
 
   const voltar = () => {
-    if (reacao || enviando || voo) return;
+    if (reacao || enviando || voo || liberando) return;
     if (podeVoltar(estado)) despachar({ tipo: "voltar" });
     else navigate("/", { replace: true });
   };
@@ -648,7 +661,7 @@ export default function Jornada() {
         <button
           type="button"
           onClick={voltar}
-          disabled={estado.etapa === "fim" || enviando || !!reacao}
+          disabled={estado.etapa === "fim" || enviando || liberando || !!reacao}
           aria-label="Voltar"
           className="absolute left-3 z-30 flex h-10 w-10 items-center justify-center rounded-full transition active:scale-90 disabled:opacity-0"
           style={{ top: "max(12px, env(safe-area-inset-top, 0px))", background: COR.painelFundo, boxShadow: `inset 0 0 0 2px ${COR.borda}, 0 4px 10px -4px #000` }}
@@ -743,7 +756,7 @@ export default function Jornada() {
         >
           {/* o painel do RPG (`.rpg-panel`), encaixado embaixo */}
           <div
-            className="max-h-[78dvh] overflow-y-auto px-5 pt-3.5"
+            className={`px-5 pt-3.5 ${etapa.tipo === "planos" ? "flex max-h-[72dvh] flex-col overflow-hidden" : "max-h-[78dvh] overflow-y-auto"}`}
             style={{
               background: `linear-gradient(${COR.painel}, ${COR.painelFundo})`,
               borderTop: `2px solid ${COR.borda}`,
@@ -762,7 +775,7 @@ export default function Jornada() {
                 initial={reduzirMov ? { opacity: 0 } : { opacity: 0, y: 26 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: reduzirMov ? 0 : 0.18, duration: 0.3, ease: "easeOut" } }}
                 exit={reduzirMov ? { opacity: 0 } : { opacity: 0, y: 18, transition: { duration: 0.16 } }}
-                className={reacao ? "pointer-events-none" : undefined}
+                className={`${reacao || liberando ? "pointer-events-none " : ""}${etapa.tipo === "planos" ? "flex min-h-0 flex-1 flex-col" : ""}`}
               >
                 {conteudoDaEtapa()}
               </motion.div>
@@ -1067,7 +1080,7 @@ export default function Jornada() {
       case "planos": {
         const pago = plano === "free" ? null : PRECOS[plano];
         return (
-          <div className="space-y-3 pb-1">
+          <div className="flex min-h-0 flex-1 flex-col pb-1">
             <Portas
               planos={etapa.opcoes!}
               plano={plano}
@@ -1089,16 +1102,17 @@ export default function Jornada() {
                 setAssentado(false);
                 setToque((n) => n + 1);
               }}
+              rodape={
+                <>
+                  {erro && <p className="mb-2 px-1 text-center text-[12.5px] font-bold" style={{ color: COR.erro }} role="alert">{erro}</p>}
+                  <Botao onClick={continuar} carregando={enviando || liberando} icone={enviando || liberando ? <Loader2 className="h-5 w-5 animate-spin" /> : undefined}>
+                    {liberando ? "Liberando seu acesso…"
+                      : !pago ? "Começar grátis"
+                      : `Assinar ${pago.name === "GOLD" ? "Gold" : "Premium"} ${periodo === "annual" ? "anual" : "mensal"}`}
+                  </Botao>
+                </>
+              }
             />
-            {erro && <p className="px-1 text-center text-[13px] font-bold" style={{ color: COR.erro }} role="alert">{erro}</p>}
-            <Botao onClick={continuar} carregando={enviando} icone={enviando ? <Loader2 className="h-5 w-5 animate-spin" /> : undefined}>
-              {!pago ? "Começar grátis" : `Assinar ${pago.name === "GOLD" ? "Gold" : "Premium"} ${periodo === "annual" ? "anual" : "mensal"}`}
-            </Botao>
-            {pago && (
-              <div className="text-center">
-                <Link onClick={() => { setPlano("free"); setAoVivo(etapa.opcoes![0].reacao ?? null); }} cor={COR.texto2}>Prefiro começar grátis</Link>
-              </div>
-            )}
           </div>
         );
       }
@@ -1119,6 +1133,8 @@ function limparRedirecionamento() {
 const ESTILO = `
 .jz-raiz input.jz-campo,.jz-raiz .jz-caixa select,.jz-raiz input.jz-range{background-color:transparent!important;color:${COR.texto}!important}
 .jz-caixa:focus-within{box-shadow:inset 0 0 0 2px ${COR.ouro},0 0 0 4px rgba(232,176,75,.16)!important}
+.jz-rolagem{scrollbar-width:thin;scrollbar-color:${COR.borda} transparent}
+.jz-rolagem::-webkit-scrollbar{width:4px}.jz-rolagem::-webkit-scrollbar-thumb{background:${COR.borda};border-radius:4px}
 .jz-campo::placeholder{color:${COR.texto3};opacity:.75;font-weight:500}
 .jz-raiz select option{background:${COR.painelFundo};color:${COR.texto}}
 @keyframes jz-balanca{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
