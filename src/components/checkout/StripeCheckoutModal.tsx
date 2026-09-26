@@ -60,7 +60,7 @@ export default function StripeCheckoutModal({ init, title = "Pagamento", item, o
         initial={{ y: 40, opacity: 0, scale: 0.98 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 40, opacity: 0 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="rpg-root w-full sm:max-w-md max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border-2 border-[#e8b04b] p-4 shadow-[0_-10px_50px_-10px_#000]"
+        className="rpg-root w-full sm:max-w-md lg:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border-2 border-[#e8b04b] p-4 shadow-[0_-10px_50px_-10px_#000]"
         style={{ background: "linear-gradient(180deg, #141c30, #0b1120)" }}
         role="dialog"
         aria-label={title}

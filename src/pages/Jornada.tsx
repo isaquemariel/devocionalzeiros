@@ -44,6 +44,10 @@ const CAMINHADA_MS = 1000;
 const OCIOSO_MS = 9000;
 /** coluna do jogo: em tela larga, a cena é um celular no meio do mundo */
 const COLUNA_MAX = 480;
+/** largura do cartão do caderno no computador, antes da escala */
+const CARTAO_L = 460;
+/** a altura de um balão de três linhas — o que a conta do tamanho dele reserva */
+const BALAO_RESERVA = 112;
 
 /** tempo de leitura de uma frase depois de escrita — cresce com o tamanho */
 const leitura = (t: string, fim = false) => Math.min(fim ? 3200 : 2800, Math.max(fim ? 1300 : 1100, 650 + t.length * 30));
@@ -677,30 +681,62 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
   if (etapa.tipo === "lanternas" && !reacao) chama += escolhas.length * 0.012;
 
   // ─── geometria da cena ────────────────────────────────────────────────────
-  const W = Math.min(tela.w, COLUNA_MAX);
+  // DOIS ARRANJOS. No celular (e no tablet em pé), a coluna de 480 px: o
+  // caderno encaixado embaixo e a cena por cima dele. No COMPUTADOR (tela
+  // deitada e larga), a coluna esticada num celular deixava tudo curto e
+  // miúdo no meio de um mundo vazio; lá a cena ocupa a tela inteira, o
+  // Devocionalzeiro cresce na estrada, à esquerda, e o caderno vira um cartão
+  // do RPG flutuando à direita, como a caixa de diálogo de um jogo de mesa.
+  const desktop = tela.w >= 900 && tela.w > tela.h * 1.15;
+  const W = desktop ? tela.w : Math.min(tela.w, COLUNA_MAX);
   const H = tela.h;
   // O mundo tem céu de reserva por cima: assim a trilha pode descer até
   // encostar no caderno quando ele é baixo, em vez de deixar um descampado
   // vazio entre os pés dele e as perguntas.
-  const reserva = Math.round(H * 0.32);
+  const reserva = Math.round(H * (desktop ? 0.45 : 0.32));
   const trilhaY = posicaoDaTrilha(tela.w, H + reserva) - reserva;
   const topoPainel = H - teclado - alturaPainel;
-  // a trilha fica sempre logo acima do caderno: painel alto (ou teclado
-  // aberto) empurra o mundo para cima; painel baixo o deixa descer
-  const deslocar = Math.max(-reserva, Math.round(trilhaY + 12 - topoPainel));
+  // No celular a trilha fica sempre logo acima do caderno: painel alto (ou
+  // teclado aberto) empurra o mundo para cima; painel baixo o deixa descer.
+  // No computador o caderno flutua ao lado, e a estrada fica a 4/5 da tela.
+  const deslocar = desktop
+    ? Math.max(-reserva, Math.round(trilhaY - H * 0.8))
+    : Math.max(-reserva, Math.round(trilhaY + 12 - topoPainel));
   const pesY = trilhaY - deslocar;
   const alt = (t: number) => (t * 229) / 205;
-  let tamanho = Math.max(112, Math.min(176, W * 0.4));
-  // sem espaço para ele e o balão acima do caderno: ele encolhe
-  const cabe = (pesY - alturaBalao - 30) / 0.62;
-  if (alt(tamanho) > cabe) tamanho = Math.max(76, (cabe * 205) / 229);
-  tamanho = Math.round(tamanho);
+
+  // o cartão do computador: cresce com a tela, até 1,3×
+  const escala = desktop ? Math.min(1.3, Math.max(1, H / 760)) : 1;
+  const larguraCartao = Math.round(CARTAO_L * escala);
+  const margemCartao = Math.round(Math.max(40, W * 0.06));
+  const esquerdaCartao = W - margemCartao - larguraCartao;
+
+  let tamanho: number, mascoteX: number;
+  if (desktop) {
+    tamanho = Math.round(Math.max(190, Math.min(320, H * 0.29)));
+    mascoteX = Math.round(Math.max(tamanho * 0.6 + 24, Math.min(W * 0.3, esquerdaCartao * 0.42)));
+  } else {
+    tamanho = Math.max(112, Math.min(176, W * 0.4));
+    // Sem espaço para ele e o balão acima do caderno: ele encolhe. A conta usa
+    // um balão de TRÊS LINHAS fixo, não o balão medido — com o medido, ele
+    // mudava de tamanho a cada frase (uma de duas linhas, outra de quatro).
+    // Balão mais alto que isso desce um pouco, para o lado dele.
+    const cabe = (pesY - BALAO_RESERVA - 30) / 0.62;
+    if (alt(tamanho) > cabe) tamanho = Math.max(76, (cabe * 205) / 229);
+    tamanho = Math.round(tamanho);
+    mascoteX = Math.max(tamanho * 0.5 + 6, W * 0.25);
+  }
   const altura = alt(tamanho);
-  const mascoteX = Math.max(tamanho * 0.5 + 6, W * 0.25);
   const topoMascote = pesY - altura * 0.96;
   // O balão mora acima da cabeça dele; sem espaço (celular baixo com o teclado
-  // aberto), ele desce para o lado — nunca sai por cima da tela nem entra no caderno.
-  const baseBalao = Math.min(pesY - 6, Math.max(pesY - altura * 0.62 - 17, alturaBalao + (portas ? 60 : 10)));
+  // aberto), ele desce para o lado — nunca sai por cima da tela nem entra no
+  // caderno. No computador, sobra céu: ele fica em cima, com o rabicho na chama.
+  const baseBalao = desktop
+    ? Math.round(Math.max(topoMascote - 4, alturaBalao + 76))
+    : Math.min(pesY - 6, Math.max(pesY - altura * 0.62 - 17, alturaBalao + (portas ? 60 : 10)));
+  const esquerdaBalao = desktop ? Math.round(Math.max(24, mascoteX - 22)) : Math.min(mascoteX + tamanho * 0.3, W - 190);
+  const direitaBalao = desktop ? Math.round(Math.max(W - esquerdaCartao + 32, W - esquerdaBalao - 480 * escala)) : 14;
+  const larguraPlaca = desktop ? Math.round(150 * escala) : Math.min(132, W * 0.34);
   const chamaNaTela = { x: offCol.x + mascoteX + tamanho * 0.01, y: offCol.y + pesY - altura * 0.76 };
   const transicao = reduzirMov ? "none" : "transform 420ms cubic-bezier(.3,.7,.3,1), top 420ms cubic-bezier(.3,.7,.3,1)";
 
@@ -724,7 +760,7 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
       </div>
 
       {/* ── a coluna do jogo ─────────────────────────────────────────────── */}
-      <div ref={coluna} className="absolute inset-y-0 left-1/2 w-full -translate-x-1/2" style={{ maxWidth: COLUNA_MAX }}>
+      <div ref={coluna} className="absolute inset-y-0 left-1/2 w-full -translate-x-1/2" style={{ maxWidth: desktop ? "none" : COLUNA_MAX }}>
         {/* voltar */}
         <button
           type="button"
@@ -755,14 +791,15 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
         <AnimatePresence>
           {estado.etapa === "nome" && !andando && (
             <motion.div
-              className="absolute right-4 z-[5]"
-              style={{ top: pesY - Math.min(132, W * 0.34) * 0.58 - 14, transition: transicao }}
+              className={`absolute z-[5] ${desktop ? "" : "right-4"}`}
+              // no computador, a lápide fica na beira da estrada ao lado dele
+              style={{ top: pesY - larguraPlaca * 0.58 - 14, left: desktop ? mascoteX + tamanho * 0.6 : undefined, transition: transicao }}
               initial={reduzirMov ? false : { y: 40, opacity: 0, rotate: 6 }}
               animate={{ y: 0, opacity: 1, rotate: -2 }}
               exit={{ y: 30, opacity: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 16 }}
             >
-              <Placa nome={texto} largura={Math.min(132, W * 0.34)} />
+              <Placa nome={texto} largura={larguraPlaca} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -808,8 +845,8 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
           ref={balaoRef}
           className="absolute z-10"
           style={{
-            left: Math.min(mascoteX + tamanho * 0.3, W - 190),
-            right: 14,
+            left: esquerdaBalao,
+            right: direitaBalao,
             bottom: H - baseBalao,
             transition: reduzirMov ? "none" : "bottom 420ms cubic-bezier(.3,.7,.3,1)",
           }}
@@ -822,7 +859,8 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={reduzirMov ? { opacity: 0 } : { opacity: 0, scale: 0.85, y: 6, transition: { duration: 0.12 } }}
                 transition={{ type: "spring", stiffness: 420, damping: 26 }}
-                style={{ transformOrigin: "12% 100%" }}
+                // no computador, a letra cresce com o cartão
+                style={{ transformOrigin: "12% 100%", zoom: escala !== 1 ? escala : undefined }}
               >
                 <Balao texto={falaAtual.texto} onTerminou={falaEscrita} onFalando={setFalando} onAvancar={pularFala} mais={haMais} />
               </motion.div>
@@ -830,16 +868,31 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
           </AnimatePresence>
         </div>
 
-        {/* ── o caderno: onde a pessoa responde ────────────────────────── */}
+        {/* ── o caderno: onde a pessoa responde ──────────────────────────
+            No celular, encaixado embaixo. No computador, um cartão flutuando à
+            direita, centrado na altura, com tudo em escala (`zoom`) — as
+            mecânicas foram desenhadas em px de celular, e o zoom as cresce
+            por igual, sem desenhar cada uma duas vezes. */}
         <div
           ref={painel}
-          className="absolute inset-x-0 z-20"
-          style={{ bottom: teclado, transition: reduzirMov ? "none" : "bottom 180ms ease-out" }}
+          className={desktop ? "absolute z-20" : "absolute inset-x-0 z-20"}
+          style={desktop
+            ? { left: esquerdaCartao, width: larguraCartao, top: "50%", transform: "translateY(-50%)" }
+            : { bottom: teclado, transition: reduzirMov ? "none" : "bottom 180ms ease-out" }}
         >
-          {/* o painel do RPG (`.rpg-panel`), encaixado embaixo */}
+          {/* o painel do RPG (`.rpg-panel`) */}
           <div
-            className={`px-5 pt-3.5 ${etapa.tipo === "planos" ? "flex max-h-[72dvh] flex-col overflow-hidden" : "max-h-[78dvh] overflow-y-auto"}`}
-            style={{
+            className={`px-5 pt-3.5 ${etapa.tipo === "planos" ? `flex flex-col overflow-hidden${desktop ? "" : " max-h-[72dvh]"}` : `overflow-y-auto${desktop ? "" : " max-h-[78dvh]"}`}`}
+            style={desktop ? {
+              zoom: escala !== 1 ? escala : undefined,
+              maxHeight: Math.round((H - 112) / escala),
+              background: `linear-gradient(${COR.painel}, ${COR.painelFundo})`,
+              border: `2px solid ${COR.borda}`,
+              borderRadius: 18,
+              paddingTop: 18,
+              paddingBottom: 20,
+              boxShadow: `0 30px 70px -24px #000, 0 0 0 1px #0008, inset 0 1px 0 ${COR.painelBrilho}`,
+            } : {
               background: `linear-gradient(${COR.painel}, ${COR.painelFundo})`,
               borderTop: `2px solid ${COR.borda}`,
               borderRadius: "16px 16px 0 0",

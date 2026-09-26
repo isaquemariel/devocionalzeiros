@@ -15,6 +15,12 @@ export type Periodo = "monthly" | "annual";
 const COR_PLANO: Record<ChavePlano, string> = { free: COR.verde, gold: COR.ouroClaro, premium: "#c084fc" };
 /** de quem cada plano herda — o que ele mostra é só a diferença */
 const HERDA: Record<ChavePlano, ChavePlano | null> = { free: null, gold: "free", premium: "gold" };
+/** os planos acima de cada um, do mais perto ao mais longe */
+const ACIMA: Record<ChavePlano, ChavePlano[]> = { free: ["gold", "premium"], gold: ["premium"], premium: [] };
+/** três fileiras de três selos */
+const LUGARES = 9;
+/** título (16 + 6) + três fileiras de 38 com 5 de vão */
+const ALTURA_MIOLO = 22 + 3 * 38 + 2 * 5;
 const TITULO: Record<ChavePlano, string> = { free: "O que já vem de graça", gold: "Tudo do Grátis, e mais:", premium: "Tudo do Gold, e mais:" };
 
 interface Props {
@@ -38,8 +44,9 @@ interface Props {
  * - em cima, as três abas e o preço (começa no MENSAL — o valor anual,
  *   maior, assustava de cara; o anual fica a um toque, com a economia);
  * - no meio, SÓ O QUE MUDA: o Grátis mostra o que já vem; o Gold, "tudo do
- *   Grátis, e mais…"; o Premium, "tudo do Gold, e mais…". Selos em duas
- *   colunas; cada um, tocado, o Devocionalzeiro explica;
+ *   Grátis, e mais…"; o Premium, "tudo do Gold, e mais…". Selos em três
+ *   colunas, numa grade de ALTURA FIXA; cada um, tocado, o Devocionalzeiro
+ *   explica;
  * - "Ver tudo" abre a tabela completa do plano, rolando POR DENTRO deste
  *   miolo — o topo e o botão não se mexem;
  * - embaixo, o botão, fora da rolagem.
@@ -52,6 +59,17 @@ export function Portas({ planos, atual = null, plano, periodo, onPlano, onPeriod
   const eco = preco ? economiaAnual(preco) : null;
   const pai = HERDA[plano];
   const selos = pai ? diferencas(pai, plano) : incluidos(plano);
+  const rotulo = (k: ChavePlano) => planos.find((o) => o.valor === k)?.rotulo ?? k;
+  // As três fileiras sempre cheias: o Grátis tem 6 selos e o Gold e o Premium
+  // têm 1 + 8. O que sobra de lugar mostra, trancado, o que vem no plano de
+  // cima — o Grátis ganha o gostinho do Gold, e a grade nunca fica banguela.
+  const provas: { r: Recurso; em: ChavePlano }[] = [];
+  for (const acima of ACIMA[plano]) {
+    for (const r of diferencas(plano, acima)) {
+      if (provas.length >= LUGARES - selos.length - (pai ? 1 : 0)) break;
+      if (!lerValor(r[plano]).tem && !provas.some((p) => p.r.name === r.name)) provas.push({ r, em: acima });
+    }
+  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col" style={{ fontFamily: FONTE }}>
@@ -119,8 +137,13 @@ export function Portas({ planos, atual = null, plano, periodo, onPlano, onPeriod
         </div>
       </div>
 
-      {/* ── miolo: só o que muda; "ver tudo" rola aqui dentro ──────────── */}
-      <div className="jz-rolagem mt-2.5 min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      {/* ── miolo: só o que muda; "ver tudo" rola aqui dentro ──────────────
+          ALTURA FIXA, a mesma em toda aba e no "ver tudo": o painel não muda
+          de tamanho, então a cena e o Devocionalzeiro também não. Antes o
+          Grátis (6 selos) deixava o painel uma fileira mais baixo que o Gold
+          e o Premium (8), o mundo subia e descia a cada toque, e num celular
+          baixo o boneco encolhia de 129 px para 76 px. */}
+      <div className="jz-rolagem mt-2.5 min-h-[96px] overflow-y-auto overscroll-contain" style={{ flex: `0 1 ${ALTURA_MIOLO}px` }}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={plano + (tudo ? "-tudo" : "")}
@@ -129,27 +152,34 @@ export function Portas({ planos, atual = null, plano, periodo, onPlano, onPeriod
             exit={{ opacity: 0, transition: { duration: 0.08 } }}
             transition={{ duration: 0.2 }}
           >
-            <p className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em]" style={{ color: cor }}>
-              {tudo ? `Tudo o que o ${planos.find((o) => o.valor === plano)?.rotulo} inclui` : TITULO[plano]}
+            <p className="mb-1.5 h-4 truncate text-[10.5px] font-bold uppercase leading-4 tracking-[0.16em]" style={{ color: cor }}>
+              {tudo ? `Tudo o que o ${rotulo(plano)} inclui` : TITULO[plano]}
             </p>
             {!tudo ? (
-              <div className="grid grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-3 gap-[5px]">
+                {pai && (
+                  // o que ele herda, num selo só — tocado, abre a lista inteira
+                  <Selo
+                    nome={`Tudo do ${rotulo(pai)}`}
+                    valor="já incluso"
+                    cor={COR_PLANO[pai]}
+                    destaque
+                    onClick={() => { tocar(6); setTudo(true); }}
+                  />
+                )}
                 {selos.map((r) => (
-                  <button
-                    key={r.name}
-                    type="button"
-                    onClick={() => { tocar(6); onExplicar(r); }}
-                    className="flex items-center gap-2 rounded-[9px] px-2 py-1.5 text-left active:scale-[0.98]"
-                    style={{ background: COR.campo, boxShadow: `inset 0 0 0 1.5px ${COR.borda}` }}
-                  >
-                    <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full" style={{ background: cor }}>
-                      <Check className="h-2.5 w-2.5" strokeWidth={4} style={{ color: COR.tintaEscura }} />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-[11.5px] font-extrabold leading-tight" style={{ color: COR.texto }}>{r.curto}</span>
-                      <span className="block truncate text-[10px] leading-tight" style={{ color: COR.texto3 }}>{resumo(r[plano])}</span>
-                    </span>
-                  </button>
+                  <Selo key={r.name} nome={r.curto} valor={resumo(r[plano])} cor={cor} onClick={() => { tocar(6); onExplicar(r); }} />
+                ))}
+                {provas.map((p) => (
+                  // o que o plano de cima tem e este não: o cadeado leva à aba dele
+                  <Selo
+                    key={p.r.name}
+                    nome={p.r.curto}
+                    valor={`no ${rotulo(p.em)}`}
+                    cor={COR.texto3}
+                    trancado
+                    onClick={() => { tocar(8); setTudo(false); onPlano(p.em); }}
+                  />
                 ))}
               </div>
             ) : (
@@ -193,5 +223,29 @@ export function Portas({ planos, atual = null, plano, periodo, onPlano, onPeriod
       {/* ── o botão, preso embaixo ──────────────────────────────────────── */}
       <div className="shrink-0 pt-1">{rodape}</div>
     </div>
+  );
+}
+
+/** um selo da grade: o nome curto e, embaixo, o valor na cor do plano */
+function Selo({ nome, valor, cor, destaque, trancado, onClick }: {
+  nome: string; valor: string; cor: string; destaque?: boolean; trancado?: boolean; onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-[38px] min-w-0 flex-col justify-center rounded-[9px] px-1.5 text-left active:scale-[0.97]"
+      style={{
+        background: destaque ? COR.painelFundo : COR.campo,
+        boxShadow: `inset 0 0 0 1.5px ${destaque ? cor : COR.borda}`,
+        opacity: trancado ? 0.6 : 1,
+      }}
+    >
+      <span className="block truncate font-extrabold leading-tight" style={{ color: trancado ? COR.texto2 : COR.texto, fontSize: "clamp(10px, 2.9vw, 11.5px)" }}>{nome}</span>
+      <span className="flex min-w-0 items-center gap-1 leading-tight" style={{ color: cor, fontSize: "clamp(9.5px, 2.6vw, 10.5px)" }}>
+        {trancado && <Lock className="h-2.5 w-2.5 shrink-0" />}
+        <span className="truncate">{valor}</span>
+      </span>
+    </button>
   );
 }
