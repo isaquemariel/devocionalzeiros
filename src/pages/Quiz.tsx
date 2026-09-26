@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -49,6 +50,7 @@ const Quiz = () => {
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null>(null);
   const [showRandomLockedModal, setShowRandomLockedModal] = useState(false);
+  // (o palco é ocupado mais abaixo, quando o resultado — com ele em cena — aparece)
   const { 
     loading: quizLoading, 
     currentQuestion, 
@@ -67,6 +69,10 @@ const Quiz = () => {
     currentStreak,
     bestSessionStreak,
   } = useQuiz(user?.id);
+  // Resultado na tela = ele em cena (Mascot3D grande): o "Correto!" da última
+  // resposta não sobe um segundo boneco por cima — o placar já diz tudo. Um
+  // erro espera o resultado sair.
+  useOcuparPalco((a) => a.tipo !== "erro", !!quizCompleted);
 
   // Get reading progress with correct params
   const startDate = useMemo(() => {

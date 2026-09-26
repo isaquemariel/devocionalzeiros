@@ -26,7 +26,15 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const returnUrl = body?.returnUrl as string;
-    if (!returnUrl || typeof returnUrl !== 'string') {
+    // o link de volta do portal só pode levar ao PRÓPRIO app (senão vira um
+    // redirecionamento aberto numa página com a marca do Stripe)
+    const ORIGENS = ['https://devocionalzeiros.com.br', 'https://www.devocionalzeiros.com.br', 'https://devocionalzeiros.lovable.app', 'capacitor://localhost', 'https://localhost', 'http://localhost'];
+    let voltaOk = false;
+    try {
+      const u = new URL(returnUrl);
+      voltaOk = ORIGENS.includes(u.origin) || /^https:\/\/[a-z0-9-]+\.(lovableproject\.com|lovable\.app)$/.test(u.origin);
+    } catch { voltaOk = false; }
+    if (!returnUrl || typeof returnUrl !== 'string' || !voltaOk) {
       return new Response(JSON.stringify({ error: 'invalid_return_url' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -59,7 +67,7 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('create-customer-portal error', e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), {
+    return new Response(JSON.stringify({ error: 'failed' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

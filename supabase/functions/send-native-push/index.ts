@@ -67,6 +67,18 @@ async function getAccessToken(serviceAccount: any): Promise<string> {
   return cachedToken.token;
 }
 
+/** busca TODAS as linhas, de mil em mil (a API corta em 1.000 por consulta) */
+async function todasAsLinhas<T>(montar: (de: number, ate: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
+  const out: T[] = [];
+  for (let de = 0; ; de += 1000) {
+    const { data, error } = await montar(de, de + 999);
+    if (error) throw error;
+    out.push(...(data ?? []));
+    if (!data || data.length < 1000) break;
+  }
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -100,15 +112,16 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { user_id, title, message, url, exclude_user_ids } = await req.json();
+    const { user_id, title, message, url, exclude_user_ids, tipo } = await req.json();
     // quem está com o app aberto agora não recebe (ver send-push-notification)
     const fora = new Set<string>(Array.isArray(exclude_user_ids) ? exclude_user_ids : []);
 
-    let query = supabase.from("native_push_tokens").select("*");
-    if (user_id) query = query.eq("user_id", user_id);
-    const { data: todos, error } = await query;
-    if (error) throw error;
-    const tokens = (todos ?? []).filter((t: { user_id: string }) => !fora.has(t.user_id));
+    const todos = await todasAsLinhas<{ user_id: string }>((de, ate) => {
+      let query = supabase.from("native_push_tokens").select("*");
+      if (user_id) query = query.eq("user_id", user_id);
+      return query.order("token").range(de, ate);
+    });
+    const tokens = todos.filter((t) => !fora.has(t.user_id)) as { user_id: string; token: string; platform?: string }[];
     if (!tokens.length) {
       return new Response(JSON.stringify({ sent: 0, failed: 0 }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -131,7 +144,7 @@ Deno.serve(async (req) => {
         message: {
           token: t.token,
           notification: { title: notifTitle, body: notifBody },
-          data: { url: clickUrl },
+          data: { url: clickUrl, tipo: typeof tipo === "string" ? tipo : "" },
           android: {
             priority: "HIGH",
             notification: {
@@ -144,7 +157,8 @@ Deno.serve(async (req) => {
               color: "#e8b04b",
             },
           },
-          apns: { payload: { aps: { sound: "default", badge: 1 } } },
+          // sem `badge`: nada no app zera o número do ícone, e ele ficava "1" para sempre
+          apns: { payload: { aps: { sound: "default" } } },
         },
       };
       try {

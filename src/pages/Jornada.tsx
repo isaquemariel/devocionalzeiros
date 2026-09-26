@@ -115,7 +115,9 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
   const [estado, despachar] = useReducer(reduzir, undefined, () => {
     if (portas) return { ...estadoInicial(), etapa: "plano" as IdEtapa };
     const salvo = lerRascunho();
-    if (salvo?.aguardandoGoogle) return salvo;
+    // a volta do Google, e quem saiu no meio da conta ("Já tenho uma conta" e
+    // voltou): retoma de onde parou — é o que a tela inicial promete
+    if (salvo?.aguardandoGoogle || (salvo && ["salvar", "email", "senha"].includes(salvo.etapa))) return salvo;
     apagarRascunho();
     return estadoInicial();
   });
@@ -264,7 +266,7 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
     if (loading) return;
     if (portas) {
       // a página de planos é de quem tem conta: o pagamento é da conta
-      if (!user) navigate("/auth?entrar=1", { replace: true });
+      if (!user) navigate("/auth?entrar=1&redirect=%2Fplanos", { replace: true });
       return;
     }
     if (!user) {
@@ -289,7 +291,10 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
     const criadaEm = user.created_at ? new Date(user.created_at).getTime() : Date.now();
     setContaAntiga(Date.now() - criadaEm > CONTA_ANTIGA_MS);
     setAcordado(true);
-    aplicarJornada(user.id, estado).finally(() => {
+    aplicarJornada(user.id, estado).then((res) => {
+      // não gravou (rede, sessão): guarda as respostas para o próximo login tentar
+      if (res === "falhou") gravarRascunho({ ...estado, respostas: { ...estado.respostas, email: undefined } });
+    }).catch(() => undefined).finally(() => {
       limparRedirecionamento();
       setEnviando(false);
       setReacao(null);
@@ -475,6 +480,7 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
       case "email": {
         const e = validarEmail(texto);
         if (e) { setErro(e); campoRef.current?.focus(); return; }
+        campoRef.current?.blur(); // sem teclado, sem um segundo Enter no campo que já saiu
         responder({ email: texto.trim().toLowerCase() });
         return;
       }
@@ -516,7 +522,15 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
     window.setTimeout(() => responder({ motivos }), 950);
   };
 
+  // um toque só cria a conta: Enter com o spinner rodando mandava um segundo
+  // signUp, que falhava com "já existe" e piscava o aviso errado
+  const criando = useRef(false);
   const criarConta = async () => {
+    if (criando.current) return;
+    criando.current = true;
+    try { await criarContaAgora(); } finally { criando.current = false; }
+  };
+  const criarContaAgora = async () => {
     const e = validarSenha(senha);
     if (e) { setErro(e); campoRef.current?.focus(); return; }
     if (!r.email) { despachar({ tipo: "irPara", etapa: "email" }); return; }
@@ -605,9 +619,15 @@ export default function Jornada({ modo = "jornada" }: { modo?: "jornada" | "port
     setErro(null);
     setEnviando(true);
     try {
-      setCheckout(await createSubscriptionCheckout(p, periodo));
-    } catch {
-      setErro("Não consegui abrir o pagamento agora. Tenta de novo em instantes?");
+      const r = await createSubscriptionCheckout(p, periodo);
+      // já assinava: o servidor trocou o plano da assinatura que existe (sem
+      // uma segunda cobrança) — é só esperar o plano novo chegar
+      if ("trocado" in r) { void assinou(); return; }
+      setCheckout(r);
+    } catch (e) {
+      setErro(String((e as Error)?.message ?? "").includes("card_declined")
+        ? "O cartão da sua assinatura recusou a troca. Atualize o cartão em Gerenciar assinatura."
+        : "Não consegui abrir o pagamento agora. Tenta de novo em instantes?");
     } finally {
       setEnviando(false);
     }

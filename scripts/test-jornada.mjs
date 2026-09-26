@@ -201,11 +201,22 @@ caso("o céu vai de 0 a 1 até o fim, e fica no dia nas portas", () => {
 });
 
 // ─── reducer ────────────────────────────────────────────────────────────────
-caso("percorre a jornada inteira avançando", () => {
+caso("percorre a jornada inteira avançando (o fim só com a conta criada)", () => {
   let e = J.estadoInicial(0);
   const visitadas = [e.etapa];
+  while (e.etapa !== "senha" && J.proxima(e.etapa)) { e = J.reduzir(e, { tipo: "avancar" }); visitadas.push(e.etapa); }
+  // da senha, "avançar" não leva ao fim: quem leva é o efeito da conta criada
+  assert.equal(J.reduzir(e, { tipo: "avancar" }).etapa, "senha");
+  e = J.reduzir(e, { tipo: "irPara", etapa: J.proxima("senha") });
+  visitadas.push(e.etapa);
   while (J.proxima(e.etapa)) { e = J.reduzir(e, { tipo: "avancar" }); visitadas.push(e.etapa); }
   assert.deepEqual(visitadas, J.ORDEM);
+});
+caso("Enter duplo no e-mail não pula a criação da conta", () => {
+  let e = J.reduzir(J.estadoInicial(0), { tipo: "irPara", etapa: "email" });
+  e = J.reduzir(e, { tipo: "avancar" }); // o envio certo: vai para a senha
+  e = J.reduzir(e, { tipo: "avancar" }); // o envio repetido do formulário que saía
+  assert.equal(e.etapa, "senha");
 });
 caso("voltar desfaz o avançar", () => {
   let e = J.estadoInicial(0);

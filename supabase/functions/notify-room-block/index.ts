@@ -2,11 +2,12 @@ import { corsHeaders } from '../_shared/cors.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // Push de moderação das salas. Seguro por desenho:
-//  • Exige um usuário autenticado (qualquer um pode chamar).
-//  • Só envia se o ALVO estiver REALMENTE bloqueado (room_bans ativo).
-//  • Mensagem é FIXA (não dá para spammar texto arbitrário).
-// Assim tanto o bloqueio automático (denúncias) quanto o manual (admin) podem
-// avisar o bloqueado por push, sem abrir brecha de abuso.
+//  • Só quem pode mandar: um ADMIN (bloqueio manual) ou, no bloqueio
+//    AUTOMÁTICO, quem acabou de provocá-lo (até 2 min depois de criado).
+//  • Só envia se o ALVO estiver REALMENTE bloqueado (room_bans ativo), e UMA
+//    vez por bloqueio (`notificado_em`) — não dá para repetir o push.
+//  • Mensagem é FIXA, e a resposta é só { ok }: não revela a ninguém se a
+//    pessoa está bloqueada, se está no app, nem quantos aparelhos tem.
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
@@ -34,21 +35,33 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceKey);
 
+    const ok = () => new Response(JSON.stringify({ ok: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
     // Confirma que o alvo está mesmo com bloqueio ATIVO
-    const { data: ban } = await admin
+    const { data: ban, error: banErr } = await admin
       .from('room_bans')
-      .select('permanent, banned_until')
+      .select('permanent, banned_until, auto, created_at, updated_at, created_by, notificado_em')
       .eq('user_id', targetId)
       .maybeSingle();
+    if (banErr) throw banErr;
     const active = !!ban && (ban.permanent || (ban.banned_until && new Date(ban.banned_until as string) > new Date()));
-    if (!active) {
-      return new Response(JSON.stringify({ skipped: 'not_blocked' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-    }
+    if (!active) return ok();
+
+    // quem está chamando pode avisar ESTE bloqueio?
+    const { data: papel } = await admin.from('user_roles').select('role').eq('user_id', userData.user.id).eq('role', 'admin').maybeSingle();
+    const recente = Date.now() - new Date((ban!.updated_at ?? ban!.created_at) as string).getTime() < 2 * 60_000;
+    const autorizado = !!papel || (ban!.auto && recente) || (ban!.created_by === userData.user.id && recente);
+    if (!autorizado) return ok();
+
+    // uma vez por bloqueio: já avisado depois da última mudança, não repete
+    if (ban!.notificado_em && new Date(ban!.notificado_em as string) >= new Date((ban!.updated_at ?? ban!.created_at) as string)) return ok();
+    const { error: marcaErr } = await admin.from('room_bans').update({ notificado_em: new Date().toISOString() }).eq('user_id', targetId);
+    if (marcaErr) throw marcaErr;
 
     const permanent = !!ban!.permanent;
 
     // Dispara o push (server-to-server, service role) pro alvo
-    const resp = await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
+    await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${serviceKey}` },
       body: JSON.stringify({
@@ -60,11 +73,9 @@ Deno.serve(async (req) => {
         url: '/mundo',
       }),
     });
-    const out = await resp.json().catch(() => ({}));
-
-    return new Response(JSON.stringify({ ok: true, push: out }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    return ok();
   } catch (e) {
     console.error('notify-room-block error', e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: 'failed' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 });

@@ -1,6 +1,22 @@
 // Service Worker Push Event Handler
 // This file is imported by the Workbox-generated service worker
 
+// Só abre endereços do PRÓPRIO app: um link de fora no payload viraria um
+// redirecionamento aberto a partir de uma notificação com a nossa marca.
+function urlDoApp(bruta) {
+  try {
+    const u = new URL(bruta || '/devocional', self.location.origin);
+    if (u.origin !== self.location.origin) return '/devocional';
+    return u.pathname + u.search + u.hash;
+  } catch (e) {
+    return '/devocional';
+  }
+}
+
+// Safari/iOS revoga a inscrição se um push chegar sem notificação na tela —
+// lá ela aparece sempre, mesmo com o app aberto.
+const SAFARI = /Safari/.test(self.navigator.userAgent) && !/Chrome|Chromium|Android/.test(self.navigator.userAgent);
+
 self.addEventListener('push', (event) => {
   if (!event.data) return;
 
@@ -11,7 +27,7 @@ self.addEventListener('push', (event) => {
     data = { title: 'Devocionalzeiros', body: event.data.text() };
   }
 
-  const url = data.url || '/devocional';
+  const url = urlDoApp(data.url);
   // As conquistas se agrupam numa notificação só (a mais nova substitui a
   // anterior e toca de novo), e o botão já diz o que fazer: resgatar.
   const conquista = url.indexOf('/conquistas') === 0;
@@ -35,9 +51,11 @@ self.addEventListener('push', (event) => {
   // isto cobre a janela entre um sinal de presença e outro.)
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
-      const visivel = janelas.find((j) => j.visibilityState === 'visible');
-      if (visivel) {
-        visivel.postMessage({ tipo: 'push-no-app', title: data.title, body: data.body, url });
+      // "no app" = a janela com FOCO (uma janela visível mas atrás de outros
+      // programas não conta: o aviso dentro dela ninguém veria)
+      const naFrente = janelas.find((j) => j.focused) || null;
+      if (naFrente && !SAFARI) {
+        naFrente.postMessage({ tipo: 'push-no-app', origem: data.tipo || null, title: data.title, body: data.body, url });
         return;
       }
       return self.registration.showNotification(data.title || 'Devocionalzeiros 🙏', options);
@@ -50,20 +68,18 @@ self.addEventListener('notificationclick', (event) => {
 
   if (event.action === 'close') return;
 
-  const url = event.notification.data?.url || '/devocional';
+  const url = urlDoApp(event.notification.data && event.notification.data.url);
+  const abrirNova = () => (clients.openWindow ? clients.openWindow(url) : undefined);
 
+  // espera a navegação terminar (senão o worker pode ser encerrado antes); se a
+  // janela não é controlada por este worker, `navigate` falha — abre outra
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          client.focus();
-          client.navigate(url);
-          return;
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
+      const janela = clientList.find((c) => new URL(c.url).origin === self.location.origin && 'focus' in c);
+      if (!janela) return abrirNova();
+      return janela.focus()
+        .then((c) => (c && 'navigate' in c ? c.navigate(url) : abrirNova()))
+        .catch(abrirNova);
     })
   );
 });

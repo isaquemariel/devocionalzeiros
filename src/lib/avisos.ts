@@ -52,7 +52,14 @@ supabase.auth.onAuthStateChange((evento) => { if (evento === "SIGNED_OUT") saiuE
 
 /** tira os emojis: a cara dele já diz o que o 🎉 e o ⚠️ diziam */
 const semEmoji = (s: string) =>
-  s.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, "").replace(/\s{2,}/g, " ").trim();
+  s
+    .replace(/[#*0-9]\u{FE0F}?\u{20E3}/gu, "") // teclas 1️⃣ #️⃣
+    // pictogramas (menos ©®™ e setas, que são texto), tons de pele, bandeiras
+    // e os "colantes" (variação, ZWJ, tags)
+    .replace(/(?![\u00A9\u00AE\u2122\u2190-\u21FF\u25B6\u25C0])[\p{Extended_Pictographic}\p{Emoji_Modifier}\p{Regional_Indicator}\u{FE0F}\u{200D}\u{E0020}-\u{E007F}]/gu, "")
+    .replace(/[ \t]{2,}/g, " ") // só espaços — a quebra de linha fica
+    .replace(/ ([!?.,;:])/g, "$1") // "Brasil 🇧🇷!" não vira "Brasil !"
+    .trim();
 
 function avisar(tipo: TipoAviso, mensagem: unknown, o: OpcoesAviso = {}) {
   if (typeof window === "undefined") return;

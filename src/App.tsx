@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
+import { ConfirmarEmailDaCompra } from "@/components/shared/ConfirmarEmailDaCompra";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -8,6 +9,7 @@ import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot
 import { Comemoracao } from "@/components/devocionalzeiro/Comemoracao";
 import { SincronizaVisual } from "@/components/devocionalzeiro/SincronizaVisual";
 import { PresencaNoApp } from "@/components/shared/PresencaNoApp";
+import { ExigeTrocaDeSenha } from "@/components/shared/ExigeTrocaDeSenha";
 import { InstalarAppGlobal } from "@/components/shared/InstalarAppGlobal";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
@@ -235,6 +237,8 @@ const App = () => (
               <SincronizaVisual />
               {/* presença no app: push só para quem está fora */}
               <PresencaNoApp />
+              <ExigeTrocaDeSenha />
+              <ConfirmarEmailDaCompra />
               {/* o "baixe o app", aberto de qualquer tela */}
               <InstalarAppGlobal />
               </CartSyncWrapper>

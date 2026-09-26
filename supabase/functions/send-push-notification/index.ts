@@ -7,6 +7,18 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/** busca TODAS as linhas, de mil em mil (a API corta em 1.000 por consulta) */
+async function todasAsLinhas<T>(montar: (de: number, ate: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
+  const out: T[] = [];
+  for (let de = 0; ; de += 1000) {
+    const { data, error } = await montar(de, de + 999);
+    if (error) throw error;
+    out.push(...(data ?? []));
+    if (!data || data.length < 1000) break;
+  }
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -43,10 +55,12 @@ Deno.serve(async (req) => {
     const noApp = new Set<string>();
     if (!ignorar_presenca) {
       const desde = new Date(Date.now() - 3 * 60_000).toISOString();
-      let pq = serviceClient.from("user_app_presence").select("user_id").eq("visivel", true).gte("visto_em", desde);
-      if (user_id) pq = pq.eq("user_id", user_id);
-      const { data: presentes } = await pq;
-      for (const p of presentes ?? []) noApp.add((p as { user_id: string }).user_id);
+      const presentes = await todasAsLinhas<{ user_id: string }>((de, ate) => {
+        let pq = serviceClient.from("user_app_presence").select("user_id").eq("visivel", true).gte("visto_em", desde);
+        if (user_id) pq = pq.eq("user_id", user_id);
+        return pq.range(de, ate);
+      });
+      for (const p of presentes) noApp.add(p.user_id);
     }
     if (user_id && noApp.has(user_id)) {
       const pulado = { web: { sent: 0, failed: 0, skipped: "no-app" }, native: { sent: 0, failed: 0, skipped: "no-app" }, sent: 0 };
@@ -116,10 +130,11 @@ Deno.serve(async (req) => {
         if (web.parDeChaves !== "ok") console.error("VAPID:", web.parDeChaves);
         webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
 
-        let query = serviceClient.from("push_subscriptions").select("*");
-        if (user_id) query = query.eq("user_id", user_id);
-        const { data: subscriptions, error } = await query;
-        if (error) throw error;
+        const subscriptions = await todasAsLinhas<Record<string, unknown>>((de, ate) => {
+          let query = serviceClient.from("push_subscriptions").select("*");
+          if (user_id) query = query.eq("user_id", user_id);
+          return query.order("id").range(de, ate);
+        });
 
         const payload = JSON.stringify({
           title: title ?? "Devocionalzeiros 🙏",
@@ -127,6 +142,8 @@ Deno.serve(async (req) => {
           icon: "/pwa-192x192.png",
           badge: "/pwa-192x192.png",
           url: url ?? "/devocional",
+          // o app aberto usa para não repetir o que ele mesmo já avisou (conquista)
+          tipo: source ?? null,
         });
 
         const toDelete: string[] = [];
@@ -201,7 +218,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${supabaseServiceKey}`,
           ...(cronSecret ? { "x-cron-secret": cronSecret } : {}),
         },
-        body: JSON.stringify({ user_id, title, message, url, exclude_user_ids: user_id ? [] : [...noApp] }),
+        body: JSON.stringify({ user_id, title, message, url, tipo: source ?? null, exclude_user_ids: user_id ? [] : [...noApp] }),
       });
       const ntext = await nres.text();
       try { native = JSON.parse(ntext); } catch { native = { raw: ntext.slice(0, 500) }; }

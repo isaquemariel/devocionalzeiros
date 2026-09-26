@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
     const meta = (session.metadata ?? {}) as Record<string, string>;
 
     // Only expose data if session belongs to caller
-    if (meta.user_id && meta.user_id !== userData.user.id) {
+    if (meta.user_id !== userData.user.id) {
       return new Response(JSON.stringify({ error: 'forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('get-checkout-status error', e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), {
+    return new Response(JSON.stringify({ error: 'failed' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

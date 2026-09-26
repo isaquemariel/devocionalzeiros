@@ -58,6 +58,11 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
   // como livre. O ✓ só aparece com a resposta do banco, e "Confirmar"
   // reconsulta antes de seguir.
   const checkTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => () => clearTimeout(checkTimer.current), []);
+  // gravando o personagem: o botão final trava, e um erro aparece aqui mesmo
+  // (o aviso central espera o tutorial sair — ele está em cena)
+  const [salvando, setSalvando] = useState(false);
+  const [erroSalvar, setErroSalvar] = useState<string | null>(null);
   const consulta = useRef(0);
   const [confirmando, setConfirmando] = useState(false);
   const mostrarResultado = useCallback((nome: string, r: "livre" | "em-uso" | "falhou") => {
@@ -130,15 +135,22 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
     } else {
       // grava; se o nome foi tomado nesse meio-tempo (raro), volta para a
       // escolha já dizendo isso — em vez de um aviso solto no fim
+      if (salvando) return;
+      setSalvando(true);
+      setErroSalvar(null);
       Promise.resolve(onDone(name)).then((r) => {
         if (r && !r.ok && r.error === "name_taken") {
           setStep(0);
           setNameInput(name);
           mostrarResultado(name, "em-uso");
+        } else if (r && !r.ok) {
+          setErroSalvar("Não consegui salvar agora. Confira a internet e toque de novo.");
         }
-      });
+      }).catch(() => {
+        setErroSalvar("Não consegui salvar agora. Confira a internet e toque de novo.");
+      }).finally(() => setSalvando(false));
     }
-  }, [step, naming, typing, curText.length, name, onDone, mostrarResultado]);
+  }, [step, naming, typing, curText.length, name, onDone, mostrarResultado, salvando]);
 
   const back = useCallback(() => {
     if (step > 1) setStep((s) => s - 1);
@@ -365,6 +377,9 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
       </AnimatePresence>
 
       {/* Navegação do tutorial */}
+      {inTutorial && erroSalvar && (
+        <p role="alert" className="shrink-0 px-3 pt-2 text-center text-[12px] font-semibold text-[#e8846b] bg-[#0b0805]">{erroSalvar}</p>
+      )}
       {inTutorial && (
         <div className="shrink-0 p-3 flex items-center gap-3 bg-[#0b0805] border-t-2 border-[#3a2c18]">
           <button onClick={back} disabled={step <= 1} className="rpg-btn-ghost px-3 py-2 text-xs disabled:opacity-30">
@@ -379,8 +394,8 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
             ))}
           </div>
           {last ? (
-            <button onClick={advance} className="rpg-btn px-4 py-2 text-xs">
-              ✦ Começar jornada
+            <button onClick={advance} disabled={salvando} className="rpg-btn px-4 py-2 text-xs">
+              {salvando ? "Salvando…" : "✦ Começar jornada"}
             </button>
           ) : (
             <button onClick={advance} className="rpg-btn-ghost px-4 py-2 text-xs !text-[#ffd889] !border-[#e8b04b]/50">

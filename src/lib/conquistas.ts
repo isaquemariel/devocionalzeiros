@@ -131,94 +131,78 @@ export function montarConquistas(e: Estatisticas, resgatadas: Set<string>): Conq
   }));
 }
 
-// Helper to get Brasília date
-const getBrasiliaDateString = (): string => {
-  const now = new Date();
-  const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-  const year = brasiliaDate.getFullYear();
-  const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = brasiliaDate.getDate().toString().padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+/** o bônus da sequência que o quiz soma aos pontos (useQuiz: 3→1, 5→2, 7→3, 10→5) */
+const BONUS_SEQUENCIA: Record<number, number> = { 3: 1, 5: 2, 7: 3, 10: 5 };
 
-/** as estatísticas da pessoa e as conquistas já resgatadas, direto das tabelas */
+/**
+ * As estatísticas da pessoa e as conquistas já resgatadas.
+ *
+ * Quem conta é o BANCO (`minhas_estatisticas_conquistas`): é ele que aceita ou
+ * recusa o resgate, então a tela mostra como liberado exatamente o que ele
+ * vai aceitar. Sem a função (banco ainda sem a migração), a conta é feita aqui
+ * com as MESMAS regras. Erro de consulta LANÇA — antes uma falha virava "zero",
+ * e a tela dizia "todas as conquistas são suas" ou oferecia resgatar de novo.
+ */
 export async function buscarEstatisticas(userId: string): Promise<{ estat: Estatisticas; resgatadas: Set<string> }> {
-  // as tabelas, em paralelo
-  const [
-    { data: logins },
-    { data: readingProgress },
-    { data: readingSchedule },
-    { data: quizAttempts },
-    { data: devotionalCompletions },
-    { data: claimedAchievements },
-    { data: rpgProgress },
-  ] = await Promise.all([
+  const { data: doBanco, error: erroRpc } = await supabase.rpc("minhas_estatisticas_conquistas" as never);
+  if (!erroRpc && doBanco) {
+    const d = doBanco as unknown as { estat: Estatisticas; resgatadas: string[] };
+    return { estat: d.estat, resgatadas: new Set(d.resgatadas ?? []) };
+  }
+  return contarAqui(userId);
+}
+
+async function contarAqui(userId: string): Promise<{ estat: Estatisticas; resgatadas: Set<string> }> {
+  const r = await Promise.all([
     supabase.from('daily_logins').select('login_date').eq('user_id', userId).order('login_date', { ascending: true }),
     supabase.from('reading_progress').select('book_name, chapter_number').eq('user_id', userId),
-    supabase.from('reading_schedule').select('book_name, chapter_number, is_completed, completed_at').eq('user_id', userId).eq('is_completed', true),
+    supabase.from('reading_schedule').select('book_name, chapter_number').eq('user_id', userId).eq('is_completed', true),
     supabase.from('quiz_attempts').select('is_correct, points_earned, streak_count').eq('user_id', userId),
     supabase.from('devotional_completions').select('devotional_date').eq('user_id', userId),
     supabase.from('achievement_claims').select('achievement_id').eq('user_id', userId),
     supabase.from('rpg_progress').select('is_completed, quiz_correct, quiz_total').eq('user_id', userId),
+    supabase.from('community_posts' as never).select('post_type, is_answered').eq('user_id', userId),
   ]);
+  const erro = r.find((x) => x.error)?.error;
+  if (erro) throw erro;
+  const [logins, leituras, cronograma, quiz, devocionais, resgates, rpg, posts] = r.map((x) => x.data ?? []) as unknown as [
+    { login_date: string }[], { book_name: string; chapter_number: number }[], { book_name: string; chapter_number: number }[],
+    { is_correct: boolean; points_earned: number; streak_count: number | null }[], unknown[], { achievement_id: string }[],
+    { is_completed: boolean; quiz_correct: number; quiz_total: number }[], { post_type: string; is_answered: boolean | null }[],
+  ];
 
-  // Community stats (separate query to avoid breaking parallel typing)
-  const { data } = await supabase
-    .from('community_posts' as never)
-    .select('post_type, is_answered')
-    .eq('user_id', userId);
-  const communityPosts = (data ?? []) as { post_type: string; is_answered: boolean | null }[];
-  const totalPrayerPosts = communityPosts.filter((p) => p.post_type === 'prayer').length;
-  const totalThanksPosts = communityPosts.filter((p) => p.post_type === 'thanks').length;
-  const totalAnsweredPrayers = communityPosts.filter((p) => p.post_type === 'prayer' && p.is_answered).length;
-
-  // Calculate stats
-  const totalChaptersRead = (readingProgress?.length || 0) + (readingSchedule?.length || 0);
-  const totalQuizCorrect = quizAttempts?.filter(q => q.is_correct).length || 0;
-  const totalQuizHardCorrect = quizAttempts?.filter(q => q.is_correct && q.points_earned === 3).length || 0;
-  const totalQuizAttempts = quizAttempts?.length || 0;
-  const totalDevotionals = devotionalCompletions?.length || 0;
-  const totalLogins = logins?.length || 0;
-  
-  // RPG stats
-  const rpgCompletedChapters = rpgProgress?.filter(p => p.is_completed).length || 0;
-  const rpgPerfectChapters = rpgProgress?.filter(p => p.is_completed && p.quiz_correct === p.quiz_total && p.quiz_total > 0).length || 0;
-  const rpgTotalXp = rpgProgress?.filter(p => p.is_completed).reduce((sum, p) => sum + 10 + (p.quiz_correct * 5), 0) || 0;
-  
-  // Calculate best quiz streak (max streak_count from all attempts)
-  const bestQuizStreak = quizAttempts?.reduce((max, q) => Math.max(max, q.streak_count || 0), 0) || 0;
-
-  // Calculate current login streak
-  let currentStreak = 0;
-  if (logins && logins.length > 0) {
-    const today = getBrasiliaDateString();
-    const todayDate = new Date(today + 'T12:00:00');
-    const lastLogin = logins[logins.length - 1].login_date;
-    const lastLoginDate = new Date(lastLogin + 'T12:00:00');
-    const daysSinceLastLogin = Math.round((todayDate.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (daysSinceLastLogin <= 1) {
-      currentStreak = 1;
-      for (let i = logins.length - 1; i > 0; i--) {
-        const currDate = new Date(logins[i].login_date + 'T12:00:00');
-        const prevDate = new Date(logins[i - 1].login_date + 'T12:00:00');
-        const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (diffDays === 1) {
-          currentStreak++;
-        } else {
-          break;
-        }
-      }
-    }
+  // capítulos DISTINTOS (o mesmo capítulo nas duas tabelas conta uma vez)
+  const capitulos = new Set([...leituras, ...cronograma].map((c) => `${c.book_name}:${c.chapter_number}`)).size;
+  // a MAIOR sequência de dias seguidos (a conquista, uma vez alcançada, fica)
+  let sequencia = 0, atual = 0, anterior: number | null = null;
+  for (const l of logins) {
+    const dia = Math.round(new Date(`${l.login_date}T12:00:00`).getTime() / 86_400_000);
+    if (anterior !== null && dia === anterior) continue;
+    atual = anterior !== null && dia - anterior === 1 ? atual + 1 : 1;
+    sequencia = Math.max(sequencia, atual);
+    anterior = dia;
   }
+  const dificil = (q: { points_earned: number; streak_count: number | null }) =>
+    q.points_earned - (BONUS_SEQUENCIA[q.streak_count ?? 0] ?? 0) === 3;
+  const concluidas = rpg.filter((p) => p.is_completed);
+
   return {
     estat: {
-      capitulos: totalChaptersRead, sequencia: currentStreak, quizAcertos: totalQuizCorrect,
-      quizDificeis: totalQuizHardCorrect, quizTentativas: totalQuizAttempts, quizSequencia: bestQuizStreak,
-      devocionais: totalDevotionals, acessos: totalLogins, rpgCapitulos: rpgCompletedChapters,
-      rpgPerfeitos: rpgPerfectChapters, rpgXp: rpgTotalXp, oracoes: totalPrayerPosts, gratidoes: totalThanksPosts,
-      respondidas: totalAnsweredPrayers,
+      capitulos,
+      sequencia,
+      quizAcertos: quiz.filter((q) => q.is_correct).length,
+      quizDificeis: quiz.filter((q) => q.is_correct && dificil(q)).length,
+      quizTentativas: quiz.length,
+      quizSequencia: quiz.reduce((m, q) => Math.max(m, q.streak_count || 0), 0),
+      devocionais: devocionais.length,
+      acessos: new Set(logins.map((l) => l.login_date)).size,
+      rpgCapitulos: concluidas.length,
+      rpgPerfeitos: concluidas.filter((p) => p.quiz_total > 0 && p.quiz_correct === p.quiz_total).length,
+      rpgXp: concluidas.reduce((s, p) => s + 10 + (p.quiz_correct || 0) * 5, 0),
+      oracoes: posts.filter((p) => p.post_type === 'prayer').length,
+      gratidoes: posts.filter((p) => p.post_type === 'thanks').length,
+      respondidas: posts.filter((p) => p.post_type === 'prayer' && p.is_answered).length,
     },
-    resgatadas: new Set((claimedAchievements || []).map((c) => c.achievement_id)),
+    resgatadas: new Set(resgates.map((c) => c.achievement_id)),
   };
 }

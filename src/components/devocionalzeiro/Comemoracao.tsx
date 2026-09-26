@@ -85,109 +85,125 @@ type Item = Festa | Aviso;
 const VALIDADE_NA_FILA = 30_000;
 
 export function Comemoracao() {
-  const [ativo, setAtivo] = useState<Item | null>(null);
+  const [ativo, setAtivoEstado] = useState<Item | null>(null);
+  const ativoRef = useRef<Item | null>(null);
   const fila = useRef<Item[]>([]);
   const seq = useRef(0);
   const versaoPalco = useVersaoDoPalco();
-  const ativoRef = useRef(ativo);
-  ativoRef.current = ativo;
-  // os bonecos fixos das telas (home, cabeçalho) saem de cena enquanto ele fala aqui
-  // "no ar" é o que está falando E o que está na fila para falar: entre a tela
-  // abrir e o aviso subir (os 350 ms da troca, o carregamento que acabou de
-  // sair), o boneco do canto não pode aparecer — senão ele e o "Bem-vindo de
-  // volta!" ficam dois na tela
-  const marcarCentro = useCallback(() => {
-    queueMicrotask(() => definirCentroAtivo(
-      !!ativoRef.current || fila.current.some((p) => Date.now() - p.desde < VALIDADE_NA_FILA),
-    ));
-  }, []);
-  useEffect(() => { marcarCentro(); }, [ativo, marcarCentro]);
-  useEffect(() => () => definirCentroAtivo(false), []);
 
-  const proximoDaFila = useCallback((): Item | null => {
-    while (fila.current.length) {
-      const p = fila.current.shift()!;
-      marcarCentro();
-      if (Date.now() - p.desde < VALIDADE_NA_FILA) return { ...p, desde: Date.now() };
-    }
-    return null;
-  }, []);
+  // Tudo o que decide a fila vive em refs e em funções estáveis: antes as
+  // decisões moravam dentro de `setAtivo((a) => …)` com efeitos colaterais
+  // (mexer na fila, somar o contador) — updater tem de ser puro, e o React
+  // pode repeti-lo.
+  const ops = useRef({
+    fresco: (p: Item) => Date.now() - p.desde < VALIDADE_NA_FILA,
+    /** "no ar" = falando OU esperando na fila: o boneco do canto fica fora de cena */
+    marcarCentro: () => {
+      queueMicrotask(() => definirCentroAtivo(!!ativoRef.current || fila.current.some(ops.current.fresco)));
+    },
+    setAtivo: (i: Item | null) => {
+      ativoRef.current = i;
+      setAtivoEstado(i);
+      ops.current.marcarCentro();
+    },
+    proximo: (): Item | null => {
+      while (fila.current.length) {
+        const p = fila.current.shift()!;
+        if (ops.current.fresco(p)) return { ...p, desde: Date.now() };
+      }
+      return null;
+    },
+    /** palco livre e ninguém falando: sobe o próximo da fila (depois da troca) */
+    puxarSeLivre: () => {
+      window.setTimeout(() => {
+        if (donoDoPalco() || ativoRef.current) return;
+        const p = ops.current.proximo();
+        if (p) ops.current.setAtivo(p);
+        else ops.current.marcarCentro();
+      }, 350);
+    },
+    enfileirar: (i: Item, frente = false) => {
+      if (frente) fila.current.unshift(i); else fila.current.push(i);
+      // teto de 5: sai o mais velho que NÃO é erro (erro não se perde calado)
+      while (fila.current.length > 5) {
+        const k = fila.current.findIndex((x) => !(x.tipo === "aviso" && x.aviso === "erro"));
+        fila.current.splice(k >= 0 ? k : 0, 1);
+      }
+      ops.current.marcarCentro();
+      // quando ele vencer na fila, o boneco do canto tem de poder voltar
+      window.setTimeout(ops.current.marcarCentro, VALIDADE_NA_FILA + 50);
+      ops.current.puxarSeLivre();
+    },
+  });
+
+  useEffect(() => () => definirCentroAtivo(false), []);
 
   // alguém pôs o personagem em cena (ou tirou): o palco central cede ou volta
   useEffect(() => {
+    const o = ops.current;
     if (donoDoPalco()) {
       const a = ativoRef.current;
-      if (a) { fila.current.unshift({ ...a, desde: Date.now() }); marcarCentro(); setAtivo(null); }
+      if (a) { fila.current.unshift({ ...a, desde: Date.now() }); o.setAtivo(null); }
     } else if (!ativoRef.current) {
-      const t = window.setTimeout(() => { if (!donoDoPalco() && !ativoRef.current) setAtivo(proximoDaFila()); }, 350);
-      return () => window.clearTimeout(t);
+      o.puxarSeLivre();
     }
-  }, [versaoPalco, proximoDaFila]);
+  }, [versaoPalco]);
 
   useEffect(() => {
+    const o = ops.current;
     const aoCelebrar = (e: Event) => {
       const p = (e as CustomEvent<PedidoCelebracao>).detail;
       if (!p || !CENAS[p.motivo]) return;
       const cena = CENAS[p.motivo];
+      const nova: Festa = { id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() };
       // palco ocupado por outra tela: a festa espera a vez
-      if (donoDoPalco()) {
-        if (fila.current.length < 3) fila.current.push({ id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() }); marcarCentro();
+      if (donoDoPalco()) { o.enfileirar(nova); return; }
+      const a = ativoRef.current;
+      if (!a) { o.setAtivo(nova); return; }
+      // o aviso de sucesso que acabou de chegar vira a fala da festa — no MESMO
+      // palco (mesmo id): sem um segundo boneco entrando por cima do primeiro
+      if (a.tipo === "aviso" && a.aviso === "sucesso" && !a.acao && Date.now() - a.desde < 1200) {
+        o.setAtivo(cena.tamanho === "grande" ? { ...nova, id: a.id, detalhe: a.fala } : { ...nova, id: a.id, fala: a.fala, detalhe: a.detalhe });
         return;
       }
-      setAtivo((a) => {
-        const nova: Festa = { id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() };
-        if (!a) return nova;
-        // o aviso de sucesso que acabou de chegar vira a fala da festa
-        if (a.tipo === "aviso" && a.aviso === "sucesso" && !a.acao && Date.now() - a.desde < 1200) {
-          return cena.tamanho === "grande" ? { ...nova, detalhe: a.fala } : { ...nova, fala: a.fala, detalhe: a.detalhe };
-        }
-        if (a.tipo === "aviso") { fila.current.unshift(nova); marcarCentro(); return a; }
-        // o capítulo que fecha o dia dispara "capítulo" e, logo depois,
-        // "leitura do dia": a maior toma o lugar da menor
-        if (PESO[cena.tamanho] > PESO[CENAS[a.motivo].tamanho]) return nova;
-        if (p.motivo === a.motivo) return a;
-        if (fila.current.length < 3) fila.current.push(nova); marcarCentro();
-        return a;
-      });
+      if (a.tipo === "aviso") { o.enfileirar(nova, true); return; }
+      // o capítulo que fecha o dia dispara "capítulo" e, logo depois,
+      // "leitura do dia": a maior toma o lugar da menor (no mesmo palco)
+      if (PESO[cena.tamanho] > PESO[CENAS[a.motivo].tamanho]) { o.setAtivo({ ...nova, id: a.id }); return; }
+      if (p.motivo === a.motivo) return;
+      o.enfileirar(nova);
     };
     const aoAvisar = (e: Event) => {
       const p = (e as CustomEvent<PedidoAviso>).detail;
       if (!p?.texto) return;
-      // aviso da PRÓXIMA tela: vai para a fila e espera ela abrir
-      if (p.naProximaTela) {
-        if (fila.current.length < 3) fila.current.push({
-          id: ++seq.current, tipo: "aviso", aviso: p.tipo, fala: p.texto, detalhe: p.detalhe, acao: p.acao,
-          dura: p.duracao ? Math.min(12000, Math.max(2500, p.duracao)) : tempoDeLeitura(p.texto, p.detalhe, !!p.acao),
-          desde: Date.now(),
-        });
-        marcarCentro();
-        return;
-      }
-      // a tela que já tem o personagem em cena diz o aviso pela boca dele
-      const dono = donoDoPalco();
-      if (dono?.falar?.(p)) return;
       const novo: Aviso = {
         id: ++seq.current, tipo: "aviso", aviso: p.tipo, fala: p.texto, detalhe: p.detalhe, acao: p.acao,
         dura: p.duracao ? Math.min(12000, Math.max(2500, p.duracao)) : tempoDeLeitura(p.texto, p.detalhe, !!p.acao),
         desde: Date.now(),
       };
-      if (dono) {
-        // (o carregamento): espera ele sair
-        if (fila.current.length < 3) fila.current.push(novo); marcarCentro();
+      // aviso da PRÓXIMA tela: vai para a fila e espera ela abrir
+      if (p.naProximaTela) { o.enfileirar(novo); return; }
+      // a tela que já tem o personagem em cena diz o aviso pela boca dele
+      const dono = donoDoPalco();
+      if (dono?.falar?.(p)) return;
+      // (o carregamento, a jornada): espera ela sair
+      if (dono) { o.enfileirar(novo); return; }
+      const a = ativoRef.current;
+      if (!a) { o.setAtivo(novo); return; }
+      // o sucesso que chega junto da festa vira a fala dela
+      // (um aviso com botão — "Resgatar" — nunca se funde: o botão sumiria)
+      if (a.tipo === "festa" && p.tipo === "sucesso" && !p.acao && Date.now() - a.desde < 1200) {
+        o.setAtivo(CENAS[a.motivo].tamanho === "grande" ? { ...a, detalhe: p.texto } : { ...a, fala: p.texto, detalhe: p.detalhe });
         return;
       }
-      setAtivo((a) => {
-        if (!a) return novo;
-        // o sucesso que chega junto da festa vira a fala dela
-        // (um aviso com botão — "Resgatar" — nunca se funde: o botão sumiria)
-        if (a.tipo === "festa" && p.tipo === "sucesso" && !p.acao && Date.now() - a.desde < 1200) {
-          return CENAS[a.motivo].tamanho === "grande" ? { ...a, detalhe: p.texto } : { ...a, fala: p.texto, detalhe: p.detalhe };
-        }
-        // aviso sobre aviso: o mais novo é o que importa agora
-        if (a.tipo === "aviso") return novo;
-        if (fila.current.length < 3) fila.current.push(novo); marcarCentro();
-        return a;
-      });
+      if (a.tipo === "aviso") {
+        // um ERRO ou um aviso com BOTÃO não é atropelado: o novo espera a vez
+        // (antes "o mais novo ganha" apagava o erro de salvar e o "Resgatar")
+        if (a.aviso === "erro" || a.acao) { o.enfileirar(novo, novo.aviso === "erro" || !!novo.acao); return; }
+        o.setAtivo(novo);
+        return;
+      }
+      o.enfileirar(novo);
     };
     window.addEventListener(EVENTO_CELEBRAR, aoCelebrar);
     window.addEventListener(EVENTO_AVISO, aoAvisar);
@@ -197,20 +213,18 @@ export function Comemoracao() {
     };
   }, []);
 
-  const encerrar = useCallback(() => {
-    setAtivo(null);
+  /** o palco que acabou é ESTE? (um palco saindo não derruba o que entrou) */
+  const encerrar = useCallback((id: number) => {
+    if (ativoRef.current?.id !== id) return;
+    ops.current.setAtivo(null);
     // o próximo entra depois que este saiu de cena (se o palco estiver livre)
-    window.setTimeout(() => {
-      if (donoDoPalco() || ativoRef.current) return;
-      const p = proximoDaFila();
-      if (p) setAtivo(p);
-    }, 350);
-  }, [proximoDaFila]);
+    ops.current.puxarSeLivre();
+  }, []);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {/* quando o aviso vira a fala da festa, o mesmo palco segue e o balão reescreve */}
-      {ativo && <Palco key={ativo.id} item={ativo} onFim={encerrar} />}
+      {ativo && <Palco key={ativo.id} item={ativo} onFim={() => encerrar(ativo.id)} />}
     </AnimatePresence>
   );
 }
@@ -307,11 +321,11 @@ function Palco({ item, onFim }: { item: Item; onFim: () => void }) {
   if (festa?.tamanho === "grande") {
     return (
       <motion.div
+        data-palco-central=""
         className="rpg-root fixed inset-0 z-[200] flex items-center justify-center px-6"
         style={{ background: "rgba(5,7,12,0.82)", backdropFilter: "blur(3px)" }}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.3 } }}
         onClick={() => fim.current()}
-        role="status"
       >
         <div className="relative flex w-full max-w-[340px] flex-col items-center">
           {/* a luz que abre atrás dele (o giro fica no filho: o framer-motion
@@ -366,7 +380,7 @@ function Palco({ item, onFim }: { item: Item; onFim: () => void }) {
   // e só o boneco com o balão recebe o toque (que o dispensa).
   const tamanho = festa ? (festa.tamanho === "pequena" ? 104 : 124) : 112;
   return (
-    <div className="rpg-root pointer-events-none fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ background: "transparent" }} role="status">
+    <div data-palco-central="" className="rpg-root pointer-events-none fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ background: "transparent" }}>
       {/* um halo suave atrás dele, para ler sobre qualquer tela */}
       <motion.div
         className="pointer-events-none absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full"

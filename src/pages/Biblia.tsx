@@ -252,14 +252,9 @@ const Biblia = () => {
     }
 
     // If changing plan (not onboarding), regenerate schedule
-    if (profile?.has_completed_onboarding) {
-      await regenerateSchedule(plan);
-      toast.success("Plano alterado com sucesso!");
-    } else {
-      // For onboarding, generate initial schedule
-      await regenerateSchedule(plan);
-      toast.success("Plano configurado! Vamos começar sua jornada.");
-    }
+    // só comemora o que foi GRAVADO (o erro já foi dito pelo personagem)
+    if (!(await regenerateSchedule(plan))) return;
+    toast.success(profile?.has_completed_onboarding ? "Plano alterado com sucesso!" : "Plano configurado! Vamos começar sua jornada.");
 
     setShowPlanSelection(false);
     playSound("success");
@@ -297,7 +292,7 @@ const Biblia = () => {
       if (profileError) throw profileError;
 
       // Regenerate schedule with custom books
-      await regenerateSchedule("custom", planData.books, planData.totalDays);
+      if (!(await regenerateSchedule("custom", planData.books, planData.totalDays))) return;
 
       setShowCustomPlanModal(false);
       playSound("success");
@@ -379,7 +374,7 @@ const Biblia = () => {
   const handleMarkChapterFromModal = async () => {
     if (!selectedChapter || !todaySchedule) return;
     
-    await markChapterComplete(todaySchedule.date, selectedChapter.book, selectedChapter.chapter);
+    if (!(await markChapterComplete(todaySchedule.date, selectedChapter.book, selectedChapter.chapter))) return;
     playSound("complete");
     celebrar("capitulo");
     
@@ -404,7 +399,7 @@ const Biblia = () => {
 
     if (chapterData?.isCompleted) return; // Already completed
 
-    await markChapterComplete(todaySchedule.date, book, chapter);
+    if (!(await markChapterComplete(todaySchedule.date, book, chapter))) return;
     playSound("complete");
     celebrar("capitulo");
 
@@ -423,7 +418,7 @@ const Biblia = () => {
   const handleMarkAllAsRead = async () => {
     if (!todaySchedule) return;
 
-    await markDayComplete(todaySchedule.date);
+    if (!(await markDayComplete(todaySchedule.date))) return;
     playSound("achievement");
     celebrar("leitura-do-dia");
     toast.success("Leitura do dia concluída! 🎉");
@@ -446,7 +441,7 @@ const Biblia = () => {
     if (!studyBibleChapter || !todaySchedule) return;
     
     // Mark in the reading schedule (plan progress)
-    await markChapterComplete(todaySchedule.date, studyBibleChapter.book, studyBibleChapter.chapter);
+    if (!(await markChapterComplete(todaySchedule.date, studyBibleChapter.book, studyBibleChapter.chapter))) return;
     playSound("complete");
     celebrar("capitulo");
     
@@ -651,7 +646,7 @@ const Biblia = () => {
                     await updateProfile({
                       reading_plan: "custom",
                     });
-                    await regenerateSchedule("custom", customPlanCache.selected_books, customPlanCache.total_days);
+                    if (!(await regenerateSchedule("custom", customPlanCache.selected_books, customPlanCache.total_days))) return;
                     toast.success(`Plano "${customPlanCache.plan_name}" reiniciado!`);
                     playSound("success");
                     celebrar("plano-criado");
@@ -826,13 +821,13 @@ const Biblia = () => {
                   console.log("Day clicked:", date);
                 }}
                 onMarkDayComplete={async (date) => {
-                  await markDayComplete(date);
+                  if (!(await markDayComplete(date))) return;
                   playSound("achievement");
                   celebrar("leitura-do-dia");
                   toast.success("Leitura do dia marcada como concluída! 🎉");
                 }}
                 onMarkChapterComplete={async (date, book, chapter) => {
-                  await markChapterComplete(date, book, chapter);
+                  if (!(await markChapterComplete(date, book, chapter))) return;
                   playSound("complete");
                   celebrar("capitulo");
                 }}

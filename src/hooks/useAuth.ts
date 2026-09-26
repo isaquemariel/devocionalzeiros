@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { prepararSaida } from "@/lib/sairDaConta";
 import { User, Session } from "@supabase/supabase-js";
 import { invalidateAdminCache } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
@@ -139,6 +140,7 @@ export const useAuth = () => {
     localStorage.removeItem('supabase.auth.token');
     
     try {
+      await prepararSaida();
       await supabase.auth.signOut();
     } catch (error) {
       // Ignore errors - session might already be invalid

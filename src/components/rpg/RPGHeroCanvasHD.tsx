@@ -59,6 +59,8 @@ const RPGHeroCanvasHD = ({
   propsRef.current = { look, walking, face, mood };
 
   const { CW, CH } = FRAMES[frame];
+  const reduzMovimento = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const quadroEstatico = reduzMovimento ? JSON.stringify([look, mood, walking, face, size]) : "";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -96,7 +98,10 @@ const RPGHeroCanvasHD = ({
       mounted = false;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [CW, CH]);
+    // com movimento reduzido ele desenha UM quadro: então redesenha quando a
+    // roupa, o humor ou o tamanho mudam (senão o provador mostrava a peça
+    // anterior, e trocar o tamanho do canvas o deixava em branco)
+  }, [CW, CH, quadroEstatico]);
 
   // resolução real do canvas: tamanho CSS × DPR (nítido em qualquer tela)
   const dpr = typeof window !== "undefined" ? Math.min(3, window.devicePixelRatio || 1) : 2;

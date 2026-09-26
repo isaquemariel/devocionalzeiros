@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { aplicarJornada } from "@/lib/jornada/aplicar";
 import { lerRascunho } from "@/lib/jornada/motor";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -178,22 +178,41 @@ const Auth = () => {
   }, [showSplash]);
 
   // Redirect target after successful auth — supports ?redirect=/loja etc.
+  // Só caminhos do PRÓPRIO app: "//site.com" e "/\site.com" passavam no
+  // startsWith("/") e levavam a pessoa, logada, para fora (redirecionamento
+  // aberto — isca perfeita para uma página falsa de "sessão expirada").
+  const destinoSeguro = (r: string | null): string | null => {
+    if (!r || !r.startsWith("/") || r.startsWith("//") || r.includes("\\")) return null;
+    try {
+      const u = new URL(r, window.location.origin);
+      return u.origin === window.location.origin ? u.pathname + u.search + u.hash : null;
+    } catch { return null; }
+  };
   const getRedirectTarget = () => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const r = params.get("redirect");
-      if (r && r.startsWith("/")) return r;
-      const pending = localStorage.getItem("post_signup_redirect");
-      if (pending && pending.startsWith("/")) {
-        localStorage.removeItem("post_signup_redirect");
-        return pending;
-      }
-    } catch {}
+      const r = destinoSeguro(params.get("redirect"));
+      if (r) return r;
+      // o destino que foi junto na ida ao Google (a volta cai na raiz, sem ?redirect)
+      const doGoogle = destinoSeguro(sessionStorage.getItem("dz.depoisDoGoogle"));
+      sessionStorage.removeItem("dz.depoisDoGoogle");
+      if (doGoogle) return doGoogle;
+      const pending = destinoSeguro(localStorage.getItem("post_signup_redirect"));
+      localStorage.removeItem("post_signup_redirect");
+      if (pending) return pending;
+    } catch { /* sem armazenamento */ }
     return "/home";
   };
 
+  // O DEPOIS DO LOGIN mora num lugar só (e roda uma vez): confere a troca de
+  // senha obrigatória, leva as respostas da jornada e só então segue. Antes o
+  // login por senha navegava direto — pulando a troca de senha forçada pelo
+  // admin e perdendo as respostas de quem entrou no meio da jornada.
+  const jaSeguiu = useRef(false);
+  const acabouDeEntrar = useRef(false);
+
   useEffect(() => {
-    if (user && !loading && !isSettingNewPassword) {
+    if (user && !loading && !isSettingNewPassword && !jaSeguiu.current) {
       // Check if admin forced a password reset — if so, keep user on this screen
       (async () => {
         const { data } = await supabase
@@ -215,7 +234,15 @@ const Auth = () => {
           if (rascunho && !rascunho.aguardandoGoogle && ["salvar", "email", "senha"].includes(rascunho.etapa)) {
             await aplicarJornada(user.id, rascunho);
           }
-          navigate(getRedirectTarget());
+          if (jaSeguiu.current) return;
+          jaSeguiu.current = true;
+          // as boas-vindas são da tela de DENTRO: entram na fila já, sobem quando
+          // ela terminar de abrir (depois do carregamento), e o boneco pequeno
+          // do canto só aparece quando elas descerem
+          if (acabouDeEntrar.current) toast.success("Bem-vindo de volta!", { naProximaTela: true });
+          // replace: o Voltar do celular não cai de novo nesta tela (que o
+          // mandaria para dentro outra vez — uma armadilha)
+          navigate(getRedirectTarget(), { replace: true });
         }
       })();
     }
@@ -267,10 +294,10 @@ const Auth = () => {
                 .eq("user_id", u.id);
             }
           } catch (_) {}
-          toast.success("Senha alterada com sucesso!");
-          setIsSettingNewPassword(false);
+          toast.success("Senha alterada com sucesso!", { naProximaTela: true });
           setNewPassword(""); setConfirmPassword("");
-          navigate(getRedirectTarget());
+          // o "depois do login" (acima) segue daqui — uma navegação só
+          setIsSettingNewPassword(false);
         } catch {
           toast.error("Erro ao atualizar senha. Tente novamente.");
         }
@@ -282,8 +309,10 @@ const Auth = () => {
         toast.success("Email de recuperação enviado!");
         setIsRecovery(false); setEmail("");
       } else {
+        acabouDeEntrar.current = true; // antes: o "depois do login" pode rodar antes de o signIn voltar
         const { data, error } = await signIn(email, password);
         if (error) {
+          acabouDeEntrar.current = false;
           const msg = (error.message ?? "").toLowerCase();
           const status = (error as any)?.status;
           if (msg.includes("invalid login credentials")) {
@@ -326,13 +355,8 @@ const Auth = () => {
           }
           return;
         }
-        // as boas-vindas são da tela de DENTRO: entram na fila já, sobem quando
-        // ela terminar de abrir (depois do carregamento), e o boneco pequeno
-        // do canto só aparece quando elas descerem
-        if (data?.session?.user) {
-          toast.success("Bem-vindo de volta!", { naProximaTela: true });
-          navigate(getRedirectTarget(), { replace: true });
-        }
+        // entrou: quem segue é o "depois do login" (troca de senha, jornada, destino)
+        if (!data?.session?.user) acabouDeEntrar.current = false;
       }
     } catch {
       toast.error("Ocorreu um erro. Tente novamente.");
@@ -345,6 +369,8 @@ const Auth = () => {
     // Login com Google liberado em qualquer ambiente (navegador, PWA e app nativo).
     setIsGoogleLoading(true);
     try {
+      const destino = destinoSeguro(new URLSearchParams(window.location.search).get("redirect"));
+      try { if (destino) sessionStorage.setItem("dz.depoisDoGoogle", destino); } catch { /* ok */ }
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
@@ -358,8 +384,8 @@ const Auth = () => {
         setIsGoogleLoading(false);
         return;
       }
-      // Sessão criada com sucesso
-      navigate(getRedirectTarget(), { replace: true });
+      // Sessão criada: quem segue é o "depois do login"
+      acabouDeEntrar.current = true;
     } catch (err) {
       console.error("Google sign-in exception:", err);
       toast.error("Erro ao conectar com Google. Tente novamente.");
@@ -411,9 +437,12 @@ const Auth = () => {
               alto e embaixo, como na tela inicial, para o texto ler. */}
           <FundoDoDia veu="linear-gradient(180deg, rgba(6,8,16,0.32) 0%, rgba(6,8,16,0) 30%, rgba(6,8,16,0) 70%, rgba(6,8,14,0.3) 100%)" />
           {/* Desktop left panel */}
-          <div className="hidden lg:block lg:w-[46%] xl:w-[44%] shrink-0 relative">
-            <IdentityPanel registrar={desktop} />
-          </div>
+          {/* só um boneco montado por vez (o escondido por CSS seguia animando) */}
+          {desktop && (
+            <div className="w-[46%] xl:w-[44%] shrink-0 relative">
+              <IdentityPanel registrar />
+            </div>
+          )}
 
           {/* Right / full panel */}
           <div className="flex-1 relative h-full overflow-hidden">
@@ -443,14 +472,14 @@ const Auth = () => {
 
                 {/* ele recebe quem chega (no computador, ele já está no painel ao lado;
                     no cadastro, que tem mais campos, ele cede o espaço) */}
-                {!apertado && (
+                {!apertado && !desktop && (
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="relative lg:hidden"
                   >
-                    <PersonagemQueFala tamanho={compacto ? 78 : 112} registrar={!desktop} largura={Math.min(340, window.innerWidth - 40)} />
+                    <PersonagemQueFala tamanho={compacto ? 78 : 112} registrar largura={Math.min(340, window.innerWidth - 40)} />
                   </motion.div>
                 )}
 
@@ -499,22 +528,22 @@ const Auth = () => {
                         <AnimatePresence>
                           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3.5">
                             <div>
-                              <label className={rotulo}>Nova senha</label>
+                              <label htmlFor="auth-nova" className={rotulo}>Nova senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${campo} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 8 caracteres" disabled={isSubmitting} />
-                                <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                                <input id="auth-nova" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${campo} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 8 caracteres" disabled={isSubmitting} />
+                                <button type="button" aria-label={showNewPassword ? "Esconder senha" : "Mostrar senha"} onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                               </div>
                               {errors.newPassword && <p className="text-xs text-red-400 mt-1">{errors.newPassword}</p>}
                             </div>
                             <div>
-                              <label className={rotulo}>Confirmar senha</label>
+                              <label htmlFor="auth-confirma" className={rotulo}>Confirmar senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${campo} pr-10 ${errors.confirmPassword ? inputErr : ""}`} placeholder="Repita a nova senha" disabled={isSubmitting} />
-                                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                                <input id="auth-confirma" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${campo} pr-10 ${errors.confirmPassword ? inputErr : ""}`} placeholder="Repita a nova senha" disabled={isSubmitting} />
+                                <button type="button" aria-label={showConfirmPassword ? "Esconder senha" : "Mostrar senha"} onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                               </div>
@@ -527,10 +556,10 @@ const Auth = () => {
                         <>
                           {/* Email */}
                           <div>
-                            <label className={rotulo}>Email</label>
+                            <label htmlFor="auth-email" className={rotulo}>Email</label>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                              <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email} onChange={(e) => setEmail(e.target.value)} className={`${campo} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
+                              <input id="auth-email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email} onChange={(e) => setEmail(e.target.value)} className={`${campo} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
                             </div>
                             {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
                           </div>
@@ -538,11 +567,11 @@ const Auth = () => {
                           {/* Password */}
                           {!isRecovery && (
                             <div>
-                              <label className={rotulo}>Senha</label>
+                              <label htmlFor="auth-senha" className={rotulo}>Senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className={`${campo} pr-10 ${errors.password ? inputErr : ""}`} placeholder="••••••••" disabled={isSubmitting} autoComplete="current-password" />
-                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                                <input id="auth-senha" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className={`${campo} pr-10 ${errors.password ? inputErr : ""}`} placeholder="••••••••" disabled={isSubmitting} autoComplete="current-password" />
+                                <button type="button" aria-label={showPassword ? "Esconder senha" : "Mostrar senha"} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                               </div>

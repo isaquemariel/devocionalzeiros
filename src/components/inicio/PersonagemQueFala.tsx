@@ -34,7 +34,8 @@ export function PersonagemQueFala({
     if (!fala) return;
     setReagindo(true);
     const a = window.setTimeout(() => setReagindo(false), 1600);
-    const b = window.setTimeout(() => setFala(null), fala.duracao ?? tempoDeLeitura(fala.texto, fala.detalhe, !!fala.acao));
+    const dura = fala.duracao ? Math.min(12000, Math.max(2500, fala.duracao)) : tempoDeLeitura(fala.texto, fala.detalhe, !!fala.acao);
+    const b = window.setTimeout(() => setFala(null), dura);
     return () => { window.clearTimeout(a); window.clearTimeout(b); };
   }, [fala]);
 

@@ -89,6 +89,15 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
   });
   // quem volta encontra o boneco vestido como o deixou no RPG (só o que fica nele)
   const lookDeQuemVolta = useMemo(() => (quem.volta ? paraOApp(equipToLook(getEquip(quem.volta.uid))) : null), [quem]);
+  // o boneco vestido (canvas) baixa À PARTE: ele só entra em cena quando já
+  // chegou, senão aparecia sem roupa e trocava no meio da caminhada
+  const [vestidoPronto, setVestidoPronto] = useState(!lookDeQuemVolta);
+  useEffect(() => {
+    if (!lookDeQuemVolta) return;
+    let vivo = true;
+    import("@/components/devocionalzeiro/DevocionalzeiroVestido").then(() => { if (vivo) setVestidoPronto(true); }, () => { if (vivo) setVestidoPronto(true); });
+    return () => { vivo = false; };
+  }, [lookDeQuemVolta]);
 
   // ─── medidas: a cena tem 800 de altura, inteira na tela ────────────────────
   const desktop = tela.w >= 1024;
@@ -156,16 +165,16 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
   }, []);
   useEffect(() => {
     const mv = mov.current;
-    if (mv.alvo != null) andar();
+    if (mv.alvo != null && vestidoPronto) andar();
     return () => cancelAnimationFrame(mv.raf);
-  }, [andar]);
+  }, [andar, vestidoPronto]);
   // a tela mudou de tamanho: a casa muda de lugar e ele continua dentro da estrada
   useEffect(() => {
     const mv = mov.current;
-    if (!chegou) { mv.alvo = xCasa; andar(); return; }
+    if (!chegou) { mv.alvo = xCasa; if (vestidoPronto) andar(); return; }
     const nx = limitar(mv.x, xMin, xMax);
     if (nx !== mv.x) { mv.x = nx; setX(nx); }
-  }, [xCasa, xMin, xMax, chegou, andar]);
+  }, [xCasa, xMin, xMax, chegou, andar, vestidoPronto]);
 
   // ─── o pulo ───────────────────────────────────────────────────────────────
   const [salto, setSalto] = useState(0);
@@ -438,6 +447,10 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
     const dir = (k: string) => k === "ArrowRight" || k === "d" || k === "D";
     const baixo = (e: KeyboardEvent) => {
       if (saindo.current) return;
+      // atalhos do navegador (Ctrl/Cmd+D, Cmd+A…) não são com ele
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      // A/D só com o foco livre (setas andam mesmo com um botão focado)
+      if ((e.key === "a" || e.key === "A" || e.key === "d" || e.key === "D") && !livre()) return;
       if (esq(e.key) || dir(e.key)) {
         if (esq(e.key)) mov.current.esq = true; else mov.current.dir = true;
         mov.current.alvo = null;
@@ -700,11 +713,13 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
           className="relative h-full w-full cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd889]"
           style={{ transform: anda < 0 ? "scaleX(-1)" : undefined }}
         >
-          <Devocionalzeiro
-            tamanho={tamanho} gesto={anda ? "andar" : gesto} expressao={festejo ? "radiante" : expressao} chama={chama}
-            falando={falando} pulso={pulso} salto={salto} olhar={olhar}
-            look={lookDeQuemVolta ?? undefined}
-          />
+          {vestidoPronto && (
+            <Devocionalzeiro
+              tamanho={tamanho} gesto={anda ? "andar" : gesto} expressao={festejo ? "radiante" : expressao} chama={chama}
+              falando={falando} pulso={pulso} salto={salto} olhar={olhar}
+              look={lookDeQuemVolta ?? undefined}
+            />
+          )}
         </div>
       </div>
 

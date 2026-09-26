@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useOcuparPalco } from "@/lib/devocionalzeiro/palco";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles, Loader2, Plus } from "lucide-react";
 import { toast } from "@/lib/avisos";
@@ -62,6 +63,11 @@ function buildAvailable(userId: string, isAdmin: boolean): Set<string> {
 const MESMO_LUGAR: Partial<Record<Slot, Slot[]>> = { sword: ["weapon"], weapon: ["sword"] };
 
 const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobeProps) => {
+  // o herói está em cena no provador: o aviso ("faltam 20 talentos",
+  // "adquirido!") sai ao lado DELE, não num segundo boneco no meio da tela
+  const [aviso, setAviso] = useState<{ texto: string; erro: boolean } | null>(null);
+  useOcuparPalco((a) => { setAviso({ texto: a.texto, erro: a.tipo === "erro" }); return true; });
+  useEffect(() => { if (!aviso) return; const t = window.setTimeout(() => setAviso(null), 3800); return () => window.clearTimeout(t); }, [aviso]);
   // ownedVersion: recomputa "disponível" após comprar/resgatar (some o preço/lock na hora)
   const [ownedVersion, setOwnedVersion] = useState(0);
   const available = useMemo(() => buildAvailable(userId, isAdmin), [userId, isAdmin, ownedVersion]);
@@ -262,6 +268,23 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
           >
             <RPGHeroCanvasHD look={look} mood={mood} size={260} />
           </motion.div>
+
+          {/* o aviso do provador, falado por ele (o balão desce da cabeça do herói) */}
+          <AnimatePresence>
+            {aviso && (
+              <motion.div
+                key={aviso.texto}
+                className="pointer-events-none absolute left-1/2 top-2 z-10 w-[min(300px,90%)] -translate-x-1/2"
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                role="status"
+              >
+                <div className="rpg-dialogue px-3 py-2 text-[12.5px] font-semibold" style={{ borderColor: aviso.erro ? "#e8846b" : undefined }}>
+                  <span className="who block pb-0.5 text-[9.5px] font-bold">Devocionalzeiro</span>
+                  {aviso.texto}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Painel de ação da peça em foco (provar → adquirir/resgatar) */}
           <AnimatePresence>

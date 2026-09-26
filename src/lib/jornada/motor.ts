@@ -21,6 +21,10 @@ export function reduzir(estado: Estado, acao: Acao): Estado {
       return { ...estado, respostas: { ...estado.respostas, ...acao.parcial } };
 
     case "avancar": {
+      // da senha ninguém "avança": o fim só vem quando a conta EXISTE (quem
+      // leva para lá é o efeito da conta). Um Enter duplo no e-mail disparava
+      // um segundo avanço e caía no fim sem conta nenhuma.
+      if (estado.etapa === "senha") return estado;
       const seguinte = proxima(estado.etapa);
       if (!seguinte) return estado;
       return { ...estado, etapa: seguinte, historico: [...estado.historico, estado.etapa] };

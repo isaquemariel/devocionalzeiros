@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { limparDadosLocaisDaConta, prepararSaida } from "@/lib/sairDaConta";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -163,6 +164,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       // Sign out after password change — Supabase invalidates all refresh tokens
       // when the password changes, so we must force a fresh login.
       setTimeout(async () => {
+        await prepararSaida();
         await supabase.auth.signOut();
         navigate("/auth");
       }, 1500);
@@ -497,6 +499,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         headers: { Authorization: `Bearer ${session.access_token}` },
                       });
                       if (error) throw error;
+                      // a conta sumiu: some também tudo dela neste aparelho
+                      limparDadosLocaisDaConta(session.user.id);
+                      await prepararSaida();
                       await supabase.auth.signOut();
                       navigate("/auth");
                       toast.success("Conta excluída com sucesso.");
