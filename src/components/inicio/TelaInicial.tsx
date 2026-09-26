@@ -4,7 +4,7 @@ import { BookOpen, Brain, HeartHandshake, Scroll, Sword, Trophy, type LucideIcon
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 import { Balao } from "@/components/jornada/Balao";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
-import { ALTURA, CenaDoDia, ESTILO_CENA, ESTRADA } from "./CenaDoDia";
+import { ALTURA, CenaDoDia, ESTILO_CENA, ESTRADA, posicaoDoAstro } from "./CenaDoDia";
 import { useMomentoDoDia } from "./useMomentoDoDia";
 import { NomeDoApp } from "./NomeDoApp";
 import { CUTUCOES, CUTUCOES_DESKTOP, RECURSOS, montarRoteiro, type Fala, type IdRecurso } from "./roteiro";
@@ -286,8 +286,11 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
   };
 
   const cabeca = { x, y: topoBoneco + altBoneco * 0.42 };
-  const astroSol = naTela(m.sol.x * L, 470 - m.sol.altura * 360);
-  const astroLua = naTela(m.lua.x * L, 470 - m.lua.altura * 330);
+  // o mesmo lugar em que a cena desenha o astro (ao lado da torre)
+  const pSol = posicaoDoAstro((m.sol.x - 0.08) / 0.84, m.sol.altura, L, L * centroCena);
+  const pLua = posicaoDoAstro((m.lua.x - 0.1) / 0.8, m.lua.altura, L, L * centroCena);
+  const astroSol = naTela(pSol.x, pSol.y);
+  const astroLua = naTela(pLua.x, pLua.y);
 
   const tocarCeu = (qual: "sol" | "lua") => {
     if (saindo.current || !chegou) return;
@@ -584,10 +587,7 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
         >
           <div className="w-full px-10 py-8 xl:px-14">
             <div className="flex items-center gap-4">
-              <div className="relative shrink-0" style={{ width: 76, height: 76 }}>
-                <div className="absolute left-1/2 top-1/2 h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "radial-gradient(circle, rgba(255,200,110,0.32) 0%, rgba(255,200,110,0) 62%)" }} />
-                <img src={logoOfficial} alt="" aria-hidden="true" className="relative h-full w-full object-contain drop-shadow-[2px_3px_0_#0b0805]" />
-              </div>
+              <img src={logoOfficial} alt="" aria-hidden="true" className="shrink-0 object-contain" style={{ width: 76, height: 76 }} />
               <div className="min-w-0">
                 <h1 className="leading-none"><NomeDoApp tamanho={`${Math.round(limitar((painel - 190) / 9.9, 26, 50))}px`} /></h1>
                 <p className="mt-2 text-[14px] font-semibold leading-snug" style={{ color: "#ece0c6" }}>
@@ -633,11 +633,8 @@ export default function TelaInicial({ onSignup, onLogin }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative mb-2.5" style={{ width: baixa ? 54 : 74, height: baixa ? 54 : 74 }}>
-            <div className="absolute left-1/2 top-1/2 h-[190%] w-[190%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ background: "radial-gradient(circle, rgba(255,200,110,0.38) 0%, rgba(255,200,110,0) 62%)" }} />
-            <img src={logoOfficial} alt="" aria-hidden="true" className="relative h-full w-full object-contain drop-shadow-[2px_3px_0_#0b0805]" />
-          </div>
+          {/* o logo, limpo: sem brilho atrás (que parecia um segundo sol) nem sombra */}
+          <img src={logoOfficial} alt="" aria-hidden="true" className="mb-2.5 object-contain" style={{ width: baixa ? 56 : 78, height: baixa ? 56 : 78 }} />
           <h1 className="leading-none">
             <NomeDoApp tamanho={baixa ? "clamp(22px, 7.6vw, 40px)" : "clamp(24px, 8.4vw, 58px)"} />
           </h1>

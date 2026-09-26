@@ -7,6 +7,8 @@ import { useMomentoDoDia } from "./useMomentoDoDia";
  * A cena do dia como FUNDO de uma tela que não é a inicial (o login, o
  * cadastro): a mesma Jerusalém na hora de agora, com um véu escuro por cima
  * para o formulário ler. Quem entra de dia continua de dia; à noite, à noite.
+ * O sol (ou a lua) fica num canto do alto: o meio é do formulário e do
+ * personagem.
  */
 export function FundoDoDia({ veu = "rgba(4,8,16,0.72)" }: { veu?: string }) {
   const m = useMomentoDoDia();
@@ -28,7 +30,7 @@ export function FundoDoDia({ veu = "rgba(4,8,16,0.72)" }: { veu?: string }) {
   return (
     <div ref={caixa} className="pointer-events-none absolute inset-0 overflow-hidden" style={{ background: m.ceu.topo }} aria-hidden="true">
       <style>{ESTILO_CENA}</style>
-      <CenaDoDia momento={m} proporcao={proporcao} reduzir={reduzir} />
+      <CenaDoDia momento={m} proporcao={proporcao} reduzir={reduzir} astro="canto" />
       <div className="absolute inset-0" style={{ background: veu }} />
     </div>
   );

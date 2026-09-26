@@ -25,6 +25,13 @@ export interface OpcoesAviso {
   /** aceito por compatibilidade com o sonner; o personagem tem lugar próprio */
   position?: string;
   id?: string | number;
+  /**
+   * O aviso é da tela para onde se está INDO (o "Bem-vindo de volta!" do
+   * login): entra direto na fila do palco central e só sobe quando a tela de
+   * destino terminar de abrir — e, desde já, os bonecos fixos dela ficam fora
+   * de cena até ele descer.
+   */
+  naProximaTela?: boolean;
 }
 
 export interface PedidoAviso {
@@ -33,6 +40,7 @@ export interface PedidoAviso {
   detalhe?: string;
   duracao?: number;
   acao?: { rotulo: string; onClick: () => void };
+  naProximaTela?: boolean;
 }
 
 export const EVENTO_AVISO = "dz:aviso";
@@ -56,6 +64,7 @@ function avisar(tipo: TipoAviso, mensagem: unknown, o: OpcoesAviso = {}) {
     detail: {
       tipo, texto, detalhe: detalhe || undefined, duracao: o.duration,
       acao: o.action ? { rotulo: o.action.label, onClick: o.action.onClick } : undefined,
+      naProximaTela: o.naProximaTela || undefined,
     },
   }));
 }

@@ -47,6 +47,11 @@ algo ficou vermelho, NÃO suba: conserte ou avise.
   palco central está no ar (`useCentroAtivo`). Toda tela nova que desenhe o
   personagem em destaque tem de ocupar o palco — foi assim que o "Bem-vindo
   de volta!" aparecia como um segundo boneco por cima do login.
+  O boneco fixo só volta quando NÃO há nada no ar nem NA FILA do palco
+  central (`marcarCentro`). Aviso que é da tela para onde se vai (o
+  "Bem-vindo de volta!" do login) usa `toast.success(…, { naProximaTela: true })`:
+  entra na fila já, sobe quando a tela de destino terminar de abrir, e o boneco
+  do canto dela nasce escondido até ele descer.
 
 ## A VOZ DE DEUS na cena viva (regra fixa)
 
@@ -304,6 +309,11 @@ relógio: `?hora=19.5` na URL.
   mexer o ponteiro não pode redesenhar a cena.
 - O personagem fica EM PÉ na estrada (`ESTRADA`) e o balão sai da cabeça dele;
   nada de painel cobrindo o corpo dele.
+- **Um astro só, num lugar de céu limpo** (`posicaoDoAstro`): na tela inicial,
+  ao lado da torre do Templo (manhã à esquerda, tarde à direita); no login, num
+  canto do alto (`astro="canto"`). Nunca atrás do nome, do logo ou do
+  personagem — e nada de brilho radial atrás do logo ou do boneco, que se lê
+  como um segundo sol. O logo vai limpo, sem halo nem sombra.
 - Ele se controla como no RPG: arrastar abre o joystick flutuante
   (`RPGJoystick`) e anda na estrada; um toque avança a conversa (no boneco,
   ele reage); toque duplo pula (`salto` no rig); no computador, setas/A-D e

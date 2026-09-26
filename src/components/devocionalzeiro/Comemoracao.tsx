@@ -92,12 +92,22 @@ export function Comemoracao() {
   const ativoRef = useRef(ativo);
   ativoRef.current = ativo;
   // os bonecos fixos das telas (home, cabeçalho) saem de cena enquanto ele fala aqui
-  useEffect(() => { definirCentroAtivo(!!ativo); }, [ativo]);
+  // "no ar" é o que está falando E o que está na fila para falar: entre a tela
+  // abrir e o aviso subir (os 350 ms da troca, o carregamento que acabou de
+  // sair), o boneco do canto não pode aparecer — senão ele e o "Bem-vindo de
+  // volta!" ficam dois na tela
+  const marcarCentro = useCallback(() => {
+    queueMicrotask(() => definirCentroAtivo(
+      !!ativoRef.current || fila.current.some((p) => Date.now() - p.desde < VALIDADE_NA_FILA),
+    ));
+  }, []);
+  useEffect(() => { marcarCentro(); }, [ativo, marcarCentro]);
   useEffect(() => () => definirCentroAtivo(false), []);
 
   const proximoDaFila = useCallback((): Item | null => {
     while (fila.current.length) {
       const p = fila.current.shift()!;
+      marcarCentro();
       if (Date.now() - p.desde < VALIDADE_NA_FILA) return { ...p, desde: Date.now() };
     }
     return null;
@@ -107,7 +117,7 @@ export function Comemoracao() {
   useEffect(() => {
     if (donoDoPalco()) {
       const a = ativoRef.current;
-      if (a) { fila.current.unshift({ ...a, desde: Date.now() }); setAtivo(null); }
+      if (a) { fila.current.unshift({ ...a, desde: Date.now() }); marcarCentro(); setAtivo(null); }
     } else if (!ativoRef.current) {
       const t = window.setTimeout(() => { if (!donoDoPalco() && !ativoRef.current) setAtivo(proximoDaFila()); }, 350);
       return () => window.clearTimeout(t);
@@ -121,7 +131,7 @@ export function Comemoracao() {
       const cena = CENAS[p.motivo];
       // palco ocupado por outra tela: a festa espera a vez
       if (donoDoPalco()) {
-        if (fila.current.length < 3) fila.current.push({ id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() });
+        if (fila.current.length < 3) fila.current.push({ id: ++seq.current, tipo: "festa", motivo: p.motivo, fala: p.fala || sortear(cena.falas), desde: Date.now() }); marcarCentro();
         return;
       }
       setAtivo((a) => {
@@ -131,18 +141,28 @@ export function Comemoracao() {
         if (a.tipo === "aviso" && a.aviso === "sucesso" && !a.acao && Date.now() - a.desde < 1200) {
           return cena.tamanho === "grande" ? { ...nova, detalhe: a.fala } : { ...nova, fala: a.fala, detalhe: a.detalhe };
         }
-        if (a.tipo === "aviso") { fila.current.unshift(nova); return a; }
+        if (a.tipo === "aviso") { fila.current.unshift(nova); marcarCentro(); return a; }
         // o capítulo que fecha o dia dispara "capítulo" e, logo depois,
         // "leitura do dia": a maior toma o lugar da menor
         if (PESO[cena.tamanho] > PESO[CENAS[a.motivo].tamanho]) return nova;
         if (p.motivo === a.motivo) return a;
-        if (fila.current.length < 3) fila.current.push(nova);
+        if (fila.current.length < 3) fila.current.push(nova); marcarCentro();
         return a;
       });
     };
     const aoAvisar = (e: Event) => {
       const p = (e as CustomEvent<PedidoAviso>).detail;
       if (!p?.texto) return;
+      // aviso da PRÓXIMA tela: vai para a fila e espera ela abrir
+      if (p.naProximaTela) {
+        if (fila.current.length < 3) fila.current.push({
+          id: ++seq.current, tipo: "aviso", aviso: p.tipo, fala: p.texto, detalhe: p.detalhe, acao: p.acao,
+          dura: p.duracao ? Math.min(12000, Math.max(2500, p.duracao)) : tempoDeLeitura(p.texto, p.detalhe, !!p.acao),
+          desde: Date.now(),
+        });
+        marcarCentro();
+        return;
+      }
       // a tela que já tem o personagem em cena diz o aviso pela boca dele
       const dono = donoDoPalco();
       if (dono?.falar?.(p)) return;
@@ -153,7 +173,7 @@ export function Comemoracao() {
       };
       if (dono) {
         // (o carregamento): espera ele sair
-        if (fila.current.length < 3) fila.current.push(novo);
+        if (fila.current.length < 3) fila.current.push(novo); marcarCentro();
         return;
       }
       setAtivo((a) => {
@@ -165,7 +185,7 @@ export function Comemoracao() {
         }
         // aviso sobre aviso: o mais novo é o que importa agora
         if (a.tipo === "aviso") return novo;
-        if (fila.current.length < 3) fila.current.push(novo);
+        if (fila.current.length < 3) fila.current.push(novo); marcarCentro();
         return a;
       });
     };
