@@ -1,1 +1,2 @@
 Edge Functions use the root Deno configuration with automatic npm dependency resolution so local checks can resolve their npm imports without changing deployed function behavior.
+Edge Functions share CORS response headers from `_shared/cors.ts` because the Supabase client does not export a `/cors` module.

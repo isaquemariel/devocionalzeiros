@@ -1,6 +1,6 @@
 // Checkout para COMPRAR TALENTOS (moeda do jogo). R$ 1 = 20 talentos.
 // O usuário escolhe o valor em R$; o webhook credita os talentos após o pagamento.
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { corsHeaders } from '../_shared/cors.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import Stripe from 'npm:stripe@17';
 
