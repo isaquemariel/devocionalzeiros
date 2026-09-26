@@ -20,7 +20,13 @@ export function useKeyboardInset(): number {
       const escondido = window.innerHeight - vv.height - vv.offsetTop;
       // < 80px é barra de navegação do navegador, não teclado: ignorar evita
       // o layout pular a cada rolagem.
-      setInset(escondido > 80 ? Math.round(escondido) : 0);
+      //
+      // Arredondado em degraus de 8px: durante a animação do teclado o iOS
+      // dispara `resize` a cada quadro, e cada valor novo re-renderizava a
+      // sala inteira. Quem alisa o movimento é a transição CSS de quem lê
+      // este número — não a quantidade de re-renders.
+      const bruto = escondido > 80 ? escondido : 0;
+      setInset(bruto ? Math.round(bruto / 8) * 8 : 0);
     };
     medir();
     vv.addEventListener("resize", medir);

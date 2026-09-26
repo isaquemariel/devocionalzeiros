@@ -27,6 +27,21 @@
 
 type G = CanvasRenderingContext2D;
 
+/**
+ * Degradês verticais em cache. São os mesmos em todo quadro — só mudam de
+ * tamanho —, e `createLinearGradient` a 60 fps é alocação pura.
+ */
+const CACHE_GRAD = new Map<string, CanvasGradient>();
+function degrade(g: G, chave: string, y0: number, y1: number, paradas: string[]): CanvasGradient {
+  const achado = CACHE_GRAD.get(chave);
+  if (achado) return achado;
+  const lg = g.createLinearGradient(0, y0, 0, y1);
+  paradas.forEach((c, i) => lg.addColorStop(i / (paradas.length - 1), c));
+  if (CACHE_GRAD.size > 24) CACHE_GRAD.clear(); // troca de sala/rotação: não cresce
+  CACHE_GRAD.set(chave, lg);
+  return lg;
+}
+
 /** A trilha não muda de forma: só de tamanho. Pintada uma vez, esticada sempre. */
 const CACHE_TRILHA: Record<string, HTMLCanvasElement | null> = {};
 function trilhaCache(claro: boolean): HTMLCanvasElement | null {
@@ -92,10 +107,8 @@ export function drawRoomFloor(g: G, d: ChaoDims, claro: boolean): void {
   // ---- 1. a dobra do horizonte -----------------------------------------
   // Uma sombra curta onde o plano encontra o fundo. É o que separa "chão"
   // de "parede pintada" — e vale mais que qualquer linha de grade.
-  const dobra = g.createLinearGradient(0, GROUND, 0, GROUND + faixa * 0.26);
-  dobra.addColorStop(0, "rgba(0,0,0,0.30)");
-  dobra.addColorStop(1, "rgba(0,0,0,0)");
-  g.fillStyle = dobra;
+  g.fillStyle = degrade(g, `dobra:${GROUND}:${faixa}`, GROUND, GROUND + faixa * 0.26,
+    ["rgba(0,0,0,0.30)", "rgba(0,0,0,0)"]);
   g.fillRect(camX, GROUND, VW, faixa * 0.26);
 
   // ---- 2. trilha --------------------------------------------------------
@@ -117,10 +130,8 @@ export function drawRoomFloor(g: G, d: ChaoDims, claro: boolean): void {
   // ---- 3. beirada da frente --------------------------------------------
   // Escurece a borda de baixo: a moldura empurra o miolo para dentro e o
   // chão deixa de acabar no nada.
-  const perto = g.createLinearGradient(0, H - faixa * 0.3, 0, H);
-  perto.addColorStop(0, "rgba(0,0,0,0)");
-  perto.addColorStop(1, "rgba(6,4,14,0.34)");
-  g.fillStyle = perto;
+  g.fillStyle = degrade(g, `perto:${H}:${faixa}`, H - faixa * 0.3, H,
+    ["rgba(0,0,0,0)", "rgba(6,4,14,0.34)"]);
   g.fillRect(camX, H - faixa * 0.3, VW, faixa * 0.3);
 
   g.restore();

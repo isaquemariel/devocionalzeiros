@@ -2,7 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { MessageSquare, Send, X } from "lucide-react";
 import type { ChatMessage } from "@/hooks/useWorldRoom";
 import { getLevelTier } from "@/lib/rpgLevel";
-import { useKeyboardInset } from "@/hooks/useKeyboardInset";
 
 const ADMIN_COLOR = "#c084fc";
 
@@ -11,6 +10,11 @@ interface Props {
   onSend: (texto: string) => void;
   /** avisa a sala que estou escrevendo (balão de "…" sobre a minha cabeça) */
   onTyping?: (on: boolean) => void;
+  /** altura do teclado virtual — medida UMA vez, lá na sala */
+  teclado: number;
+  /** o cartão do histórico está aberto? (a sala precisa saber, para poupar quadros) */
+  painel: boolean;
+  onPainel: (v: boolean) => void;
 }
 
 const hora = (ts: number) =>
@@ -32,9 +36,8 @@ const hora = (ts: number) =>
  *    É histórico, não é o lugar da conversa; por isso não ocupa a tela toda e
  *    o mundo continua vivo atrás dele.
  */
-export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
+export function RPGRoomChat({ messages, onSend, onTyping, teclado, painel, onPainel }: Props) {
   const [draft, setDraft] = useState("");
-  const [painel, setPainel] = useState(false);
   // `entrou` liga um quadro DEPOIS de montar: é o que dá o salto do botão
   // para o centro. Ao fechar, desliga primeiro e desmonta no fim da volta —
   // senão o cartão sumiria seco, sem devolver o gesto.
@@ -48,13 +51,12 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
   const fechar = useCallback(() => {
     setEntrou(false);
     if (saidaRef.current) window.clearTimeout(saidaRef.current);
-    saidaRef.current = window.setTimeout(() => setPainel(false), 200);
+    saidaRef.current = window.setTimeout(() => onPainel(false), 200);
   }, []);
   useEffect(() => () => { if (saidaRef.current) window.clearTimeout(saidaRef.current); }, []);
   const inputRef = useRef<HTMLInputElement>(null);
   const painelInputRef = useRef<HTMLInputElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
-  const teclado = useKeyboardInset();
 
   // ---- não lidas: o crachá do botão que abre o histórico --------------------
   const vistasRef = useRef(messages.length);
@@ -130,21 +132,22 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center gap-2 px-3 pt-6"
         style={{
-          // o teclado é descontado pela SALA (que encolhe o mundo); aqui só a
-          // área segura do aparelho, senão o desconto entraria duas vezes.
+          // sobe junto com o teclado por transformação: mexer em `bottom`
+          // seria layout a cada quadro da animação do teclado.
+          transform: `translate3d(0, ${-teclado}px, 0)`,
           paddingBottom: teclado ? 8 : "max(0.625rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))",
           background: "linear-gradient(to top, rgba(7,6,12,0.82), rgba(7,6,12,0))",
           // com o cartão aberto a barra atrás vira ruído: o cartão já tem o
           // seu próprio campo de escrever.
           opacity: painel ? 0 : 1,
-          transition: "opacity 160ms ease",
+          transition: "transform 200ms cubic-bezier(.22,.61,.36,1), opacity 160ms ease",
         }}
         onPointerDown={(e) => e.stopPropagation()}
       >
         <div className={`flex min-w-0 flex-1 items-center gap-2 ${painel ? "pointer-events-none" : "pointer-events-auto"}`}>
           <button
             type="button"
-            onClick={() => setPainel(true)}
+            onClick={() => onPainel(true)}
             aria-label={naoLidas > 0 ? `Abrir a conversa (${naoLidas} não lidas)` : "Abrir a conversa"}
             className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0b0a12]/85 text-white/75 backdrop-blur-sm transition active:scale-95"
           >
@@ -168,6 +171,7 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
         <div
           className="absolute inset-0 z-30 flex items-center justify-center px-4"
           style={{
+            paddingBottom: teclado,
             background: entrou ? "rgba(0,0,0,0.34)" : "rgba(0,0,0,0)",
             transition: "background 200ms ease",
           }}
@@ -177,11 +181,12 @@ export function RPGRoomChat({ messages, onSend, onTyping }: Props) {
             className="flex w-[min(92%,440px)] flex-col overflow-hidden rounded-3xl border border-[#e8b04b44]"
             style={{
               maxHeight: "min(62%, 440px)",
-              /* 0,80 deixa a cena aparecer; o desfoque é o que salva a leitura
-                 quando um balão branco passa por trás do texto. */
-              background: "rgba(10,9,16,0.80)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              /* Translúcido para a cena aparecer, mas SEM `backdrop-filter`:
+                 desfocar o que está atrás obriga o compositor a refiltrar a
+                 tela a cada quadro do canvas, e era isso que fazia o cartão
+                 abrir engasgando no celular. A leitura fica por conta do tom
+                 mais fechado e da sombra no texto. */
+              background: "rgba(10,9,16,0.86)",
               boxShadow: "0 26px 64px rgba(0,0,0,0.6)",
               transformOrigin: "left bottom",
               transform: entrou ? "scale(1) translate(0,0)" : "scale(0.28) translate(-14%, 52%)",

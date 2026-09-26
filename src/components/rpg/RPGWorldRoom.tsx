@@ -138,11 +138,27 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   useEffect(() => { onCount?.(count); }, [count, onCount]);
   useEffect(() => { onConnected?.(connected); }, [connected, onConnected]);
 
-  // O teclado não pode engolir a sala: ele encolhe o MUNDO por baixo (um
-  // espaçador no fim da coluna), e a cena reenquadra sozinha. Antes o campo
-  // abria uma gaveta e os personagens desapareciam atrás de uma parede preta —
-  // que é o contrário do que a sala serve.
+  // O TECLADO DESLIZA A CENA, NÃO A REDIMENSIONA.
+  //
+  // Antes ele encolhia a caixa do mundo. O ResizeObserver disparava, `setup()`
+  // recalculava a proporção, o horizonte (`groundPara`) mudava de lugar e a
+  // cena inteira se reenquadrava: o personagem SALTAVA e a imagem cortava.
+  // Ainda por cima os dois buffers de canvas eram realocados a cada quadro da
+  // animação do teclado.
+  //
+  // Agora a caixa não muda de tamanho: o mundo é EMPURRADO para cima por um
+  // `translateY`, que o compositor resolve sozinho, sem tocar no layout nem no
+  // desenho. O personagem fica exatamente onde estava, do mesmo tamanho.
   const teclado = useKeyboardInset();
+  // A barra sobe o teclado inteiro (tem de ficar acima dele); o mundo sobe
+  // menos, para o fundo da faixa andável não subir demais em telas baixas.
+  const subirMundo = Math.round(teclado * 0.75);
+
+  // O cartão de conversa mora aqui em cima porque a sala precisa saber que
+  // ele está aberto: com um cartão cobrindo a cena, desenhar 60 vezes por
+  // segundo é queimar bateria e roubar o tempo da própria animação de abrir.
+  const [painel, setPainel] = useState(false);
+  const painelRef = useRef(false); painelRef.current = painel;
 
   const posRef = useRef({ x: 0.5, y: 0.5 });
   const targetRef = useRef<{ x: number; y: number } | null>(null);
@@ -313,8 +329,14 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let t = 0, last = 0, raf = 0, on = true;
 
+    let ultimoDesenho = 0;
     const frame = (now: number) => {
       if (!on) return;
+      // Cartão aberto: a cena está por baixo de um cartão. 60 fps ali é
+      // trabalho jogado fora — e é justamente o que faz a animação de abrir
+      // engasgar. ~14 fps mantém a sala viva e devolve a thread à interface.
+      if (painelRef.current && now - ultimoDesenho < 70) { raf = requestAnimationFrame(frame); return; }
+      ultimoDesenho = now;
       const dt = Math.min(48, now - last || 16); last = now; t += dt;
       const secs = dt / 1000;
 
@@ -513,7 +535,16 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       <div
         ref={palcoRef}
         className="absolute inset-0"
-        style={{ touchAction: "none", cursor: "pointer" }}
+        style={{
+          touchAction: "none",
+          cursor: "pointer",
+          // desliza; NÃO redimensiona. `translate3d` para ir na GPU e não
+          // disparar layout — a caixa continua do mesmo tamanho, então o
+          // ResizeObserver nem acorda e a cena não se reenquadra.
+          transform: `translate3d(0, ${-subirMundo}px, 0)`,
+          transition: "transform 200ms cubic-bezier(.22,.61,.36,1)",
+          willChange: subirMundo ? "transform" : undefined,
+        }}
         onPointerDown={onStagePointerDown}
         onPointerMove={onStagePointerMove}
         onPointerUp={onStagePointerUp}
@@ -541,12 +572,15 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           joystick, e isso impediria a rolagem do histórico se o chat vivesse
           dentro dele. A barra flutua sobre o mundo; o painel desliza da
           direita quando a pessoa pede. */}
-      <RPGRoomChat messages={messages} onSend={sendChat} onTyping={sendTyping} />
+      <RPGRoomChat
+        messages={messages}
+        onSend={sendChat}
+        onTyping={sendTyping}
+        teclado={teclado}
+        painel={painel}
+        onPainel={setPainel}
+      />
       </div>
-
-      {/* O teclado tira altura do MUNDO, e só. A cena reenquadra e continua
-          inteira acima dele — nada de parede preta. */}
-      {teclado > 0 && <div aria-hidden="true" style={{ height: teclado }} className="shrink-0" />}
 
 
       {/* ---- Menu de moderação (ao tocar num personagem) ---- */}
