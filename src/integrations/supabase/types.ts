@@ -59,6 +59,32 @@ export type Database = {
         }
         Relationships: []
       }
+      achievement_notifications: {
+        Row: {
+          achievement_id: string
+          notified_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          notified_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          notified_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achievement_notifications_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievement_catalog"
+            referencedColumns: ["achievement_id"]
+          },
+        ]
+      }
       admin_metrics_backup: {
         Row: {
           active_users: number
@@ -1741,6 +1767,24 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string
+        }
+        Relationships: []
+      }
+      user_app_presence: {
+        Row: {
+          user_id: string
+          visivel: boolean
+          visto_em: string
+        }
+        Insert: {
+          user_id: string
+          visivel?: boolean
+          visto_em?: string
+        }
+        Update: {
+          user_id?: string
+          visivel?: boolean
+          visto_em?: string
         }
         Relationships: []
       }
