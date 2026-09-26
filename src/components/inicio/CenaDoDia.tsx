@@ -19,6 +19,31 @@ export const ALTURA = 800;
 export const ESTRADA = 572;
 export const yNaTela = (y: number, alturaTela: number) => (y / ALTURA) * alturaTela;
 
+/**
+ * ONDE FICA O SOL (ou a lua) — um astro só, num lugar de céu limpo.
+ *
+ * - `torre` (tela inicial): ao LADO da torre do Templo, perto das nuvens — de
+ *   manhã à esquerda dela, de tarde à direita — subindo com a hora, da linha
+ *   dos telhados (nascer/pôr) até logo acima dela (meio-dia). Nunca atrás do
+ *   nome, do logo ou do personagem.
+ * - `canto` (login e cadastro, onde o meio é do formulário e do personagem):
+ *   num canto do alto, do lado da hora.
+ *
+ * `frac` é a posição na travessia do céu (0 nasce, 1 se põe) e `altura` o
+ * quanto subiu (0..1), ambos de `lib/ceu`. Devolve unidades da cena.
+ */
+export type ModoAstro = "torre" | "canto";
+export function posicaoDoAstro(frac: number, altura: number, L: number, c0: number, modo: ModoAstro = "torre") {
+  const lado = frac < 0.5 ? -1 : 1;
+  const k = Math.min(1, Math.abs(frac - 0.5) * 2); // 0 ao meio-dia, 1 no horizonte
+  if (modo === "canto") {
+    const margem = Math.max(62, L * 0.09);
+    return { x: lado < 0 ? margem : L - margem, y: 150 - altura * 50 };
+  }
+  const longe = Math.max(110, Math.min(230, Math.min(c0, L - c0) - 34));
+  return { x: c0 + lado * (100 + k * (longe - 100)), y: 400 - altura * 125 };
+}
+
 /** gerador com semente fixa: a cidade é sempre a mesma, e não "pula" a cada render */
 function semente(n: number) {
   let s = n;
@@ -36,9 +61,11 @@ interface Props {
    * direita dele (0,7) em vez de ficar escondida atrás.
    */
   centro?: number;
+  /** onde fica o astro: ao lado da torre (tela inicial) ou num canto (login) */
+  astro?: ModoAstro;
 }
 
-export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzir, centro = 0.5 }: Props) {
+export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzir, centro = 0.5, astro = "torre" }: Props) {
   const uid = useId().replace(/:/g, "");
   const L = Math.max(400, Math.round(ALTURA * proporcao));
   const c0 = L * centro;
@@ -86,8 +113,8 @@ export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzi
   // `--dz-py` (-1..1) num ancestral, e cada camada anda na sua profundidade
   // pelo CSS — mexer o ponteiro não redesenha centenas de elementos.
   const cam = (k: number) => (reduzir ? undefined : { transform: `translate(calc(var(--dz-px, 0) * ${k}px), calc(var(--dz-py, 0) * ${Math.round(k * 0.3)}px))` });
-  const sol = { x: m.sol.x * L, y: 470 - m.sol.altura * 360 };
-  const lua = { x: m.lua.x * L, y: 470 - m.lua.altura * 330 };
+  const sol = posicaoDoAstro((m.sol.x - 0.08) / 0.84, m.sol.altura, L, c0, astro);
+  const lua = posicaoDoAstro((m.lua.x - 0.1) / 0.8, m.lua.altura, L, c0, astro);
   // a sombra da lua desliza com a fase (0 nova, 0,5 cheia)
   const faseLua = m.lua.fase;
   const iluminada = 1 - Math.abs(faseLua - 0.5) * 2; // 0 nova · 1 cheia
@@ -146,7 +173,7 @@ export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzi
       {/* o sol, com o halo que se abre no nascer e no pôr */}
       {m.sol.visivel && (
         <g style={cam(-6)}>
-          <circle cx={sol.x} cy={sol.y} r={70 + m.calor * 50} fill={`url(#sol-${uid})`} />
+          <circle cx={sol.x} cy={sol.y} r={44 + m.calor * 32} fill={`url(#sol-${uid})`} />
           <circle cx={sol.x} cy={sol.y} r="22" fill={misturar("#fffbe8", "#ffc46a", m.calor)} />
         </g>
       )}
@@ -154,7 +181,7 @@ export const CenaDoDia = memo(function CenaDoDia({ momento: m, proporcao, reduzi
       {/* a lua, na fase de hoje */}
       {m.lua.visivel && (
         <g style={cam(-6)}>
-          <circle cx={lua.x} cy={lua.y} r={46 + iluminada * 26} fill={`url(#luar-${uid})`} />
+          <circle cx={lua.x} cy={lua.y} r={32 + iluminada * 16} fill={`url(#luar-${uid})`} />
           <circle cx={lua.x} cy={lua.y} r="17" fill="#2a3358" />
           <g clipPath={`url(#lua-${uid})`}>
             {/* a parte iluminada: um disco que se desloca com a fase */}

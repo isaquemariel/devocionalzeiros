@@ -101,7 +101,7 @@ const IdentityPanel = ({ registrar }: { registrar: boolean }) => {
     <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-12 py-12 overflow-hidden">
       <div className="relative z-10 flex flex-col items-center text-center gap-5 max-w-xs">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-          <PersonagemQueFala tamanho={150} registrar={registrar} largura={320} />
+          <PersonagemQueFala tamanho={190} registrar={registrar} largura={320} />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
           <h1 className="mb-2"><NomeDoApp tamanho="clamp(28px, 2.6vw, 40px)" /></h1>
@@ -410,13 +410,13 @@ const Auth = () => {
           }
           return;
         }
+        // as boas-vindas são da tela de DENTRO: entram na fila já, sobem quando
+        // ela terminar de abrir (depois do carregamento), e o boneco pequeno
+        // do canto só aparece quando elas descerem
         if (data?.session?.user) {
+          toast.success("Bem-vindo de volta!", { naProximaTela: true });
           navigate(getRedirectTarget(), { replace: true });
         }
-        // as boas-vindas saem na tela de dentro: dadas aqui, eram ditas por um
-        // segundo boneco por cima do login que já estava saindo. Lá, se a tela
-        // ainda estiver carregando, o aviso espera o carregamento sair.
-        window.setTimeout(() => toast.success("Bem-vindo de volta!"), 450);
       } else {
         // Garante que tanto o listener de auth quanto o fluxo de confirmação por email
         // levem o novo usuário direto para a escolha de plano.
@@ -603,7 +603,7 @@ const Auth = () => {
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="relative lg:hidden"
                   >
-                    <PersonagemQueFala tamanho={compacto ? 62 : 88} registrar={!desktop} largura={Math.min(340, window.innerWidth - 40)} />
+                    <PersonagemQueFala tamanho={compacto ? 78 : 112} registrar={!desktop} largura={Math.min(340, window.innerWidth - 40)} />
                   </motion.div>
                 )}
 
