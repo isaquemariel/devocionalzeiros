@@ -84,7 +84,7 @@ const Quiz = () => {
 
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
 
-  const { getTodaySchedule, loading: scheduleLoading } = useReadingProgress(user?.id, currentPlan, startDate);
+  const { getTodaySchedule, loading: scheduleLoading } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
   const todaySchedule = getTodaySchedule();
 
   // Calculate chapters read today

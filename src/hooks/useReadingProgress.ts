@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans, bibleBooks } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -80,7 +80,7 @@ type LinhaDoPlano = {
 
 const salvarPlano = async (
   itens: LinhaDoPlano[],
-): Promise<{ ok: boolean; sessao: boolean }> => {
+): Promise<{ ok: boolean; sessao: boolean; duplicado?: boolean }> => {
   const gravados: string[] = [];
   const TAMANHO_LOTE = 500;
 
@@ -101,12 +101,31 @@ const salvarPlano = async (
     if (error) {
       console.error("Falha ao gravar o plano de leitura:", error);
       await desfazer();
-      return { ok: false, sessao: ehErroDeSessao(error) };
+      // 23505: outra aba/aparelho gravou o MESMO plano ao mesmo tempo — não é
+      // falha de quem está olhando; basta recarregar o que está no banco
+      return { ok: false, sessao: ehErroDeSessao(error), duplicado: error.code === "23505" };
     }
     for (const linha of data ?? []) gravados.push((linha as { id: string }).id);
   }
   return { ok: true, sessao: false };
 };
+
+// Format date to YYYY-MM-DD string using Brasília timezone
+const formatDateKey = (date: Date): string => {
+  const brasiliaDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+  const year = brasiliaDate.getFullYear();
+  const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = brasiliaDate.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+/** UMA geração de plano por conta de cada vez, neste aparelho. A Home, a
+ *  Bíblia e o Quiz usam este hook, e cada renderização podia disparar uma
+ *  busca: numa conta nova (sem plano) duas ou três gerações corriam juntas —
+ *  a segunda batia na chave única e o personagem dizia "Não consegui salvar o
+ *  seu plano de leitura" a quem acabou de entrar; com datas diferentes, entravam
+ *  dois planos misturados. */
+const geracaoEmCurso = new Map<string, Promise<void>>();
 
 interface ReadingScheduleItem {
   id?: string;
@@ -126,7 +145,12 @@ interface DaySchedule {
   completedTimes: string[]; // Array of completion timestamps
 }
 
-export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan, startDate: Date) => {
+/**
+ * @param pronto false enquanto o perfil ainda carrega: sem ele, o plano e a
+ *   data de início são os padrões, e gerar um plano com eles gravava o plano
+ *   errado (ou dois) para a conta nova.
+ */
+export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan, startDate: Date, pronto = true) => {
   const [schedule, setSchedule] = useState<DaySchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentDay, setCurrentDay] = useState(1);
@@ -135,23 +159,25 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const [planoNaoSalvo, setPlanoNaoSalvo] = useState(false);
   const { playSound } = useGameSounds();
 
-  // Format date to YYYY-MM-DD string using Brasília timezone
-  const formatDateKey = (date: Date): string => {
-    // Convert to Brasília timezone to ensure consistency
-    const brasiliaDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-    const year = brasiliaDate.getFullYear();
-    const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = brasiliaDate.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  // quem chama cria um `new Date()` a cada renderização: a busca depende do
+  // DIA, não do objeto (senão ela rodava de novo a cada renderização)
+  const inicioChave = formatDateKey(startDate);
+  const inicioRef = useRef(startDate);
+  inicioRef.current = startDate;
+  const buscarRef = useRef<() => Promise<void>>(async () => {});
 
   const fetchSchedule = useCallback(async () => {
+    if (!pronto) return; // segue "carregando" até o perfil chegar
     if (!userId) {
       setLoading(false);
       return;
     }
 
     try {
+      // um plano sendo gravado agora: espera ele e lê o que ficou no banco
+      const emCurso = geracaoEmCurso.get(userId);
+      if (emCurso) await emCurso;
+
       // Get today's date in Brasília timezone
       const today = formatDateKey(getBrazilDate());
       
@@ -257,15 +283,50 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     } finally {
       setLoading(false);
     }
-  }, [userId, plan, startDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, plan, inicioChave, pronto]);
+  buscarRef.current = fetchSchedule;
 
   const generateAndSaveSchedule = async () => {
     if (!userId) return;
 
     // Skip for custom plan without proper config
     if (plan === "custom") return;
-    
-    const generatedSchedule = generateReadingSchedule(plan, startDate);
+
+    // outra geração desta conta já está gravando: espera e recarrega dela
+    const emCurso = geracaoEmCurso.get(userId);
+    if (emCurso) {
+      await emCurso;
+      await buscarRef.current();
+      return;
+    }
+    let liberar: () => void = () => {};
+    geracaoEmCurso.set(userId, new Promise<void>((r) => { liberar = r; }));
+    let recarregar = false;
+    try {
+      recarregar = await gerarEGravar(userId);
+    } finally {
+      geracaoEmCurso.delete(userId);
+      liberar();
+    }
+    // (só depois de soltar a vez: a busca espera a geração em curso)
+    if (recarregar) await buscarRef.current();
+  };
+
+  /** devolve true quando o plano certo já está no banco e é só recarregar */
+  const gerarEGravar = async (userId: string): Promise<boolean> => {
+    const hoje = formatDateKey(getBrazilDate());
+    // (re)confere no banco: entre a leitura e aqui, outro aparelho pode ter
+    // gravado o plano — gerar de novo duplicaria
+    const { data: jaTem, error: erroConferir } = await supabase
+      .from("reading_schedule")
+      .select("id")
+      .eq("user_id", userId)
+      .or(`is_completed.eq.false,scheduled_date.gte.${hoje}`)
+      .limit(1);
+    if (!erroConferir && jaTem && jaTem.length > 0) return true;
+
+    const generatedSchedule = generateReadingSchedule(plan, inicioRef.current);
 
     // Prepare items for insertion
     const scheduleItems: Omit<ReadingScheduleItem, "id">[] = [];
@@ -281,6 +342,11 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     });
 
     const salvo = await salvarPlano(scheduleItems.map((item) => ({ ...item, user_id: userId })));
+    if (salvo.duplicado) {
+      // o mesmo plano já entrou por outro caminho: mostra o do banco
+      setPlanoNaoSalvo(false);
+      return true;
+    }
     setPlanoNaoSalvo(!salvo.ok);
     if (!salvo.ok) avisarQueNaoSalvou(salvo.sessao);
 
@@ -405,7 +471,22 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   /** devolve se o plano novo foi GRAVADO — quem chama só comemora com `true` */
   const regenerateSchedule = async (newPlan: ReadingPlan | "custom", customBooks?: string[], customDays?: number): Promise<boolean> => {
     if (!userId) return false;
+    // segura a MESMA vez da geração automática: apagar o plano velho dispara
+    // os eventos em tempo real, e a busca que eles acordam achava o plano
+    // vazio e gerava o padrão por cima do novo
+    const antes = geracaoEmCurso.get(userId);
+    if (antes) await antes;
+    let liberar: () => void = () => {};
+    geracaoEmCurso.set(userId, new Promise<void>((r) => { liberar = r; }));
+    try {
+      return await trocarPlano(userId, newPlan, customBooks, customDays);
+    } finally {
+      geracaoEmCurso.delete(userId);
+      liberar();
+    }
+  };
 
+  const trocarPlano = async (userId: string, newPlan: ReadingPlan | "custom", customBooks?: string[], customDays?: number): Promise<boolean> => {
     setLoading(true);
 
     try {

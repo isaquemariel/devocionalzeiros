@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { drawHeroHD } from "@/lib/rpgHero";
 import { DEFAULT_LOOK } from "@/lib/rpgMascot";
+import { useCentroAtivo } from "@/lib/devocionalzeiro/palco";
 
 // ============================================================================
 // Capa do RPG no /home — a IDENTIDADE NOVA do jogo (vetorial HD, a mesma da
@@ -16,6 +17,12 @@ const GROUND = 352;
 
 export default function RPGGameCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // um boneco por vez: com um aviso no palco central, o herói da capa sai de
+  // cena (a capa fica) e volta quando o aviso desce
+  const centro = useCentroAtivo();
+  const semHeroi = useRef(centro);
+  semHeroi.current = centro;
+  const [reduzir] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
   useEffect(() => {
     const cv = canvasRef.current;
@@ -41,6 +48,7 @@ export default function RPGGameCard() {
     }));
 
     let t = 0, last = 0, raf = 0, on = true;
+    let heroi = semHeroi.current ? 0 : 1; // opacidade do herói (esmaece)
     const frame = (now: number) => {
       if (!on) return;
       const dt = Math.min(48, now - last || 16); last = now; t += dt;
@@ -138,26 +146,34 @@ export default function RPGGameCard() {
       }
       g.globalAlpha = 1;
 
+      heroi = reduce ? (semHeroi.current ? 0 : 1) : Math.max(0, Math.min(1, heroi + (semHeroi.current ? -1 : 1) * dt / 220));
       // sombra longa do herói fugindo da luz
-      g.globalAlpha = 0.34;
+      g.globalAlpha = 0.34 * heroi;
       g.fillStyle = "#0c0812";
       g.beginPath(); g.ellipse(cx, GROUND + 26, 30, 8, 0, 0, 6.29); g.fill();
       g.globalAlpha = 1;
 
       // O HERÓI — o próprio renderer do jogo, de costas para nós, caminhando
       // para dentro da Palavra. Escala 2x para presença de capa.
-      g.save();
-      g.translate(cx, GROUND + 28);
-      g.scale(1.85, 1.85);
-      drawHeroHD(g, 0, 0, DEFAULT_LOOK, { t, reduce, walking: !reduce, face: 1 });
-      g.restore();
+      if (heroi > 0) {
+        g.save();
+        g.globalAlpha = heroi;
+        g.translate(cx, GROUND + 28);
+        g.scale(1.85, 1.85);
+        drawHeroHD(g, 0, 0, DEFAULT_LOOK, { t, reduce, walking: !reduce, face: 1 });
+        g.restore();
+        g.globalAlpha = 1;
+      }
 
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
     return () => { on = false; if (raf) cancelAnimationFrame(raf); };
-  }, []);
+    // sem movimento o quadro é único: redesenha quando o palco central muda
+    // (com movimento, o laço lê `semHeroi` e esmaece sozinho)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduzir && centro]);
 
   return (
     <div className="absolute inset-0 select-none">

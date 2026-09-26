@@ -260,7 +260,7 @@ const Home = () => {
 
   const {
     loading: scheduleLoading
-  } = useReadingProgress(user?.id, currentPlan, startDate);
+  } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
 
   // Record daily login
   useDailyLogin(user?.id);

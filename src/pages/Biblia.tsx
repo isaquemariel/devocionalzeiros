@@ -141,7 +141,7 @@ const Biblia = () => {
     regenerateSchedule,
     getTodaySchedule,
     isPlanComplete,
-  } = useReadingProgress(user?.id, currentPlan, startDate);
+  } = useReadingProgress(user?.id, currentPlan, startDate, !authLoading);
 
   const todaySchedule = getTodaySchedule();
 
