@@ -352,7 +352,22 @@ CREATE TRIGGER exigir_conquista_alcancada BEFORE INSERT ON public.achievement_cl
   FOR EACH ROW EXECUTE FUNCTION public.exigir_conquista_alcancada();
 
 -- ─── 8. Nome do personagem: o formato também no banco ──────────────────────
--- (só letras, até 10) — NOT VALID: vale para o que entrar daqui para a frente
+-- (só letras, até 10). Por gatilho, e só quando o nome é criado ou trocado:
+-- uma CHECK valeria em TODO update da linha, e quem já tem um nome antigo fora
+-- do formato deixaria de salvar XP.
 ALTER TABLE public.rpg_user_stats DROP CONSTRAINT IF EXISTS rpg_user_stats_character_name_formato;
-ALTER TABLE public.rpg_user_stats ADD CONSTRAINT rpg_user_stats_character_name_formato
-  CHECK (character_name IS NULL OR character_name ~ '^[A-Za-zÀ-ÖØ-öø-ÿ]{1,10}$') NOT VALID;
+CREATE OR REPLACE FUNCTION public.rpg_nome_no_formato()
+RETURNS trigger LANGUAGE plpgsql SET search_path TO 'public'
+AS $$
+BEGIN
+  IF NEW.character_name IS NOT NULL
+     AND (TG_OP = 'INSERT' OR NEW.character_name IS DISTINCT FROM OLD.character_name)
+     AND NEW.character_name !~ '^[A-Za-zÀ-ÖØ-öø-ÿ]{1,10}$' THEN
+    RAISE EXCEPTION 'nome do personagem fora do formato' USING ERRCODE = '23514';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS rpg_nome_no_formato ON public.rpg_user_stats;
+CREATE TRIGGER rpg_nome_no_formato BEFORE INSERT OR UPDATE OF character_name ON public.rpg_user_stats
+  FOR EACH ROW EXECUTE FUNCTION public.rpg_nome_no_formato();
