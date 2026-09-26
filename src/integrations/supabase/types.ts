@@ -18,18 +18,24 @@ export type Database = {
         Row: {
           achievement_id: string
           created_at: string
+          estat: string | null
+          meta: number | null
           points: number
           updated_at: string
         }
         Insert: {
           achievement_id: string
           created_at?: string
+          estat?: string | null
+          meta?: number | null
           points: number
           updated_at?: string
         }
         Update: {
           achievement_id?: string
           created_at?: string
+          estat?: string | null
+          meta?: number | null
           points?: number
           updated_at?: string
         }
@@ -727,6 +733,24 @@ export type Database = {
         }
         Relationships: []
       }
+      email_verificado: {
+        Row: {
+          como: string
+          user_id: string
+          verificado_em: string
+        }
+        Insert: {
+          como?: string
+          user_id: string
+          verificado_em?: string
+        }
+        Update: {
+          como?: string
+          user_id?: string
+          verificado_em?: string
+        }
+        Relationships: []
+      }
       kiwify_webhook_log: {
         Row: {
           amount_paid: number | null
@@ -1219,6 +1243,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          notificado_em: string | null
           permanent: boolean
           reason: string | null
           updated_at: string
@@ -1230,6 +1255,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          notificado_em?: string | null
           permanent?: boolean
           reason?: string | null
           updated_at?: string
@@ -1241,6 +1267,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          notificado_em?: string | null
           permanent?: boolean
           reason?: string | null
           updated_at?: string
@@ -1772,16 +1799,19 @@ export type Database = {
       }
       user_app_presence: {
         Row: {
+          device_id: string
           user_id: string
           visivel: boolean
           visto_em: string
         }
         Insert: {
+          device_id?: string
           user_id: string
           visivel?: boolean
           visto_em?: string
         }
         Update: {
+          device_id?: string
           user_id?: string
           visivel?: boolean
           visto_em?: string
@@ -2076,6 +2106,10 @@ export type Database = {
         Args: { p_ban_hours?: number; p_reason: string; p_reply_id: string }
         Returns: undefined
       }
+      admin_find_user_id_by_email: {
+        Args: { p_email: string }
+        Returns: string
+      }
       admin_get_all_users: {
         Args: never
         Returns: {
@@ -2239,6 +2273,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      admin_revoke_sessions: { Args: { p_user_id: string }; Returns: undefined }
       admin_save_metrics_snapshot: { Args: never; Returns: undefined }
       admin_set_room_ban: {
         Args: {
@@ -2285,11 +2320,15 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_whatsapp_reminders: { Args: never; Returns: undefined }
+      compra_aguardando_confirmacao: { Args: never; Returns: boolean }
+      confirmar_email: { Args: never; Returns: boolean }
       credit_talents: {
         Args: { p_amount: number; p_source: string; p_user_id: string }
         Returns: undefined
       }
       current_user_manages_stripe: { Args: never; Returns: boolean }
+      email_comprovado: { Args: { p_uid: string }; Returns: boolean }
+      estatisticas_conquistas: { Args: { p_uid: string }; Returns: Json }
       get_all_monthly_champions: {
         Args: never
         Returns: {
@@ -2366,8 +2405,18 @@ export type Database = {
       }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_room_blocked: { Args: never; Returns: Json }
+      minhas_estatisticas_conquistas: { Args: never; Returns: Json }
       refund_daily_usage: {
         Args: { p_feature_key: string }
+        Returns: undefined
+      }
+      registrar_token_nativo: {
+        Args: {
+          p_app_version?: string
+          p_device_id?: string
+          p_platform: string
+          p_token: string
+        }
         Returns: undefined
       }
       report_room_user: { Args: { target_id: string }; Returns: Json }
@@ -2380,6 +2429,7 @@ export type Database = {
       rpg_get_daily: { Args: never; Returns: Json }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
+      soltar_token_nativo: { Args: { p_token: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
