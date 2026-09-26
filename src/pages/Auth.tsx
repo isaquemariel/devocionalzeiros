@@ -17,6 +17,7 @@ import { z } from "zod";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
 import TelaInicial from "@/components/inicio/TelaInicial";
 import { FundoDoDia } from "@/components/inicio/FundoDoDia";
+import { NomeDoApp } from "@/components/inicio/NomeDoApp";
 import { Devocionalzeiro } from "@/components/devocionalzeiro/Devocionalzeiro";
 
 const emailSchema = z.string().email("Email inválido");
@@ -103,8 +104,8 @@ const IdentityPanel = () => {
           <Devocionalzeiro tamanho={150} gesto="acenar" expressao="feliz" chama={0.55} />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-          <h1 className="rpg-title text-3xl lg:text-4xl mb-2"><span className="dz-titulo-auth">Devocionalzeiros</span></h1>
-          <p className="rpg-eyebrow">Sua jornada com a Palavra</p>
+          <h1 className="mb-2"><NomeDoApp tamanho="clamp(28px, 2.6vw, 40px)" /></h1>
+          <p className="rpg-eyebrow" style={{ color: "#ffd889", textShadow: "0 1px 0 #0b0805, 0 0 8px rgba(0,0,0,.6)" }}>Sua jornada com a Palavra</p>
         </motion.div>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }} className="space-y-2 w-full">
           {features.map(({ icon: Icon, text }, i) => (
@@ -118,7 +119,7 @@ const IdentityPanel = () => {
             </motion.div>
           ))}
         </motion.div>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }} className="text-[12px] italic leading-relaxed px-2" style={{ color: "#b8a67f" }}>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.5 }} className="text-[12px] italic leading-relaxed px-3 py-2 rounded-[10px]" style={{ color: "#ece0c6", background: "rgba(20,15,8,0.72)", border: "1px solid #3a2c18" }}>
           “Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.”
           <span className="block mt-0.5 not-italic font-bold" style={{ color: "#e8b04b" }}>— Salmos 119:105</span>
         </motion.p>
@@ -148,11 +149,6 @@ const SubmitButton = ({ isSubmitting, label, icon, loadingLabel }: {
 );
 
 const ESTILO_AUTH = `
-.dz-titulo-auth {
-  background: linear-gradient(180deg, #fff6d8 0%, #ffd889 38%, #e8b04b 70%, #b9822c 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(2px 2px 0 #0b0805);
-}
 @keyframes dz-brilho-auth { 0% { transform: translateX(-120%) skewX(-18deg) } 60%,100% { transform: translateX(260%) skewX(-18deg) } }
 .dz-brilho-auth::after {
   content: ""; position: absolute; inset: 0 auto 0 0; width: 40%;
@@ -192,6 +188,19 @@ const Auth = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  // A tela de entrada é FIXA: numa tela baixa tudo aperta um pouco (e, bem
+  // baixa, o personagem cede o lugar) para caber sem rolagem.
+  const [alturaTela, setAlturaTela] = useState(() => window.innerHeight);
+  useEffect(() => {
+    const medir = () => setAlturaTela(window.innerHeight);
+    window.addEventListener("resize", medir);
+    return () => window.removeEventListener("resize", medir);
+  }, []);
+  // o cadastro tem mais campos: aperta já numa tela de celular comum
+  const compacto = alturaTela < (isLogin || isRecovery ? 760 : 900);
+  const apertado = alturaTela < 620;
+  const campo = compacto ? inputBase.replace("py-2.5", "py-2") : inputBase;
+  const rotulo = `block text-xs font-semibold ${compacto ? "mb-1" : "mb-1.5"} text-white/60 uppercase tracking-wider`;
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
@@ -510,7 +519,7 @@ const Auth = () => {
     : "Junte-se à comunidade Devocionalzeiros";
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-[100dvh] overflow-hidden">
     <AnimatePresence mode="wait">
       {showSplash && !isSettingNewPassword ? (
         /* ── SPLASH ── */
@@ -528,12 +537,14 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 60 }}
           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          className="rpg-root relative h-screen flex overflow-hidden"
+          className="rpg-root relative h-[100dvh] flex overflow-hidden"
           style={{ background: "#040810" }}
         >
           <style>{ESTILO_AUTH}</style>
-          {/* a mesma Jerusalém da tela inicial, na hora de agora, sob um véu */}
-          <FundoDoDia veu="linear-gradient(90deg, rgba(4,8,16,0.45) 0%, rgba(4,8,16,0.55) 40%, rgba(4,8,16,0.82) 60%, rgba(4,8,16,0.86) 100%)" />
+          {/* a mesma Jerusalém da tela inicial, na hora de agora — sem véu que
+              escureça o dia: de dia é dia, de noite é noite. Só as sombras no
+              alto e embaixo, como na tela inicial, para o texto ler. */}
+          <FundoDoDia veu="linear-gradient(180deg, rgba(6,8,16,0.32) 0%, rgba(6,8,16,0) 30%, rgba(6,8,16,0) 70%, rgba(6,8,14,0.3) 100%)" />
           {/* Desktop left panel */}
           <div className="hidden lg:block lg:w-[46%] xl:w-[44%] shrink-0 relative">
             <IdentityPanel />
@@ -541,9 +552,6 @@ const Auth = () => {
 
           {/* Right / full panel */}
           <div className="flex-1 relative h-full overflow-hidden">
-            {/* no celular o véu é por igual (o formulário ocupa a tela toda) */}
-            <div className="absolute inset-0 lg:hidden pointer-events-none" style={{ background: "rgba(4,8,16,0.4)" }} />
-
             {/* ── X button — top-right corner ── */}
             {!isSettingNewPassword && (
               <motion.button
@@ -551,30 +559,35 @@ const Auth = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 }}
                 onClick={() => setShowSplash(true)}
-                className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/10 transition-all"
+                className="absolute right-3 z-30 w-9 h-9 rounded-full flex items-center justify-center text-[#ece0c6] hover:text-white transition-all"
+                style={{ top: "max(12px, env(safe-area-inset-top))", background: "rgba(12,10,6,0.55)", border: "1px solid #3a2c18" }}
                 aria-label="Voltar"
               >
                 <X className="w-5 h-5" />
               </motion.button>
             )}
 
-            {/* ── Scrollable content (scrollbar hidden) ── */}
+            {/* ── uma tela fixa: tudo cabe, centrado na altura. A rolagem só existe
+                como último recurso (teclado aberto num celular baixo). ── */}
             <div
-              className="relative z-10 h-full overflow-y-auto flex flex-col items-center"
+              className="relative z-10 h-full overflow-y-auto overscroll-none flex flex-col items-center"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}
             >
-              <div className="w-full max-w-md px-5 py-8 flex flex-col items-center gap-5">
+              <div className={`w-full max-w-md min-h-full px-5 flex flex-col items-center justify-center [&>*]:shrink-0 ${compacto ? "gap-2.5 py-3" : "gap-3.5 py-5"}`}
+                style={{ paddingTop: "max(14px, env(safe-area-inset-top))", paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
 
-                {/* ele recebe quem chega (no computador, ele já está no painel ao lado) */}
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative mt-1 lg:hidden"
-                >
-                  <div className="pointer-events-none absolute left-1/2 top-[40%] h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "radial-gradient(circle, #5b9bff44 0%, #5b9bff00 62%)" }} />
-                  <Devocionalzeiro tamanho={84} gesto={isLogin ? "acenar" : "vitoria"} expressao="feliz" chama={0.5} />
-                </motion.div>
+                {/* ele recebe quem chega (no computador, ele já está no painel ao lado;
+                    no cadastro, que tem mais campos, ele cede o espaço) */}
+                {(isLogin || isRecovery || isSettingNewPassword) && !apertado && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative lg:hidden"
+                  >
+                    <Devocionalzeiro tamanho={compacto ? 62 : 88} gesto="acenar" expressao="feliz" chama={0.5} />
+                  </motion.div>
+                )}
 
                 {/* Mode header — splash-style lettering */}
                 <motion.div
@@ -587,17 +600,15 @@ const Auth = () => {
                   {isRecovery || isSettingNewPassword ? (
                     <>
                       <h2 className="rpg-title text-2xl mb-1">{modeTitle}</h2>
-                      <p className="text-[12.5px]" style={{ color: "#b8a67f" }}>{modeSubtitle}</p>
+                      <p className="text-[12.5px]" style={{ color: "#ece0c6", textShadow: "0 1px 2px #000" }}>{modeSubtitle}</p>
                     </>
                   ) : (
                     <>
-                      <p className="rpg-eyebrow mb-1.5">
-                        {isLogin ? "Bem-vindo(a) de volta ao" : "Seja bem-vindo(a) ao"}
-                      </p>
-                      <h2 className="rpg-title text-[1.75rem] leading-none">
-                        <span className="dz-titulo-auth">Devocionalzeiros</span>
+                      <p className={`rpg-eyebrow ${compacto && !isLogin ? "mb-1" : "mb-2"}`} style={{ color: "#ffd889", textShadow: "0 1px 0 #0b0805" }}>Seja bem-vindo(a)</p>
+                      <h2 className="leading-none">
+                        <NomeDoApp tamanho={compacto ? "clamp(22px, 7.4vw, 30px)" : "clamp(24px, 8vw, 34px)"} />
                       </h2>
-                      <p className="text-[12px] mt-2" style={{ color: "#b8a67f" }}>{modeSubtitle}</p>
+                      {!(compacto && !isLogin) && <p className="text-[12px] mt-2" style={{ color: "#ece0c6", textShadow: "0 1px 2px #000" }}>{modeSubtitle}</p>}
                     </>
                   )}
                 </motion.div>
@@ -615,18 +626,18 @@ const Auth = () => {
                   }}
                 >
 
-                  <div className="p-5">
-                    <form onSubmit={handleSubmit} className="space-y-3.5">
+                  <div className={compacto ? "p-4" : "p-5"}>
+                    <form onSubmit={handleSubmit} className={compacto ? "space-y-2.5" : "space-y-3.5"}>
 
                       {/* NEW PASSWORD MODE */}
                       {isSettingNewPassword ? (
                         <AnimatePresence>
                           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3.5">
                             <div>
-                              <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Nova senha</label>
+                              <label className={rotulo}>Nova senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${inputBase} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 8 caracteres" disabled={isSubmitting} />
+                                <input type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${campo} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 8 caracteres" disabled={isSubmitting} />
                                 <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -634,10 +645,10 @@ const Auth = () => {
                               {errors.newPassword && <p className="text-xs text-red-400 mt-1">{errors.newPassword}</p>}
                             </div>
                             <div>
-                              <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Confirmar senha</label>
+                              <label className={rotulo}>Confirmar senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${inputBase} pr-10 ${errors.confirmPassword ? inputErr : ""}`} placeholder="Repita a nova senha" disabled={isSubmitting} />
+                                <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${campo} pr-10 ${errors.confirmPassword ? inputErr : ""}`} placeholder="Repita a nova senha" disabled={isSubmitting} />
                                 <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -652,17 +663,17 @@ const Auth = () => {
                           {/* SIGNUP EXTRA FIELDS */}
                           <AnimatePresence>
                             {!isLogin && !isRecovery && (
-                              <motion.div key="signup-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="space-y-3.5 overflow-hidden">
+                              <motion.div key="signup-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className={`${compacto ? "space-y-2.5" : "space-y-3.5"} overflow-hidden`}>
                                 <div>
-                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Nome completo</label>
+                                  <label className={rotulo}>Nome completo</label>
                                   <div className="relative">
                                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                    <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} className={`${inputBase} ${errors.name ? inputErr : ""}`} placeholder="Seu nome" disabled={isSubmitting} />
+                                    <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} className={`${campo} ${errors.name ? inputErr : ""}`} placeholder="Seu nome" disabled={isSubmitting} />
                                   </div>
                                   {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
-                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-white/30">(opcional)</span></label>
+                                  <label className={rotulo}>WhatsApp <span className="text-white/30">(opcional)</span></label>
                                   <div className="flex gap-2">
                                     <select
                                       value={countryCode}
@@ -680,7 +691,7 @@ const Auth = () => {
                                         type="tel"
                                         value={whatsappNumber}
                                         onChange={handlePhoneChange}
-                                        className={`${inputBase} ${errors.phone ? inputErr : ""}`}
+                                        className={`${campo} ${errors.phone ? inputErr : ""}`}
                                         placeholder={countryCodes.find(c => c.code === countryCode)?.placeholder ?? ""}
                                         maxLength={(countryCodes.find(c => c.code === countryCode)?.maxDigits ?? 15) + 4}
                                         disabled={isSubmitting}
@@ -690,11 +701,11 @@ const Auth = () => {
                                   {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone}</p>}
                                 </div>
                                 <div>
-                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Como nos conheceu? <span className="text-red-400">*</span></label>
+                                  <label className={rotulo}>Como nos conheceu? <span className="text-red-400">*</span></label>
                                   <div className="grid grid-cols-3 gap-1.5">
                                     {referralOptions.map((opt) => (
                                       <motion.button key={opt.value} type="button" onClick={() => setReferralSource(opt.value)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                                        className={`py-2 px-1 rounded-lg text-xs font-medium transition-all ${referralSource === opt.value ? "bg-amber-500/25 text-amber-300 border border-amber-500/50" : "bg-white/[0.04] border border-white/[0.08] text-white/50 hover:border-amber-500/25 hover:text-white/70"}`}
+                                        className={`${compacto ? "py-1.5" : "py-2"} px-1 rounded-lg text-xs font-medium transition-all ${referralSource === opt.value ? "bg-amber-500/25 text-amber-300 border border-amber-500/50" : "bg-white/[0.04] border border-white/[0.08] text-white/50 hover:border-amber-500/25 hover:text-white/70"}`}
                                         disabled={isSubmitting}>
                                         {opt.label}
                                       </motion.button>
@@ -708,10 +719,10 @@ const Auth = () => {
 
                           {/* Email */}
                           <div>
-                            <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Email</label>
+                            <label className={rotulo}>Email</label>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                              <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email} onChange={(e) => setEmail(e.target.value)} className={`${inputBase} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
+                              <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email} onChange={(e) => setEmail(e.target.value)} className={`${campo} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
                             </div>
                             {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
                           </div>
@@ -719,17 +730,17 @@ const Auth = () => {
                           {/* Password */}
                           {!isRecovery && (
                             <div>
-                              <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Senha</label>
+                              <label className={rotulo}>Senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className={`${inputBase} pr-10 ${errors.password ? inputErr : ""}`} placeholder="••••••••" disabled={isSubmitting} autoComplete={isLogin ? "current-password" : "new-password"} />
+                                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className={`${campo} pr-10 ${errors.password ? inputErr : ""}`} placeholder="••••••••" disabled={isSubmitting} autoComplete={isLogin ? "current-password" : "new-password"} />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                               </div>
                               {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
                               {!isLogin && (
-                                <ul className="mt-2 space-y-1 text-[11px]">
+                                <ul className={compacto ? "mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px]" : "mt-1.5 grid grid-cols-2 gap-x-2 gap-y-1 text-[10.5px]"}>
                                   {(() => {
                                     const r = checkPasswordRules(password);
                                     const Item = ({ ok, label }: { ok: boolean; label: string }) => (
@@ -742,10 +753,10 @@ const Auth = () => {
                                     );
                                     return (
                                       <>
-                                        <Item ok={r.length} label="Mínimo de 8 caracteres" />
-                                        <Item ok={r.letter} label="Pelo menos uma letra (a-z)" />
-                                        <Item ok={r.number} label="Pelo menos um número (0-9)" />
-                                        <Item ok={r.symbol} label="Recomendado: um símbolo (!@#$...)" />
+                                        <Item ok={r.length} label={compacto ? "8+" : "8+ caracteres"} />
+                                        <Item ok={r.letter} label={compacto ? "letra" : "Uma letra (a-z)"} />
+                                        <Item ok={r.number} label={compacto ? "número" : "Um número (0-9)"} />
+                                        <Item ok={r.symbol} label={compacto ? "símbolo" : "Um símbolo (opcional)"} />
                                       </>
                                     );
                                   })()}
@@ -768,7 +779,7 @@ const Auth = () => {
 
                   {/* Bottom section */}
                   {!isSettingNewPassword && (
-                    <div className="px-5 pb-5 space-y-3 border-t border-white/[0.06] pt-4">
+                    <div className={`border-t border-white/[0.06] ${compacto ? "px-4 pb-3.5 pt-3 space-y-2.5" : "px-5 pb-5 pt-4 space-y-3"}`}>
                       <p className="text-center text-sm text-white/40">
                         {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}{" "}
                         <button onClick={() => { isRecovery ? setIsRecovery(false) : setIsLogin(!isLogin); setErrors({}); }} className="font-bold text-amber-400 hover:text-amber-300 transition-colors" disabled={isSubmitting}>
@@ -777,11 +788,11 @@ const Auth = () => {
                       </p>
                       {!isRecovery && (
                         <>
-                          <div className="flex items-center gap-3">
+                          {!(compacto && !isLogin) && <div className="flex items-center gap-3">
                             <div className="flex-1 h-px bg-white/[0.07]" />
                             <span className="text-xs text-white/20 uppercase tracking-wider">ou</span>
                             <div className="flex-1 h-px bg-white/[0.07]" />
-                          </div>
+                          </div>}
                           <motion.button type="button" onClick={handleGoogleSignIn} disabled={isSubmitting || isGoogleLoading} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                             className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-medium transition-all text-white/50 hover:text-white/80 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.14] disabled:opacity-40">
                             {isGoogleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
@@ -796,18 +807,16 @@ const Auth = () => {
                           </motion.button>
                         </>
                       )}
-                      <div className="text-center">
+                      {(isLogin || isRecovery) && <div className="text-center">
                         <motion.button onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")} className="inline-flex items-center gap-1.5 text-[11px] text-white/20 hover:text-white/40 transition-colors" whileHover={{ scale: 1.02 }}>
                           <MessageCircle className="w-3 h-3" />
                           Problemas de acesso?
                         </motion.button>
-                      </div>
+                      </div>}
                     </div>
                   )}
                 </motion.div>
 
-                {/* Bottom padding for scroll breathing room */}
-                <div className="h-4" />
               </div>
             </div>
           </div>

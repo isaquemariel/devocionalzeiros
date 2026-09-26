@@ -124,16 +124,14 @@ export const VERSOS: Record<Fase, { texto: string; ref: string }[]> = {
   ],
 };
 
+/** antes das 7h o sol ainda não subiu: a manhã é aurora */
+export const SAUDACAO_AURORA = ["Bom dia! O dia está nascendo, e a chama também.", "Bom dia! Chegou cedo — o sol ainda nem subiu."];
+
 export const SAUDACAO: Record<Fase, string[]> = {
   madrugada: ["Acordado a essa hora? A Palavra também é pra madrugada.", "Madrugada quieta... boa hora pra ouvir a Deus."],
-  manha: ["Bom dia! Que tal começar o dia na Palavra?", "Bom dia! O dia está nascendo, e a chama também."],
+  manha: ["Bom dia! Que tal começar o dia na Palavra?", "Bom dia! O sol já brilha lá fora, e a chama aqui também."],
   tarde: ["Boa tarde! Uma pausa na Palavra cai bem agora.", "Boa tarde! Bora dar mais um passo na estrada?"],
   noite: ["Boa noite! Uma leitura antes de descansar?", "Boa noite! Olha as estrelas — e a Palavra pra fechar o dia."],
-};
-
-/** o nome da hora, para o relógio da tela */
-export const NOME_DA_FASE: Record<Fase, string> = {
-  madrugada: "Madrugada", manha: "Manhã", tarde: "Tarde", noite: "Noite",
 };
 
 /** o nome da fase da lua de hoje, como se fala */
