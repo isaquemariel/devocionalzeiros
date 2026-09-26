@@ -47,20 +47,14 @@ const garantirSessao = async (): Promise<boolean> => {
 /** Avisa que NÃO salvou. Antes isto era um `console.error` e mais nada: a tela
  *  mostrava um plano que nunca chegou ao banco, e o usuário só descobria ao
  *  recarregar, já sem o progresso que tinha marcado. */
+//
+// Falha de SESSÃO não vira aviso: é a pessoa saindo da conta (um salvamento
+// ainda em voo encontra a sessão já fechada) ou o login vencido — e nesse caso
+// o próprio app a leva para a tela de entrar. Dizer "sua sessão expirou" para
+// quem acabou de tocar em "Sair" era um aviso sem sentido.
 const avisarQueNaoSalvou = (deSessao: boolean) => {
-  if (deSessao) {
-    toast.error("Sua sessão expirou — o plano de leitura não foi salvo.", {
-      description: "Entre de novo para o plano e o seu progresso ficarem guardados.",
-      duration: 12000,
-      action: {
-        label: "Entrar",
-        onClick: async () => {
-          await supabase.auth.signOut();
-          window.location.assign("/auth");
-        },
-      },
-    });
-  } else {
+  if (deSessao) return;
+  {
     toast.error("Não consegui salvar o seu plano de leitura.", {
       description: "O que está na tela ainda não foi guardado. Tente escolher o plano de novo em instantes.",
       duration: 10000,

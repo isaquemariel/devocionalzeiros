@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { supabase } from "@/integrations/supabase/client";
+import { irPara, toast } from "@/lib/avisos";
 
 /**
  * Registers the device with FCM/APNs and saves the token to Supabase.
@@ -58,8 +59,13 @@ export function useNativePushNotifications(userId: string | undefined) {
           console.error("[native-push] registration error", err);
         });
 
+        // Chegou com o app ABERTO: não é hora de bandeja do sistema (o
+        // capacitor.config só mostra o selo em primeiro plano). Quem avisa é
+        // o Devocionalzeiro, com o botão que leva ao lugar.
         await PushNotifications.addListener("pushNotificationReceived", (n) => {
-          console.log("[native-push] received in foreground", n);
+          const url = (n.data as { url?: string } | undefined)?.url;
+          if (!n.title) return;
+          toast.info(n.title, { description: n.body || undefined, action: url ? { label: "Ver", onClick: () => irPara(url) } : undefined });
         });
 
         await PushNotifications.addListener("pushNotificationActionPerformed", (action) => {

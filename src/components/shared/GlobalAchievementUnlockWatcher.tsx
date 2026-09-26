@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
-import { supabase } from "@/integrations/supabase/client";
+import { pedidoAoSair } from "@/lib/presenca";
 import { toast } from "@/lib/avisos";
 import { EVENTO_CELEBRAR } from "@/lib/celebrar";
 
@@ -11,9 +11,11 @@ import { EVENTO_CELEBRAR } from "@/lib/celebrar";
  * pessoa fica sabendo, em qualquer tela:
  * - NO APP: o Devocionalzeiro aparece e diz qual foi, com o botão "Resgatar",
  *   que leva direto à cena de resgate daquela conquista;
- * - NATIVO: a função `notificar-conquista` põe o aviso no sino e manda o push
- *   (celular e navegador), que abre o mesmo resgate. O servidor garante UMA
- *   notificação por conquista, mesmo com vários aparelhos.
+ * - FORA DO APP: push só faz sentido para quem não está aqui. Quando a pessoa
+ *   SAI do app (a tela vai para o fundo) deixando conquistas por resgatar, a
+ *   função `notificar-conquista` põe o aviso no sino e manda o push (celular e
+ *   navegador), que abre o mesmo resgate. O servidor garante UM push por
+ *   conquista, mesmo com vários aparelhos.
  *
  * Cada conquista é avisada uma vez (a lista fica no aparelho). Na primeira vez
  * que a conta passa por aqui, o que já estava pendente vira um resumo só, sem
@@ -66,14 +68,28 @@ export const GlobalAchievementUnlockWatcher = () => {
         duration: 8000,
       });
     }
-    // o push, só para o que é novo de verdade (não o acumulado da 1ª visita)
-    if (lido !== null) {
-      supabase.functions
-        .invoke("notificar-conquista", { body: { conquistas: novas.map((c) => ({ id: c.id, titulo: c.titulo })) } })
-        .catch(() => { /* sem rede: fica o aviso no app */ });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resgataveis, loading, uid]);
+
+  // saiu do app com conquistas por resgatar → o push (uma vez por conquista)
+  const pendentes = useRef(resgataveis);
+  pendentes.current = resgataveis;
+  useEffect(() => {
+    if (!uid) return;
+    const chave = `dz.conquistas.push.${uid}`;
+    const aoSair = () => {
+      if (document.visibilityState !== "hidden") return;
+      let ja = new Set<string>();
+      try { ja = new Set(JSON.parse(localStorage.getItem(chave) || "[]") as string[]); } catch { /* sem armazenamento */ }
+      const faltam = pendentes.current.filter((c) => !ja.has(c.id));
+      if (!faltam.length) return;
+      faltam.forEach((c) => ja.add(c.id));
+      try { localStorage.setItem(chave, JSON.stringify([...ja])); } catch { /* sem armazenamento */ }
+      pedidoAoSair("/functions/v1/notificar-conquista", "POST", { conquistas: faltam.map((c) => ({ id: c.id, titulo: c.titulo })) });
+    };
+    document.addEventListener("visibilitychange", aoSair);
+    return () => document.removeEventListener("visibilitychange", aoSair);
+  }, [uid]);
 
   return null;
 };

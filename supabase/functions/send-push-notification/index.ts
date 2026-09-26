@@ -32,7 +32,32 @@ Deno.serve(async (req) => {
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
     const body = await req.json();
-    const { user_id, title, message, url, source } = body;
+    const { user_id, title, message, url, source, ignorar_presenca } = body;
+
+    // ---------------------------------------------------------------------
+    // SÓ PARA QUEM ESTÁ FORA DO APP. Quem está com o app na tela (presença
+    // renovada há menos de 3 min) não recebe push — lá dentro quem avisa é o
+    // Devocionalzeiro. `ignorar_presenca` é para o aviso disparado no exato
+    // momento em que a pessoa sai (a presença ainda não virou).
+    // ---------------------------------------------------------------------
+    const noApp = new Set<string>();
+    if (!ignorar_presenca) {
+      const desde = new Date(Date.now() - 3 * 60_000).toISOString();
+      let pq = serviceClient.from("user_app_presence").select("user_id").eq("visivel", true).gte("visto_em", desde);
+      if (user_id) pq = pq.eq("user_id", user_id);
+      const { data: presentes } = await pq;
+      for (const p of presentes ?? []) noApp.add((p as { user_id: string }).user_id);
+    }
+    if (user_id && noApp.has(user_id)) {
+      const pulado = { web: { sent: 0, failed: 0, skipped: "no-app" }, native: { sent: 0, failed: 0, skipped: "no-app" }, sent: 0 };
+      try {
+        await serviceClient.from("push_send_log").insert({
+          source: source ?? "api", target_user_id: user_id, title: title ?? null,
+          web: pulado.web as unknown as Record<string, unknown>, native: pulado.native as unknown as Record<string, unknown>,
+        });
+      } catch { /* o log é auditoria, não bloqueia */ }
+      return new Response(JSON.stringify(pulado), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
     // ---------------------------------------------------------------------
     // WEB PUSH (PWA) — best-effort. Se as chaves VAPID não estiverem
@@ -107,6 +132,8 @@ Deno.serve(async (req) => {
         const toDelete: string[] = [];
         const rejected: Record<string, number> = {};
         for (const sub of subscriptions ?? []) {
+          // no broadcast, quem está no app agora fica de fora
+          if (noApp.has(sub.user_id)) { rejected["no-app"] = (rejected["no-app"] ?? 0) + 1; continue; }
           // Inscrição criada com OUTRA chave pública nunca vai passar: o
           // servidor de push compara-a com a assinatura e recusa. Não vale a
           // pena gastar a chamada — apaga-se, e o aparelho refaz a inscrição
@@ -174,7 +201,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${supabaseServiceKey}`,
           ...(cronSecret ? { "x-cron-secret": cronSecret } : {}),
         },
-        body: JSON.stringify({ user_id, title, message, url }),
+        body: JSON.stringify({ user_id, title, message, url, exclude_user_ids: user_id ? [] : [...noApp] }),
       });
       const ntext = await nres.text();
       try { native = JSON.parse(ntext); } catch { native = { raw: ntext.slice(0, 500) }; }

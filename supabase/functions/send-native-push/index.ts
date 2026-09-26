@@ -100,13 +100,16 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { user_id, title, message, url } = await req.json();
+    const { user_id, title, message, url, exclude_user_ids } = await req.json();
+    // quem está com o app aberto agora não recebe (ver send-push-notification)
+    const fora = new Set<string>(Array.isArray(exclude_user_ids) ? exclude_user_ids : []);
 
     let query = supabase.from("native_push_tokens").select("*");
     if (user_id) query = query.eq("user_id", user_id);
-    const { data: tokens, error } = await query;
+    const { data: todos, error } = await query;
     if (error) throw error;
-    if (!tokens?.length) {
+    const tokens = (todos ?? []).filter((t: { user_id: string }) => !fora.has(t.user_id));
+    if (!tokens.length) {
       return new Response(JSON.stringify({ sent: 0, failed: 0 }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

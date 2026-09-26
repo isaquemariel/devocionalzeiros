@@ -22,7 +22,6 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
-import InstallAppModal from "@/components/shared/InstallAppModal";
 import RPGGameCard from "@/components/home/RPGGameCard";
 import { DailyUpgradeModal } from "@/components/shared/DailyUpgradeModal";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
@@ -306,14 +305,7 @@ const Home = () => {
     planType
   );
 
-  const [showInstallModal, setShowInstallModal] = useState(false);
-
-  // Listen for install modal event from settings
-  useEffect(() => {
-    const handler = () => setShowInstallModal(true);
-    window.addEventListener("open-install-modal", handler);
-    return () => window.removeEventListener("open-install-modal", handler);
-  }, []);
+  // (o modal de baixar o app agora é global: ver InstalarAppGlobal no App)
   const [showDailyUpgrade, setShowDailyUpgrade] = useState(false);
 
   // Pop-up de doação/upgrade diário pausado (ajuste solicitado).
@@ -418,8 +410,6 @@ const Home = () => {
       {/* Daily Upgrade Modal for Free Users */}
       <DailyUpgradeModal isOpen={showDailyUpgrade} onClose={() => setShowDailyUpgrade(false)} />
 
-      {/* Install App Modal */}
-      <InstallAppModal isOpen={showInstallModal} onClose={() => setShowInstallModal(false)} />
 
       {/* Locked Feature Modal */}
       <LockedFeatureModal

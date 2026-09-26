@@ -7,6 +7,8 @@ import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 import { Comemoracao } from "@/components/devocionalzeiro/Comemoracao";
 import { SincronizaVisual } from "@/components/devocionalzeiro/SincronizaVisual";
+import { PresencaNoApp } from "@/components/shared/PresencaNoApp";
+import { InstalarAppGlobal } from "@/components/shared/InstalarAppGlobal";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
@@ -170,7 +172,9 @@ const PrecarregaTelas = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+    {/* Tema ÚNICO: o escuro do RPG é a identidade do app. `forcedTheme` vale
+        até para quem tinha ligado o tema claro antes (a opção saiu). */}
+    <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
       <SoundProvider>
         <TooltipProvider>
           {/* sem toasts: quem avisa é o Devocionalzeiro (lib/avisos + <Comemoracao/>) */}
@@ -229,6 +233,10 @@ const App = () => (
               <Comemoracao />
               {/* o que ele veste no RPG, ele veste no app todo */}
               <SincronizaVisual />
+              {/* presença no app: push só para quem está fora */}
+              <PresencaNoApp />
+              {/* o "baixe o app", aberto de qualquer tela */}
+              <InstalarAppGlobal />
               </CartSyncWrapper>
               </AppPresenceWrapper>
             </Suspense>

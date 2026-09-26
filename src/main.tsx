@@ -49,4 +49,13 @@ try {
 // sozinhos, sem o usuário limpar cookies/dados.
 initAutoUpdate();
 
+// O tamanho de fonte ajustável saiu (a letra padrão é a do app): quem tinha
+// escolhido "grande" volta ao normal, sem sobrar a escolha antiga guardada.
+// E o tema claro também saiu: apaga a escolha guardada (o App força o escuro).
+try {
+  localStorage.removeItem("font-scale");
+  document.documentElement.style.fontSize = "";
+  if (localStorage.getItem("theme") === "light") localStorage.setItem("theme", "dark");
+} catch { /* sem armazenamento */ }
+
 createRoot(document.getElementById("root")!).render(<App />);

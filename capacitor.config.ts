@@ -19,8 +19,11 @@ const config: CapacitorConfig = {
     cleartext: true,
   },
   plugins: {
+    // Com o app ABERTO, o push não aparece na bandeja (nem toca): só o selo.
+    // Lá dentro quem avisa é o Devocionalzeiro (useNativePushNotifications).
+    // Mudança de config nativa: vale a partir do próximo build do app.
     PushNotifications: {
-      presentationOptions: ['badge', 'sound', 'alert'],
+      presentationOptions: ['badge'],
     },
     // Barras do sistema (Android): mantém a injeção oficial de
     // --safe-area-inset-* no WebView (insetsHandling 'css', o padrão) e usa

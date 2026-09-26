@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react"; // refreshed
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import { 
   BookOpen, 
   Calendar, 
@@ -91,7 +90,6 @@ const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: numb
 const Biblia = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { theme } = useTheme();
   const { user, profile, loading: authLoading, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState(() => {
     const tabParam = searchParams.get('tab');

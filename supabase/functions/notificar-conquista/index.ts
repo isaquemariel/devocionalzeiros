@@ -4,8 +4,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
  * NOTIFICAR CONQUISTA — a notificação nativa de "você desbloqueou uma
  * conquista, venha resgatar".
  *
- * As conquistas são contadas no aparelho (lib/conquistas). Quando o app vê
- * uma nova pronta para resgate, chama esta função com os ids; aqui:
+ * As conquistas são contadas no aparelho (lib/conquistas). Dentro do app,
+ * quem avisa é o Devocionalzeiro. Esta função é chamada quando a pessoa SAI
+ * do app (a tela some) deixando conquistas por resgatar — o push só faz
+ * sentido para quem está fora. Aqui:
  * 1. confere quem pediu (JWT) — só notifica A PRÓPRIA conta;
  * 2. aceita só ids do catálogo (`achievement_catalog`);
  * 3. registra em `achievement_notifications` (chave usuário+conquista): cada
@@ -79,7 +81,8 @@ Deno.serve(async (req) => {
     const r = await fetch(`${url}/functions/v1/send-push-notification`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${service}` },
-      body: JSON.stringify({ user_id: user.id, title: titulo, message: texto, url: link, source: "achievement" }),
+      // ela está saindo agora: a presença ainda pode dizer "no app"
+      body: JSON.stringify({ user_id: user.id, title: titulo, message: texto, url: link, source: "achievement", ignorar_presenca: true }),
     }).catch(() => null);
 
     return json({ novas: novas.length, push: r?.ok ?? false });

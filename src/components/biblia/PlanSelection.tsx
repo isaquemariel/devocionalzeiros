@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Cross, ScrollText, Lock, Crown, ArrowLeft, History, Gem } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
-import logoBlack from "@/assets/logo-black.png";
 
 interface CustomPlanData {
   name: string;
@@ -32,7 +30,6 @@ const allPlans = ["nt60", "at90", "90", "184", "365", "cronologico365"] as const
 type StandardPlan = typeof allPlans[number];
 
 const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack, planType = "free" }: PlanSelectionProps) => {
-  const { theme } = useTheme();
   const [selectedPlan, setSelectedPlan] = useState<StandardPlan | null>(
     currentPlan && currentPlan !== "custom" ? currentPlan as StandardPlan : null
   );
@@ -97,7 +94,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
             </button>
           )}
           <img 
-            src={theme === "dark" ? logoWhite : logoBlack} 
+            src={logoWhite /* tema único: o escuro */} 
             alt="CLUBE HD" 
             className="h-14 w-auto mx-auto mb-4"
           />

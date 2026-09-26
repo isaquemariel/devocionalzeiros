@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 /**
  * OS AVISOS DO APP — ditos pelo Devocionalzeiro.
  *
@@ -35,12 +37,18 @@ export interface PedidoAviso {
 
 export const EVENTO_AVISO = "dz:aviso";
 
+// Quem acabou de sair da conta não recebe erro: telas que ainda terminam um
+// pedido no ar esbarram na sessão fechada, e isso não é problema da pessoa.
+let saiuEm = 0;
+supabase.auth.onAuthStateChange((evento) => { if (evento === "SIGNED_OUT") saiuEm = Date.now(); });
+
 /** tira os emojis: a cara dele já diz o que o 🎉 e o ⚠️ diziam */
 const semEmoji = (s: string) =>
   s.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, "").replace(/\s{2,}/g, " ").trim();
 
 function avisar(tipo: TipoAviso, mensagem: unknown, o: OpcoesAviso = {}) {
   if (typeof window === "undefined") return;
+  if ((tipo === "erro" || tipo === "alerta") && Date.now() - saiuEm < 8000) return;
   const texto = semEmoji(String(mensagem ?? ""));
   if (!texto) return;
   const detalhe = o.description ? semEmoji(String(o.description)) : undefined;
@@ -66,3 +74,15 @@ export const toast: Fn & { success: Fn; error: Fn; info: Fn; warning: Fn; messag
   });
 
 export { avisar };
+
+/**
+ * Navega para uma rota do app sem recarregar a página (o botão de um aviso
+ * vindo de fora do React Router — push, sino — usa isto).
+ */
+export function irPara(link: string) {
+  if (!link) return;
+  if (/^https?:\/\//.test(link) && !link.startsWith(window.location.origin)) { window.location.assign(link); return; }
+  const caminho = link.replace(window.location.origin, "");
+  window.history.pushState({}, "", caminho);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}

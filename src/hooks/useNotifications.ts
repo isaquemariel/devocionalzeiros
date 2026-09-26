@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { irPara, toast } from "@/lib/avisos";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface UserNotification {
@@ -58,7 +59,17 @@ export function useNotifications(userId?: string) {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "user_notifications", filter: `user_id=eq.${userId}` },
-        () => {
+        (mudanca) => {
+          // Chegou uma notificação nova com a pessoa NO app: o push não sai
+          // (ela está aqui), então quem avisa é o Devocionalzeiro, com o botão
+          // que leva ao lugar. As de conquista ele já anuncia por conta própria.
+          const nova = mudanca.eventType === "INSERT" ? (mudanca.new as { type?: string; title?: string; body?: string; link?: string }) : null;
+          if (nova?.title && nova.type !== "achievement" && document.visibilityState === "visible") {
+            toast.info(nova.title, {
+              description: nova.body || undefined,
+              action: nova.link ? { label: "Ver", onClick: () => irPara(nova.link!) } : undefined,
+            });
+          }
           if (aviso !== undefined) window.clearTimeout(aviso);
           aviso = window.setTimeout(() => { aviso = undefined; load(); }, 400);
         }

@@ -29,8 +29,19 @@ self.addEventListener('push', (event) => {
     ],
   };
 
+  // Push só para quem está FORA do app: se há uma janela do app visível, a
+  // notificação não vai para a bandeja — a mensagem vai para a página, e lá
+  // quem avisa é o Devocionalzeiro. (O servidor já pula quem está presente;
+  // isto cobre a janela entre um sinal de presença e outro.)
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Devocionalzeiros 🙏', options)
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
+      const visivel = janelas.find((j) => j.visibilityState === 'visible');
+      if (visivel) {
+        visivel.postMessage({ tipo: 'push-no-app', title: data.title, body: data.body, url });
+        return;
+      }
+      return self.registration.showNotification(data.title || 'Devocionalzeiros 🙏', options);
+    })
   );
 });
 

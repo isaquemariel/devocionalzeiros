@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "next-themes";
 import {
   Dialog,
   DialogContent,
@@ -16,8 +15,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Download,
-  Sun, Moon, Type, CreditCard
+  FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Download,
+  Smartphone, CreditCard
 } from "lucide-react";
 import { openCustomerPortal } from "@/lib/stripeCheckout";
 import {
@@ -54,17 +53,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const isPaidPlan = planType === "gold" || planType === "premium";
   const { managesStripe } = useStripeSubscription(isPaidPlan);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
-  const { theme, setTheme } = useTheme();
-  const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
-    if (typeof window === "undefined") return "normal";
-    return (localStorage.getItem("font-scale") as any) || "normal";
-  });
-
-  useEffect(() => {
-    const map = { normal: "100%", large: "115%", xlarge: "130%" };
-    document.documentElement.style.fontSize = map[fontScale];
-    localStorage.setItem("font-scale", fontScale);
-  }, [fontScale]);
+  // (O app no nativo não precisa do botão de baixar.)
+  const noAppNativo = (() => {
+    try { return !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.(); } catch { return false; }
+  })();
 
   const hasAdminAccess = isAdmin || planType === "admin";
 
@@ -257,15 +249,35 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         {/* ── Scrollable body (vertical only) ── */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 space-y-3">
 
-          {/* Instalar App — destaque no topo */}
-          <Section title="Aplicativo" />
-          <Row
-            icon={<Download className="w-4 h-4 text-emerald-500" />}
-            label="Baixar App no Celular"
-            sub="Android: Play Store · iPhone: tela inicial"
-            color="border-emerald-500/40 hover:bg-emerald-500/10"
-            onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
-          />
+          {/* Baixar o app — O destaque das configurações: é o que mais importa
+              para quem ainda usa pelo navegador. */}
+          {!noAppNativo && (
+            <button
+              type="button"
+              onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
+              className="relative w-full overflow-hidden rounded-2xl p-4 text-left active:scale-[.98] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60"
+              style={{
+                background: "linear-gradient(135deg, #2a1f10 0%, #1a1308 60%, #10203a 100%)",
+                boxShadow: "inset 0 0 0 2px #e8b04b, 0 10px 30px -12px rgba(232,176,75,0.55)",
+              }}
+            >
+              <span className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rounded-full" style={{ background: "radial-gradient(circle, rgba(255,216,137,0.35), transparent 70%)" }} />
+              <div className="relative flex items-center gap-3">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl" style={{ background: "linear-gradient(180deg, #ffd889, #e8b04b)", boxShadow: "0 3px 0 #6e4e18" }}>
+                  <Smartphone className="h-6 w-6" style={{ color: "#1a1206" }} strokeWidth={2.4} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-extrabold leading-tight" style={{ color: "#ffd889" }}>Baixe o app no celular</p>
+                  <p className="mt-0.5 text-xs leading-snug" style={{ color: "#cdbfa0" }}>Mais rápido, com avisos do Devocionalzeiro e o jogo na palma da mão.</p>
+                </div>
+                <Download className="h-5 w-5 shrink-0" style={{ color: "#ffd889" }} />
+              </div>
+              <div className="relative mt-3 flex gap-2 text-[10.5px] font-bold uppercase tracking-[0.08em]" style={{ color: "#1a1206" }}>
+                <span className="whitespace-nowrap rounded-full px-2.5 py-1" style={{ background: "#e8b04b" }}>Android</span>
+                <span className="whitespace-nowrap rounded-full px-2.5 py-1" style={{ background: "#ffd889" }}>iPhone</span>
+              </div>
+            </button>
+          )}
 
           <Separator />
 
@@ -283,18 +295,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <Separator />
             </>
           )}
-
-          {/* Gamificação */}
-          <Section title="Gamificação" />
-          <Row
-            icon={<Trophy className="w-4 h-4 text-primary" />}
-            label="Conquistas"
-            sub="Visualizar e resgatar pontos"
-            color="border-primary/30 hover:bg-primary/10"
-            onClick={() => { navigateTo("/conquistas"); }}
-          />
-
-          <Separator />
 
           {/* Planos */}
           <Section title="Planos" />
@@ -336,50 +336,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
-          {/* Acessibilidade */}
-          <Section title="Acessibilidade" />
-          <Row
-            icon={theme === "light"
-              ? <Sun className="w-4 h-4 text-amber-500" />
-              : <Moon className="w-4 h-4 text-indigo-300" />}
-            label="Tema claro"
-            sub="Deixa a tela mais clara, melhor para vista cansada"
-            right={
-              <Switch
-                checked={theme === "light"}
-                onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
-                className="shrink-0"
-              />
-            }
-          />
-          <div className="px-3 py-2.5 rounded-xl border border-border/40 bg-card/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Type className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Tamanho da fonte</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {([
-                { id: "normal", label: "Normal", size: "text-sm" },
-                { id: "large", label: "Grande", size: "text-base" },
-                { id: "xlarge", label: "Maior", size: "text-lg" },
-              ] as const).map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => setFontScale(opt.id)}
-                  className={`px-2 py-2 rounded-lg border transition-colors ${opt.size} ${
-                    fontScale === opt.id
-                      ? "border-primary/60 bg-primary/10 text-primary font-semibold"
-                      : "border-border/40 bg-muted/10 text-muted-foreground hover:bg-muted/20"
-                  }`}
-                >
-                  Aa
-                  <div className="text-[10px] mt-0.5 opacity-70">{opt.label}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
+          {/* (Removidos) Tema claro e tamanho da fonte: o app tem uma
+              identidade só — o tema escuro do RPG, na letra padrão. */}
 
           {/* Som */}
           <Section title="Som" />
@@ -388,7 +346,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               ? <Volume2 className="w-4 h-4 text-primary" />
               : <VolumeX className="w-4 h-4 text-muted-foreground" />}
             label="Sons do App"
-            sub="Efeitos sonoros de quiz e leitura"
+            sub="Já vem ligado — efeitos do quiz, da leitura e do jogo"
             right={
               <Switch
                 checked={soundEnabled}
