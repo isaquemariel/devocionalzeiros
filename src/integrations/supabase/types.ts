@@ -912,6 +912,7 @@ export type Database = {
           full_name: string | null
           has_completed_onboarding: boolean | null
           id: string
+          jornada: Json | null
           last_celebrated_plan: string | null
           must_change_password: boolean
           preferred_reading_time: string | null
@@ -933,6 +934,7 @@ export type Database = {
           full_name?: string | null
           has_completed_onboarding?: boolean | null
           id?: string
+          jornada?: Json | null
           last_celebrated_plan?: string | null
           must_change_password?: boolean
           preferred_reading_time?: string | null
@@ -954,6 +956,7 @@ export type Database = {
           full_name?: string | null
           has_completed_onboarding?: boolean | null
           id?: string
+          jornada?: Json | null
           last_celebrated_plan?: string | null
           must_change_password?: boolean
           preferred_reading_time?: string | null

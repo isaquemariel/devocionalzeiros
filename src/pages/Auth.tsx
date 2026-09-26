@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { aplicarJornada } from "@/lib/jornada/aplicar";
+import { lerRascunho } from "@/lib/jornada/motor";
+import { DDIS } from "@/lib/ddis";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -198,25 +201,8 @@ const IdentityPanel = () => {
   );
 };
 
-// ─── Country codes ─────────────────────────────────────────────────────────────
-const countryCodes = [
-  { code: "+55",  country: "BR", flag: "🇧🇷", maxDigits: 11, placeholder: "(11) 99999-9999" },
-  { code: "+1",   country: "US", flag: "🇺🇸", maxDigits: 10, placeholder: "(555) 555-5555" },
-  { code: "+351", country: "PT", flag: "🇵🇹", maxDigits: 9,  placeholder: "912 345 678" },
-  { code: "+34",  country: "ES", flag: "🇪🇸", maxDigits: 9,  placeholder: "612 345 678" },
-  { code: "+39",  country: "IT", flag: "🇮🇹", maxDigits: 10, placeholder: "312 345 6789" },
-  { code: "+44",  country: "UK", flag: "🇬🇧", maxDigits: 10, placeholder: "7911 123456" },
-  { code: "+33",  country: "FR", flag: "🇫🇷", maxDigits: 9,  placeholder: "06 12 34 56 78" },
-  { code: "+49",  country: "DE", flag: "🇩🇪", maxDigits: 11, placeholder: "1512 3456789" },
-  { code: "+81",  country: "JP", flag: "🇯🇵", maxDigits: 10, placeholder: "090-1234-5678" },
-  { code: "+86",  country: "CN", flag: "🇨🇳", maxDigits: 11, placeholder: "139 1234 5678" },
-  { code: "+54",  country: "AR", flag: "🇦🇷", maxDigits: 10, placeholder: "11 1234-5678" },
-  { code: "+56",  country: "CL", flag: "🇨🇱", maxDigits: 9,  placeholder: "9 1234 5678" },
-  { code: "+57",  country: "CO", flag: "🇨🇴", maxDigits: 10, placeholder: "312 345 6789" },
-  { code: "+52",  country: "MX", flag: "🇲🇽", maxDigits: 10, placeholder: "55 1234 5678" },
-  { code: "+595", country: "PY", flag: "🇵🇾", maxDigits: 9,  placeholder: "961 456789" },
-  { code: "+598", country: "UY", flag: "🇺🇾", maxDigits: 8,  placeholder: "94 123 456" },
-];
+// DDIs moram em @/lib/ddis (a jornada de boas-vindas usa a mesma lista)
+const countryCodes = DDIS;
 
 // ─── Input styles ──────────────────────────────────────────────────────────────
 const inputBase =
@@ -327,7 +313,7 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onSignup}
           className="w-full py-4 rounded-2xl text-sm font-black tracking-widest uppercase text-[#040810] shadow-lg"
           style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)", boxShadow: "0 4px 24px rgba(245,158,11,0.35)" }}>
-          Criar Conta Gratuita
+          Começar Jornada
         </motion.button>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onLogin}
           className="w-full py-4 rounded-2xl text-sm font-semibold tracking-widest uppercase text-white/60 border border-white/15 bg-white/[0.04] hover:bg-white/[0.07] hover:text-white/80 transition-all">
@@ -354,12 +340,19 @@ const SubmitButton = ({ isSubmitting, label, icon, loadingLabel }: {
 );
 
 // ─── Main component ────────────────────────────────────────────────────────────
+/** `?entrar=1` pula o splash e abre o login (a jornada manda para cá quando o e-mail já tem conta). */
+const querEntrarDireto = () => {
+  try { return new URLSearchParams(window.location.search).get("entrar") === "1"; } catch { return false; }
+};
+
 const Auth = () => {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => !querEntrarDireto());
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
   const [isSettingNewPassword, setIsSettingNewPassword] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    try { return new URLSearchParams(window.location.search).get("email") ?? ""; } catch { return ""; }
+  });
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -388,6 +381,20 @@ const Auth = () => {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  // Pré-carrega a jornada enquanto o splash está na tela: o toque em "Começar
+  // Jornada" não pode ficar esperando o download da página.
+  useEffect(() => {
+    if (!showSplash) return;
+    const carregar = () => { void import("./Jornada"); };
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (id: number) => void };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(carregar);
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const t = window.setTimeout(carregar, 1200);
+    return () => window.clearTimeout(t);
+  }, [showSplash]);
 
   // Redirect target after successful auth — supports ?redirect=/loja etc.
   const getRedirectTarget = () => {
@@ -418,6 +425,15 @@ const Auth = () => {
           setShowSplash(false);
           toast.info("Defina uma nova senha para continuar.");
         } else {
+          // Rede de segurança da jornada: quem chegou à etapa da conta e entrou
+          // por AQUI (link de confirmação, ou "Já tenho conta" no meio da
+          // jornada) também leva as respostas. O retorno do Google fica de fora
+          // de propósito — esse é da própria jornada, que mostra a celebração;
+          // aplicar aqui apagaria o rascunho antes de ela o ler.
+          const rascunho = lerRascunho();
+          if (rascunho && !rascunho.aguardandoGoogle && ["salvar", "email", "senha"].includes(rascunho.etapa)) {
+            await aplicarJornada(user.id, rascunho);
+          }
           navigate(getRedirectTarget());
         }
       })();
@@ -674,7 +690,7 @@ const Auth = () => {
         /* ── SPLASH ── */
         <motion.div key="splash" initial={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
           <SplashScreen
-            onSignup={() => { setIsLogin(false); setShowSplash(false); }}
+            onSignup={() => navigate("/jornada")}
             onLogin={() => { setIsLogin(true); setShowSplash(false); }}
           />
         </motion.div>
